@@ -1,6 +1,6 @@
-/* Jordan Tinplate: small shared script. Nav, theme, language preference, reveal, quote form.
-   Everything degrades: without JS the nav is visible, the language switch is a normal link,
-   and the form opens the email app through its mailto action. */
+/* Jordan Tinplate: small shared script. Nav, theme, language preference, reveal, review mode.
+   Everything degrades: without JS the nav is visible and the language switch is a normal link.
+   "Request a quote" is a plain external link to the online order tool (no script needed). */
 (function () {
   'use strict';
   var doc = document, root = doc.documentElement;
@@ -69,34 +69,5 @@
     } else {
       items.forEach(function (el) { el.classList.add('is-in'); });
     }
-  }
-
-  /* ---------- quote form: prefill from ?industry=, then open the email app ---------- */
-  var form = doc.getElementById('quote-form');
-  if (form) {
-    var sel = form.elements.product;
-    try {
-      var wanted = new URLSearchParams(location.search).get('industry');
-      if (wanted && sel) for (var i = 0; i < sel.options.length; i++) if (sel.options[i].value === wanted) sel.selectedIndex = i;
-    } catch (e) {}
-    var note = doc.getElementById('form-note');
-    form.addEventListener('submit', function (e) {
-      var name = form.elements.name.value.trim(), email = form.elements.email.value.trim();
-      var ok = name && /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email);
-      form.elements.name.setAttribute('aria-invalid', name ? 'false' : 'true');
-      form.elements.email.setAttribute('aria-invalid', ok ? 'false' : 'true');
-      e.preventDefault();
-      if (!ok) { note.textContent = form.getAttribute('data-err'); (name ? form.elements.email : form.elements.name).focus(); return; }
-      var lines = [
-        form.getAttribute('data-l-name') + ': ' + name,
-        form.getAttribute('data-l-company') + ': ' + form.elements.company.value.trim(),
-        form.getAttribute('data-l-email') + ': ' + email,
-        form.getAttribute('data-l-product') + ': ' + sel.options[sel.selectedIndex].text,
-        '', form.elements.msg.value.trim()
-      ];
-      var subject = form.getAttribute('data-subject') + ': ' + sel.options[sel.selectedIndex].text;
-      note.textContent = form.getAttribute('data-ok');
-      location.href = 'mailto:' + form.getAttribute('data-to') + '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(lines.join('\n'));
-    });
   }
 })();

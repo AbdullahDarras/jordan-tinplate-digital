@@ -10,7 +10,7 @@
 | **Format** | Text post + 1 image (4:5, 1080x1350 px) |
 | **Status** | Copy updated with management's approved decisions (`docs/decisions.md`). Design not started. Needs final text sign-off; the company-page update must happen first (see checklist) |
 
-> Convention: `[TBC]` / `[تحقق]` marks anything not confirmed. Nothing in this post uses an unconfirmed claim; the only open points are the final sign-off, the official Arabic name and the page set-up. **`[مؤقت]`** marks the provisional Arabic brand name «جوردن تينبليت كانينغ»: it stays in the file until the official Arabic name arrives, then it is replaced everywhere and the marker is deleted. Do not paste the marker into the published post.
+> Convention: `[TBC]` / `[تحقق]` marks anything not confirmed. Nothing in this post uses an unconfirmed claim; the only open points are the final sign-off and the page set-up. The **official Arabic name «مصنع الأردنية للصفيح والعبوات المعدنية»** is confirmed (round 2, 2026-10-20) and is used in all Arabic copy; the English name stays **Jordan Tinplate Canning**.
 
 ---
 
@@ -41,17 +41,17 @@ jordantinplate.com
 
 Over the next weeks we will share how a flat sheet of tinplate becomes a can, how finishes work, and what to look for when choosing metal packaging. Follow the page to see it.
 
-الملخص بالعربية: جوردن تينبليت كانينغ [مؤقت] مصنع أردني للتغليف المعدني لعلامات الأغذية والمشروبات منذ عام 1998، في الزميلات – الموقّر، يعمل فيه نحو 250 موظفاً ويديره اليوم الجيل الثالث من العائلة المؤسِّسة. نقدّم الرحلة كاملة في مكان واحد، من التصميم وألواح الطباعة (CTP) إلى الطباعة والطلاء والتشكيل والتغليف الجاهز للتصدير، مع إمكانية تخزين المنتج الجاهز. للتواصل: sales@jordantinplate.com
+الملخص بالعربية: مصنع الأردنية للصفيح والعبوات المعدنية متخصص في التغليف المعدني لعلامات الأغذية والمشروبات منذ عام 1998، في الزميلات – الموقّر، يعمل فيه نحو 250 موظفاً ويديره اليوم الجيل الثالث من العائلة المؤسِّسة. نقدّم الرحلة كاملة في مكان واحد، من التصميم وألواح الطباعة (CTP) إلى الطباعة والطلاء والتشكيل والتغليف الجاهز للتصدير، مع إمكانية تخزين المنتج الجاهز. للتواصل: sales@jordantinplate.com
 
 #MetalPackaging #FoodAndBeverage #MadeInJordan #JordanTinplateCanning #تغليف_معدني
 ```
 
 ## 2) Final copy: Arabic (summary, also usable as the Arabic page About or a standalone Arabic post)
 
-**الاسم العربي:** «جوردن تينبليت كانينغ» **[مؤقت]**: الاسم العربي الرسمي بانتظار الإدارة، وتُستبدل الصيغة في كل النصوص عند وصوله.
+**الاسم العربي الرسمي:** «مصنع الأردنية للصفيح والعبوات المعدنية» (معتمد). يُكتب كاملاً في النصوص العربية، ويبقى الاسم الإنجليزي Jordan Tinplate Canning في النصوص الإنجليزية.
 
 ```
-جوردن تينبليت كانينغ [مؤقت] مصنع أردني للتغليف المعدني لعلامات الأغذية والمشروبات، بدأت قصته عام 1998، ويعمل فيه اليوم نحو 250 موظفاً من مقرنا في الزميلات – الموقّر، ويديره الجيل الثالث من العائلة المؤسِّسة.
+مصنع الأردنية للصفيح والعبوات المعدنية متخصص في التغليف المعدني لعلامات الأغذية والمشروبات، بدأت قصته عام 1998، ويعمل فيه اليوم نحو 250 موظفاً من مقرنا في الزميلات – الموقّر، ويديره الجيل الثالث من العائلة المؤسِّسة.
 
 نقدّم الرحلة كاملة في مكان واحد:
 - التصميم والعمل الفني
@@ -73,7 +73,7 @@ sales@jordantinplate.com
 
 - **EN (on the post, max 5):** #MetalPackaging #FoodAndBeverage #MadeInJordan #TinplateCans #JordanTinplateCanning
 - **AR:** #تغليف_معدني #علب_معدنية #صنع_في_الأردن
-- Brand tag is always the full `#JordanTinplateCanning`. Never use `#Canning`-style tags: another Jordanian company trades as "Canning Industries" (see Offsite plan, audit item 2). No Arabic brand hashtag until the official Arabic name arrives.
+- Brand tag is always the full `#JordanTinplateCanning`. Never use `#Canning`-style tags: another Jordanian company trades as "Canning Industries" (see Offsite plan, audit item 2). No separate Arabic brand hashtag: the official Arabic name is written in full in the text.
 
 ## 4) CTA
 
@@ -106,7 +106,7 @@ sales@jordantinplate.com
 
 ## 7) Publishing notes
 
-- Publish **from the company page**, after the page name (Jordan Tinplate Canning), tagline, About, address (Al-Zmailat – Al-Muwaqqar) and website link are updated (Offsite plan, week 1 actions). The English name is approved, so Sunday's launch does not wait for the Arabic name.
+- Publish **from the company page**, after the page name (Jordan Tinplate Canning), tagline, About, address (Al-Zmailat – Al-Muwaqqar) and website link are updated (Offsite plan, week 1 actions). Both the English and the Arabic official names are approved.
 - Ask staff to like and reshare in the first hours, and to link their profiles to the page.
 - Pin the post to the top of the page's Featured section for the month.
 - Suggested time: morning, Gulf working hours [TBC: confirm with analytics once the page has data].
@@ -114,13 +114,12 @@ sales@jordantinplate.com
 ## 8) Needs confirmation (checklist)
 
 **Resolved (management decisions, `docs/decisions.md`):**
-- [x] Official brand name **Jordan Tinplate Canning**, written in full (Arabic provisional «جوردن تينبليت كانينغ» [مؤقت])
+- [x] Official brand name **Jordan Tinplate Canning**, written in full; official Arabic name «مصنع الأردنية للصفيح والعبوات المعدنية» (confirmed, round 2)
 - [x] Address: Al-Zmailat – Al-Muwaqqar (not Sahab); about 250 employees
 - [x] Olive-oil tins in 1, 4, 8 and 16 L/kg may be named publicly
 - [x] Bio/About approved provisionally; account access with the marketing lead (2FA on)
 
 **Still open:**
-- [ ] **Official Arabic name** [تحقق]: replace the provisional form everywhere when it arrives
 - [ ] **Final sign-off of the text** by the approver (the About is approved provisionally only)
 - [ ] **Wording of the family story** ("third generation"; 1998 is confirmed)
 - [ ] **Storage of finished goods:** confirm it is offered as a standard service (taken from the site/draft About; wording is "when customers need it")

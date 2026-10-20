@@ -9,9 +9,12 @@
 export const t = (en, ar) => ({ en, ar });
 
 export const SITE = {
-  // Production origin used for canonical / hreflang / sitemap. NOT CONFIRMED: override with SITE_URL=... when building.
+  // Production origin used for canonical / hreflang / sitemap. Confirmed by management (round 2, 2026-10-20).
+  // SITE_URL=... can still override it for a staging build.
   origin: process.env.SITE_URL || 'https://www.jordantinplate.com',
-  name: 'Jordan Tinplate Canning',           // working brand name; official EN/AR name is an open item
+  name: 'Jordan Tinplate Canning',           // official English name (always written in full)
+  nameAr: 'مصنع الأردنية للصفيح والعبوات المعدنية',   // official Arabic name (confirmed, round 2)
+  orderUrl: 'https://jc-order.netlify.app/',  // existing online order / quote tool: primary "Request a quote" link
   phone: '+962 6 4051125',
   tel: '+96264051125',
   email: 'sales@jordantinplate.com',
@@ -61,31 +64,22 @@ export const UI = {
   review: t('Review mode', 'وضع المراجعة'),
   catalogue: t('Download the catalogue (PDF)', 'حمّل الكتالوج (PDF)'),
   opensNew: t('opens in a new tab', 'يُفتح في تبويب جديد'),
-  brandAria: t('Jordan Tinplate Canning, home page', 'Jordan Tinplate Canning، الصفحة الرئيسية'),
+  brandAria: t('Jordan Tinplate Canning, home page', 'مصنع الأردنية للصفيح والعبوات المعدنية، الصفحة الرئيسية'),
   ctaTitle: t('Let’s put your brand on metal.', 'لنطبع علامتك على المعدن.'),
   ctaLead: t('Tell us what you are packing, the pack size and your artwork idea. We will come back with a quotation.',
              'أخبرنا بما تريد تعبئته ومقاس العبوة وفكرة التصميم، وسنردّ عليك بعرض سعر.'),
-  form: {
-    name: t('Your name', 'الاسم'),
-    company: t('Company', 'الشركة'),
-    email: t('Email', 'البريد الإلكتروني'),
-    product: t('What are you packing?', 'ما الذي تريد تعبئته؟'),
-    msg: t('Tell us about your pack', 'حدّثنا عن عبوتك'),
-    send: t('Send request', 'أرسل الطلب'),
-    ok: t('Thanks. Your email app will open with the request ready to send.', 'شكراً لك. سيفتح تطبيق البريد لديك والطلب جاهز للإرسال.'),
-    err: t('Please add your name and a valid email address.', 'يرجى إدخال الاسم وبريد إلكتروني صحيح.'),
-    note: t('For now this form opens your email app. An online form will replace it once the hosting is confirmed.',
-            'يفتح هذا النموذج تطبيق البريد لديك حالياً، وسيحلّ محلّه نموذج إلكتروني بعد اعتماد الاستضافة.'),
-    other: t('Something else', 'شيء آخر'),
-    subject: t('Quote request', 'طلب عرض سعر')
-  }
+  orderTitle: t('Request your quote online', 'اطلب عرض سعرك إلكترونياً'),
+  orderLead: t('Use our online order tool to describe your pack. It opens in a new tab.',
+               'استخدم أداة الطلب الإلكترونية لوصف عبوتك. وتُفتح في تبويب جديد.'),
+  orderEmail: t('Or email us', 'أو راسلنا بالبريد')
 };
 
 // ---------------------------------------------------------------- pages
 // art keys: round | square | rect | oval | oil | can | hero
 const IND_ART = { 'ind-olive': 'oil', 'ind-dairy': 'can', 'ind-sweets': 'square', 'ind-cheese': 'rect', 'ind-coffee': 'round', 'ind-industrial': 'can' };
 
-const quoteCta = (industry) => ({ label: UI.quote, to: 'contact', query: industry ? '?industry=' + industry : '' });
+// "Request a quote" always goes to the existing online order tool (SITE.orderUrl), opened in a new tab.
+const quoteCta = () => ({ label: UI.quote, to: 'order' });
 
 // Finishes: used on several pages (from the current site copy).
 const FINISH_CARDS = [
@@ -129,9 +123,9 @@ export const PAGES = [
   // ============================================================ HOME
   {
     id: 'home', path: '', navKey: 'home',
-    title: t('Jordan Tinplate Canning | Custom Metal Packaging for Food & Beverage', 'Jordan Tinplate Canning | تغليف معدني مخصّص للأغذية والمشروبات'),
+    title: t('Jordan Tinplate Canning | Custom Metal Packaging for Food & Beverage', 'مصنع الأردنية للصفيح والعبوات المعدنية | تغليف معدني مخصّص للأغذية والمشروبات'),
     description: t('Jordan Tinplate Canning designs, prints, forms and packs custom tinplate cans and gift tins for food and beverage brands. Made in Jordan since 1998.',
-                   'تصمّم Jordan Tinplate Canning علب الصفيح المعدنية وعلب الهدايا وتطبعها وتشكّلها وتجهّزها للشحن لعلامات الأغذية والمشروبات. صناعة أردنية منذ عام 1998.'),
+                   'يصمّم مصنع الأردنية للصفيح والعبوات المعدنية علب الصفيح المعدنية وعلب الهدايا ويطبعها ويشكّلها ويجهّزها للشحن لعلامات الأغذية والمشروبات. صناعة أردنية منذ عام 1998.'),
     crumb: t('Home', 'الرئيسية'),
     hero: {
       eyebrow: t('Metal packaging · Made in Jordan · Since 1998', 'تغليف معدني · صناعة أردنية · منذ عام 1998'),
@@ -170,9 +164,9 @@ export const PAGES = [
   // ============================================================ PRODUCTS INDEX
   {
     id: 'products', path: 'products/', navKey: 'products', parent: 'home',
-    title: t('Tinplate Cans & Gift Tins | Jordan Tinplate Canning', 'علب الصفيح وعلب الهدايا المعدنية للأغذية | Jordan Tinplate Canning'),
+    title: t('Tinplate Cans & Gift Tins | Jordan Tinplate Canning', 'علب الصفيح وعلب الهدايا المعدنية للأغذية | مصنع الأردنية للصفيح والعبوات المعدنية'),
     description: t('Fancy tins, food cans, milk powder cans, food containers, special molds, ends and industrial cans. Browse Jordan Tinplate Canning products by industry or by type.',
-                   'علب فاخرة وعلب أغذية وعلب حليب بودرة وحاويات أغذية وقوالب خاصة وأغطية وعلب صناعية. تصفّح منتجات Jordan Tinplate Canning حسب القطاع أو حسب النوع.'),
+                   'علب فاخرة وعلب أغذية وعلب حليب بودرة وحاويات أغذية وقوالب خاصة وأغطية وعلب صناعية. تصفّح منتجات مصنع الأردنية للصفيح والعبوات المعدنية حسب القطاع أو حسب النوع.'),
     crumb: t('Products', 'المنتجات'),
     hero: {
       eyebrow: t('Products', 'المنتجات'),
@@ -225,7 +219,7 @@ export const PAGES = [
   // ============================================================ INDUSTRY: OLIVE OIL
   {
     id: 'ind-olive', path: 'products/olive-oil/', navKey: 'products', parent: 'products',
-    title: t('Olive Oil Tins 1–16 L/kg | Jordan Tinplate Canning', 'علب زيت الزيتون 1–16 لتر/كغ | Jordan Tinplate Canning'),
+    title: t('Olive Oil Tins 1–16 L/kg | Jordan Tinplate Canning', 'علب زيت الزيتون 1–16 لتر/كغ | مصنع الأردنية للصفيح والعبوات المعدنية'),
     description: t('Printed tinplate olive oil tins in 1, 4, 8 and 16 L/kg with food-grade interior lacquer, in-house artwork and export-ready packing. Made in Jordan.',
                    'تنكات زيت الزيتون من الصفيح المطبوع بأحجام 1 و4 و8 و16 لتر/كغ، بطلاء داخلي صالح للأغذية وتصميم داخل المصنع وتغليف جاهز للتصدير. صناعة أردنية.'),
     crumb: t('Olive oil', 'زيت الزيتون'),
@@ -235,7 +229,7 @@ export const PAGES = [
       h1: t('Tinplate tins for olive oil brands', 'علب صفيح لعلامات زيت الزيتون'),
       lead: t('Olive oil has its season, and your tins should be ready before it starts. We design, print, form and pack tinplate for oil brands in one place.',
               'لزيت الزيتون موسمه، وعلبك يجب أن تكون جاهزة قبل أن يبدأ. نصمّم علب الصفيح ونطبعها ونشكّلها ونجهّزها لعلامات الزيت في مكان واحد.'),
-      art: 'oil', ctas: [quoteCta('olive-oil'), { label: t('All products', 'كل المنتجات'), to: 'products', kind: 'ghost' }]
+      art: 'oil', ctas: [quoteCta(), { label: t('All products', 'كل المنتجات'), to: 'products', kind: 'ghost' }]
     },
     sections: [
       { eyebrow: t('What we offer', 'ما نقدّمه'), title: t('Printed, finished and ready to ship', 'مطبوعة ومشطَّبة وجاهزة للشحن'),
@@ -252,8 +246,6 @@ export const PAGES = [
           { k: t('Round gift tins', 'علب هدايا دائرية'), v: t('Ø 73–265 mm · H 34–210 mm', 'قطر 73–265 مم · ارتفاع 34–210 مم'), note: t('For premium and gift packs.', 'للعبوات الفاخرة وعبوات الهدايا.') }
         ] }] },
       { blocks: [{ k: 'tbc', title: t('Still to be confirmed for olive oil', 'ما زال بانتظار التأكيد لزيت الزيتون'), items: [
-        t('Protection from light', 'الحماية من الضوء'),
-        t('Spout, handle and closure options', 'خيارات الفوهة والمقبض والإغلاق'),
         t('Certifications (copies will be published once received)', 'الشهادات (تُنشر بعد وصول نسخها)'),
         t('Minimum order quantity and harvest-season lead times', 'الحد الأدنى للطلب ومدد التسليم في موسم الحصاد')
       ] }] }
@@ -263,16 +255,16 @@ export const PAGES = [
   // ============================================================ INDUSTRY: MILK POWDER & DAIRY
   {
     id: 'ind-dairy', path: 'products/milk-powder-dairy/', navKey: 'products', parent: 'products',
-    title: t('Milk Powder Cans for Dairy | Jordan Tinplate Canning', 'علب حليب البودرة | علب صفيح لعلامات الألبان | Jordan Tinplate Canning'),
+    title: t('Milk Powder Cans for Dairy | Jordan Tinplate Canning', 'علب حليب البودرة | علب صفيح لعلامات الألبان | مصنع الأردنية للصفيح والعبوات المعدنية'),
     description: t('Printed tinplate milk powder cans, from Ø 99 to 189 mm and up to 5.5 kg, plus ends and export-ready packing. Made in Jordan by Jordan Tinplate Canning.',
-                   'علب صفيح مطبوعة لحليب البودرة بأقطار من 99 إلى 189 مم وسعة حتى 5.5 كغ، مع الأغطية والتغليف الجاهز للتصدير. صناعة أردنية من Jordan Tinplate Canning.'),
+                   'علب صفيح مطبوعة لحليب البودرة بأقطار من 99 إلى 189 مم وسعة حتى 5.5 كغ، مع الأغطية والتغليف الجاهز للتصدير. صناعة أردنية من مصنع الأردنية للصفيح والعبوات المعدنية.'),
     crumb: t('Milk powder & dairy', 'حليب البودرة والألبان'),
     tile: { h: t('Milk powder & dairy', 'حليب البودرة والألبان'), p: t('Large-format cans for powder and dairy.', 'علب كبيرة الحجم للبودرة والألبان.') },
     hero: {
       eyebrow: t('Industry · Milk powder & dairy', 'القطاع · حليب البودرة والألبان'),
       h1: t('Milk powder cans for dairy brands', 'علب حليب البودرة لعلامات الألبان'),
       lead: t('Large-format cans for powder and dairy, printed to your artwork and packed for export.', 'علب كبيرة الحجم للبودرة والألبان، مطبوعة وفق تصميمك ومجهّزة للتصدير.'),
-      art: 'can', ctas: [quoteCta('milk-powder'), { label: t('All products', 'كل المنتجات'), to: 'products', kind: 'ghost' }]
+      art: 'can', ctas: [quoteCta(), { label: t('All products', 'كل المنتجات'), to: 'products', kind: 'ghost' }]
     },
     sections: [
       { eyebrow: t('The range', 'المجموعة'), title: t('Cans and ends for powder and dairy', 'علب وأغطية للبودرة والألبان'),
@@ -299,16 +291,16 @@ export const PAGES = [
   // ============================================================ INDUSTRY: SWEETS / KA'AK / CHOCOLATE
   {
     id: 'ind-sweets', path: 'products/sweets-kaak-chocolate/', navKey: 'products', parent: 'products',
-    title: t('Gift Tins for Sweets, Ka’ak & Chocolate | Jordan Tinplate Canning', 'علب هدايا للحلويات والكعك والشوكولاتة | Jordan Tinplate Canning'),
+    title: t('Gift Tins for Sweets, Ka’ak & Chocolate | Jordan Tinplate Canning', 'علب هدايا للحلويات والكعك والشوكولاتة | مصنع الأردنية للصفيح والعبوات المعدنية'),
     description: t('Round, square, rectangular and oval gift tins for sweets, ka’ak and chocolate, with embossing and soft-touch finishes. Made in Jordan by Jordan Tinplate Canning.',
-                   'علب هدايا دائرية ومربعة ومستطيلة وبيضاوية للحلويات والكعك والشوكولاتة، بنقش بارز وملمس ناعم. صناعة أردنية من Jordan Tinplate Canning.'),
+                   'علب هدايا دائرية ومربعة ومستطيلة وبيضاوية للحلويات والكعك والشوكولاتة، بنقش بارز وملمس ناعم. صناعة أردنية من مصنع الأردنية للصفيح والعبوات المعدنية.'),
     crumb: t('Sweets, ka’ak & chocolate', 'الحلويات والكعك والشوكولاتة'),
     tile: { h: t('Sweets, ka’ak & chocolate', 'الحلويات والكعك والشوكولاتة'), p: t('Gift tins for Ramadan, Eid and every season.', 'علب هدايا لرمضان والعيد وكل المواسم.') },
     hero: {
       eyebrow: t('Industry · Sweets, ka’ak & chocolate', 'القطاع · الحلويات والكعك والشوكولاتة'),
       h1: t('Gift tins for sweets, ka’ak and chocolate', 'علب هدايا للحلويات والكعك والشوكولاتة'),
       lead: t('Embossed, soft-touch and unmistakably festive: tins that make Ramadan and Eid gifts worth keeping.', 'بنقش بارز وملمس ناعم وطابع احتفالي لا يُخطئ: علب تجعل هدايا رمضان والعيد تستحق الاحتفاظ بها.'),
-      art: 'square', ctas: [quoteCta('sweets'), { label: t('All products', 'كل المنتجات'), to: 'products', kind: 'ghost' }]
+      art: 'square', ctas: [quoteCta(), { label: t('All products', 'كل المنتجات'), to: 'products', kind: 'ghost' }]
     },
     sections: [
       { eyebrow: t('Shapes and sizes', 'الأشكال والمقاسات'), title: t('Four shapes, many sizes', 'أربعة أشكال ومقاسات متعددة'),
@@ -335,17 +327,17 @@ export const PAGES = [
   // ============================================================ INDUSTRY: WHITE CHEESE
   {
     id: 'ind-cheese', path: 'products/white-cheese/', navKey: 'products', parent: 'products',
-    title: t('White Cheese Tins | Jordan Tinplate Canning', 'علب الجبنة البيضاء | تغليف معدني | Jordan Tinplate Canning'),
+    title: t('White Cheese Tins | Jordan Tinplate Canning', 'علب الجبنة البيضاء | تغليف معدني | مصنع الأردنية للصفيح والعبوات المعدنية'),
     description: t('Printed tinplate tins for white cheese brands from Jordan Tinplate Canning: in-house artwork and plates, finishes and export-ready packing for the spring season.',
-                   'علب صفيح مطبوعة لعلامات الجبنة البيضاء من Jordan Tinplate Canning: تصميم وألواح داخل المصنع، وتشطيبات، وتغليف جاهز للتصدير لموسم الربيع.'),
+                   'علب صفيح مطبوعة لعلامات الجبنة البيضاء من مصنع الأردنية للصفيح والعبوات المعدنية: تصميم وألواح داخل المصنع، وتشطيبات، وتغليف جاهز للتصدير لموسم الربيع.'),
     crumb: t('White cheese', 'الجبنة البيضاء'),
     tile: { h: t('White cheese', 'الجبنة البيضاء'), p: t('Tins for the spring cheese season.', 'علب لموسم الجبنة في الربيع.') },
     hero: {
       eyebrow: t('Industry · White cheese', 'القطاع · الجبنة البيضاء'),
       h1: t('Tinplate tins for white cheese brands', 'علب صفيح لعلامات الجبنة البيضاء'),
-      lead: t('Spring is white-cheese season. We print and form tinplate for dairy brands, with the technical specification agreed with our team for your product.',
-              'الربيع هو موسم الجبنة البيضاء. نطبع الصفيح ونشكّله لعلامات الألبان، مع تحديد المواصفات الفنية لمنتجك بالاتفاق مع فريقنا.'),
-      art: 'rect', ctas: [quoteCta('white-cheese'), { label: t('All products', 'كل المنتجات'), to: 'products', kind: 'ghost' }]
+      lead: t('Spring is white-cheese season. We print and form tinplate for dairy brands, from artwork and plates to export-ready packs.',
+              'الربيع هو موسم الجبنة البيضاء. نطبع الصفيح ونشكّله لعلامات الألبان، من التصميم والألواح حتى العبوة الجاهزة للتصدير.'),
+      art: 'rect', ctas: [quoteCta(), { label: t('All products', 'كل المنتجات'), to: 'products', kind: 'ghost' }]
     },
     sections: [
       { eyebrow: t('What we offer', 'ما نقدّمه'), title: t('Printing, finishing and packing', 'الطباعة والتشطيب والتغليف'),
@@ -354,29 +346,26 @@ export const PAGES = [
           { h: t('Finishes', 'التشطيبات'), p: t('Gloss, matte, soft touch, rough touch and embossing.', 'لامع ومطفي وملمس ناعم وملمس خشن ونقش بارز.') },
           { h: t('Export-ready packing', 'تغليف جاهز للتصدير'), p: t('Palletising for overseas shipping and storage of finished stock on request.', 'تغليف على باليتات للشحن الخارجي، وتخزين المنتج الجاهز عند الطلب.') }
         ] }] },
-      { blocks: [{ k: 'tbc', title: t('White-cheese technical details', 'التفاصيل الفنية للجبنة البيضاء'), wide: true, items: [
-        t('Interior coating suited to brined and fresh dairy', 'الطلاء الداخلي المناسب للأجبان المملحة والطازجة'),
-        t('Recommended formats and sizes', 'الأشكال والمقاسات الموصى بها'),
-        t('Ends and sealing', 'الأغطية وطريقة الإغلاق'),
-        t('Food-contact compliance and certifications', 'مطابقة الاستخدام الغذائي والشهادات'),
-        t('Minimum order quantity and spring-season lead times', 'الحد الأدنى للطلب ومدد التسليم في موسم الربيع')
-      ], note: t('These points are not yet confirmed by our technical team, so we do not state them here.', 'لم يؤكّد الفريق الفني هذه النقاط بعد، لذلك لا نذكرها هنا.') }] }
+      { blocks: [{ k: 'prose', ps: [
+        t('Tell us the product, the pack size and your artwork idea, and we will come back with a quotation made to your brand.',
+          'أخبرنا بالمنتج ومقاس العبوة وفكرة التصميم، وسنردّ عليك بعرض سعر يناسب علامتك.')
+      ] }] }
     ]
   },
 
   // ============================================================ INDUSTRY: COFFEE & TEA
   {
     id: 'ind-coffee', path: 'products/coffee-tea/', navKey: 'products', parent: 'products',
-    title: t('Coffee & Tea Tins | Jordan Tinplate Canning', 'علب القهوة والشاي | تغليف معدني مطبوع | Jordan Tinplate Canning'),
+    title: t('Coffee & Tea Tins | Jordan Tinplate Canning', 'علب القهوة والشاي | تغليف معدني مطبوع | مصنع الأردنية للصفيح والعبوات المعدنية'),
     description: t('Coffee and tea tins from Jordan Tinplate Canning: round and square tins, special molds that protect aroma, and printed finishes. Made in Jordan.',
-                   'علب قهوة وشاي من Jordan Tinplate Canning: علب دائرية ومربعة وقوالب خاصة تحفظ العبير، بطباعة وتشطيبات فاخرة. صناعة أردنية.'),
+                   'علب قهوة وشاي من مصنع الأردنية للصفيح والعبوات المعدنية: علب دائرية ومربعة وقوالب خاصة تحفظ العبير، بطباعة وتشطيبات فاخرة. صناعة أردنية.'),
     crumb: t('Coffee & tea', 'القهوة والشاي'),
     tile: { h: t('Coffee & tea', 'القهوة والشاي'), p: t('Special molds that protect aroma.', 'قوالب خاصة تحفظ العبير.') },
     hero: {
       eyebrow: t('Industry · Coffee & tea', 'القطاع · القهوة والشاي'),
       h1: t('Tins for coffee and tea brands', 'علب لعلامات القهوة والشاي'),
       lead: t('Printed tins in round, square and special-mold shapes, including coffee tins that protect aroma.', 'علب مطبوعة بأشكال دائرية ومربعة وبقوالب خاصة، ومنها علب قهوة تحفظ العبير.'),
-      art: 'round', ctas: [quoteCta('coffee-tea'), { label: t('All products', 'كل المنتجات'), to: 'products', kind: 'ghost' }]
+      art: 'round', ctas: [quoteCta(), { label: t('All products', 'كل المنتجات'), to: 'products', kind: 'ghost' }]
     },
     sections: [
       { eyebrow: t('The range', 'المجموعة'), title: t('Shapes for coffee and tea', 'أشكال للقهوة والشاي'),
@@ -399,16 +388,16 @@ export const PAGES = [
   // ============================================================ INDUSTRY: INDUSTRIAL
   {
     id: 'ind-industrial', path: 'products/industrial/', navKey: 'products', parent: 'products',
-    title: t('Industrial Cans for Paints & Chemicals | Jordan Tinplate Canning', 'علب صناعية | للدهانات والكيماويات والبراميل | Jordan Tinplate Canning'),
+    title: t('Industrial Cans for Paints & Chemicals | Jordan Tinplate Canning', 'علب صناعية | للدهانات والكيماويات والبراميل | مصنع الأردنية للصفيح والعبوات المعدنية'),
     description: t('Industrial tinplate cans for paints, chemicals and drums, with ends and components, from Jordan Tinplate Canning in Jordan.',
-                   'علب صفيح صناعية للدهانات والكيماويات والبراميل، مع الأغطية والقطع، من Jordan Tinplate Canning في الأردن.'),
+                   'علب صفيح صناعية للدهانات والكيماويات والبراميل، مع الأغطية والقطع، من مصنع الأردنية للصفيح والعبوات المعدنية في الأردن.'),
     crumb: t('Industrial', 'الصناعي'),
     tile: { h: t('Industrial', 'الصناعي'), p: t('Cans for paints, chemicals and drums.', 'علب للدهانات والكيماويات والبراميل.') },
     hero: {
       eyebrow: t('Industry · Industrial', 'القطاع · الصناعي'),
       h1: t('Industrial cans for paints, chemicals and drums', 'علب صناعية للدهانات والكيماويات والبراميل'),
       lead: t('Beyond food and beverage, we also make cans for industrial products.', 'إلى جانب الأغذية والمشروبات، نصنع أيضاً علباً للمنتجات الصناعية.'),
-      art: 'can', ctas: [quoteCta('industrial'), { label: t('All products', 'كل المنتجات'), to: 'products', kind: 'ghost' }]
+      art: 'can', ctas: [quoteCta(), { label: t('All products', 'كل المنتجات'), to: 'products', kind: 'ghost' }]
     },
     sections: [
       { eyebrow: t('What we make', 'ما نصنعه'), title: t('Industrial packaging', 'عبوات صناعية'),
@@ -430,9 +419,9 @@ export const PAGES = [
   // ============================================================ CAPABILITIES
   {
     id: 'capabilities', path: 'capabilities/', navKey: 'capabilities', parent: 'home',
-    title: t('Capabilities: Print, Form & Export | Jordan Tinplate Canning', 'قدراتنا: التصميم والطباعة والتشكيل والتصدير | Jordan Tinplate Canning'),
+    title: t('Capabilities: Print, Form & Export | Jordan Tinplate Canning', 'قدراتنا: التصميم والطباعة والتشكيل والتصدير | مصنع الأردنية للصفيح والعبوات المعدنية'),
     description: t('In-house design and CTP plate-making, printing and finishes, forming, palletising, storage and export packing: the whole tinplate journey at Jordan Tinplate Canning.',
-                   'تصميم وتصنيع ألواح CTP داخل المصنع، وطباعة وتشطيبات، وتشكيل، وتغليف على باليتات، وتخزين، وتجهيز للتصدير: رحلة الصفيح كاملة لدى Jordan Tinplate Canning.'),
+                   'تصميم وتصنيع ألواح CTP داخل المصنع، وطباعة وتشطيبات، وتشكيل، وتغليف على باليتات، وتخزين، وتجهيز للتصدير: رحلة الصفيح كاملة لدى مصنع الأردنية للصفيح والعبوات المعدنية.'),
     crumb: t('Capabilities', 'قدراتنا'),
     hero: {
       eyebrow: t('Capabilities', 'قدراتنا'),
@@ -476,9 +465,9 @@ export const PAGES = [
   // ============================================================ ABOUT
   {
     id: 'about', path: 'about/', navKey: 'about', parent: 'home',
-    title: t('About Us | Family Tinplate Maker Since 1998 | Jordan Tinplate Canning', 'من نحن | Jordan Tinplate Canning، صناعة الصفيح العائلية منذ 1998'),
+    title: t('About Us | Family Tinplate Maker Since 1998 | Jordan Tinplate Canning', 'من نحن | مصنع الأردنية للصفيح والعبوات المعدنية، صناعة الصفيح العائلية منذ 1998'),
     description: t('Founded in 1998 and led today by the third generation of the family, Jordan Tinplate Canning makes metal packaging for food and beverage brands in Jordan.',
-                   'تأسست Jordan Tinplate Canning عام 1998 ويقودها اليوم الجيل الثالث من العائلة، وتصنع التغليف المعدني لعلامات الأغذية والمشروبات في الأردن.'),
+                   'تأسس مصنع الأردنية للصفيح والعبوات المعدنية عام 1998 ويقوده اليوم الجيل الثالث من العائلة، ويصنع التغليف المعدني لعلامات الأغذية والمشروبات في الأردن.'),
     crumb: t('About', 'من نحن'),
     hero: {
       eyebrow: t('About us', 'من نحن'),
@@ -504,8 +493,8 @@ export const PAGES = [
         ] },
       { eyebrow: t('Company details', 'بيانات الشركة'), title: t('Who we are', 'من نحن'),
         blocks: [{ k: 'specs', rows: [
-          { k: t('Official name', 'الاسم الرسمي'), v: t('Jordan Tinplate Canning', 'Jordan Tinplate Canning') },
-          { k: t('Arabic name', 'الاسم العربي'), v: t('Official Arabic name pending (temporary working name: جوردن تينبليت كانينغ)', 'الاسم العربي الرسمي قيد الاعتماد (اسم مؤقت: جوردن تينبليت كانينغ)'), tbc: true },
+          { k: t('Official name (English)', 'الاسم الرسمي بالإنجليزية'), v: t('Jordan Tinplate Canning', 'Jordan Tinplate Canning') },
+          { k: t('Official name (Arabic)', 'الاسم الرسمي بالعربية'), v: t('مصنع الأردنية للصفيح والعبوات المعدنية', 'مصنع الأردنية للصفيح والعبوات المعدنية') },
           { k: t('Location', 'الموقع'), v: t('Al-Zmailat – Al-Muwaqqar, Amman, Jordan', 'الزميلات – الموقّر، عمّان، الأردن') },
           { k: t('People', 'الفريق'), v: t('About 250 employees', 'نحو 250 موظفاً') }
         ] }] },
@@ -523,9 +512,9 @@ export const PAGES = [
   // ============================================================ NEWS
   {
     id: 'news', path: 'news/', navKey: 'news', parent: 'home',
-    title: t('News & Events | Jordan Tinplate Canning', 'الأخبار والفعاليات | Jordan Tinplate Canning'),
+    title: t('News & Events | Jordan Tinplate Canning', 'الأخبار والفعاليات | مصنع الأردنية للصفيح والعبوات المعدنية'),
     description: t('Jordan Tinplate Canning in the news: the Saudi Food Manufacturing 2025 interview and our exhibitions in Dubai, New York and Baghdad.',
-                   'أخبار Jordan Tinplate Canning: مقابلة معرض Saudi Food Manufacturing 2025، ومشاركاتنا في المعارض في دبي ونيويورك وبغداد.'),
+                   'أخبار مصنع الأردنية للصفيح والعبوات المعدنية: مقابلة معرض Saudi Food Manufacturing 2025، ومشاركاتنا في المعارض في دبي ونيويورك وبغداد.'),
     crumb: t('News', 'الأخبار'),
     hero: {
       eyebrow: t('News & events', 'الأخبار والفعاليات'),
@@ -545,9 +534,9 @@ export const PAGES = [
   // ============================================================ CONTACT
   {
     id: 'contact', path: 'contact/', navKey: 'contact', parent: 'home', noCta: true,
-    title: t('Request a Quote | Contact Jordan Tinplate Canning', 'اطلب عرض سعر | تواصل مع Jordan Tinplate Canning'),
-    description: t('Request a quotation for tinplate cans and tins. Call +962 6 4051125 or email sales@jordantinplate.com, or send your pack details through the form.',
-                   'اطلب عرض سعر لعلب الصفيح المعدنية. اتصل على ‎+962 6 4051125 أو راسلنا على sales@jordantinplate.com، أو أرسل تفاصيل عبوتك عبر النموذج.'),
+    title: t('Request a Quote | Contact Jordan Tinplate Canning', 'اطلب عرض سعر | تواصل مع مصنع الأردنية للصفيح والعبوات المعدنية'),
+    description: t('Request a quotation for tinplate cans and tins. Call +962 6 4051125 or email sales@jordantinplate.com, or use our online order tool.',
+                   'اطلب عرض سعر لعلب الصفيح المعدنية. اتصل على ‎+962 6 4051125 أو راسلنا على sales@jordantinplate.com، أو استخدم أداة الطلب الإلكترونية.'),
     crumb: t('Contact', 'تواصل معنا'),
     hero: {
       eyebrow: t('Contact', 'تواصل معنا'),
@@ -563,27 +552,16 @@ export const NEWS = [
   { tag: t('Interview · April 2025', 'مقابلة · نيسان 2025'),
     h: t('Saudi Food Manufacturing 2025', 'معرض Saudi Food Manufacturing 2025'),
     p: t('Our partner Omar Abu Salha was interviewed by Sharikat Mubasher at Saudi Food Manufacturing 2025.', 'أجرى موقع «شركات مباشر» مقابلة مع شريكنا Omar Abu Salha خلال معرض Saudi Food Manufacturing 2025.'),
-    href: 'https://en.sharikatmubasher.com/media-hub/news/21479228/jordan-canning-eyes-expanding-into-saudi-arabia',
-    tbc: t('Publication approval from the partner to be confirmed', 'موافقة الشريك على النشر بانتظار التأكيد') },
+    href: 'https://en.sharikatmubasher.com/media-hub/news/21479228/jordan-canning-eyes-expanding-into-saudi-arabia' },
   { tag: t('Dubai · 2017', 'دبي · 2017'), h: t('Gulfood Manufacturing', 'معرض Gulfood Manufacturing'), p: t('Meeting food manufacturers from across the region.', 'لقاء مصنّعي الأغذية من أنحاء المنطقة.') },
   { tag: t('New York · 2017', 'نيويورك · 2017'), h: t('Fancy Food Show', 'معرض Fancy Food Show'), p: t('Our tins on the stand in North America.', 'علبنا في جناحنا في أمريكا الشمالية.') },
   { tag: t('Baghdad · 2017', 'بغداد · 2017'), h: t('Baghdad International Fair', 'معرض بغداد الدولي'), p: t('Meeting the Iraqi market in person.', 'لقاء السوق العراقي وجهاً لوجه.') }
-];
-
-// forms: product options (value is the English label used in the mailto subject)
-export const FORM_PRODUCTS = [
-  { v: 'olive-oil', l: t('Olive oil', 'زيت الزيتون') },
-  { v: 'milk-powder', l: t('Milk powder and dairy', 'حليب البودرة والألبان') },
-  { v: 'sweets', l: t('Sweets, ka’ak or chocolate', 'حلويات أو كعك أو شوكولاتة') },
-  { v: 'white-cheese', l: t('White cheese', 'جبنة بيضاء') },
-  { v: 'coffee-tea', l: t('Coffee or tea', 'قهوة أو شاي') },
-  { v: 'industrial', l: t('Industrial', 'صناعي') },
-  { v: 'other', l: UI.form.other }
 ];
 
 export const NAV = [
   { key: 'products', page: 'products', label: t('Products', 'المنتجات') },
   { key: 'capabilities', page: 'capabilities', label: t('Capabilities', 'قدراتنا') },
   { key: 'about', page: 'about', label: t('About', 'من نحن') },
-  { key: 'news', page: 'news', label: t('News', 'الأخبار') }
+  { key: 'news', page: 'news', label: t('News', 'الأخبار') },
+  { key: 'contact', page: 'contact', label: t('Contact', 'تواصل معنا') }
 ];

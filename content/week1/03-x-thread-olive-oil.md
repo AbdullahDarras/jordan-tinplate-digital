@@ -10,13 +10,13 @@
 | **Format** | 6 posts (a new post 5/6 carries the confirmed sizes and interior-lacquer line). Image on post 1 only (16:9, 1600x900 px). Text only for the rest |
 | **Status** | Copy updated with management's approved decisions. **Technical wording on light, toughness and stacking (posts 2 to 4) still needs technical review**, same as post #2; the sizes and interior-lacquer post (5/6) is confirmed. Design only needs one image |
 
-> Convention: `[TBC]` / `[تحقق]` marks statements not yet confirmed (light, toughness, stacking). Sizes (1, 4, 8, 16 L/kg) and the interior lacquer meeting the highest food-grade hygiene standards are **confirmed** (`docs/decisions.md`) and carry no marker; name no standard. **`[مؤقت]`** marks the provisional Arabic brand name «جوردن تينبليت كانينغ» until the official Arabic name arrives. Remove all markers (and the notes) before posting. If the review is late, use the fallback at the end.
+> Convention: `[TBC]` / `[تحقق]` marks statements not yet confirmed (light, toughness, stacking). Sizes (1, 4, 8, 16 L/kg) and the interior lacquer meeting the highest food-grade hygiene standards are **confirmed** (`docs/decisions.md`) and carry no marker; name no standard. The **official Arabic name «مصنع الأردنية للصفيح والعبوات المعدنية»** is confirmed and used in the Arabic thread. Remove all markers (and the notes) before posting. If the review is late, use the fallback at the end.
 
 ---
 
 ## 1) Final copy: Arabic thread (main)
 
-Every post is under the X limit of 280 characters (re-checked with a script after the rename and the new post; counted without the `[تحقق]` / `[TBC]` / `[مؤقت]` markers).
+Every post is under the X limit of 280 characters (re-checked with a script after the rename and the new post; counted without the `[تحقق]` / `[TBC]` markers; re-run after the official Arabic name was added).
 
 **1/6** (hook + cover image)
 ```
@@ -60,7 +60,7 @@ Every post is under the X limit of 280 characters (re-checked with a script afte
 ```
 وعلامتك؟ نطبع تصميمك على العلبة بتأثيرات مثل اللمعة والمطّ والملمس الناعم والنقش البارز.
 
-نحن جوردن تينبليت كانينغ [مؤقت]، علب معدنية للأغذية والمشروبات منذ 1998.
+نحن مصنع الأردنية للصفيح والعبوات المعدنية: علب معدنية للأغذية والمشروبات منذ 1998.
 للتواصل: sales@jordantinplate.com
 
 #زيت_الزيتون #JordanTinplateCanning
@@ -119,7 +119,7 @@ sales@jordantinplate.com
 ## 4) CTA
 
 - **Primary:** email `sales@jordantinplate.com` (in post 6)
-- **Optional line at the end of post 6:** "التفاصيل كاملة على انستغرام: [اسم الحساب - تحقق]" / "Full carousel on Instagram: [handle, TBC]". Add only after the Instagram and X handles are settled (Offsite plan, week 1 to 2, item 3: `@jordantinplatecanning` on Instagram, `@jordantinplate` on X)
+- **Optional line at the end of post 6:** "التفاصيل كاملة على انستغرام: [اسم الحساب - تحقق]" / "Full carousel on Instagram: [handle, TBC]". Add only after the Instagram and X handles are settled (Offsite plan, week 1 to 2, item 3: `@jordantinplate` on every platform)
 - **Website:** `jordantinplate.com` in the X bio, not repeated in the thread
 
 ## 5) Visual (design brief)
@@ -139,14 +139,14 @@ sales@jordantinplate.com
 **Resolved (management decisions, `docs/decisions.md`):**
 - [x] The company **produces olive-oil tins** in 1, 4, 8 and 16 L/kg; sizes may be named (post 5/6)
 - [x] **Interior lacquer** meets the highest food-grade hygiene standards: say it only in this generic form, never name a standard or number
-- [x] Brand name **Jordan Tinplate Canning** in full; Arabic name provisional [مؤقت]. Account access is with the marketing lead (2FA on)
+- [x] Brand name **Jordan Tinplate Canning** in full; official Arabic name «مصنع الأردنية للصفيح والعبوات المعدنية» (confirmed, round 2). Account access is with the marketing lead (2FA on)
 
 **Still open:**
-- [ ] **Technical sign-off** on light, toughness (vs glass), pallet stacking, and finishes on oil tins [تحقق] (same as post #2; reviewer's name and sending route pending from management)
+- [ ] **Technical sign-off** on light, toughness (vs glass) and pallet stacking [تحقق] by the existing technical body (same as post #2; no reviewer name is needed)
 - [ ] **No claims** made on: shelf life, oil quality, certifications (they exist; none may be named), capacity, clients. No Saudi reference of any kind (no Saudi branch exists). Keep it that way in replies and quote posts
-- [ ] X handle: `@jordantinplate` (X caps usernames at 15 characters, so `@jordantinplatecanning` does not fit; the display name is "Jordan Tinplate Canning"), if available. Do not tag or link a handle in the copy until confirmed
-- [ ] X bio updated first (Offsite plan: "Jordan Tinplate Canning: custom metal packaging for food & beverage brands. Made in Jordan since 1998. | تغليف معدني للأغذية والمشروبات")
-- [ ] Management approval of the Arabic text; replace the provisional Arabic name when the official one arrives
+- [ ] X handle: `@jordantinplate`, the same username on all platforms (decision, round 2; 14 characters, so it fits X). The display name is the official name ("Jordan Tinplate Canning"). Do not tag or link a handle in the copy until the account is renamed
+- [ ] X bio updated first (Offsite plan, section 3: English line with the official Arabic name «مصنع الأردنية للصفيح والعبوات المعدنية»)
+- [ ] Management approval of the Arabic text
 - [ ] Reply policy: who answers questions on the thread (the marketing lead), and the standard answer for questions beyond the four sizes: "Please email sales@jordantinplate.com with your specification"
 
 ## 8) Fallback if the technical review of light, toughness and stacking is late

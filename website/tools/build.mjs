@@ -8,7 +8,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import { fileURLToPath } from 'node:url';
-import { SITE, LANGS, UI, PAGES, NEWS, FORM_PRODUCTS, NAV } from './content.mjs';
+import { SITE, LANGS, UI, PAGES, NEWS, NAV } from './content.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const L = Object.keys(LANGS);                       // ['en', 'ar']
@@ -24,6 +24,7 @@ const other = (lang) => L.find((l) => l !== lang);
 const pageRef = (id) => (id === 'catalogue' ? null : byId[id]);
 const hashOf = (f) => crypto.createHash('sha1').update(fs.readFileSync(path.join(ROOT, f))).digest('hex').slice(0, 8);
 const V = { css: hashOf('assets/css/site.css'), js: hashOf('assets/js/site.js') };
+const brandName = (lang) => (lang === 'ar' ? SITE.nameAr : SITE.name);   // display name per language
 const OG_IMG = SITE.origin + '/assets/img/og-default.png';
 
 // ---------------------------------------------------------------- tin illustrations (inline SVG)
@@ -51,7 +52,11 @@ const MARK = `<svg viewBox="0 0 40 40" class="brand__mark" aria-hidden="true" fo
 // ---------------------------------------------------------------- blocks
 const tbcBadge = (lang) => `<span class="badge">${T(UI.tbc, lang)}</span>`;
 const goLink = (href, label, extra = '') => `<a class="go" href="${href}"${extra}>${label}${ARROW}</a>`;
+// External "Request a quote" link: the existing online order tool, new tab, rel="noopener".
+const orderLink = (lang, { cls = 'btn', label, icon = ARROW } = {}) =>
+  `<a class="${cls}" href="${SITE.orderUrl}" target="_blank" rel="noopener">${label || T(UI.quote, lang)}<span class="vh"> (${T(UI.opensNew, lang)})</span>${icon}</a>`;
 const ctaHref = (c, lang) => {
+  if (c.to === 'order') return { href: SITE.orderUrl, ext: true, order: true };
   if (c.to === 'catalogue') return { href: SITE.catalogue, ext: true };
   return { href: rel(lang, byId[c.to]) + (c.query || ''), ext: false };
 };
@@ -90,8 +95,6 @@ function renderBlock(b, lang, ctx) {
 }
 
 function contactBlock(lang) {
-  const f = UI.form;
-  const lab = (k) => esc(tx(f[k], lang));
   return `<div class="panel contact">
   <div data-reveal>
     <p class="eyebrow"><span class="dot"></span>${T(UI.quote, lang)}</p>
@@ -104,18 +107,12 @@ function contactBlock(lang) {
     <ul class="social">${Object.entries(SITE.social).map(([n, u]) => `<li><a href="${u}" target="_blank" rel="noopener noreferrer">${n}<span class="vh"> (${T(UI.opensNew, lang)})</span></a></li>`).join('')}</ul>
     <a class="btn btn--ghost" href="${SITE.catalogue}" target="_blank" rel="noopener noreferrer">${T(UI.catalogue, lang)}${DOWN}</a>
   </div>
-  <form class="form" id="quote-form" data-reveal action="mailto:${SITE.email}" method="post" enctype="text/plain" novalidate
-    data-to="${SITE.email}" data-subject="${lab('subject')}" data-ok="${lab('ok')}" data-err="${lab('err')}"
-    data-l-name="${lab('name')}" data-l-company="${lab('company')}" data-l-email="${lab('email')}" data-l-product="${lab('product')}">
-    <label>${lab('name')}<input name="name" autocomplete="name" required></label>
-    <label>${lab('company')}<input name="company" autocomplete="organization"></label>
-    <label>${lab('email')}<input name="email" type="email" autocomplete="email" required dir="ltr"></label>
-    <label>${lab('product')}<select name="product">${FORM_PRODUCTS.map((o) => `<option value="${o.v}">${T(o.l, lang)}</option>`).join('')}</select></label>
-    <label class="full">${lab('msg')}<textarea name="msg" rows="4"></textarea></label>
-    <button class="btn" type="submit">${lab('send')}${ARROW}</button>
-    <p class="fine" id="form-note" aria-live="polite" role="status"></p>
-    <p class="fine">${lab('note')}</p>
-  </form>
+  <div class="order" id="order" data-reveal>
+    <h3 class="h3">${T(UI.orderTitle, lang)}</h3>
+    <p>${T(UI.orderLead, lang)}</p>
+    <div class="cta-row">${orderLink(lang)}</div>
+    <p class="order__alt">${T(UI.orderEmail, lang)}: <a href="mailto:${SITE.email}" class="ltr">${SITE.email}</a></p>
+  </div>
 </div>`;
 }
 
@@ -135,19 +132,18 @@ function header(lang, page) {
     const isSection = !isPage && crumbTrail(page).some((p) => p.id === target.id);
     return `<a href="${rel(lang, target)}"${isPage ? ' aria-current="page"' : ''}${isSection ? ' class="is-current"' : ''}>${T(n.label, lang)}</a>`;
   }).join('');
-  const contact = byId.contact;
   return `<a class="skip" href="#main">${T(UI.skip, lang)}</a>
 <header class="site-header">
   <div class="bar">
     <a class="brand" href="${rel(lang, home)}" aria-label="${T(UI.brandAria, lang)}">${MARK}<span class="brand__word">JORDAN <b>TINPLATE</b> CANNING</span></a>
-    <nav class="nav" id="primary-nav" aria-label="${T(UI.primaryNav, lang)}">${nav}<a class="nav__cta" href="${rel(lang, contact)}">${T(UI.quote, lang)}</a></nav>
+    <nav class="nav" id="primary-nav" aria-label="${T(UI.primaryNav, lang)}">${nav}${orderLink(lang, { cls: 'nav__cta', label: T(UI.quote, lang), icon: '' })}</nav>
     <div class="tools">
       <a class="tool tool--lang" href="${rel(alt, page)}" hreflang="${alt}" lang="${alt}" aria-label="${esc(A.switchAria)}" data-lang-switch>${esc(A.switchLabel)}</a>
       <button class="tool" id="theme-btn" type="button" aria-label="${T(UI.theme, lang)}" aria-pressed="false">
         <svg class="i-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.6M12 18.9v2.6M2.5 12h2.6M18.9 12h2.6M5.3 5.3l1.8 1.8M16.9 16.9l1.8 1.8M5.3 18.7l1.8-1.8M16.9 7.1l1.8-1.8"/></svg>
         <svg class="i-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5z"/></svg>
       </button>
-      <a class="btn btn--sm" href="${rel(lang, contact)}">${T(UI.quote, lang)}</a>
+      ${orderLink(lang, { cls: 'btn btn--sm', icon: '' })}
       <button class="burger" id="menu-btn" type="button" aria-label="${T(UI.menu, lang)}" aria-expanded="false" aria-controls="primary-nav"><i></i><i></i></button>
     </div>
   </div>
@@ -173,7 +169,7 @@ function footer(lang) {
       </ul></div>
     </div>
     <div class="foot__base">
-      <span>© ${SITE.year} ${SITE.name}. ${T(UI.rights, lang)}</span>
+      <span>© ${SITE.year} ${esc(brandName(lang))}. ${T(UI.rights, lang)}</span>
       <span>${T(UI.footDraft, lang)}</span>
       <button class="linkbtn" id="review-btn" type="button" aria-pressed="false">${T(UI.review, lang)}</button>
     </div>
@@ -190,7 +186,7 @@ function hero(lang, page) {
     const label = T(c.label, lang);
     return c.kind === 'ghost'
       ? `<a class="btn btn--ghost" href="${href}"${ext ? ' target="_blank" rel="noopener noreferrer"' : ''}>${label}${ext ? DOWN : ''}</a>`
-      : `<a class="btn" href="${href}">${label}${ARROW}</a>`;
+      : `<a class="btn" href="${href}"${ext ? ' target="_blank" rel="noopener"' : ''}>${label}${ext ? `<span class="vh"> (${T(UI.opensNew, lang)})</span>` : ''}${ARROW}</a>`;
   }).join('');
   const stats = h.stats ? `<ul class="stats">${h.stats.map((s) => `<li><b>${T(s.big, lang)}</b><span>${T(s.small, lang)}</span></li>`).join('')}</ul>` : '';
   const showArt = page.id !== 'contact';
@@ -233,7 +229,7 @@ function ctaBand(lang) {
       <p class="eyebrow"><span class="dot"></span>${T(UI.quote, lang)}</p>
       <h2 class="h2" id="cta-h">${T(UI.ctaTitle, lang)}</h2>
       <p class="lead">${T(UI.ctaLead, lang)}</p>
-      <div class="cta-row"><a class="btn" href="${rel(lang, byId.contact)}">${T(UI.quote, lang)}${ARROW}</a><a class="btn btn--ghost" href="tel:${SITE.tel}"><span class="ltr">${SITE.phone}</span></a></div>
+      <div class="cta-row">${orderLink(lang)}<a class="btn btn--ghost" href="mailto:${SITE.email}"><span class="ltr">${SITE.email}</span></a><a class="btn btn--ghost" href="tel:${SITE.tel}"><span class="ltr">${SITE.phone}</span></a></div>
     </div>
   </div>
 </section>`;
@@ -243,15 +239,17 @@ function ctaBand(lang) {
 function jsonLd(lang, page) {
   const url = abs(lang, page);
   const org = {
-    '@type': 'Organization', '@id': SITE.origin + '/#organization', name: SITE.name, url: abs('en', byId.home),
+    '@type': 'Organization', '@id': SITE.origin + '/#organization', name: brandName(lang), alternateName: brandName(other(lang)), url: abs('en', byId.home),
     foundingDate: SITE.founded, telephone: SITE.phone, email: SITE.email,
-    description: 'Custom tinplate packaging for food and beverage brands, made in Jordan since 1998.',
+    description: lang === 'ar'
+      ? 'علب معدنية مخصّصة لعلامات الأغذية والمشروبات، صناعة أردنية منذ عام 1998.'
+      : 'Custom tinplate packaging for food and beverage brands, made in Jordan since 1998.',
     address: { '@type': 'PostalAddress', addressLocality: 'Al-Zmailat – Al-Muwaqqar, Amman', addressCountry: 'JO' },
     numberOfEmployees: { '@type': 'QuantitativeValue', value: 250 },
     contactPoint: { '@type': 'ContactPoint', contactType: 'sales', telephone: SITE.phone, email: SITE.email },
     sameAs: Object.values(SITE.social)
   };
-  const site = { '@type': 'WebSite', '@id': SITE.origin + '/#website', url: abs('en', byId.home), name: SITE.name, inLanguage: L, publisher: { '@id': SITE.origin + '/#organization' } };
+  const site = { '@type': 'WebSite', '@id': SITE.origin + '/#website', url: abs('en', byId.home), name: brandName(lang), alternateName: brandName(other(lang)), inLanguage: L, publisher: { '@id': SITE.origin + '/#organization' } };
   const graph = [org, site];
   const webpage = { '@type': 'WebPage', '@id': url + '#webpage', url, name: tx(page.title, lang), description: tx(page.description, lang), inLanguage: lang, isPartOf: { '@id': SITE.origin + '/#website' } };
   graph.push(webpage);
@@ -289,7 +287,7 @@ ${hreflangs}
 <meta name="robots" content="index, follow, max-image-preview:large">
 <meta name="theme-color" content="#213469">
 <meta property="og:type" content="website">
-<meta property="og:site_name" content="${SITE.name}">
+<meta property="og:site_name" content="${esc(brandName(lang))}">
 <meta property="og:title" content="${esc(title)}">
 <meta property="og:description" content="${esc(desc)}">
 <meta property="og:url" content="${url}">
@@ -298,7 +296,7 @@ ${hreflangs}
 <meta property="og:image" content="${OG_IMG}">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Jordan Tinplate Canning: custom tinplate packaging for food and beverage brands">
+<meta property="og:image:alt" content="${esc(brandName(lang))}: ${lang === 'ar' ? 'علب معدنية مخصّصة لعلامات الأغذية والمشروبات' : 'custom tinplate packaging for food and beverage brands'}">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="${esc(title)}">
 <meta name="twitter:description" content="${esc(desc)}">
