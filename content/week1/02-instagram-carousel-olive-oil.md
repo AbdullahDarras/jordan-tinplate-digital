@@ -7,9 +7,10 @@
 | **Pillar** | 1: Metal packaging for food & beverages (the olive-oil season) |
 | **Goal** | Seasonal awareness: be present at the start of the olive harvest and pressing season, and show we understand the oil filler's questions |
 | **Format** | 6 slides, 1080x1350 px (4:5). Caption Arabic first, then English |
-| **Status** | Copy ready. **Slides 2 to 4 are blocked on technical review** (Month-1 plan: posts 2, 3, 7 need review). Design can start now on slides 1, 5, 6 |
+| **Status** | Copy updated with management's approved decisions. **Slides 2 to 4 (light, toughness, stacking) still need technical review** (Month-1 plan: posts 2, 3, 7). Slide 6 (sizes, interior lacquer) is confirmed. Design can start now on slides 1, 5, 6 |
 
-> Convention: `[TBC]` / `[تحقق]` marks a technical statement not confirmed in the repo. The copy is phrased cautiously on purpose: it describes general properties of metal, makes **no** claim about shelf life, oil quality, food-contact lacquer, certifications, sizes or that we make a specific oil-tin model. Remove the marker once the technical team confirms, or use the fallback in section 7.
+> Convention: `[TBC]` / `[تحقق]` marks a technical statement not yet confirmed. **Now confirmed by management (`docs/decisions.md`) and stated without a marker:** the company makes olive-oil tins in 1, 4, 8 and 16 L/kg, and the interior lacquer meets the highest food-grade hygiene standards (no standard is named; do not name one). **Still marked:** the light, toughness and pallet-stacking sentences (slides 2 to 4). The copy still makes **no** claim about shelf life, oil quality, certifications (they exist but none may be named), capacity, clients, or a specific spout-and-handle model. Remove a marker only after the technical team confirms, or use the fallback in section 7.
+> **`[مؤقت]`** marks the provisional Arabic brand name «جوردن تينبليت كانينغ» until the official Arabic name arrives; replace it everywhere and delete the marker. Never paste the marker into a published post.
 
 ---
 
@@ -64,11 +65,11 @@
 | | Arabic | English |
 |---|---|---|
 | **Headline** | جاهز لموسمك؟ تحدّث معنا | Ready for your season? Talk to us |
-| **Body** | المقاسات والمواصفات حسب الطلب. [تحقق] | Sizes and specifications on request. [TBC] |
+| **Body** | تنكات الزيت بأحجام 1 و4 و8 و16 لتر/كغ، بطلاء داخلي يطابق أعلى معايير الصحة الخاصة بالأغذية. | Olive-oil tins in 1, 4, 8 and 16 L/kg, with an interior lacquer that meets the highest food-grade hygiene standards. |
 | **Contact** | sales@jordantinplate.com · +962 6 4051125 · jordantinplate.com | same |
-| **Sign-off** | جوردن تينبليت · علب معدنية للأغذية والمشروبات · منذ 1998 | Jordan Tinplate · Metal packaging for food & beverage brands · Since 1998 |
+| **Sign-off** | جوردن تينبليت كانينغ [مؤقت] · علب معدنية للأغذية والمشروبات · منذ 1998 | Jordan Tinplate Canning · Metal packaging for food & beverage brands · Since 1998 |
 
-**Visual direction:** Return to the cover tin (so the carousel loops), the olive branch smaller. Wordmark (temporary) at the top. Contact lines in large, tappable-looking rows. A small "احفظ المنشور / Save this post" label.
+**Visual direction:** Return to the cover tin (so the carousel loops), the olive branch smaller. Wordmark "Jordan Tinplate Canning" (temporary until the final logo and Pantone arrive) at the top. The two confirmed facts (sizes, interior lacquer) get their own line each, with the four sizes shown as four small tin silhouettes. No standard name, no badge. Contact lines in large, tappable-looking rows. A small "احفظ المنشور / Save this post" label.
 
 **Template notes for the designer:** consistent number position, safe margins 90 px, Arabic is the first line on every slide (RTL reading, swipe direction on Instagram is the same for both), minimum body size about 40 px for phone reading.
 
@@ -81,7 +82,7 @@
 
 في هذا الكاروسيل ثلاثة أمور تستحق النظر عند التفكير بالتنك لزيت الزيتون: الضوء، والمتانة، والتخزين [تحقق]، ثم كيف تظهر علامتك على العلبة بالطباعة والتشطيبات.
 
-نحن في جوردن تينبليت نصنع علباً معدنية لعلامات الأغذية والمشروبات منذ عام 1998، من التصميم والطباعة حتى التشكيل والتغليف الجاهز للتصدير.
+نحن في جوردن تينبليت كانينغ [مؤقت] نصنع علباً معدنية لعلامات الأغذية والمشروبات منذ عام 1998، من التصميم والطباعة حتى التشكيل والتغليف الجاهز للتصدير. وننتج تنكات الزيت بأحجام 1 و4 و8 و16 لتر/كغ، بطلاء داخلي يطابق أعلى معايير الصحة الخاصة بالأغذية.
 
 تجهّز لموسمك؟ راسلنا: sales@jordantinplate.com
 احفظ المنشور وشاركه مع من يعبّئ الزيت هذا الموسم.
@@ -92,7 +93,7 @@ Olive harvest and pressing season is here, and with it comes a question that ret
 
 This carousel looks at three things worth considering when choosing tin for olive oil: light, toughness and storage [TBC]. Then we show how your brand appears on the tin through printing and finishes.
 
-At Jordan Tinplate we have been making metal packaging for food and beverage brands since 1998, from design and printing to forming and export-ready packing.
+At Jordan Tinplate Canning we have been making metal packaging for food and beverage brands since 1998, from design and printing to forming and export-ready packing. Our olive-oil tins come in 1, 4, 8 and 16 L/kg, with an interior lacquer that meets the highest food-grade hygiene standards.
 
 Getting ready for your season? Write to us: sales@jordantinplate.com
 Save this post and share it with someone filling oil this season.
@@ -100,9 +101,10 @@ Save this post and share it with someone filling oil this season.
 
 ## 3) Hashtags
 
-- **AR:** #زيت_الزيتون #موسم_الزيتون #تنكة_زيت #علب_معدنية #تغليف_معدني #صنع_في_الأردن
-- **EN:** #OliveOil #OliveOilSeason #MetalPackaging #TinplateCans #FoodPackaging #MadeInJordan
-- Put the hashtags in the first comment (or at the end of the caption after the English), 10 or fewer in total.
+- **AR:** #زيت_الزيتون #موسم_الزيتون #تنكة_زيت #علب_معدنية #صنع_في_الأردن
+- **EN:** #OliveOil #MetalPackaging #TinplateCans #MadeInJordan #JordanTinplateCanning
+- The brand tag is always the full `#JordanTinplateCanning` (never a `#Canning`-style tag).
+- Put the hashtags in the first comment (or at the end of the caption after the English), 10 in total (the lists above).
 
 ## 4) CTA
 
@@ -123,22 +125,26 @@ Save this post and share it with someone filling oil this season.
 
 ## 6) Needs confirmation (checklist)
 
-**Technical (must be cleared by the technical team before publishing slides 2 to 4):**
-- [ ] Does the company **produce tins for olive oil**, and is it fine to say so publicly? (Month-1 plan, management item 2)
+**Resolved (management decisions, `docs/decisions.md`):**
+- [x] The company **produces olive-oil tins** in 1, 4, 8 and 16 L/kg; sizes may be named publicly (slide 6, caption)
+- [x] **Interior lacquer** meets the highest food-grade hygiene standards: use this generic wording only; name no standard or number until the certificates arrive
+- [x] Brand name **Jordan Tinplate Canning**, written in full; Arabic name provisional [مؤقت]
+
+**Technical (must be cleared by the technical team before publishing slides 2 to 4; the reviewer's name and the way posts are sent to them are pending from management):**
 - [ ] Slide 2: wording on **light** is acceptable for oil. We state only that metal is opaque; no quality or shelf-life claim [تحقق]
 - [ ] Slide 3: wording on **toughness** (compared with glass) is acceptable [تحقق]
 - [ ] Slide 4: **stacking on pallets** applies to the oil tins in question [تحقق]
-- [ ] Slide 6: "sizes and specifications on request": confirm which sizes may be named publicly (none are named here) [تحقق]
 - [ ] Slide 5: finishes (gloss, matte, soft touch, embossing) are available on **oil tins** as well as on gift tins [تحقق]
 - [ ] Whether to show a **spout and handle** model on the cover. The website prototype marks it "to be confirmed with the technical team", so the cover uses a plain tin
-- [ ] **Interior lacquer / food-contact claims:** deliberately **not mentioned**. Do not add unless confirmed in writing [تحقق]
-- [ ] Certifications (ISO, FSSC and others): deliberately **not mentioned** [تحقق]
+- [ ] Certifications (ISO, FSSC and others): **not mentioned**. They exist, but none may be named until copies arrive [تحقق]
+- [ ] Any **shelf-life or oil-quality claim**: deliberately not made [تحقق]
 
 **General:**
-- [ ] Brand name and Arabic name as on the template [تحقق]
+- [ ] Official Arabic name replaces the provisional form on the template [تحقق]
 - [ ] Management approval for the caption (same approver as post #1)
 - [ ] Artwork on the tins is sample artwork, not a real client's brand
+- [ ] Optional: stills from the professional videos (lines and samples) can replace illustrated tins on slides 4 and 5 once delivered; no real client brand visible
 
-## 7) Fallback if the technical review is late
+## 7) Fallback if the technical review of light, toughness and stacking is late
 
-Publish a 3-slide version using only confirmed content: **Slide 1** (cover), **Slide 5** (your brand on every tin) and **Slide 6** (CTA). Keep the caption's first paragraph and the third paragraph, and drop the second. Move the full 6-slide version to a later date once cleared.
+Publish a 3-slide version using only confirmed content: **Slide 1** (cover), **Slide 5** (your brand on every tin; if finishes on oil tins are not yet confirmed, show the finishes on a generic tin) and **Slide 6** (CTA with the confirmed sizes and interior-lacquer line). Keep the caption's first paragraph and the third paragraph (which carries the sizes and lacquer line), and drop the second. Move the full 6-slide version to a later date once cleared.

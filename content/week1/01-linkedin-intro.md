@@ -8,9 +8,9 @@
 | **Goal** | Brand awareness: a clear, first introduction (who we are, what we make, who it is for) and a stable reference for the page's About and SEO |
 | **Language** | English post + short Arabic summary at the end (per plan) |
 | **Format** | Text post + 1 image (4:5, 1080x1350 px) |
-| **Status** | Copy ready for review. Design not started. **Blocked on management approval** (see checklist) |
+| **Status** | Copy updated with management's approved decisions (`docs/decisions.md`). Design not started. Needs final text sign-off; the company-page update must happen first (see checklist) |
 
-> Convention: `[TBC]` / `[تحقق]` marks anything not confirmed in the repo. Nothing in this post uses a TBC claim; the only open points are approvals, the Arabic name and the page set-up.
+> Convention: `[TBC]` / `[تحقق]` marks anything not confirmed. Nothing in this post uses an unconfirmed claim; the only open points are the final sign-off, the official Arabic name and the page set-up. **`[مؤقت]`** marks the provisional Arabic brand name «جوردن تينبليت كانينغ»: it stays in the file until the official Arabic name arrives, then it is replaced everywhere and the marker is deleted. Do not paste the marker into the published post.
 
 ---
 
@@ -19,9 +19,9 @@
 > Paste exactly as below. Line breaks matter on LinkedIn. No emojis, by design.
 
 ```
-Meet Jordan Tinplate.
+Meet Jordan Tinplate Canning.
 
-We are a Jordan-based manufacturer of metal packaging for food and beverage brands. The story started in 1998, and today the company is run by the third generation of the founding family.
+We are a Jordan-based manufacturer of metal packaging for food and beverage brands, working from Al-Zmailat – Al-Muwaqqar. The story started in 1998, and today a team of about 250 people is led by the third generation of the founding family.
 
 What we do, under one roof:
 - Artwork and design
@@ -32,7 +32,7 @@ What we do, under one roof:
 - Storage of finished goods, when customers need it
 
 What we make:
-Food cans, milk powder cans, food containers, round, square and rectangular fancy tins, industrial cans and ends. We also make special-edition packs with custom molds and finishes such as soft touch, embossing and matte/gloss.
+Food cans, milk powder cans, olive-oil tins (in 1, 4, 8 and 16 L/kg), food containers, round, square and rectangular fancy tins, industrial cans and ends. We also make special-edition packs with custom molds and finishes such as soft touch, embossing and matte/gloss.
 
 If you are building a food or beverage brand and want packaging that protects the product and stands out on the shelf, we would be glad to talk.
 
@@ -41,17 +41,17 @@ jordantinplate.com
 
 Over the next weeks we will share how a flat sheet of tinplate becomes a can, how finishes work, and what to look for when choosing metal packaging. Follow the page to see it.
 
-الملخص بالعربية: جوردن تينبليت مصنع أردني للتغليف المعدني لعلامات الأغذية والمشروبات منذ عام 1998، ويديره اليوم الجيل الثالث من العائلة المؤسِّسة. نقدّم الرحلة كاملة في مكان واحد، من التصميم وألواح الطباعة (CTP) إلى الطباعة والطلاء والتشكيل والتغليف الجاهز للتصدير، مع إمكانية تخزين المنتج الجاهز. للتواصل: sales@jordantinplate.com
+الملخص بالعربية: جوردن تينبليت كانينغ [مؤقت] مصنع أردني للتغليف المعدني لعلامات الأغذية والمشروبات منذ عام 1998، في الزميلات – الموقّر، يعمل فيه نحو 250 موظفاً ويديره اليوم الجيل الثالث من العائلة المؤسِّسة. نقدّم الرحلة كاملة في مكان واحد، من التصميم وألواح الطباعة (CTP) إلى الطباعة والطلاء والتشكيل والتغليف الجاهز للتصدير، مع إمكانية تخزين المنتج الجاهز. للتواصل: sales@jordantinplate.com
 
-#MetalPackaging #FoodAndBeverage #MadeInJordan #Packaging #تغليف_معدني
+#MetalPackaging #FoodAndBeverage #MadeInJordan #JordanTinplateCanning #تغليف_معدني
 ```
 
 ## 2) Final copy: Arabic (summary, also usable as the Arabic page About or a standalone Arabic post)
 
-**الاسم العربي:** [تحقق: الاسم العربي الرسمي بانتظار الاعتماد. الصيغة المؤقتة في المستودع: «جوردن تينبليت»]
+**الاسم العربي:** «جوردن تينبليت كانينغ» **[مؤقت]**: الاسم العربي الرسمي بانتظار الإدارة، وتُستبدل الصيغة في كل النصوص عند وصوله.
 
 ```
-جوردن تينبليت مصنع أردني للتغليف المعدني لعلامات الأغذية والمشروبات، بدأت قصته عام 1998، ويديره اليوم الجيل الثالث من العائلة المؤسِّسة.
+جوردن تينبليت كانينغ [مؤقت] مصنع أردني للتغليف المعدني لعلامات الأغذية والمشروبات، بدأت قصته عام 1998، ويعمل فيه اليوم نحو 250 موظفاً من مقرنا في الزميلات – الموقّر، ويديره الجيل الثالث من العائلة المؤسِّسة.
 
 نقدّم الرحلة كاملة في مكان واحد:
 - التصميم والعمل الفني
@@ -61,7 +61,7 @@ Over the next weeks we will share how a flat sheet of tinplate becomes a can, ho
 - التغليف الجاهز للتصدير
 - تخزين المنتج الجاهز عند الحاجة
 
-ماذا نصنع؟ علب أغذية، وعلب حليب بودرة، وحاويات أغذية، وعلباً فاخرة دائرية ومربعة ومستطيلة، وعلباً صناعية وأغطية، إضافةً إلى عبوات خاصة بقوالب وتشطيبات مميزة مثل الملمس الناعم (Soft Touch) والنقش البارز واللمعة والمطّ.
+ماذا نصنع؟ علب أغذية، وعلب حليب بودرة، وتنكات زيت زيتون بأحجام 1 و4 و8 و16 لتر/كغ، وحاويات أغذية، وعلباً فاخرة دائرية ومربعة ومستطيلة، وعلباً صناعية وأغطية، إضافةً إلى عبوات خاصة بقوالب وتشطيبات مميزة مثل الملمس الناعم (Soft Touch) والنقش البارز واللمعة والمطّ.
 
 إن كنت تبني علامة أغذية أو مشروبات وتبحث عن عبوة تحمي منتجك وتميّزه على الرف، يسعدنا أن نسمعك.
 sales@jordantinplate.com
@@ -71,9 +71,9 @@ sales@jordantinplate.com
 
 ## 3) Hashtags
 
-- **EN (on the post, max 5):** #MetalPackaging #FoodAndBeverage #MadeInJordan #Packaging #TinplateCans
+- **EN (on the post, max 5):** #MetalPackaging #FoodAndBeverage #MadeInJordan #TinplateCans #JordanTinplateCanning
 - **AR:** #تغليف_معدني #علب_معدنية #صنع_في_الأردن
-- Do not use `#Canning`-style tags: another Jordanian company trades as "Canning Industries" (see Offsite plan, audit item 2).
+- Brand tag is always the full `#JordanTinplateCanning`. Never use `#Canning`-style tags: another Jordanian company trades as "Canning Industries" (see Offsite plan, audit item 2). No Arabic brand hashtag until the official Arabic name arrives.
 
 ## 4) CTA
 
@@ -88,15 +88,15 @@ sales@jordantinplate.com
 
 | Element | Direction |
 |---|---|
-| Hero | A tidy group of 3 to 5 tins in different shapes (round, square, rectangular), on a clean ground. Use real product photos if management supplies them; otherwise the 3D sample render of tins (the website prototype's sample artwork). Sample artwork must carry no real client brand |
+| Hero | A tidy group of 3 to 5 tins in different shapes (round, square, rectangular), on a clean ground. Use stills from the professional videos or real product photos if available (video delivery is pending); otherwise the 3D sample render of tins (the website prototype's sample artwork). Sample artwork must carry no real client brand |
 | Headline (EN) | **Made in Jordan since 1998** |
 | Sub-line (EN) | Metal packaging for food & beverage brands |
 | Headline (AR) | **صُنع في الأردن منذ 1998** (smaller, under the English, or mirrored on the right) |
 | Sub-line (AR) | تغليف معدني لعلامات الأغذية والمشروبات |
-| Footer | Wordmark (temporary until the name is settled) + `jordantinplate.com` |
-| Do not add | Certification badges, capacity numbers, client logos, a Saudi mention, a map with markets |
+| Footer | Wordmark "Jordan Tinplate Canning" (temporary until the final logo and Pantone arrive) + `jordantinplate.com` |
+| Do not add | Certification badges, capacity numbers, client logos, any Saudi reference (there is no Saudi branch or office), a map with markets |
 
-**Optional variant (if design time allows):** 5-page PDF document post: (1) cover "Meet Jordan Tinplate", (2) 1998 + third generation, (3) the 6 services, (4) what we make, (5) contact. Same words as above. Do not add new claims.
+**Optional variant (if design time allows):** 5-page PDF document post: (1) cover "Meet Jordan Tinplate Canning", (2) 1998 + third generation + a team of about 250, (3) the 6 services, (4) what we make, (5) contact. Same words as above. Do not add new claims.
 
 ## 6) Alt text
 
@@ -106,19 +106,25 @@ sales@jordantinplate.com
 
 ## 7) Publishing notes
 
-- Publish **from the company page**, after the page name, tagline, About and website link are updated (Offsite plan, week 1 actions). If the name is still unsettled on Sunday, do not publish.
+- Publish **from the company page**, after the page name (Jordan Tinplate Canning), tagline, About, address (Al-Zmailat – Al-Muwaqqar) and website link are updated (Offsite plan, week 1 actions). The English name is approved, so Sunday's launch does not wait for the Arabic name.
 - Ask staff to like and reshare in the first hours, and to link their profiles to the page.
 - Pin the post to the top of the page's Featured section for the month.
 - Suggested time: morning, Gulf working hours [TBC: confirm with analytics once the page has data].
 
 ## 8) Needs confirmation (checklist)
 
-- [ ] **Official brand name** to appear on the post: "Jordan Tinplate" (proposed) and the **official Arabic name** [تحقق]. Until settled, do not mix with "Jordan Canning"
-- [ ] **Management approval of the final text** and who approves in future (Month-1 plan, management item 1)
-- [ ] **Approval to publicly state "1998" and "third generation"** (Month-1 plan, management item 5). Note: 1998 is confirmed in the repo; the family story needs a sign-off on wording
-- [ ] **Approval of the product list** to name publicly (food cans, milk powder cans, food containers, fancy tins, industrial cans, ends, special-edition packs), copied from the draft About text
+**Resolved (management decisions, `docs/decisions.md`):**
+- [x] Official brand name **Jordan Tinplate Canning**, written in full (Arabic provisional «جوردن تينبليت كانينغ» [مؤقت])
+- [x] Address: Al-Zmailat – Al-Muwaqqar (not Sahab); about 250 employees
+- [x] Olive-oil tins in 1, 4, 8 and 16 L/kg may be named publicly
+- [x] Bio/About approved provisionally; account access with the marketing lead (2FA on)
+
+**Still open:**
+- [ ] **Official Arabic name** [تحقق]: replace the provisional form everywhere when it arrives
+- [ ] **Final sign-off of the text** by the approver (the About is approved provisionally only)
+- [ ] **Wording of the family story** ("third generation"; 1998 is confirmed)
 - [ ] **Storage of finished goods:** confirm it is offered as a standard service (taken from the site/draft About; wording is "when customers need it")
-- [ ] LinkedIn page updated first: name, tagline, About, website link to homepage, logo, cover
-- [ ] Image: real photos available? Permission for any product shown?
-- [ ] **Deliberately NOT in this post** (add only if management confirms): ISO/FSSC or any certification, production capacity, number of employees, client names, Saudi branch or expansion plans, export markets by name (Gulf, Iraq), "fully automatic lines"
+- [ ] LinkedIn page updated first: name, tagline, About, address, website link to homepage, logo, cover
+- [ ] Image: stills from the professional videos or real photos (video delivery pending); permission for any product shown
+- [ ] **Deliberately NOT in this post:** any certification (they exist, but none may be named until copies arrive), production capacity, client names, any Saudi reference (no Saudi branch or office exists), export markets by name (Gulf, Iraq), "fully automatic lines", the full street address (pending)
 - [ ] Optional line if management approves naming markets: "We serve brands in the Gulf and Iraq." [TBC] (not in the copy above)

@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Static site generator for Jordan Tinplate (phase 1). No dependencies.
+// Static site generator for Jordan Tinplate Canning (phase 1). No dependencies.
 //   node website/tools/build.mjs            (SITE_URL=https://example.com node ... to override the production origin)
 // Reads tools/content.mjs, writes en/, ar/, sitemap.xml, robots.txt, index.html (language chooser), 404.html.
 // The generated files are committed; re-run this script after editing content.mjs.
@@ -99,7 +99,7 @@ function contactBlock(lang) {
     <ul class="clist" style="margin-top:2rem">
       <li><span class="k">${T(UI.phone, lang)}</span><a href="tel:${SITE.tel}" class="ltr">${SITE.phone}</a></li>
       <li><span class="k">${T(UI.mail, lang)}</span><a href="mailto:${SITE.email}">${SITE.email}</a></li>
-      <li data-tbc><span class="k">${T(UI.address, lang)}</span><span class="badge">${T(UI.addressTbc, lang)}</span></li>
+      <li><span class="k">${T(UI.address, lang)}</span><span>${T(UI.addressArea, lang)}<br><span class="badge" data-tbc>${T(UI.addressTbc, lang)}</span></span></li>
     </ul>
     <ul class="social">${Object.entries(SITE.social).map(([n, u]) => `<li><a href="${u}" target="_blank" rel="noopener noreferrer">${n}<span class="vh"> (${T(UI.opensNew, lang)})</span></a></li>`).join('')}</ul>
     <a class="btn btn--ghost" href="${SITE.catalogue}" target="_blank" rel="noopener noreferrer">${T(UI.catalogue, lang)}${DOWN}</a>
@@ -139,7 +139,7 @@ function header(lang, page) {
   return `<a class="skip" href="#main">${T(UI.skip, lang)}</a>
 <header class="site-header">
   <div class="bar">
-    <a class="brand" href="${rel(lang, home)}" aria-label="${T(UI.brandAria, lang)}">${MARK}<span class="brand__word">JORDAN <b>TINPLATE</b></span></a>
+    <a class="brand" href="${rel(lang, home)}" aria-label="${T(UI.brandAria, lang)}">${MARK}<span class="brand__word">JORDAN <b>TINPLATE</b> CANNING</span></a>
     <nav class="nav" id="primary-nav" aria-label="${T(UI.primaryNav, lang)}">${nav}<a class="nav__cta" href="${rel(lang, contact)}">${T(UI.quote, lang)}</a></nav>
     <div class="tools">
       <a class="tool tool--lang" href="${rel(alt, page)}" hreflang="${alt}" lang="${alt}" aria-label="${esc(A.switchAria)}" data-lang-switch>${esc(A.switchLabel)}</a>
@@ -161,7 +161,7 @@ function footer(lang) {
   <div class="wrap">
     <div class="foot__grid">
       <div>
-        <a class="brand" href="${rel(lang, byId.home)}" aria-label="${T(UI.brandAria, lang)}">${MARK}<span class="brand__word" style="display:inline">JORDAN <b>TINPLATE</b></span></a>
+        <a class="brand" href="${rel(lang, byId.home)}" aria-label="${T(UI.brandAria, lang)}">${MARK}<span class="brand__word" style="display:inline">JORDAN <b>TINPLATE</b> CANNING</span></a>
         <p>${T(UI.footBlurb, lang)}</p>
       </div>
       <nav aria-label="${T(UI.footIndustries, lang)}"><h2>${T(UI.footIndustries, lang)}</h2><ul>${inds.map((p) => `<li><a href="${rel(lang, p)}">${T(p.tile.h, lang)}</a></li>`).join('')}</ul></nav>
@@ -173,7 +173,7 @@ function footer(lang) {
       </ul></div>
     </div>
     <div class="foot__base">
-      <span>© ${SITE.year} Jordan Tinplate. ${T(UI.rights, lang)}</span>
+      <span>© ${SITE.year} ${SITE.name}. ${T(UI.rights, lang)}</span>
       <span>${T(UI.footDraft, lang)}</span>
       <button class="linkbtn" id="review-btn" type="button" aria-pressed="false">${T(UI.review, lang)}</button>
     </div>
@@ -246,7 +246,8 @@ function jsonLd(lang, page) {
     '@type': 'Organization', '@id': SITE.origin + '/#organization', name: SITE.name, url: abs('en', byId.home),
     foundingDate: SITE.founded, telephone: SITE.phone, email: SITE.email,
     description: 'Custom tinplate packaging for food and beverage brands, made in Jordan since 1998.',
-    address: { '@type': 'PostalAddress', addressCountry: 'JO' },
+    address: { '@type': 'PostalAddress', addressLocality: 'Al-Zmailat – Al-Muwaqqar, Amman', addressCountry: 'JO' },
+    numberOfEmployees: { '@type': 'QuantitativeValue', value: 250 },
     contactPoint: { '@type': 'ContactPoint', contactType: 'sales', telephone: SITE.phone, email: SITE.email },
     sameAs: Object.values(SITE.social)
   };
@@ -297,7 +298,7 @@ ${hreflangs}
 <meta property="og:image" content="${OG_IMG}">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Jordan Tinplate: custom tinplate packaging for food and beverage brands">
+<meta property="og:image:alt" content="Jordan Tinplate Canning: custom tinplate packaging for food and beverage brands">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="${esc(title)}">
 <meta name="twitter:description" content="${esc(desc)}">
@@ -336,8 +337,8 @@ function chooser() {
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Jordan Tinplate | English / العربية</title>
-<meta name="description" content="Choose your language: Jordan Tinplate, custom tinplate packaging for food and beverage brands. اختر اللغة.">
+<title>Jordan Tinplate Canning | English / العربية</title>
+<meta name="description" content="Choose your language: Jordan Tinplate Canning, custom tinplate packaging for food and beverage brands. اختر اللغة.">
 <meta name="robots" content="noindex, follow">
 <link rel="canonical" href="${SITE.origin}/">
 <meta name="theme-color" content="#213469">
@@ -349,7 +350,7 @@ ${THEME_SCRIPT}
 <body>
 <main class="chooser" id="main">
   <div>
-    <a class="brand" href="/en/" aria-label="Jordan Tinplate">${MARK}<span class="brand__word" style="display:inline">JORDAN <b>TINPLATE</b></span></a>
+    <a class="brand" href="/en/" aria-label="Jordan Tinplate Canning">${MARK}<span class="brand__word" style="display:inline">JORDAN <b>TINPLATE</b> CANNING</span></a>
     <h1>Custom tinplate packaging · علب معدنية مخصّصة</h1>
     <p>Choose your language · اختر اللغة</p>
     <div class="cta-row"><a class="btn" href="/en/" hreflang="en" lang="en">English</a><a class="btn btn--ghost" href="/ar/" hreflang="ar" lang="ar" dir="rtl">العربية</a></div>

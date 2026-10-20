@@ -1,92 +1,98 @@
-# Jordan Tinplate — خطة الإجراءات خارج الموقع (Off-site)
+# Jordan Tinplate Canning — خطة الإجراءات خارج الموقع (Off-site)
 **الأهداف:** الوعي بالعلامة، الظهور الرقمي، أساس SEO · **القطاع:** Food & Beverage · **الأسواق:** الخليج والعراق
-**الحالة:** مسودة للمراجعة مع الإدارة — ما كان بين قوسين مربعين [ ] يحتاج تأكيداً
+**الحالة:** محدَّثة بقرارات الإدارة المعتمدة (المرجع: `docs/decisions.md`، آخر تحديث 2026-10-20). ما كان بين قوسين مربعين [ ] يحتاج تأكيداً. **الاسم الرسمي: Jordan Tinplate Canning** (يُكتب كاملاً دائماً)، والاسم العربي المؤقت «جوردن تينبليت كانينغ» [مؤقت] حتى يصل الاسم الرسمي.
 
 ---
 
 ## 1) ما وجدناه في الوضع الحالي (Audit)
 
-| # | الملاحظة | لماذا تهم |
-|---|---|---|
-| 1 | **الاسم غير موحّد:** Jordan Tinplate (الموقع) · Jordan Canning / Jordan Canning Industries (نص لينكد إن، المقابلة الصحفية 2025) · Jordan Tin Plate Canning & Printing Industrial Co. (اسم صفحة لينكد إن) | يشتت البحث ويضعف الظهور، والناس لا تعرف ماذا تكتب في جوجل |
-| 2 | **خطر التباس:** توجد شركة أردنية أخرى باسم **Canning Industries Co.** (مجموعة الصايغ) تعرض في Gulfood وFi Africa/Propak وتذكر شهادات ISO 9001 وFSSC 22000 | كلمة "Canning" وحدها تقود الباحث لشركة أخرى. نحتاج اسماً مميزاً |
-| 3 | **العنوان غير موحّد:** الموقع = الزميلات، المواقر، عمّان · لينكد إن = سحاب 11162 | الاتساق في (الاسم، العنوان، الهاتف) أساس Google Business Profile |
-| 4 | لينكد إن: الشعار "Innovative Tinplate Packaging for a Better World"، الحجم 201–500 موظف [تحقق]، رابط الموقع يشير إلى `about.html` | الرابط يجب أن يكون الصفحة الرئيسية، والحجم يجب أن يطابق الواقع |
-| 5 | فيس بوك وانستغرام موجودان (انستغرام ≈ 969 متابعاً). لم أستطع قراءة فيس بوك | |
-| 6 | البحث عن اسم الشركة لم يُرجع الموقع ولا الحسابات في نتائجي (الأداة محدودة بالولايات المتحدة، فيجب التحقق من جوجل مباشرة من الأردن والخليج) | يعني أن ظهور العلامة عند البحث باسمها ضعيف أو معدوم |
-| 7 | **مادة صحفية موجودة:** مقابلة مع شريك الشركة Omar Abu Salha في Sharikat Mubasher (14 نيسان 2025) من معرض Saudi Food Manufacturing، فيها خطة التوسع في السعودية وقاعدة عملاء قائمة هناك | رابط خارجي يمكن البناء عليه، وخبر لم يُنشر على الموقع |
-| 8 | قسم الأخبار على الموقع متوقف عند 2017 | |
+> هذا القسم وصف للوضع **قبل** القرارات ويبقى كما هو للتوثيق. ما استجد مكتوب في عمود «القرار».
+
+| # | الملاحظة | لماذا تهم | القرار (بعد ردّ الإدارة) |
+|---|---|---|---|
+| 1 | **الاسم غير موحّد:** Jordan Tinplate (الموقع) · Jordan Canning / Jordan Canning Industries (نص لينكد إن، المقابلة الصحفية 2025) · Jordan Tin Plate Canning & Printing Industrial Co. (اسم صفحة لينكد إن) | يشتت البحث ويضعف الظهور، والناس لا تعرف ماذا تكتب في جوجل | ✅ **الاسم المعتمد: Jordan Tinplate Canning.** الاسم القديم Jordan Canning قانوني/تاريخي فقط. الاسم العربي الرسمي بانتظار الإدارة |
+| 2 | **خطر التباس:** توجد شركة أردنية أخرى باسم **Canning Industries Co.** (مجموعة الصايغ) تعرض في Gulfood وFi Africa/Propak وتذكر شهادات ISO 9001 وFSSC 22000 | كلمة "Canning" وحدها تقود الباحث لشركة أخرى. نحتاج اسماً مميزاً | ما زال الخطر قائماً رغم الاسم الجديد، فيُكتب الاسم **كاملاً** دائماً ولا تُستعمل «Canning» وحدها في أي نص أو وسم أو اسم مستخدم |
+| 3 | **العنوان غير موحّد:** الموقع = الزميلات، المواقر، عمّان · لينكد إن = سحاب 11162 | الاتساق في (الاسم، العنوان، الهاتف) أساس Google Business Profile | ✅ **العنوان المعتمد: الزميلات – الموقّر** (Al-Zmailat – Al-Muwaqqar)، وليس سحاب. يُعدَّل عنوان لينكد إن. نص العنوان الكامل وإحداثيات الخريطة بانتظار الإدارة |
+| 4 | لينكد إن: الشعار "Innovative Tinplate Packaging for a Better World"، الحجم 201–500 موظف [تحقق]، رابط الموقع يشير إلى `about.html` | الرابط يجب أن يكون الصفحة الرئيسية، والحجم يجب أن يطابق الواقع | ✅ عدد الموظفين **250**، فالفئة 201–500 صحيحة ولا تتغير. رابط الموقع ما زال يحتاج تعديلاً إلى الصفحة الرئيسية |
+| 5 | فيس بوك وانستغرام موجودان (انستغرام ≈ 969 متابعاً). لم أستطع قراءة فيس بوك | | |
+| 6 | البحث عن اسم الشركة لم يُرجع الموقع ولا الحسابات في نتائجي (الأداة محدودة بالولايات المتحدة، فيجب التحقق من جوجل مباشرة من الأردن والخليج) | يعني أن ظهور العلامة عند البحث باسمها ضعيف أو معدوم | يُعاد القياس بالاسم الجديد بعد تحديث الحسابات |
+| 7 | **مادة صحفية موجودة:** مقابلة مع شريك الشركة Omar Abu Salha في Sharikat Mubasher (14 نيسان 2025) من معرض Saudi Food Manufacturing، تضمّنت كلاماً عن التوسع في السعودية وقاعدة عملاء هناك | رابط خارجي يمكن البناء عليه، وخبر لم يُنشر على الموقع | ✅ **لا فرع ولا مكتب في السعودية.** يُنشر الخبر كمشاركة/مقابلة فقط، ولا يُنقل منه أي ادعاء بفرع أو خطة توسع أو عملاء في السعودية |
+| 8 | قسم الأخبار على الموقع متوقف عند 2017 | | |
 
 ---
 
 ## 2) قائمة الإجراءات بحسب الأولوية
 
 ### الأسبوع 1 — قرارات الإدارة (لا يمكن البدء قبلها)
-- [ ] **اعتماد الاسم الرسمي للعلامة:** المقترح **Jordan Tinplate** (إنجليزي) + اسم عربي رسمي [تحدده الإدارة]. يُستخدم في كل مكان. أما "Jordan Canning" فيبقى اسماً قانونياً أو قديماً مذكوراً في الـAbout فقط.
-- [ ] **اعتماد العنوان والهاتف والبريد الرسمي** (NAP): هاتف +962 6 4051125 وsales@jordantinplate.com موجودان على الموقع. العنوان المعتمد [الزميلات/المواقر أم سحاب؟].
-- [ ] **اعتماد النبذة التعريفية** (القسم 3) وما يمكن ذكره: سنة التأسيس 1998 مؤكدة؛ الشهادات والطاقة والأسواق والعملاء [تحدد الإدارة].
-- [ ] **تحديد من يملك صلاحية الإدارة** لكل حساب (لينكد إن، فيس بوك، انستغرام، X) وتفعيل المصادقة الثنائية.
+- [x] ✅ **اعتماد الاسم الرسمي للعلامة: Jordan Tinplate Canning** (إنجليزي). يُستخدم في كل مكان وبشكل كامل. "Jordan Canning" يبقى اسماً قانونياً أو قديماً مذكوراً في الـAbout فقط. [ ] **الاسم العربي الرسمي** بانتظار الإدارة (مؤقتاً «جوردن تينبليت كانينغ» [مؤقت]).
+- [x] ✅ **العنوان:** الزميلات – الموقّر. [ ] **بانتظار الإدارة:** نص العنوان الكامل وإحداثيات الخريطة ورقم هاتف/ساعات عمل الملف على Google. الهاتف +962 6 4051125 والبريد sales@jordantinplate.com موجودان على الموقع.
+- [x] ✅ **اعتماد النبذة التعريفية (مبدئياً)** وما يمكن ذكره: سنة التأسيس 1998، الجيل الثالث، نحو 250 موظفاً، تنكات الزيت بأحجام 1 و4 و8 و16 لتر/كغ، والطلاء الداخلي المطابق لأعلى معايير الصحة الخاصة بالأغذية (دون اسم معيار). [ ] **لا يُذكر:** اسم أي شهادة (الشهادات موجودة لكن لم تصل نسخها)، الطاقة الإنتاجية، أسماء العملاء، وأي فرع أو مكتب في السعودية (غير قائم).
+- [x] ✅ **صلاحيات الحسابات** صارت مع مسؤول التسويق (لينكد إن، فيس بوك، انستغرام، X). [ ] **التنفيذ:** تفعيل المصادقة الثنائية على كل حساب.
 
 ### الأسبوع 1–2 — الأساس
-1. **Google Business Profile:** إنشاء الملف أو المطالبة به، وتصنيف أساسي "Packaging Manufacturer / Can Manufacturer"، وإضافة وصف وصور وساعات العمل ورابط الموقع. التحقق قد يتطلب بريداً أو اتصالاً أو فيديو من الموقع.
-2. **لينكد إن:** تحديث الاسم والـTagline والـAbout والـSpecialties ورابط الموقع (الرئيسية) وصورة الغلاف والشعار والموقع. ربط حسابات الموظفين بصفحة الشركة (يُطلب منهم إضافتها كجهة عمل).
-3. **انستغرام وفيس بوك وX:** توحيد الاسم، اسم المستخدم، البايو، الرابط، صورة الملف. حجز اسم مستخدم موحّد على X (مثلاً `@jordantinplate`) إن كان متاحاً.
+1. **Google Business Profile:** إنشاء الملف أو المطالبة به، وتصنيف أساسي "Packaging Manufacturer / Can Manufacturer"، وإضافة وصف وصور وساعات العمل ورابط الموقع. الاسم: **Jordan Tinplate Canning**، والعنوان: الزميلات – الموقّر (يكتمل بالنص الكامل والإحداثيات من الإدارة). التحقق قد يتطلب بريداً أو اتصالاً أو فيديو من الموقع (ويمكن أخذ الصور واللقطات من الفيديوهات الاحترافية للخطوط عند تسليمها).
+2. **لينكد إن:** تحديث الاسم إلى Jordan Tinplate Canning، والـTagline والـAbout والـSpecialties ورابط الموقع (الرئيسية) وصورة الغلاف والشعار والموقع (الزميلات – الموقّر بدل سحاب). فئة الحجم تبقى 201–500. ربط حسابات الموظفين بصفحة الشركة (يُطلب منهم إضافتها كجهة عمل).
+3. **انستغرام وفيس بوك وX:** توحيد الاسم، اسم المستخدم، البايو، الرابط، صورة الملف. أسماء المستخدم المقترحة (بشرط التوفر): `@jordantinplatecanning` على انستغرام وفيس بوك (ورابط صفحة لينكد إن بالصيغة نفسها). على X الحد الأقصى لاسم المستخدم 15 حرفاً، فالمقترح `@jordantinplate` (14 حرفاً) ويظهر الاسم الكامل Jordan Tinplate Canning في خانة الاسم؛ بديل إن لم يتوفر: `@jotinplate`. لا يُستعمل اسم مستخدم يحوي «canning» دون «tinplate».
 4. **Google Search Console وGoogle Analytics:** ربط الموقع الحالي لتسجيل الوضع قبل البدء (Baseline).
 5. **الأدلة الصناعية:** إدراج الشركة في الأدلة الصناعية (القسم 4) بنفس بيانات الاسم والعنوان والهاتف.
 
 ### الأسبوع 2–4
-6. **نشر خبر "Saudi Food Manufacturing 2025"** على لينكد إن (مع رابط للمقابلة) بصياغة حذرة ما لم تؤكد الإدارة تفاصيل الفرع السعودي.
+6. **نشر خبر "Saudi Food Manufacturing 2025"** على لينكد إن (مع رابط للمقابلة) **كمشاركة/مقابلة فقط**: بلا أي ادعاء بفرع أو مكتب أو خطة توسع في السعودية (غير قائم).
 7. **الكلمات المفتاحية:** التحقق من القائمة (القسم 5) بأداة بحث (Google Keyword Planner أو Semrush) للخليج والعراق، وتحديد 20–30 كلمة أولوية.
 8. **قائمة المواقع المستهدفة للظهور:** مجلات التغليف والصناعة الخليجية، موقع Sharikat Mubasher، بوابات المعارض (Gulfood Manufacturing, Saudi Food Manufacturing) وملف العارض إن شاركوا.
 9. **أول مقال معرفي على لينكد إن** (عربي وإنجليزي) يعمل كأصل SEO دائم.
 
 ### مستمر
-10. تسجيل شهري: ظهور العلامة في البحث، إشارات جديدة، تغييرات في الترتيب.
+10. تسجيل شهري: ظهور العلامة في البحث (بالاسم الكامل Jordan Tinplate Canning)، إشارات جديدة، تغييرات في الترتيب.
 
 ---
 
 ## 3) نصوص جاهزة للحسابات (للتأكيد قبل النشر)
 
-> لا ذكر هنا لشهادات أو طاقة أو أسماء عملاء لأننا لم نتحقق منها. أضفها بعد موافقة الإدارة.
+> محدَّثة بقرارات الإدارة. **لا يُذكر هنا:** اسم أي شهادة، الطاقة الإنتاجية، أسماء العملاء، أي فرع سعودي. يجوز: 250 موظفاً، أحجام تنكات الزيت (1 و4 و8 و16 لتر/كغ)، العنوان الزميلات – الموقّر. الاسم العربي «جوردن تينبليت كانينغ» **[مؤقت]** حتى يصل الاسم الرسمي. حدود الحروف فُحصت بعد تغيير الاسم (X ≤160، GBP ≤750، انستغرام الاسم ≤30 والبايو ≤150، فيس بوك Intro ≤101).
 
-### LinkedIn — Tagline
-`Custom metal packaging for food & beverage brands — Made in Jordan since 1998`
+### LinkedIn — الاسم والـTagline
+- **Page name:** `Jordan Tinplate Canning`
+- **Tagline:** `Custom metal packaging for food & beverage brands — Made in Jordan since 1998`
 
 ### LinkedIn — About (EN)
-Jordan Tinplate is a Jordan-based manufacturer of metal packaging, serving food and beverage brands since 1998. Run by the third generation of the founding family, we handle the whole journey in one place: artwork and design, plate-making (CTP), printing and coating, forming, and export-ready packing — with storage for finished goods when customers need it.
+Jordan Tinplate Canning is a Jordan-based manufacturer of metal packaging, serving food and beverage brands since 1998 from Al-Zmailat – Al-Muwaqqar. A team of about 250 people, run by the third generation of the founding family, handles the whole journey in one place: artwork and design, plate-making (CTP), printing and coating, forming, and export-ready packing — with storage for finished goods when customers need it.
 
-What we make: food cans, milk powder cans, food containers, round / square / rectangular fancy cans, industrial cans, ends, and special-edition packs with custom molds and finishes (soft touch, embossing, matte/gloss, and more).
+What we make: food cans, milk powder cans, olive-oil tins in 1, 4, 8 and 16 L/kg, food containers, round / square / rectangular fancy cans, industrial cans, ends, and special-edition packs with custom molds and finishes (soft touch, embossing, matte/gloss, and more).
 
 Looking for packaging that protects the product and stands out on the shelf? Talk to us: sales@jordantinplate.com
 
-**Specialties:** Metal Packaging · Tinplate Cans · Food Cans · Milk Powder Cans · Custom Printed Tins · Gift Tins · Food Containers · Industrial Cans
+**Specialties:** Metal Packaging · Tinplate Cans · Food Cans · Olive Oil Tins · Milk Powder Cans · Custom Printed Tins · Gift Tins · Food Containers · Industrial Cans
 
 ### LinkedIn — About (AR، للنسخة العربية أو التعريف)
-[الاسم العربي المعتمد] مصنع أردني متخصص في التغليف المعدني لعلامات الأغذية والمشروبات منذ عام 1998، ويديره اليوم الجيل الثالث من العائلة المؤسِّسة. نقدّم الرحلة كاملة في مكان واحد: التصميم والطباعة والطلاء والتشكيل والتغليف الجاهز للتصدير، مع إمكانية تخزين المنتج الجاهز للعميل.
-منتجاتنا: علب أغذية، علب حليب بودرة، حاويات أغذية، علب فاخرة (دائرية ومربعة ومستطيلة)، علب صناعية، وعلب خاصة بقوالب وتشطيبات مميزة.
+جوردن تينبليت كانينغ [مؤقت] مصنع أردني متخصص في التغليف المعدني لعلامات الأغذية والمشروبات منذ عام 1998، في الزميلات – الموقّر. يعمل فيه نحو 250 موظفاً ويديره اليوم الجيل الثالث من العائلة المؤسِّسة. نقدّم الرحلة كاملة في مكان واحد: التصميم والطباعة والطلاء والتشكيل والتغليف الجاهز للتصدير، مع إمكانية تخزين المنتج الجاهز للعميل.
+منتجاتنا: علب أغذية، علب حليب بودرة، تنكات زيت زيتون بأحجام 1 و4 و8 و16 لتر/كغ، حاويات أغذية، علب فاخرة (دائرية ومربعة ومستطيلة)، علب صناعية، وعلب خاصة بقوالب وتشطيبات مميزة.
 للتواصل: sales@jordantinplate.com
 
 ### Instagram — الاسم والبايو
-- **Name (يظهر في البحث):** `Jordan Tinplate | علب معدنية`
-- **Bio:**
-  `Custom metal packaging for F&B brands · Made in Jordan since 1998`
-  `علب معدنية مطبوعة لعلامات الأغذية والمشروبات`
+- **Name (يظهر في البحث، ≤30):** `Jordan Tinplate Canning`
+- **Username (إن توفر):** `@jordantinplatecanning`
+- **Bio (≤150):**
+  `Metal packaging for F&B brands · Made in Jordan since 1998`
+  `علب معدنية للأغذية والمشروبات · الزميلات – الموقّر`
   `sales@jordantinplate.com`
 
 ### X — البايو (≤160 حرفاً)
-`Custom metal packaging for food & beverage brands. Made in Jordan since 1998. | تغليف معدني مخصّص للأغذية والمشروبات — صُنع في الأردن`
+- **Name:** `Jordan Tinplate Canning` · **Username:** `@jordantinplate` (الحد 15 حرفاً)
+- **Bio:** `Jordan Tinplate Canning: custom metal packaging for food & beverage brands. Made in Jordan since 1998. | تغليف معدني للأغذية والمشروبات`
 
-### Facebook — Intro
-`Metal packaging for food & beverage brands — Jordan, since 1998 | تغليف معدني للأغذية والمشروبات`
+### Facebook — Intro (≤101)
+- **Page name:** `Jordan Tinplate Canning` · **Address:** الزميلات – الموقّر (يكتمل بالعنوان الكامل)
+- **Intro:** `Metal packaging for food & beverage brands. Al-Zmailat – Al-Muwaqqar, Jordan. Since 1998`
 
 ### Google Business Profile — الوصف (≤750 حرفاً)
-Jordan Tinplate is a metal packaging manufacturer in Jordan, serving food and beverage brands since 1998. We design, print, form and pack tinplate cans: food cans, milk powder cans, food containers, round / square / rectangular gift tins, industrial cans and ends — plus custom molds and finishes such as soft touch and embossing. In-house design and plate-making (CTP), automated production lines, and export-ready palletizing. Contact us for quotations based on your artwork and specifications.
+Jordan Tinplate Canning is a metal packaging manufacturer in Al-Zmailat – Al-Muwaqqar, Jordan, serving food and beverage brands since 1998 with a team of about 250 people. We design, print, form and pack tinplate cans: food cans, milk powder cans, olive-oil tins (1, 4, 8 and 16 L/kg), food containers, round / square / rectangular gift tins, industrial cans and ends — plus custom molds and finishes such as soft touch and embossing. In-house design and plate-making (CTP), automated production lines, and export-ready palletizing. Contact us for quotations based on your artwork and specifications.
 
 ---
 
 ## 4) الأدلة والمنصات الخارجية (للتسجيل أو التحقق من وجودنا فيها)
 
-> لم أتحقق من وجود الشركة في أي منها. تحقق قبل إنشاء حساب مكرر.
+> لم أتحقق من وجود الشركة في أي منها. تحقق قبل إنشاء حساب مكرر، وابحث بالاسمين القديم والجديد (Jordan Canning / Jordan Tin Plate Canning & Printing / Jordan Tinplate Canning). عند التسجيل استعمل الاسم الجديد كاملاً.
 
 - **غرفة صناعة عمّان / غرفة صناعة الأردن** (دليل الأعضاء).
 - **Jordan Exporters Association** (جمعية المصدّرين) وJEDCO (مؤسسة تنمية الصادرات) إن كانوا أعضاء.
@@ -101,23 +107,34 @@ Jordan Tinplate is a metal packaging manufacturer in Jordan, serving food and be
 ## 5) كلمات مفتاحية مبدئية (تحتاج تحقق بأداة بحث)
 
 **English**
+- Jordan Tinplate Canning (كلمة العلامة نفسها، تُتابَع شهرياً)
 - metal packaging manufacturer Jordan · tinplate cans manufacturer · tin cans for food
-- milk powder tin cans · custom printed tin boxes · gift tins manufacturer
+- olive oil tins manufacturer · olive oil tin 16 litre · milk powder tin cans
+- custom printed tin boxes · gift tins manufacturer
 - coffee tins · date tins · seamless two-piece cans · embossed tin packaging
-- metal packaging Saudi Arabia / UAE / Iraq
+- metal packaging Saudi Arabia / UAE / Iraq (كلمات بحث للأسواق المستهدفة فقط، لا تعني وجود فرع)
 
 **عربي (فصحى ولهجات الخليج والعراق)**
 - مصنع علب معدنية في الأردن · علب صفيح · علب تنك / علب تنكية
-- علب حليب بودرة معدنية · علب هدايا معدنية · علب قهوة معدنية · علب تمور معدنية
+- تنكات زيت زيتون · تنكة زيت 16 لتر · علب حليب بودرة معدنية
+- علب هدايا معدنية · علب قهوة معدنية · علب تمور معدنية
 - طباعة على الصفيح · علب معدنية مطبوعة · علب معدنية مخصصة · مورد علب معدنية للأغذية
 
 ---
 
-## 6) أسئلة مفتوحة للإدارة
-1. الاسم العربي الرسمي المعتمد؟
-2. العنوان الرسمي للمصنع (الزميلات/المواقر أم سحاب)؟ وهل يوجد مكتب أو فرع آخر؟
-3. هل الفرع أو المكتب في السعودية قائم أو مخطط؟ وماذا يمكن إعلانه؟
-4. الشهادات (ISO / FSSC وغيرها) وهل تُعرض؟
-5. عدد الموظفين الفعلي (لينكد إن يقول 201–500)؟
-6. من يوافق على المحتوى ويدير الحسابات؟
-7. هل الشركة مسجلة في غرفة الصناعة وJEDCO؟ وهل تشارك في المعارض القادمة؟
+## 6) أسئلة الإدارة: ما حُسم وما بقي
+
+**✅ معتمد (انظر `docs/decisions.md`)**
+- الاسم الرسمي Jordan Tinplate Canning (الاسم القديم قانوني/تاريخي فقط).
+- العنوان الزميلات – الموقّر (وليس سحاب).
+- الفرع السعودي غير قائم؛ خبر Saudi Food Manufacturing مشاركة/مقابلة فقط.
+- الشهادات موجودة (لا تُسمّى قبل وصول نسخها).
+- عدد الموظفين 250 (فئة لينكد إن 201–500 صحيحة).
+- صلاحيات الحسابات مع مسؤول التسويق، مع المصادقة الثنائية.
+
+**بانتظار الإدارة**
+1. الاسم العربي الرسمي، والشعار النهائي مع كود Pantone.
+2. العنوان الكامل وإحداثيات الخريطة ورقم هاتف وساعات عمل (للملف على Google).
+3. أسماء الشهادات ونسخها.
+4. هل الشركة مسجلة في غرفة الصناعة وJEDCO؟ وهل تشارك في المعارض القادمة؟
+5. الطاقة الإنتاجية وأسماء العملاء (بعد الإطلاق).
