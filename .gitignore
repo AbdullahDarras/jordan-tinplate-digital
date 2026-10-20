@@ -1,0 +1,9 @@
+# local tool state
+.claude/settings.local.json
+.claude/worktrees/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+*.log
+node_modules/
