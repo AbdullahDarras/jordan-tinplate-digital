@@ -167,6 +167,7 @@ html[lang="ar"] .stats b { letter-spacing: 0; line-height: 1.3; }
 .sec__head .lead { margin-top: 1rem; }
 .stack > * + * { margin-top: clamp(1.4rem, 3vw, 2.2rem); }
 .grid { display: grid; gap: 1rem; list-style: none; padding: 0; margin: 0; grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr)); }
+.grid--tiles { grid-template-columns: repeat(3, 1fr); }
 .grid--2 { grid-template-columns: repeat(auto-fit, minmax(min(100%, 24rem), 1fr)); }
 .card {
   position: relative; display: flex; flex-direction: column; gap: .5rem; padding: 1.6rem; border-radius: var(--radius); background: var(--card); border: 1px solid var(--line);
@@ -223,7 +224,7 @@ html[lang="ar"] .tag { letter-spacing: 0; text-transform: none; font-size: .9rem
 .contact { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(1.5rem, 5vw, 4rem); align-items: start; }
 .clist { list-style: none; padding: 0; margin: 0 0 1.6rem; display: grid; gap: .8rem; }
 .clist li { display: flex; flex-wrap: wrap; gap: .3rem 1.2rem; align-items: baseline; border-bottom: 1px solid rgba(255, 255, 255, .2); padding-bottom: .8rem; }
-.clist .k { width: 6rem; font-size: .8rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: rgba(255, 255, 255, .78); flex: none; }
+.clist .k { width: 8rem; font-size: .8rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: rgba(255, 255, 255, .78); flex: none; }
 html[lang="ar"] .clist .k { letter-spacing: 0; text-transform: none; font-size: .95rem; }
 .clist a { font-size: 1.15rem; font-weight: 500; text-decoration: underline; text-underline-offset: 4px; text-decoration-color: rgba(255, 255, 255, .4); } .clist a:hover { color: #f2a93b; }
 .panel .badge { background: rgba(244, 179, 76, .18); color: #ffd9a0; border-color: rgba(255, 217, 160, .5); }
@@ -285,11 +286,13 @@ html:not(.js) .burger { display: none; }
   html:not(.js) .bar { flex-wrap: wrap; border-radius: 28px; }
 }
 @media (max-width: 860px) {
+  .grid--tiles { grid-template-columns: repeat(2, 1fr); }
   .hero__grid, .contact { grid-template-columns: 1fr; }
   .hero__art { max-width: 420px; justify-self: center; }
   .hero--inner .hero__art { display: none; }
 }
 @media (max-width: 560px) {
+  .grid--tiles { grid-template-columns: 1fr; }
   body { font-size: 16px; }
   .brand__word { display: none; }
   .form { grid-template-columns: 1fr; }

@@ -62,7 +62,7 @@ function renderBlock(b, lang, ctx) {
     case 'cards':
       return `<ul class="grid" data-reveal>${b.items.map((i) => `<li class="card">${i.art ? `<div class="card__art">${art(i.art)}</div>` : ''}<h${lvl} class="h3">${T(i.h, lang)}</h${lvl}><p>${T(i.p, lang)}</p>${i.meta ? `<div class="meta"><span>${T(i.meta, lang)}</span></div>` : ''}</li>`).join('')}</ul>`;
     case 'tiles':
-      return `<ul class="grid" data-reveal>${b.ids.map((id) => {
+      return `<ul class="grid grid--tiles" data-reveal>${b.ids.map((id) => {
         const p = byId[id];
         return `<li><a class="card tile" href="${rel(lang, p)}"><div class="card__art">${art(p.hero.art)}</div><h${lvl} class="h3">${T(p.tile.h, lang)}</h${lvl}><p>${T(p.tile.p, lang)}</p><span class="go">${T(UI.explore, lang)}${ARROW}</span></a></li>`;
       }).join('')}</ul>`;
@@ -127,7 +127,7 @@ function crumbTrail(page) {
 }
 
 function header(lang, page) {
-  const alt = other(lang), A = LANGS[alt];
+  const alt = other(lang), A = LANGS[lang]; // A holds the label/aria for the link that leads to the OTHER language
   const home = byId.home;
   const nav = NAV.map((n) => {
     const target = byId[n.page];
