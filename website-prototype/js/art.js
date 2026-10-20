@@ -115,9 +115,10 @@ function drawArt(ctx, w, h, theme, cwI, panels) {
     panels.forEach((px) => {
       txt(ctx, 'JORDAN', px, cy - 120 * k, 150 * k, cw.ink, { spacing: 4 * k, weight: 800 });
       txt(ctx, 'TINPLATE', px, cy + 8 * k, 150 * k, cw.accent, { spacing: 4 * k, weight: 800 });
-      ctx.fillStyle = cw.accent; ctx.fillRect(px - 150 * k, cy + 92 * k, 300 * k, 5 * k);
-      txt(ctx, 'WE PRINT. WE CAN.', px, cy + 142 * k, 44 * k, cw.ink, { spacing: 8 * k, weight: 600, alpha: 0.9 });
-      txt(ctx, 'علب معدنية · منذ 1998', px, cy + 208 * k, 44 * k, cw.ink, { font: FA, weight: 500, alpha: 0.85 });
+      txt(ctx, 'CANNING', px, cy + 98 * k, 40 * k, cw.ink, { spacing: 22 * k, weight: 600, alpha: 0.9 });
+      ctx.fillStyle = cw.accent; ctx.fillRect(px - 150 * k, cy + 134 * k, 300 * k, 5 * k);
+      txt(ctx, 'WE PRINT. WE CAN.', px, cy + 172 * k, 40 * k, cw.ink, { spacing: 8 * k, weight: 600, alpha: 0.9 });
+      txt(ctx, 'علب معدنية · منذ 1998', px, cy + 228 * k, 40 * k, cw.ink, { font: FA, weight: 500, alpha: 0.85 });
     });
   } else if (theme === 'olive') {
     grad(ctx, w, h, '#2a4f2d', '#0d2212', 1);

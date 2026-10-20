@@ -377,7 +377,6 @@ function initLoader() {
 }
 
 /* ============================================================ boot */
-const hasStage = () => $$('.stage').length > 0;
 async function loadScene(onStep) {
   const fonts = Promise.race([document.fonts ? document.fonts.ready : Promise.resolve(), new Promise((r) => setTimeout(r, 2500))]);
   if (!safe(() => document.createElement('canvas').getContext('webgl2'))) { html.classList.add('no-gl'); await fonts; return null; }
@@ -472,6 +471,7 @@ async function boot() {
   await new Promise((res) => {
     entranceResolve = res;
     // the sheet is printed, rolled into a tin and sealed while the % runs from where it is to 100
+    gsap.killTweensOf(prog);
     const tl = entranceTl = gsap.timeline({ onComplete: res });
     tl.to(prog, { v: 100, duration: reduce ? 0.4 : 2.2, ease: 'power1.inOut', onUpdate: setNum })
       .add(() => { if (scene) scene.setTheme(html.dataset.theme); })

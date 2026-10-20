@@ -492,8 +492,9 @@ export function createScene(canvas) {
     scrollVel += (Math.max(-1, Math.min(1, v / 2200)) - scrollVel) * 0.12; // eases back to 0 when scrolling stops
     frameNo++;
     stages.forEach((st) => {
-      if (COARSE && st.inst.kind === 'product') { st.acc = (st.acc || 0) + dt; if (frameNo & 1) return; dt = st.acc; st.acc = 0; }
-      renderStage(st, dt, now);
+      let d = dt;
+      if (COARSE && st.inst.kind === 'product') { st.acc = (st.acc || 0) + dt; if (frameNo & 1) return; d = st.acc; st.acc = 0; }
+      renderStage(st, d, now);
     });
   }
   // Driven from the page's single ticker, after the scroll update.
