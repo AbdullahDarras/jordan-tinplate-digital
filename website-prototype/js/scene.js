@@ -14,15 +14,19 @@ const FIN = {
   gloss: { metalness: 0.55, roughness: 0.16, clearcoat: 1, clearcoatRoughness: 0.12, sheen: 0, bumpScale: 0, bump: null },
   matte: { metalness: 0.3, roughness: 0.62, clearcoat: 0, clearcoatRoughness: 0.5, sheen: 0, bumpScale: 0, bump: null },
   soft: { metalness: 0.02, roughness: 0.96, clearcoat: 0, clearcoatRoughness: 0.5, sheen: 1, bumpScale: 0, bump: null },
-  rough: { metalness: 0.25, roughness: 0.8, clearcoat: 0, clearcoatRoughness: 0.5, sheen: 0, bumpScale: 2.4, bump: 'rough' },
-  emboss: { metalness: 0.6, roughness: 0.24, clearcoat: 0.7, clearcoatRoughness: 0.1, sheen: 0, bumpScale: 5, bump: 'emboss' }
+  rough: { metalness: 0.25, roughness: 0.8, clearcoat: 0, clearcoatRoughness: 0.5, sheen: 0, bumpScale: 1.3, bump: 'rough' },
+  emboss: { metalness: 0.6, roughness: 0.24, clearcoat: 0.7, clearcoatRoughness: 0.1, sheen: 0, bumpScale: 1.6, bump: 'emboss' }
 };
 const ACCENT = { brand: ['#f2a93b', '#ffe0a8', '#f6d27a', '#213469'], olive: '#d9a93c', eid: '#e9bd5a', cheese: '#2a6fb8' };
 
 export function createScene(canvas) {
   const gsap = window.gsap;
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: 'high-performance' });
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  // Phones and tablets: cap the pixel ratio at 1.5 (each stage is re-rendered and copied to a 2D canvas every frame) and run the
+  // product tins at 30 fps. The scroll-scrubbed journey keeps full rate.
+  const COARSE = window.matchMedia('(pointer: coarse)').matches;
+  const maxDpr = () => (COARSE || window.innerWidth < 860 ? 1.5 : 2);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, maxDpr()));
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = 1.0;
 
@@ -441,7 +445,7 @@ export function createScene(canvas) {
     update(dt, now) { if (journey.visible) globeTilt.rotation.y = GLOBE_Y + Math.sin(now / 3000) * 0.08 + ptr.sx * 0.2; },
     layout(w, h, px2w) { journey.scale.setScalar(Math.max(0.001, Math.min((w * px2w) / (JW + 0.6), (h * px2w) / 3.7))); }
   };
-  let stages = [], bufW = 1, bufH = 1, running = true, last = performance.now(), lastScrollY = window.scrollY, scrollVel = 0;
+  let frameNo = 0, stages = [], bufW = 1, bufH = 1, running = true, last = performance.now(), lastScrollY = window.scrollY, scrollVel = 0;
 
   function refreshStages() {
     stages.forEach((s) => s.cv.remove()); stages = [];
@@ -453,12 +457,16 @@ export function createScene(canvas) {
     });
   }
   function resize() {
-    const pr = Math.min(window.devicePixelRatio || 1, 2); renderer.setPixelRatio(pr);
+    const pr = Math.min(window.devicePixelRatio || 1, maxDpr()); renderer.setPixelRatio(pr);
     bufW = Math.ceil(window.innerWidth * (1 + 2 * OVER)); bufH = Math.ceil(window.innerHeight * (1 + 2 * OVER));
     renderer.setSize(bufW, bufH, false);
   }
   resize();
 
+  // drop stages whose element has left the document (e.g. the loader's stage once the entrance is over)
+  function pruneStages() {
+    stages = stages.filter((s) => { if (s.el.isConnected) return true; s.cv.remove(); return false; });
+  }
   function renderStage(st, dt, now) {
     const r = st.el.getBoundingClientRect();
     if (r.bottom < -150 || r.top > window.innerHeight + 150 || r.width < 4 || r.height < 4) return; // off screen: skip
@@ -482,7 +490,11 @@ export function createScene(canvas) {
     ptr.sx += (ptr.x - ptr.sx) * 0.06; ptr.sy += (ptr.y - ptr.sy) * 0.06;
     const y = window.scrollY, v = (y - lastScrollY) / Math.max(dt, 1 / 120); lastScrollY = y;
     scrollVel += (Math.max(-1, Math.min(1, v / 2200)) - scrollVel) * 0.12; // eases back to 0 when scrolling stops
-    stages.forEach((st) => renderStage(st, dt, now));
+    frameNo++;
+    stages.forEach((st) => {
+      if (COARSE && st.inst.kind === 'product') { st.acc = (st.acc || 0) + dt; if (frameNo & 1) return; dt = st.acc; st.acc = 0; }
+      renderStage(st, dt, now);
+    });
   }
   // Driven from the page's single ticker, after the scroll update.
   function tick() {
@@ -523,7 +535,7 @@ export function createScene(canvas) {
   }
 
   return {
-    refreshStages, setJourney, setTheme, resize, warm, advance, tick,
+    refreshStages, pruneStages, setJourney, setTheme, resize, warm, advance, tick,
     instance: (name) => byName[name],
     intro: () => (byName.hero ? byName.hero.intro() : null),
     setPointer: (x, y) => { ptr.x = x; ptr.y = y; },
