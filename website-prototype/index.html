@@ -1,0 +1,401 @@
+<!doctype html>
+<html lang="en" dir="ltr" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Jordan Tinplate — Custom Metal Packaging for Food &amp; Beverage</title>
+<meta name="description" content="Jordan Tinplate designs, prints, forms and packs custom tinplate cans for food and beverage brands — made in Jordan since 1998.">
+<meta name="theme-color" content="#213469">
+<script>
+  // set theme before paint to avoid a flash
+  try {
+    var t = localStorage.getItem('jt-theme');
+    if (!t) t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    document.documentElement.setAttribute('data-theme', t);
+    var l = localStorage.getItem('jt-lang');
+    if (l === 'ar') { document.documentElement.lang = 'ar'; document.documentElement.dir = 'rtl'; }
+  } catch (e) {}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=DM+Sans:wght@400;500;600&family=Readex+Pro:wght@300..700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.1/examples/jsm/"
+} }
+</script>
+</head>
+<body class="is-loading">
+
+<canvas id="gl" aria-hidden="true"></canvas>
+<div class="grain" aria-hidden="true"></div>
+<div class="cursor" aria-hidden="true"><i></i><span></span></div>
+
+<!-- ============ LOADER: a sheet of tinplate is printed, rolled into a tin and sealed ============ -->
+<div id="loader" role="status" aria-live="polite">
+  <div class="stage ld__stage" data-rig="journey" aria-hidden="true">
+    <div class="ld__wait"><i></i></div>
+  </div>
+  <div class="ld__meta">
+    <div class="ld__num"><b id="loaderNum">0</b><small>%</small></div>
+    <div class="ld__step" id="ldStep">Design &amp; plates</div>
+    <div class="ld__name">JORDAN&nbsp;TINPLATE</div>
+  </div>
+</div>
+<div id="curtain" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+
+<!-- ============ NAV ============ -->
+<header class="nav" id="nav">
+  <a class="brand" href="#hero" aria-label="Jordan Tinplate">
+    <svg viewBox="0 0 40 40" class="brand__mark" aria-hidden="true"><circle cx="20" cy="20" r="17" fill="none" stroke="currentColor" stroke-width="2.4"/><circle cx="20" cy="20" r="10.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-dasharray="3 3"/><circle cx="20" cy="20" r="3.4" fill="var(--accent)"/></svg>
+    <span class="brand__word">JORDAN <b>TINPLATE</b></span>
+  </a>
+  <nav class="nav__links" aria-label="Primary">
+    <a href="#journey" data-i18n="nav.journey">Journey</a>
+    <a href="#finish" data-i18n="nav.finish">Finishes</a>
+    <a href="#range" data-i18n="nav.range">Range</a>
+    <a href="#seasons" data-i18n="nav.seasons">Seasons</a>
+    <a href="#story" data-i18n="nav.story">Story</a>
+    <a href="#news" data-i18n="nav.news">News</a>
+  </nav>
+  <div class="nav__tools">
+    <button class="tool" id="langBtn" type="button" aria-label="Switch language"><span class="tool__a" data-lang-label="en">EN</span><span class="tool__b" data-lang-label="ar">عربي</span></button>
+    <button class="tool" id="themeBtn" type="button" aria-label="Toggle light and dark mode">
+      <svg class="i-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.6M12 18.9v2.6M2.5 12h2.6M18.9 12h2.6M5.3 5.3l1.8 1.8M16.9 16.9l1.8 1.8M5.3 18.7l1.8-1.8M16.9 7.1l1.8-1.8"/></svg>
+      <svg class="i-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5z"/></svg>
+    </button>
+    <a class="btn btn--sm magnetic" href="#contact"><span data-i18n="nav.cta">Request a quote</span></a>
+    <button class="burger" id="burger" type="button" aria-label="Menu" aria-expanded="false"><i></i><i></i></button>
+  </div>
+</header>
+<div class="menu" id="menu" aria-hidden="true">
+  <a href="#journey" data-i18n="nav.journey">Journey</a>
+  <a href="#finish" data-i18n="nav.finish">Finishes</a>
+  <a href="#range" data-i18n="nav.range">Range</a>
+  <a href="#seasons" data-i18n="nav.seasons">Seasons</a>
+  <a href="#story" data-i18n="nav.story">Story</a>
+  <a href="#news" data-i18n="nav.news">News</a>
+  <a href="#contact" data-i18n="nav.cta">Request a quote</a>
+</div>
+
+<main id="top">
+
+<!-- ============ 1. HERO ============ -->
+<section class="hero" id="hero">
+  <div class="hero__grid wrap">
+    <div class="hero__text">
+      <p class="eyebrow" data-i18n="hero.eyebrow"><span class="dot"></span>Metal packaging · Made in Jordan · Since 1998</p>
+      <h1 class="display" id="heroTitle">
+        <span class="line" data-split data-i18n="hero.l1">We print.</span>
+        <span class="line line--accent" data-split data-i18n="hero.l2">We can.</span>
+      </h1>
+      <p class="lead" data-reveal data-i18n="hero.lead">Custom tinplate packaging for food &amp; beverage brands — from artwork and plates to printed, formed and export-ready tins.</p>
+      <div class="hero__cta" data-reveal>
+        <a class="btn magnetic" href="#journey"><span data-i18n="hero.cta1">Follow the journey</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v15M5 13l7 7 7-7"/></svg></a>
+        <a class="btn btn--ghost magnetic" href="#contact"><span data-i18n="hero.cta2">Request a quote</span></a>
+      </div>
+      <ul class="facts" data-reveal>
+        <li><b data-count="1998" data-plain>1998</b><span data-i18n="hero.f1">Founded in Jordan</span></li>
+        <li><b>3<sup>rd</sup></b><span data-i18n="hero.f2">Generation at the helm</span></li>
+        <li><b>4</b><span data-i18n="hero.f3">Regions exhibited in</span></li>
+      </ul>
+    </div>
+    <div class="stage" data-rig="product" data-pose="hero" data-cursor="drag" aria-label="3D tin — drag to rotate"></div>
+  </div>
+  <div class="scrollcue" aria-hidden="true"><i></i><span data-i18n="hero.scroll">Scroll</span></div>
+</section>
+
+<!-- ============ MARQUEE ============ -->
+<section class="marquee" aria-label="Sectors">
+  <div class="marquee__track">
+    <div class="marquee__row" data-marquee></div>
+  </div>
+</section>
+
+<!-- ============ 2. JOURNEY (pinned, scroll-scrubbed 3D) ============ -->
+<section class="journey" id="journey">
+  <div class="journey__pin">
+    <div class="journey__grid wrap">
+      <div class="journey__text">
+        <p class="eyebrow" data-i18n="j.eyebrow"><span class="dot"></span>One roof, one partner</p>
+        <h2 class="h2" data-split data-i18n="j.title">From sheet to shelf.</h2>
+        <div class="steps" id="steps">
+          <article class="step is-active" data-step="0">
+            <span class="step__n">01</span>
+            <h3 data-i18n="j.s1t">Design &amp; plates</h3>
+            <p data-i18n="j.s1d">In-house designers prepare your artwork, and CTP (Computer-to-Plate) makes every plate precise.</p>
+          </article>
+          <article class="step" data-step="1">
+            <span class="step__n">02</span>
+            <h3 data-i18n="j.s2t">Print, coat &amp; finish</h3>
+            <p data-i18n="j.s2d">High-end inks and coatings, plus effects: gloss, matte, soft touch, embossing.</p>
+          </article>
+          <article class="step" data-step="2">
+            <span class="step__n">03</span>
+            <h3 data-i18n="j.s3t">Cut &amp; form</h3>
+            <p data-i18n="j.s3d">Sheets are cut on exact lines and formed into your shape — round, square, rectangular or custom.</p>
+          </article>
+          <article class="step" data-step="3">
+            <span class="step__n">04</span>
+            <h3 data-i18n="j.s4t">Pack &amp; palletise</h3>
+            <p data-i18n="j.s4d">Cartons are palletised with methods tailored to each client and suited to overseas shipping.</p>
+          </article>
+          <article class="step" data-step="4">
+            <span class="step__n">05</span>
+            <h3 data-i18n="j.s5t">Store &amp; ship</h3>
+            <p data-i18n="j.s5d">We can hold finished stock for you, freeing your own storage, then ship it to your markets.</p>
+          </article>
+        </div>
+        <div class="rail" aria-hidden="true"><i id="railFill"></i><b></b><b></b><b></b><b></b><b></b></div>
+      </div>
+      <div class="stage" data-rig="journey" data-pose="hero" aria-label="3D journey of a tinplate sheet"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 3. FINISH LAB ============ -->
+<section class="finish" id="finish">
+  <div class="finish__grid wrap">
+    <div class="stage" data-rig="product" data-pose="finish" data-cursor="drag" aria-label="3D tin you can restyle"></div>
+    <div class="finish__text">
+      <p class="eyebrow" data-i18n="f.eyebrow"><span class="dot"></span>Finish Lab</p>
+      <h2 class="h2" data-split data-i18n="f.title">Touch it before you print it.</h2>
+      <p class="lead" data-reveal data-i18n="f.lead">Pick a finish and watch the metal respond. Every one is available on our lines.</p>
+      <div class="chips" role="group" aria-label="Finishes" data-reveal>
+        <button class="chip is-on" type="button" data-finish="gloss"><span data-i18n="f.gloss">Gloss</span></button>
+        <button class="chip" type="button" data-finish="matte"><span data-i18n="f.matte">Matte</span></button>
+        <button class="chip" type="button" data-finish="soft"><span data-i18n="f.soft">Soft touch</span></button>
+        <button class="chip" type="button" data-finish="rough"><span data-i18n="f.rough">Rough touch</span></button>
+        <button class="chip" type="button" data-finish="emboss"><span data-i18n="f.emboss">Embossed</span></button>
+      </div>
+      <p class="finish__desc" id="finishDesc" data-reveal></p>
+      <div class="plate" data-reveal>
+        <h3 data-i18n="f.plate">One plate, many designs.</h3>
+        <p data-i18n="f.plated">Variable printing puts several versions of the same pack on a single printing plate.</p>
+        <div class="swatches" role="group" aria-label="Colourways">
+          <button class="sw is-on" type="button" data-cw="0" style="--a:#213469;--b:#f2a93b" aria-label="Navy"></button>
+          <button class="sw" type="button" data-cw="1" style="--a:#c2561f;--b:#ffe0a8" aria-label="Copper"></button>
+          <button class="sw" type="button" data-cw="2" style="--a:#0f7a73;--b:#f6d27a" aria-label="Teal"></button>
+          <button class="sw" type="button" data-cw="3" style="--a:#f3e9d4;--b:#213469" aria-label="Cream"></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 4. SHAPES ============ -->
+<section class="shapes" id="shapes">
+  <div class="shapes__grid wrap">
+    <div class="shapes__text">
+      <p class="eyebrow" data-i18n="s.eyebrow"><span class="dot"></span>Shapes</p>
+      <h2 class="h2" data-split data-i18n="s.title">Every shape your brand needs.</h2>
+      <div class="chips" role="group" aria-label="Shapes" data-reveal>
+        <button class="chip is-on" type="button" data-shape="round"><span data-i18n="s.round">Round</span></button>
+        <button class="chip" type="button" data-shape="square"><span data-i18n="s.square">Square</span></button>
+        <button class="chip" type="button" data-shape="rect"><span data-i18n="s.rect">Rectangular</span></button>
+        <button class="chip" type="button" data-shape="oval"><span data-i18n="s.oval">Oval</span></button>
+        <button class="chip" type="button" data-shape="oil"><span data-i18n="s.oil">Oil tin</span></button>
+      </div>
+      <div class="spec" id="shapeSpec" data-reveal>
+        <div class="spec__k" id="shapeName"></div>
+        <div class="spec__v" id="shapeDim"></div>
+        <p id="shapeNote"></p>
+      </div>
+      <p class="fine" data-reveal data-i18n="s.fine">3D views are illustrative. Sizes come from our product tables; custom sizes are available on request.</p>
+    </div>
+    <div class="stage" data-rig="product" data-pose="shapes" data-cursor="drag" aria-label="3D tin shapes"></div>
+  </div>
+</section>
+
+<!-- ============ 5. RANGE (bento) ============ -->
+<section class="range" id="range">
+  <div class="wrap">
+    <header class="sec-head">
+      <p class="eyebrow" data-i18n="r.eyebrow"><span class="dot"></span>The range</p>
+      <h2 class="h2" data-split data-i18n="r.title">Cans for what you put inside.</h2>
+    </header>
+    <div class="bento">
+      <article class="card card--xl tilt" data-reveal>
+        <span class="card__idx">01</span>
+        <h3 data-i18n="r.c1t">Fancy tins</h3>
+        <p data-i18n="r.c1d">Round, square, rectangular and oval gift tins for sweets, ka'ak, chocolate, coffee and more.</p>
+        <div class="card__meta"><span data-i18n="r.c1m">Ø 73–265 mm round · 120–240 mm square</span></div>
+        <svg class="card__art" viewBox="0 0 120 120" aria-hidden="true"><ellipse cx="60" cy="38" rx="42" ry="14"/><path d="M18 38v44c0 8 19 14 42 14s42-6 42-14V38"/><path d="M18 56c0 8 19 14 42 14s42-6 42-14" /></svg>
+      </article>
+      <article class="card tilt" data-reveal>
+        <span class="card__idx">02</span>
+        <h3 data-i18n="r.c2t">Food cans</h3>
+        <p data-i18n="r.c2d">Nine diameters from 52 to 215 mm.</p>
+        <div class="card__meta"><span data-i18n="r.c2m">60 ml – 8 L</span></div>
+      </article>
+      <article class="card tilt" data-reveal>
+        <span class="card__idx">03</span>
+        <h3 data-i18n="r.c3t">Milk powder cans</h3>
+        <p data-i18n="r.c3d">Large-format cans for powder and dairy.</p>
+        <div class="card__meta"><span data-i18n="r.c3m">Ø 99–189 mm · up to 5.5 kg</span></div>
+      </article>
+      <article class="card tilt" data-reveal>
+        <span class="card__idx">04</span>
+        <h3 data-i18n="r.c4t">Food containers &amp; trays</h3>
+        <p data-i18n="r.c4d">Including smooth round trays for knafeh and mansaf.</p>
+      </article>
+      <article class="card card--wide tilt" data-reveal>
+        <span class="card__idx">05</span>
+        <h3 data-i18n="r.c5t">Special molds</h3>
+        <p data-i18n="r.c5d">Coffee tins that protect aroma, seamless two-piece cans, windowed boxes, tobacco tins and fully custom shapes.</p>
+      </article>
+      <article class="card tilt" data-reveal>
+        <span class="card__idx">06</span>
+        <h3 data-i18n="r.c6t">Ends &amp; components</h3>
+        <p data-i18n="r.c6d">Easy open, peel off, penny lever, aluminium and normal ends.</p>
+      </article>
+      <article class="card tilt" data-reveal>
+        <span class="card__idx">07</span>
+        <h3 data-i18n="r.c7t">Industrial cans</h3>
+        <p data-i18n="r.c7d">Paints, chemicals and drums.</p>
+      </article>
+    </div>
+    <div class="range__cta" data-reveal>
+      <a class="btn magnetic" href="https://www.jordantinplate.com/pdf/catalog.pdf" target="_blank" rel="noopener"><span data-i18n="r.cat">Download the catalogue</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11M7 11l5 5 5-5M5 20h14"/></svg></a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 6. SEASONS ============ -->
+<section class="seasons" id="seasons">
+  <div class="seasons__grid wrap">
+    <div class="seasons__text">
+      <p class="eyebrow" data-i18n="z.eyebrow"><span class="dot"></span>Seasons</p>
+      <h2 class="h2" data-split data-i18n="z.title">Packaging that follows the harvest.</h2>
+      <p class="lead" data-reveal data-i18n="z.lead">Food has seasons. Your tins should be ready before them.</p>
+      <div class="tabs" role="tablist" data-reveal>
+        <button class="tab is-on" role="tab" type="button" data-season="olive">
+          <span class="tab__k" data-i18n="z.t1k">Autumn</span><b data-i18n="z.t1">Olive oil</b><em class="now" data-i18n="z.now">In season now</em>
+        </button>
+        <button class="tab" role="tab" type="button" data-season="eid">
+          <span class="tab__k" data-i18n="z.t2k">Ramadan &amp; Eid</span><b data-i18n="z.t2">Sweets, ka'ak &amp; chocolate</b>
+        </button>
+        <button class="tab" role="tab" type="button" data-season="cheese">
+          <span class="tab__k" data-i18n="z.t3k">Spring</span><b data-i18n="z.t3">White cheese</b>
+        </button>
+      </div>
+      <p class="season__desc" id="seasonDesc" data-reveal></p>
+      <p class="fine" data-reveal data-i18n="z.fine">Artwork shown is a sample, not a client design.</p>
+    </div>
+    <div class="stage" data-rig="product" data-pose="seasons" data-cursor="drag" aria-label="3D seasonal tin"></div>
+  </div>
+</section>
+
+<!-- ============ 7. STORY ============ -->
+<section class="story" id="story">
+  <div class="wrap">
+    <header class="sec-head">
+      <p class="eyebrow" data-i18n="st.eyebrow"><span class="dot"></span>Our story</p>
+      <h2 class="h2" data-split data-i18n="st.title">Metal, made by one family, since 1998.</h2>
+    </header>
+    <div class="story__grid">
+      <div class="bignum" data-reveal>
+        <b id="years" data-count-years="1998">28</b>
+        <span data-i18n="st.years">years of making metal packaging</span>
+      </div>
+      <div class="story__copy" data-reveal>
+        <p data-i18n="st.p1">Founded in 1998 and led today by the third generation of the family, Jordan Tinplate has grown into a manufacturer with fully automatic production lines, in-house design and skilled people.</p>
+        <blockquote><span data-i18n="st.vision">Our vision: to lead metal packaging in the region and be the first choice for customers around the globe.</span></blockquote>
+        <p data-i18n="st.p2">Our mission is to deliver high-end quality products and services using cutting-edge technology and a skilled workforce.</p>
+      </div>
+    </div>
+    <div class="proof" data-reveal>
+      <div class="proof__item" data-tbc><i>◇</i><b data-i18n="st.pr1">Certifications</b><span data-i18n="st.tbc">To be confirmed with management</span></div>
+      <div class="proof__item" data-tbc><i>◇</i><b data-i18n="st.pr2">Production capacity</b><span data-i18n="st.tbc">To be confirmed with management</span></div>
+      <div class="proof__item" data-tbc><i>◇</i><b data-i18n="st.pr3">Clients &amp; case studies</b><span data-i18n="st.tbc">To be confirmed with management</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 8. NEWS ============ -->
+<section class="news" id="news">
+  <div class="wrap">
+    <header class="sec-head">
+      <p class="eyebrow" data-i18n="n.eyebrow"><span class="dot"></span>News &amp; events</p>
+      <h2 class="h2" data-split data-i18n="n.title">Out in the world.</h2>
+    </header>
+    <div class="news__grid">
+      <a class="ncard tilt" data-reveal href="https://en.sharikatmubasher.com/media-hub/news/21479228/jordan-canning-eyes-expanding-into-saudi-arabia" target="_blank" rel="noopener">
+        <span class="ncard__tag" data-i18n="n.t1">Interview · Apr 2025</span>
+        <h3 data-i18n="n.h1">Saudi Food Manufacturing 2025</h3>
+        <p data-i18n="n.p1">Our partner Omar Abu Salha speaks to Sharikat Mubasher about regional expansion.</p>
+        <span class="ncard__go" data-i18n="n.read">Read</span>
+      </a>
+      <article class="ncard tilt" data-reveal>
+        <span class="ncard__tag">Dubai · 2017</span>
+        <h3>Gulfood Manufacturing</h3>
+        <p data-i18n="n.p2">Meeting food manufacturers from across the region.</p>
+      </article>
+      <article class="ncard tilt" data-reveal>
+        <span class="ncard__tag">New York · 2017</span>
+        <h3>Fancy Food Show</h3>
+        <p data-i18n="n.p3">Our tins on the stand in North America.</p>
+      </article>
+      <article class="ncard tilt" data-reveal>
+        <span class="ncard__tag">Baghdad · 2017</span>
+        <h3 data-i18n="n.h4">Baghdad International Fair</h3>
+        <p data-i18n="n.p4">Meeting the Iraqi market in person.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 9. CONTACT / FOOTER ============ -->
+<section class="contact" id="contact">
+  <div class="wrap contact__grid">
+    <div>
+      <p class="eyebrow" data-i18n="c.eyebrow"><span class="dot"></span>Let's talk</p>
+      <h2 class="mega" data-split data-i18n="c.title">Let's put your brand on metal.</h2>
+      <ul class="contact__list" data-reveal>
+        <li><span data-i18n="c.phone">Phone</span><a href="tel:+96264051125" dir="ltr">+962 6 4051125</a></li>
+        <li><span data-i18n="c.mail">Email</span><a href="mailto:sales@jordantinplate.com">sales@jordantinplate.com</a></li>
+        <li data-tbc><span data-i18n="c.addr">Address</span><em data-i18n="c.addrv">Al-Zmailat · Al-Mwagar, Amman, Jordan (to confirm)</em></li>
+      </ul>
+      <div class="social" data-reveal>
+        <a href="https://www.linkedin.com/company/jordan-tin-plate-canning-printing-industrial-co" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="https://www.instagram.com/jordantinplate" target="_blank" rel="noopener">Instagram</a>
+        <a href="https://www.facebook.com/JordanTinplate" target="_blank" rel="noopener">Facebook</a>
+      </div>
+    </div>
+    <form class="form" id="quote" data-reveal novalidate>
+      <label><span data-i18n="c.f1">Your name</span><input name="name" autocomplete="name" required></label>
+      <label><span data-i18n="c.f2">Company</span><input name="company" autocomplete="organization"></label>
+      <label><span data-i18n="c.f3">Email</span><input name="email" type="email" autocomplete="email" required></label>
+      <label><span data-i18n="c.f4">What are you packing?</span>
+        <select name="product">
+          <option data-i18n="c.o1">Olive oil</option>
+          <option data-i18n="c.o2">Sweets, ka'ak or chocolate</option>
+          <option data-i18n="c.o3">White cheese</option>
+          <option data-i18n="c.o4">Milk powder</option>
+          <option data-i18n="c.o5">Coffee, tea or other food</option>
+          <option data-i18n="c.o6">Something else</option>
+        </select>
+      </label>
+      <label class="full"><span data-i18n="c.f5">Tell us about your pack</span><textarea name="msg" rows="3"></textarea></label>
+      <button class="btn magnetic" type="submit"><span data-i18n="c.send">Send request</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+      <p class="fine" id="formNote" aria-live="polite"></p>
+    </form>
+  </div>
+  <footer class="foot wrap">
+    <span>© <span id="yr">2026</span> Jordan Tinplate</span>
+    <span class="foot__proto" data-i18n="foot.proto">Homepage prototype · illustrative content</span>
+    <button class="linkbtn" id="reviewBtn" type="button" data-i18n="foot.review">Review mode</button>
+  </footer>
+</section>
+
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+<script type="module" src="js/main.js"></script>
+<noscript><style>#loader,#curtain{display:none!important}.body.is-loading{overflow:auto}</style></noscript>
+</body>
+</html>
