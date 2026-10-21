@@ -5,10 +5,10 @@ const FD = '"Bricolage Grotesque","Readex Pro",system-ui,sans-serif';
 const FA = '"Readex Pro","Bricolage Grotesque",system-ui,sans-serif';
 
 export const COLORWAYS = [
-  { a: '#213469', b: '#0b1330', accent: '#f2a93b', ink: '#ffffff' }, // brand navy
+  { a: '#002F6C', b: '#0b1330', accent: '#f2a93b', ink: '#ffffff' }, // brand navy
   { a: '#c2561f', b: '#5a1f0a', accent: '#ffe0a8', ink: '#ffffff' }, // copper
   { a: '#0f7a73', b: '#05302e', accent: '#f6d27a', ink: '#ffffff' }, // teal
-  { a: '#f3e9d4', b: '#d9c6a0', accent: '#213469', ink: '#213469' }  // cream
+  { a: '#f3e9d4', b: '#d9c6a0', accent: '#002F6C', ink: '#002F6C' }  // cream
 ];
 
 const cache = new Map();
@@ -115,9 +115,10 @@ function drawArt(ctx, w, h, theme, cwI, panels) {
     panels.forEach((px) => {
       txt(ctx, 'JORDAN', px, cy - 120 * k, 150 * k, cw.ink, { spacing: 4 * k, weight: 800 });
       txt(ctx, 'TINPLATE', px, cy + 8 * k, 150 * k, cw.accent, { spacing: 4 * k, weight: 800 });
-      ctx.fillStyle = cw.accent; ctx.fillRect(px - 150 * k, cy + 92 * k, 300 * k, 5 * k);
-      txt(ctx, 'WE PRINT. WE CAN.', px, cy + 142 * k, 44 * k, cw.ink, { spacing: 8 * k, weight: 600, alpha: 0.9 });
-      txt(ctx, 'علب معدنية · منذ 1998', px, cy + 208 * k, 44 * k, cw.ink, { font: FA, weight: 500, alpha: 0.85 });
+      txt(ctx, 'CANNING', px, cy + 98 * k, 40 * k, cw.ink, { spacing: 22 * k, weight: 600, alpha: 0.9 });
+      ctx.fillStyle = cw.accent; ctx.fillRect(px - 150 * k, cy + 134 * k, 300 * k, 5 * k);
+      txt(ctx, 'WE PRINT. WE CAN.', px, cy + 172 * k, 40 * k, cw.ink, { spacing: 8 * k, weight: 600, alpha: 0.9 });
+      txt(ctx, 'علب معدنية · منذ 1998', px, cy + 228 * k, 40 * k, cw.ink, { font: FA, weight: 500, alpha: 0.85 });
     });
   } else if (theme === 'olive') {
     grad(ctx, w, h, '#2a4f2d', '#0d2212', 1);

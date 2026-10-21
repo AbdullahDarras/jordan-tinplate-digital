@@ -1,0 +1,17 @@
+date,day,time,pillar,type,file,status
+2026-10-25,Sun,09:30,5,Extra: Short fact + question (pinned intro),content/x-extra/week1.md (X-E01),draft; pending approval
+2026-10-27,Tue,13:00,1,Extra: Seasonal prompt (reply-ready question to olive-oil packers),content/x-extra/week1.md (X-E02),draft; pending approval
+2026-10-28,Wed,11:00,4,Main post,content/week1/03-x-thread-olive-oil.md,copy ready; technical review pending (posts 2 to 4)
+2026-10-29,Thu,20:30,2,Extra: Behind-the-scenes clip (from the professional videos),content/x-extra/week1.md (X-E03),draft; pending approval
+2026-11-01,Sun,09:30,4,Extra: Quote of the LinkedIn article (checklist card),content/x-extra/week2.md (X-E04),draft; pending approval
+2026-11-03,Tue,13:00,3,Extra: Myth vs fact,content/x-extra/week2.md (X-E05),draft; pending approval
+2026-11-04,Wed,11:00,6,Main post (poll),not yet written (Month-1 plan #7),planned
+2026-11-05,Thu,20:30,5,Extra: Behind-the-scenes (location and people),content/x-extra/week2.md (X-E06),draft; pending approval
+2026-11-08,Sun,09:30,6,Extra: Poll (seasonal planning),content/x-extra/week3.md (X-E07),draft; pending approval
+2026-11-10,Tue,13:00,1,Extra: Reply-ready question to packaging buyers,content/x-extra/week3.md (X-E08),draft; pending approval
+2026-11-11,Wed,11:00,1,Main post,not yet written (Month-1 plan #11),planned
+2026-11-12,Thu,20:30,2,Extra: Behind-the-scenes clip (from the professional videos),content/x-extra/week3.md (X-E09),draft; pending approval
+2026-11-15,Sun,09:30,5,Extra: Quote of the LinkedIn family-story post,content/x-extra/week4.md (X-E10),draft; pending approval
+2026-11-17,Tue,13:00,6,Extra: Seasonal prompt (white-cheese spring season),content/x-extra/week4.md (X-E11),draft; pending approval
+2026-11-18,Wed,11:00,6,Main post,not yet written (Month-1 plan #15),planned
+2026-11-19,Thu,20:30,3,Extra: Poll (shapes),content/x-extra/week4.md (X-E12),draft; pending approval
