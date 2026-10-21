@@ -1,7 +1,7 @@
 # Vendored libraries
 
-The prototype loads **no external JavaScript**. Everything below is copied unmodified from the npm tarballs
-(`npm pack <package>@<version>`) and served from this folder. Google Fonts (CSS and font files) are still loaded from Google.
+The site loads **no external JavaScript**. Everything below is copied unmodified from the npm tarballs
+(`npm pack <package>@<version>`) and served from this folder (same files as `website-prototype/vendor/`). Google Fonts (CSS and font files) are still loaded from Google.
 
 | Library | Version | Files here | Source in the npm package | Licence |
 |---|---|---|---|---|
@@ -12,8 +12,7 @@ The prototype loads **no external JavaScript**. Everything below is copied unmod
 | GSAP ScrollTrigger | 3.12.5 | `gsap/ScrollTrigger.min.js` | `dist/ScrollTrigger.min.js` | same GreenSock licence (the 3.12.5 file header points to the standard licence) |
 | Lenis | 1.1.13 | `lenis/lenis.min.js` | `dist/lenis.min.js` | MIT (`lenis/LICENSE`) |
 
-`index.html` maps the bare `three` and `three/addons/` imports to this folder with an import map, so `js/scene.js`
-imports are unchanged.
+Every page maps the bare `three` and `three/addons/` imports to this folder with an import map (written by `tools/build.mjs`), so `assets/js/engine/scene.js` imports are unchanged.
 
 To upgrade, run `npm pack` for the new version in a scratch folder, copy the same files over, and update the table.
 The three.js addons import `from 'three'`, so keep the import map and always upgrade three and its addons together.
