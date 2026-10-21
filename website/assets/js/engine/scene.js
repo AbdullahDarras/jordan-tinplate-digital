@@ -1,7 +1,6 @@
 // One persistent WebGL canvas. A single "product" tin follows the .stage elements in the layout,
 // morphs between shapes / artwork / finishes, and a separate "journey" rig is scrubbed by scroll.
 import * as THREE from 'three';
-import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
 import * as ART from './art.js';
 
@@ -21,7 +20,7 @@ const FIN = {
   rough: { metalness: 0.55, roughness: 1.8, clearcoat: 0, clearcoatRoughness: 0.5, sheen: 0, bumpScale: 1.4, bump: 'rough' },
   emboss: { metalness: 0.85, roughness: 0.5, clearcoat: 0.7, clearcoatRoughness: 0.1, sheen: 0, bumpScale: 2.2, bump: 'emboss' }
 };
-const ACCENT = { olive: '#d9a93c', eid: '#e9bd5a', cheese: ART.PAL.n500, milk: ART.PAL.n500, coffee: '#c8943c', industrial: '#e8662a' };
+const ACCENT = { olive: '#e8bf4f', eid: '#f4cf72', cheese: '#2a68c4', milk: '#2a68c4', coffee: '#e0a64a', industrial: '#ff7a33' };
 
 export function createScene(canvas) {
   const gsap = window.gsap;
@@ -33,18 +32,46 @@ export function createScene(canvas) {
   renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, maxDpr()));
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = 1.0;
+  const REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   const scene = new THREE.Scene();
   const pmrem = new THREE.PMREMGenerator(renderer);
-  scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+  // A bright, soft photo studio instead of a dim room: a luminous warm-white dome, big soft-boxes (they become the long, soft reflections on the lacquer and
+  // the foil), vertical strip lights for the cylinder highlights, warm and cool rim strips and a warm bounce from the floor. Built once, 64 px per face.
+  function studio() {
+    const st = new THREE.Scene();
+    const dome = new THREE.Mesh(new THREE.SphereGeometry(40, 32, 16), new THREE.ShaderMaterial({
+      side: THREE.BackSide, depthWrite: false,
+      vertexShader: 'varying vec3 vP; void main(){ vP = position; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }',
+      fragmentShader: 'varying vec3 vP; void main(){ float y = normalize(vP).y; vec3 top = vec3(0.95,0.93,0.9); vec3 mid = vec3(0.26,0.3,0.4); vec3 low = vec3(0.5,0.38,0.27); vec3 c = y > 0.0 ? mix(mid, top, pow(y,0.7)) : mix(mid, low, pow(-y,0.6)); gl_FragColor = vec4(c, 1.0); }'
+    }));
+    st.add(dome);
+    const box = (w, h, x, y, z, rgb, k) => {
+      const m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshBasicMaterial({ color: new THREE.Color(rgb[0] * k, rgb[1] * k, rgb[2] * k), side: THREE.DoubleSide }));
+      m.position.set(x, y, z); m.lookAt(0, 0, 0); st.add(m); return m;
+    };
+    box(26, 18, 0, 26, 2, [1, 0.97, 0.92], 1.8);          // overhead soft-box
+    box(14, 20, -17, 6, 15, [1, 0.98, 0.95], 6);        // key soft-box, front left
+    box(5, 24, 18, 3, 12, [0.96, 0.98, 1], 7);          // tall strip, front right (the long highlight on a cylinder)
+    box(4, 22, -6, 3, 22, [1, 1, 1], 4);                // front strip, slightly left of the camera axis
+    box(6, 26, -22, 4, -8, [1, 0.86, 0.6], 5);          // warm rim, back left
+    box(6, 26, 22, 4, -10, [0.7, 0.85, 1], 4.5);          // cool rim, back right
+    box(30, 14, 0, -18, 8, [1, 0.86, 0.66], 1.2);       // warm floor bounce
+    return st;
+  }
+  scene.environment = pmrem.fromScene(studio(), 0.02).texture;
 
   const camera = new THREE.PerspectiveCamera(30, 1, 0.1, 100);
   camera.position.set(0, 0, 12);
   const DIST = 12, HALF_H = DIST * Math.tan(THREE.MathUtils.degToRad(15));
 
-  const key = new THREE.DirectionalLight(0xffffff, 1.5); key.position.set(3, 5, 6); scene.add(key);
-  const rimL = new THREE.PointLight(0x879ebc, 0, 40);   // navy-300 rimL.position.set(-6, 2, 3); scene.add(rimL);
-  const rimR = new THREE.PointLight(0xffa24a, 0, 40); rimR.position.set(6, -1, 3); scene.add(rimR);
+  const key = new THREE.DirectionalLight(0xfff6e8, 0.8); key.position.set(3, 5, 6); scene.add(key);
+  const fill = new THREE.HemisphereLight(0xffffff, 0xffe2b8, 0.2); scene.add(fill);       // lifted ambient: no crushed blacks
+  const rimL = new THREE.PointLight(0xbcd6ff, 0, 40); rimL.position.set(-6, 2, 3); scene.add(rimL);   // cool
+  const rimR = new THREE.PointLight(0xffb867, 0, 40); rimR.position.set(6, -1, 3); scene.add(rimR);   // gentle warm rim
+  // a slow specular sweep: a warm point light drifts across the front of the tin every few seconds and glides over the gold
+  const glint = new THREE.PointLight(0xfff0c8, 0, 60); glint.position.set(-8, 1.5, 4.5); scene.add(glint);
+  const GLINT_PEAK = 70;
 
   const envMats = new Set();
   const env = { i: 1.0 };
@@ -58,7 +85,7 @@ export function createScene(canvas) {
   // L = layers of a printed surface from art.js (map + ORM + relief), or a plain texture for surfaces without them (the journey sheet)
   // painted metal for the side of a premium lid: lacquer over tinplate (same family as the body print), not bare metal
   function lacquerMat(color) {
-    const m = new THREE.MeshPhysicalMaterial({ color, metalness: 0.5, roughness: 0.26, clearcoat: 1, clearcoatRoughness: 0.12 });
+    const m = new THREE.MeshPhysicalMaterial({ color, metalness: 0.2, roughness: 0.2, clearcoat: 1, clearcoatRoughness: 0.1 });
     m.userData.envBase = 1.1; envMats.add(m); return m;
   }
   function printMat(L, side = THREE.FrontSide) {
@@ -74,76 +101,112 @@ export function createScene(canvas) {
     const to = { metalness: f.metalness, roughness: f.roughness, clearcoat: f.clearcoat, clearcoatRoughness: f.clearcoatRoughness, sheen: f.sheen, bumpScale: L ? f.bumpScale : 0 };
     if (instant) Object.assign(m, to); else gsap.to(m, { ...to, duration: 0.7, ease: 'power2.out' });
   }
-  const accentOf = (theme, cw) => theme === 'brand' ? ART.COLORWAYS[cw].foil[1] : ACCENT[theme];
+  const accentOf = (theme, cw) => theme === 'brand' ? ART.COLORWAYS[cw].foil[2] : ACCENT[theme];
   const skirtOf = (theme, cw) => theme === 'brand' ? ART.COLORWAYS[cw].body[0] : ACCENT[theme]; // lid side: lacquer on the premium tin, the theme's metal on the others
 
   /* ------------------------------------------------------------ model builders */
-  function lidParts(R, H, theme, cw, metal) {
-    const LR = R + 0.06;
+  // TRUE PROPORTIONS. The factory's can templates (docs/data/can-sizes.json, millimetres) are used here only as ratios, to shape the models: no
+  // number is ever shown on the site. Round cans: 1 unit = 36.5 mm (a 73 mm can has R = 1); boxes use the same unit; the olive-oil tins use their own
+  // (the 16 kg tin, 350 mm tall, is 2.75 units high). Every model reports ext = { h, w }, its visual height and footprint, so mountModel can bring
+  // very different tins (a flat tuna can, a tall box, a big oil tin) to a similar size on the stage.
+  const MM = 1 / 36.5, OIL_U = 2.75 / 350;
+  const SILVER = '#eef2f8';
+  const rimMetalOf = (theme, cw) => (theme === 'brand' ? metalMat(ART.COLORWAYS[cw].foil[2], 0.26) : metalMat(SILVER, 0.2));
+
+  function lidParts(R, H, theme, cw, metal, k = 1) {
+    const LR = R + 0.06 * k;
     const lidSide = theme === 'brand' ? lacquerMat(skirtOf(theme, cw)) : metalMat(skirtOf(theme, cw), 0.28);
     const lidTop = printMat(ART.layers('lid', theme, cw));
     const g = new THREE.Group(); g.position.y = H / 2;
-    const skirt = new THREE.Mesh(new THREE.CylinderGeometry(LR, LR, 0.24, 96, 1, true), lidSide); skirt.position.y = 0.04;
-    const top = new THREE.Mesh(new THREE.CircleGeometry(LR, 64), lidTop); top.rotation.x = -Math.PI / 2; top.position.y = 0.16;
-    const lip = new THREE.Mesh(new THREE.TorusGeometry(LR, 0.04, 12, 96), theme === 'brand' ? metalMat(ART.COLORWAYS[cw].foil[1], 0.3) : metal); lip.rotation.x = Math.PI / 2; lip.position.y = 0.16;
+    const skirt = new THREE.Mesh(new THREE.CylinderGeometry(LR, LR, 0.24 * k, 96, 1, true), lidSide); skirt.position.y = 0.04 * k;
+    const top = new THREE.Mesh(new THREE.CircleGeometry(LR, 64), lidTop); top.rotation.x = -Math.PI / 2; top.position.y = 0.16 * k;
+    const lip = new THREE.Mesh(new THREE.TorusGeometry(LR, 0.04 * k, 12, 96), theme === 'brand' ? metalMat(ART.COLORWAYS[cw].foil[2], 0.26) : metal); lip.rotation.x = Math.PI / 2; lip.position.y = 0.16 * k;
     g.add(skirt, top, lip); g.userData.print = [lidTop];
     return g;
   }
-  function buildRound({ R = 1, H = 1.5, theme, cw }) {
+  function buildRound({ R = 1, H = 1.5, theme, cw, k = R }) {
     const group = new THREE.Group(), print = [];
-    const metal = metalMat();
+    const metal = rimMetalOf(theme, cw);
     const bodyMat = printMat(ART.layers('wrap', theme, cw, H / (TAU * R))); print.push(bodyMat);
     const body = new THREE.Mesh(new THREE.CylinderGeometry(R, R, H, 96, 1, true), bodyMat); body.rotation.y = -Math.PI / 2;
-    const rim = new THREE.Mesh(new THREE.TorusGeometry(R, 0.035, 12, 96), metal); rim.rotation.x = Math.PI / 2; rim.position.y = -H / 2;
+    const rim = new THREE.Mesh(new THREE.TorusGeometry(R, 0.035 * k, 12, 96), metal); rim.rotation.x = Math.PI / 2; rim.position.y = -H / 2;
     const bottom = new THREE.Mesh(new THREE.CircleGeometry(R, 64), metal); bottom.rotation.x = Math.PI / 2; bottom.position.y = -H / 2;
-    const lid = lidParts(R, H, theme, cw, metal);
+    const lid = lidParts(R, H, theme, cw, metal, k);
     group.add(body, rim, bottom, lid); print.push(...lid.userData.print);
-    return { group, print, parts: { body, bottom, lid } };
+    return { group, print, parts: { body, bottom, lid }, ext: { h: H + 0.2 * k, w: 2 * (R + 0.06 * k) } };
   }
-  function buildBox({ w, h, d, theme, cw, r = 0.09 }) {
+  // Square / rectangular gift box with a lid that overhangs the body a little (sizes in mm, see docs/data/can-sizes.json: lid 160, body 152 ...).
+  function buildGiftBox({ w, d, h, lidH, ins = 3, theme, cw }) {
+    const W = w * MM, D = d * MM, Hh = h * MM, LH = lidH * MM, I = ins * MM, BH = Hh - LH, BW = W - 2 * I, BD = D - 2 * I;
     const group = new THREE.Group();
-    const metal = metalMat();
-    const front = printMat(ART.layers('face', theme, cw, h / w));
-    const side = printMat(ART.layers('face', theme, cw, h / d));
-    const body = new THREE.Mesh(new RoundedBoxGeometry(w, h, d, 6, r), [side, side, metal, metal, front, front]);
+    const metal = rimMetalOf(theme, cw);
+    const front = printMat(ART.layers('face', theme, cw, BH / BW));
+    const side = printMat(ART.layers('face', theme, cw, BH / BD));
+    const body = new THREE.Mesh(new RoundedBoxGeometry(BW, BH, BD, 5, Math.min(0.12, BH * 0.3)), [side, side, metal, metal, front, front]);
+    body.position.y = -Hh / 2 + BH / 2;
     const lidSide = theme === 'brand' ? lacquerMat(skirtOf(theme, cw)) : metalMat(skirtOf(theme, cw), 0.28);
-    const topPrint = printMat(ART.layers('top', theme, cw, d / w));
-    const lid = new THREE.Mesh(new RoundedBoxGeometry(w + 0.1, 0.26, d + 0.1, 5, 0.07), [lidSide, lidSide, topPrint, metal, lidSide, lidSide]);
-    lid.position.y = h / 2 + 0.06;
-    group.add(body, lid);
-    return { group, print: [front, side, topPrint], parts: { body, lid, bottom: body } };
+    const topPrint = printMat(ART.layers('top', theme, cw, D / W));
+    const lid = new THREE.Mesh(new RoundedBoxGeometry(W, LH, D, 5, Math.min(0.14, LH * 0.35)), [lidSide, lidSide, topPrint, lidSide, lidSide, lidSide]);
+    lid.position.y = Hh / 2 - LH / 2;
+    const edge = new THREE.Mesh(new RoundedBoxGeometry(W + 0.012, 0.05, D + 0.012, 3, 0.02), theme === 'brand' ? metalMat(ART.COLORWAYS[cw].foil[2], 0.26) : metalMat(ACCENT[theme] || SILVER, 0.3));
+    edge.position.y = Hh / 2 - LH + 0.025;
+    group.add(body, lid, edge);
+    return { group, print: [front, side, topPrint], parts: { body, lid, bottom: body }, ext: { h: Hh, w: Math.hypot(W, D) * 0.68 } };
   }
-  function buildOil({ theme, cw, w = 1.7, h = 2.1, d = 1.05 }) {
-    const sc = Math.min(1, w / 1.7 + 0.15); // spout, cap and handle stay in proportion on the smaller tins
+  // Olive-oil tin (sizes in mm): printed body, stepped shoulder, flat top, a ribbed screw cap on a spout and a carry handle.
+  function buildOil({ theme, cw, w, d, h }) {
+    const W = w * OIL_U, D = d * OIL_U, Ht = h * OIL_U;
     const group = new THREE.Group();
-    const metal = metalMat();
-    const front = printMat(ART.layers('face', theme, cw, h / w));
-    const side = printMat(ART.layers('face', theme, cw, h / d));
-    const body = new THREE.Mesh(new RoundedBoxGeometry(w, h, d, 6, 0.08), [side, side, metal, metal, front, front]);
-    const plate = new THREE.Mesh(new RoundedBoxGeometry(w + 0.02, 0.08, d + 0.02, 3, 0.03), metal); plate.position.y = h / 2 + 0.02;
-    const cap = new THREE.Group(); cap.position.set(w * 0.29, h / 2 + 0.06, 0); cap.scale.setScalar(sc);
-    const spout = new THREE.Mesh(new THREE.CylinderGeometry(0.17, 0.2, 0.3, 40), metal); spout.position.y = 0.15;
-    const cover = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.2, 0.12, 40), metalMat(accentOf(theme, cw), 0.3)); cover.position.y = 0.34;
-    cap.add(spout, cover);
-    const handle = new THREE.Mesh(new THREE.TorusGeometry(0.38 * sc, 0.035, 10, 48, Math.PI), metal);
-    handle.position.set(-w * 0.18, h / 2 + 0.06, 0); handle.rotation.set(0, 0, 0);
-    group.add(body, plate, cap, handle);
-    return { group, print: [front, side], parts: { body, lid: cap, bottom: body } };
+    const metal = metalMat(SILVER, 0.22), accent = metalMat(accentOf(theme, cw), 0.3);
+    const bh = Ht * 0.94, sl = Ht * 0.034, tp = Ht * 0.026, r = Math.min(W, D) * 0.05;
+    const front = printMat(ART.layers('face', theme, cw, bh / W));
+    const side = printMat(ART.layers('face', theme, cw, bh / D));
+    const body = new THREE.Mesh(new RoundedBoxGeometry(W, bh, D, 6, r), [side, side, metal, metal, front, front]);
+    body.position.y = -Ht / 2 + bh / 2;
+    const shoulder = new THREE.Mesh(new RoundedBoxGeometry(W * 0.965, sl, D * 0.965, 4, sl * 0.4), metal); shoulder.position.y = -Ht / 2 + bh + sl / 2 - 0.004;
+    const plate = new THREE.Mesh(new RoundedBoxGeometry(W * 0.9, tp, D * 0.9, 4, tp * 0.45), metal); plate.position.y = -Ht / 2 + bh + sl + tp / 2 - 0.008;
+    const topY = -Ht / 2 + bh + sl + tp - 0.008;
+    // spout and ribbed cap (the cap is a toothed disc, extruded)
+    const rr = Math.min(W, D) * 0.12, cap = new THREE.Group(); cap.position.set(W * 0.27, topY, 0);
+    const neck = new THREE.Mesh(new THREE.CylinderGeometry(rr * 0.8, rr * 0.92, rr * 0.7, 36), metal); neck.position.y = rr * 0.35;
+    const teeth = 26, sh = new THREE.Shape();
+    for (let i = 0; i < teeth * 2; i++) { const a = (i / (teeth * 2)) * TAU, q = i % 2 ? rr * 0.9 : rr * 1.04; i ? sh.lineTo(Math.cos(a) * q, Math.sin(a) * q) : sh.moveTo(q, 0); }
+    const capGeo = new THREE.ExtrudeGeometry(sh, { depth: rr * 0.75, bevelEnabled: true, bevelSize: rr * 0.05, bevelThickness: rr * 0.05, bevelSegments: 2, curveSegments: 1 });
+    const capMesh = new THREE.Mesh(capGeo, accent); capMesh.rotation.x = -Math.PI / 2; capMesh.position.y = rr * 0.55;
+    const ringM = new THREE.Mesh(new THREE.TorusGeometry(rr * 0.96, rr * 0.07, 8, 36), metal); ringM.rotation.x = Math.PI / 2; ringM.position.y = rr * 0.5;
+    cap.add(neck, capMesh, ringM);
+    // carry handle: a rounded loop standing on two small lugs
+    const hx0 = -W * 0.3, hx1 = W * 0.02, hh = Math.max(0.24, Ht * 0.09), tr = Math.max(0.034, Math.min(W, D) * 0.04);
+    const hp = new THREE.CatmullRomCurve3([
+      new THREE.Vector3(hx0, 0, 0), new THREE.Vector3(hx0, hh * 0.72, 0), new THREE.Vector3(hx0 + hh * 0.5, hh, 0),
+      new THREE.Vector3(hx1 - hh * 0.5, hh, 0), new THREE.Vector3(hx1, hh * 0.72, 0), new THREE.Vector3(hx1, 0, 0)
+    ], false, 'catmullrom', 0.25);
+    const handle = new THREE.Mesh(new THREE.TubeGeometry(hp, 40, tr, 8, false), metal); handle.position.y = topY;
+    const lug = (x) => { const l = new THREE.Mesh(new RoundedBoxGeometry(tr * 3.2, tr * 1.6, tr * 3.2, 2, tr * 0.5), metal); l.position.set(x, topY + tr * 0.4, 0); return l; };
+    group.add(body, shoulder, plate, cap, handle, lug(hx0), lug(hx1));
+    return { group, print: [front, side], parts: { body, lid: cap, bottom: body }, ext: { h: Ht + rr * 1.4, w: Math.hypot(W, D) * 0.9 } };
   }
+  const gift = (o) => (t, c) => buildGiftBox({ ...o, theme: t, cw: c });
+  const can = (dia, h) => (t, c) => buildRound({ R: (dia / 2) * MM, H: h * MM, theme: t, cw: c });
+  const oil = (w, d, h, pow = 0.5) => (t, c) => { const m = buildOil({ theme: t, cw: c, w, d, h }); m.pow = pow; return m; };
   const SHAPES = {
-    round: (t, c) => buildRound({ R: 1, H: 1.5, theme: t, cw: c }),
-    square: (t, c) => buildBox({ w: 1.7, h: 1.2, d: 1.7, theme: t, cw: c }),
-    rect: (t, c) => buildBox({ w: 2.4, h: 1.15, d: 1.4, theme: t, cw: c }),
-    oval: (t, c) => { const m = buildRound({ R: 1, H: 1.2, theme: t, cw: c }); m.group.scale.set(1.4, 1, 0.8); return m; },
-    oil: (t, c) => buildOil({ theme: t, cw: c }),
-    // olive-oil tins in the four sizes the factory makes (1, 4, 8 and 16 L/kg); proportions are illustrative
-    oil1: (t, c) => buildOil({ theme: t, cw: c, w: 1.0, h: 1.45, d: 0.66 }),
-    oil4: (t, c) => buildOil({ theme: t, cw: c, w: 1.4, h: 1.85, d: 0.9 }),
-    oil8: (t, c) => buildOil({ theme: t, cw: c, w: 1.75, h: 2.25, d: 1.1 }),
-    oil16: (t, c) => buildOil({ theme: t, cw: c, w: 2.1, h: 2.75, d: 1.3 }),
-    cheese: (t, c) => buildRound({ R: 1.25, H: 0.85, theme: t, cw: c }),
-    milk: (t, c) => buildRound({ R: 0.95, H: 2.0, theme: t, cw: c }),
-    coffee: (t, c) => buildBox({ w: 1.35, h: 2.0, d: 1.35, theme: t, cw: c }),
+    round: (t, c) => buildRound({ R: 1, H: 1.5, theme: t, cw: c }),            // the signature round gift tin (no factory template: proportions are a design choice)
+    square: gift({ w: 160, d: 160, h: 42, lidH: 20, ins: 4 }),                  // template: square box, short body (lid 160, body 152)
+    rect: gift({ w: 175, d: 105, h: 62, lidH: 24, ins: 4 }),                    // rectangular gift tin (no template: illustrative)
+    oval: (t, c) => { const m = buildRound({ R: 1, H: 1.2, theme: t, cw: c }); m.group.scale.set(1.4, 1, 0.8); m.ext = { h: 1.4, w: 2.3 }; return m; },
+    // olive oil: 4 L (rectangular, 175 x 115 x 245) and 16 kg (square, 235 x 235 x 350) are exact; the 1 L and 8 L tins are the 4 L family scaled (no template)
+    oil: oil(175, 115, 245),
+    oil1: oil(110, 72, 154),
+    oil4: oil(175, 115, 245),
+    oil8: oil(220, 145, 309),
+    oil16: oil(235, 235, 350),
+    can: can(73, 110),                                                          // 400 g food can
+    cheese: can(99, 119),                                                       // 1 kg cheese / halawa can
+    tuna: can(83, 38),                                                          // tuna can
+    milk: can(120, 165),                                                        // milk powder: the larger can family (no template: scaled up from the 1 kg can)
+    box70: gift({ w: 70, d: 70, h: 32, lidH: 16, ins: 2.5 }),                   // small square box
+    tall: gift({ w: 70, d: 70, h: 130, lidH: 20, ins: 2.5 }),                   // tall square box
+    coffee: gift({ w: 70, d: 70, h: 130, lidH: 20, ins: 2.5 }),
     paint: (t, c) => {
       const m = buildRound({ R: 1.15, H: 1.45, theme: t, cw: c });
       const bail = new THREE.Mesh(new THREE.TorusGeometry(1.1, 0.03, 8, 64, Math.PI), metalMat('#9aa3b1', 0.3));
@@ -170,6 +233,29 @@ export function createScene(canvas) {
   const POSES = { hero: { ry: -0.55, rx: 0.2, s: 1.0 }, finish: { ry: 0.35, rx: 0.16, s: 1.05 }, shapes: { ry: -0.45, rx: 0.22, s: 1.0 }, seasons: { ry: 0.5, rx: 0.18, s: 1.05 } };
   const ptr = { x: 0, y: 0, sx: 0, sy: 0 };
 
+  // a soft four-pointed star, drawn once (64 px): the sparkle that twinkles around every tin
+  const starTex = (() => {
+    const c = document.createElement('canvas'); c.width = c.height = 64; const x = c.getContext('2d');
+    const g = x.createRadialGradient(32, 32, 0, 32, 32, 30); g.addColorStop(0, 'rgba(255,255,255,1)'); g.addColorStop(0.18, 'rgba(255,240,190,.9)'); g.addColorStop(1, 'rgba(255,220,130,0)');
+    x.fillStyle = g; x.beginPath(); x.moveTo(32, 1); x.quadraticCurveTo(34, 30, 63, 32); x.quadraticCurveTo(34, 34, 32, 63); x.quadraticCurveTo(30, 34, 1, 32); x.quadraticCurveTo(30, 30, 32, 1); x.fill();
+    const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t;
+  })();
+  const SPK = 14;
+  function makeSparkles() {
+    const pos = new Float32Array(SPK * 3), col = new Float32Array(SPK * 4), ph = [];
+    for (let i = 0; i < SPK; i++) {
+      const a = (i / SPK) * TAU * 1.7 + Math.random() * 0.5, r = 1.15 + Math.random() * 0.75;
+      pos[i * 3] = Math.cos(a) * r * 1.05; pos[i * 3 + 1] = (Math.random() - 0.5) * 2.5; pos[i * 3 + 2] = Math.sin(a) * r * 0.6 + 0.3;
+      col[i * 4] = 1; col[i * 4 + 1] = 0.9; col[i * 4 + 2] = 0.62; col[i * 4 + 3] = 0;
+      ph.push([Math.random() * 6.28, 0.5 + Math.random() * 0.7]);
+    }
+    const geo = new THREE.BufferGeometry();
+    geo.setAttribute('position', new THREE.BufferAttribute(pos, 3)); geo.setAttribute('color', new THREE.BufferAttribute(col, 4));
+    const pts = new THREE.Points(geo, new THREE.PointsMaterial({ map: starTex, size: 0.22, sizeAttenuation: true, vertexColors: true, transparent: true, depthWrite: false }));
+    pts.frustumCulled = false; pts.visible = !REDUCED;
+    return { pts, tick(now) { for (let i = 0; i < SPK; i++) { const v = Math.sin(now / 1000 * ph[i][1] * 1.6 + ph[i][0]); col[i * 4 + 3] = Math.pow(Math.max(0, v), 7) * 0.95; } geo.attributes.color.needsUpdate = true; } };
+  }
+
   function makeProduct(name, cfg = {}) {
     const root = new THREE.Group(); root.visible = false; scene.add(root);
     const tilt = new THREE.Group(); root.add(tilt);
@@ -178,6 +264,7 @@ export function createScene(canvas) {
     shadow.rotation.x = -Math.PI / 2; root.add(shadow);
     const ring = new THREE.Mesh(new THREE.RingGeometry(0.98, 1, 96), new THREE.MeshBasicMaterial({ color: 0xf2a93b, transparent: true, opacity: 0, side: THREE.DoubleSide, depthWrite: false }));
     ring.rotation.x = -Math.PI / 2; root.add(ring);
+    const sparkles = makeSparkles(); root.add(sparkles.pts);
 
     const S = { ...(INITIAL[name] || INITIAL.hero), ...cfg }, pose = POSES[name] || POSES.hero;
     let model = null, transitioning = false, pending = null, idle = -pose.ry, spinYaw = 0, spinV = 0; // idle starts so that the front of the tin (the logo) faces the visitor
@@ -185,8 +272,17 @@ export function createScene(canvas) {
     const modelSize = new THREE.Vector3(2, 2, 2);
 
     function mountModel() {
-      if (model) holder.remove(model.group);
+      if (model) {
+        holder.remove(model.group);
+        model.group.traverse((o) => { // free the old tin's geometry and materials (textures stay cached in art.js)
+          if (o.geometry) o.geometry.dispose();
+          if (o.material) (Array.isArray(o.material) ? o.material : [o.material]).forEach((m) => { envMats.delete(m); m.dispose(); });
+        });
+      }
       model = SHAPES[S.shape](S.theme, S.cw);
+      // bring very different tins (flat tuna can, tall box, big oil tin) to a similar size on the stage; pow < 1 keeps some of the size difference (olive-oil sizes)
+      const ext = model.ext || { h: 2, w: 2 };
+      model.group.scale.multiplyScalar(clamp(Math.pow(2.12 / Math.max(ext.h, ext.w), model.pow || 1), 0.25, 1.8));
       model.print.forEach((m) => applyFinish(m, S.finish, true));
       syncEnv();
       holder.add(model.group);
@@ -201,7 +297,7 @@ export function createScene(canvas) {
       box.getSize(modelSize);
       model.group.position.y -= box.getCenter(new THREE.Vector3()).y;
       shadow.position.y = -modelSize.y / 2 - 0.12;
-      shadow.scale.set(modelSize.x * 1.5, modelSize.x * 1.5, 1);
+      const sw = Math.max(modelSize.x, modelSize.z) * 1.45; shadow.scale.set(sw, sw, 1);
     }
     mountModel();
 
@@ -261,8 +357,12 @@ export function createScene(canvas) {
         tilt.rotation.y = this.hold !== null ? this.hold : pose.ry + idle + spinYaw + ptr.sx * 0.35 - p * 1.25;
         tilt.rotation.z = vel * 0.06;
         root.position.y = Math.sin(now / 1300 + bob) * 0.045 - p * 0.16 + vel * 0.08;
+        if (!REDUCED) sparkles.tick(now);
       },
-      layout(w, h, px2w) { root.scale.setScalar(Math.max(0.001, (0.9 * Math.min(w, h) * px2w / 2.9) * pose.s)); },
+      layout(w, h, px2w) {
+        const sc = Math.max(0.001, (0.9 * Math.min(w, h) * px2w / 2.9) * pose.s); root.scale.setScalar(sc);
+        sparkles.pts.material.size = 0.24 * sc * (2 * HALF_H / px2w) / (0.268 * bufH); // world size -> point size (see the note in makeSparkles)
+      },
       spin(dx) { spinV += dx * 0.004; }
     };
     instances.push(inst); byName[name] = inst;
@@ -318,9 +418,9 @@ export function createScene(canvas) {
       sheetGeo.attributes.position.needsUpdate = true; sheetGeo.attributes.normal.needsUpdate = true;
       sheetGeo.computeBoundingSphere();
     }
-    // a flat sheet faces the bright side of the studio environment head on, so it is dimmed a little to keep the print the same deep navy as the finished tin
-    const sheetMat = new THREE.MeshPhysicalMaterial({ map: sheetTex, color: '#b4bfd2', metalness: 0.65, roughness: 0.26, clearcoat: 1, clearcoatRoughness: 0.1, side: THREE.DoubleSide });
-    sheetMat.userData.envBase = 0.45; envMats.add(sheetMat);
+    // the printed sheet is lacquer over tinplate like the finished tin (a little metal, a glossy clear coat), so the print keeps the same royal blue
+    const sheetMat = new THREE.MeshPhysicalMaterial({ map: sheetTex, color: '#ffffff', metalness: 0.22, roughness: 0.3, clearcoat: 1, clearcoatRoughness: 0.1, side: THREE.DoubleSide });
+    sheetMat.userData.envBase = 0.85; envMats.add(sheetMat);
     const sheet = new THREE.Mesh(sheetGeo, sheetMat);
     const sheetRig = new THREE.Group(); sheetRig.add(sheet); journey.add(sheetRig);
     bendSheet(0);
@@ -367,7 +467,7 @@ export function createScene(canvas) {
     // identical in light and dark mode. Land comes from Natural Earth (public domain), rasterised once.
     {
       const n = 9000, p = new Float32Array(n * 3), col = new Float32Array(n * 3), lonlat = new Float32Array(n * 2);
-      const land = new THREE.Color(ART.PAL.n200), sea = new THREE.Color(ART.PAL.n500);
+      const land = new THREE.Color('#ffe9a6'), sea = new THREE.Color(ART.PAL.n400);
       for (let i = 0; i < n; i++) {
         const y = 1 - (i / (n - 1)) * 2, r = Math.sqrt(1 - y * y), th = Math.PI * (3 - Math.sqrt(5)) * i;
         const x = Math.cos(th) * r, z = Math.sin(th) * r;
@@ -381,13 +481,13 @@ export function createScene(canvas) {
 
       const planet = new THREE.ShaderMaterial({
         vertexShader: 'varying vec3 vN; void main(){ vN = normalize(normalMatrix * normal); gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }',
-        fragmentShader: 'varying vec3 vN; void main(){ float f = pow(1.0 - abs(vN.z), 2.2); vec3 c = mix(vec3(0.0,0.075,0.18), vec3(0.08,0.2,0.42), f); c += vec3(0.0,0.02,0.05) * (vN.y*0.5+0.5); gl_FragColor = vec4(c,1.0); }'
+        fragmentShader: 'varying vec3 vN; void main(){ float f = pow(1.0 - abs(vN.z), 2.2); vec3 c = mix(vec3(0.02,0.13,0.32), vec3(0.14,0.34,0.62), f); c += vec3(0.02,0.05,0.1) * (vN.y*0.5+0.5); gl_FragColor = vec4(c,1.0); }'
       });
       globeTilt.add(new THREE.Mesh(new THREE.SphereGeometry(GR * 0.99, 64, 48), planet));
       const halo = new THREE.ShaderMaterial({
         transparent: true, depthWrite: false, side: THREE.BackSide,
         vertexShader: 'varying vec3 vN; void main(){ vN = normalize(normalMatrix * normal); gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }',
-        fragmentShader: 'varying vec3 vN; void main(){ float f = pow(1.0 - abs(vN.z), 2.6); gl_FragColor = vec4(0.33,0.45,0.62, f*0.55); }'
+        fragmentShader: 'varying vec3 vN; void main(){ float f = pow(1.0 - abs(vN.z), 2.6); gl_FragColor = vec4(0.45,0.6,0.85, f*0.6); }'
       });
       globe.add(new THREE.Mesh(new THREE.SphereGeometry(GR * 1.1, 64, 48), halo));
 
@@ -534,6 +634,13 @@ export function createScene(canvas) {
     const y = window.scrollY, v = (y - lastScrollY) / Math.max(dt, 1 / 120); lastScrollY = y;
     scrollVel += (Math.max(-1, Math.min(1, v / 2200)) - scrollVel) * 0.12; // eases back to 0 when scrolling stops
     frameNo++;
+    // the gold's slow specular sweep: a glint crosses the front of the tin, rests, and crosses again
+    if (REDUCED) { glint.position.set(-2.5, 1.8, 5); glint.intensity = GLINT_PEAK * 0.3; }
+    else {
+      const ph = ((now / 1000) % 8) / 8, u = clamp(ph / 0.5);
+      glint.position.set(lerp(-7.5, 7.5, u), 1.2 + Math.sin(ph * TAU) * 0.8, 4.5);
+      glint.intensity = ph < 0.5 ? GLINT_PEAK * Math.pow(Math.sin(Math.PI * u), 2) : 0;
+    }
     stages.forEach((st) => {
       let d = dt;
       if (COARSE && st.inst.kind === 'product') { st.acc = (st.acc || 0) + dt; if (frameNo & 1) return; d = st.acc; st.acc = 0; }
@@ -552,7 +659,8 @@ export function createScene(canvas) {
 
   function setTheme(mode, instant) {
     const dark = mode === 'dark';
-    const to = { exposure: dark ? 1.25 : 1.0, env: dark ? 0.55 : 1.0, key: dark ? 1.1 : 1.6, rimL: dark ? 38 : 6, rimR: dark ? 26 : 5, shadow: dark ? 0.0 : 0.5 };
+    // both themes are bright: the dark page keeps its dark background, but the tin is lit like a product shot (the halo behind it is in site.css)
+    const to = { exposure: dark ? 1.05 : 1.0, env: dark ? 1.0 : 0.95, key: dark ? 0.9 : 0.8, rimL: dark ? 22 : 8, rimR: dark ? 26 : 12, shadow: dark ? 0.3 : 0.45 };
     const o = { exposure: renderer.toneMappingExposure, env: env.i, key: key.intensity, rimL: rimL.intensity, rimR: rimR.intensity, shadow: instances.length ? instances[0].shadow.material.opacity : to.shadow };
     const set = () => {
       renderer.toneMappingExposure = o.exposure; env.i = o.env; syncEnv(); key.intensity = o.key; rimL.intensity = o.rimL; rimR.intensity = o.rimR;

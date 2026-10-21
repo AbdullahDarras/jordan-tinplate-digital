@@ -1,7 +1,9 @@
 // Procedural "printed tinplate" artwork. Every texture is drawn on a canvas (the logo from its SVG path data with Path2D), so the 3D tins need no image files.
 //
-// Premium tin (theme "brand"): Pantone 294 C navy lacquer, champagne-gold foil logo (gear mark + wordmark, from brand/logo/logo-vertical.svg),
-// foil lines, a fine trellis and an embossed rim. Industry tins keep their own colourways and carry the logo as a gold seal.
+// Premium tin (theme "brand"): luminous royal-blue lacquer lifted from PANTONE 294 C (#002F6C stays the deepest shade, in the shadows and the foot),
+// champagne-gold foil logo (gear mark + wordmark, from brand/logo/logo-vertical.svg), foil lines, a gilded trellis with tiny foil sparkles and an
+// embossed rim. Three more festive colourways (pearl & navy, turquoise, coral & rose-gold). Industry tins keep their own themed colourways, brightened,
+// and carry the logo as a gold seal.
 //
 // Each printed surface is drawn up to three times from the same code, so colour, metal and relief always line up:
 //   mode 'color'  : the picture (map)
@@ -19,17 +21,22 @@ export const PAL = {
   n600: '#002F6C', n700: '#002a61', n800: '#002352', n900: '#00193b', n950: '#00132d',
   amber: '#f2a93b'
 };
-// champagne gold foil: highlight, light, mid, shadow
-const GOLD = ['#fffaE6', '#f7e0a0', '#d9b560', '#a07a30'];
-const NAVY_FOIL = ['#3f78c4', '#1a508f', '#002F6C', '#00193b'];
+// foils: highlight, light, mid, shadow. Champagne gold is warm and bright so it still reads as gold under a bright studio.
+const GOLD = ['#fffbe8', '#ffe9a6', '#ecc25a', '#b4852c'];
+const GOLD_D = ['#f6df95', '#dcaa3c', '#b8862a', '#8a5f14']; // deeper gold for rules on the ivory tin
+const ROSE = ['#fffaf3', '#ffe3d2', '#f2b8a2', '#c27a6c'];
+const NAVY_FOIL = ['#5d97ea', '#2a68c4', '#0a4496', '#002F6C'];
 
-// Colourways of the premium tin. The first one is the signature navy-and-gold tin; the others keep the same logo and foil work.
+// Colourways of the premium tin. body = [top, bottom] of the lit lacquer, deep = the shade at the foot (the first one ends in the Pantone navy itself),
+// foil = rules, rim and frame, logo = the logo and gear (a different foil on the pearl tin), line = trellis colour.
+// The first one is the signature royal-blue-and-gold tin; the others keep the same logo and foil work.
 export const COLORWAYS = [
-  { name: 'navy', body: ['#003c82', '#00234f'], foil: GOLD, accent: '#d9b45a', line: '#d9b45a' },
-  { name: 'copper', body: ['#b4521f', '#4a1a08'], foil: GOLD, accent: '#e6c98a', line: '#e6c98a' },
-  { name: 'teal', body: ['#0e6f69', '#042f2c'], foil: GOLD, accent: '#e0c070', line: '#e0c070' },
-  { name: 'cream', body: ['#f6edd8', '#d8c59c'], foil: NAVY_FOIL, accent: '#002F6C', line: '#b58d3a' }
+  { name: 'royal', body: ['#2a6fdc', '#0848ac'], deep: '#002F6C', foil: GOLD, logo: GOLD, accent: '#f0c867', line: '#ffe9a6' },
+  { name: 'pearl', body: ['#fffbee', '#eddcb6'], deep: '#d3bd8a', foil: GOLD_D, logo: NAVY_FOIL, accent: '#0a4496', line: '#c9a24a' },
+  { name: 'turquoise', body: ['#1cc7bb', '#078a92'], deep: '#05626a', foil: GOLD, logo: GOLD, accent: '#f0c867', line: '#ffe9a6' },
+  { name: 'coral', body: ['#ff7b66', '#dc4264'], deep: '#a42a52', foil: ROSE, logo: ROSE, accent: '#ffe3d2', line: '#ffe3d2' }
 ];
+export const BRIGHT = { royal: '#0b55c0', pearl: '#f1e5c8', turquoise: '#0b9096', coral: '#e25470' };
 
 // Per-theme palette for the industry tins: [dark, light, accent]; used by the lids and the seal.
 const THEMES = {
@@ -82,6 +89,12 @@ function star8(ctx, cx, cy, r, rot = 0) {
   }
   ctx.closePath();
 }
+// a four-pointed foil sparkle
+function sparkle(ctx, x, y, r) {
+  ctx.beginPath();
+  ctx.moveTo(x, y - r * 1.9); ctx.quadraticCurveTo(x, y, x + r * 1.9, y); ctx.quadraticCurveTo(x, y, x, y + r * 1.9);
+  ctx.quadraticCurveTo(x, y, x - r * 1.9, y); ctx.quadraticCurveTo(x, y, x, y - r * 1.9); ctx.fill();
+}
 function starLattice(ctx, w, h, size, color, lw, alpha) {
   ctx.save();
   ctx.strokeStyle = color; ctx.lineWidth = lw; ctx.globalAlpha = alpha;
@@ -131,7 +144,7 @@ function branch(ctx, x, y0, y1, k) {
 }
 
 /* ------------------------------------------------------------------ foil (gold ink) in the three modes */
-const INK_METAL = 128;           // B of the lacquer in the ORM map: half of the scalar metalness (the foil is 255)
+const INK_METAL = 50;            // B of the lacquer in the ORM map: a fifth of the scalar metalness (the foil is 255): a glossy, colourful lacquer, not a dark mirror
 const FOIL_ROUGH = 255;          // G of the foil (the scalar roughness is the foil's)
 const INK_ROUGH = 115;           // G of the lacquer: about 0.45 of the foil's roughness, so the lacquer is the glossier of the two
 const orm = (g, b) => `rgb(255,${g},${b})`;
@@ -206,14 +219,22 @@ function trellis(ctx, w, h, color, lw, alpha, cols) {
 /* ------------------------------------------------------------------ premium navy tin */
 // panels = x centres of the printed panels; pw = panel width. variant: 'logo' (front of the body), 'top' (lid of a box tin)
 function premium(ctx, mode, w, h, cwI, panels, pw, variant, relief = 'plain') {
-  const cw = COLORWAYS[cwI] || COLORWAYS[0], F = cw.foil, cy = h / 2;
+  const cw = COLORWAYS[cwI] || COLORWAYS[0], F = cw.foil, LF = cw.logo || F, cy = h / 2;
   // base
   if (mode === 'color') {
-    grad(ctx, w, h, cw.body[0], cw.body[1], 1);
+    // lit lacquer: the bright tint on top, the saturated body in the middle and the deep shade (Pantone 294 C on the royal tin) only at the foot
+    const g = ctx.createLinearGradient(0, 0, 0, h);
+    g.addColorStop(0, cw.body[0]); g.addColorStop(0.62, cw.body[1]); g.addColorStop(1, cw.deep);
+    ctx.fillStyle = g; ctx.fillRect(0, 0, w, h);
     const cols = Math.max(8, Math.round(w / (h * 0.2)));
-    trellis(ctx, w, h, cw.line, Math.max(1, h * 0.0035), 0.13, cols);
-    const sh = ctx.createLinearGradient(0, 0, 0, h); // lacquer sheen: a little lighter above the middle, darker at the foot
-    sh.addColorStop(0, 'rgba(255,255,255,.07)'); sh.addColorStop(0.5, 'rgba(255,255,255,0)'); sh.addColorStop(1, 'rgba(0,0,0,.08)');
+    trellis(ctx, w, h, cw.line, Math.max(1.2, h * 0.0042), 0.2, cols);
+    // tiny foil sparkles at the centre of every trellis diamond
+    const dx = w / cols, dy = dx * 0.62, sr = Math.max(2, dx * 0.05);
+    ctx.save(); ctx.fillStyle = cw.line; ctx.globalAlpha = 0.5;
+    for (let x = dx / 2; x < w + dx; x += dx) for (let y = dy; y < h + dy; y += dy * 2) sparkle(ctx, x, y, sr);
+    ctx.restore();
+    const sh = ctx.createLinearGradient(0, 0, 0, h); // lacquer sheen: a bloom above the middle
+    sh.addColorStop(0, 'rgba(255,255,255,.14)'); sh.addColorStop(0.5, 'rgba(255,255,255,.02)'); sh.addColorStop(1, 'rgba(0,0,0,.04)');
     ctx.fillStyle = sh; ctx.fillRect(0, 0, w, h);
   } else if (mode === 'orm') { ctx.fillStyle = orm(INK_ROUGH, INK_METAL); ctx.fillRect(0, 0, w, h); }
   else {
@@ -231,7 +252,7 @@ function premium(ctx, mode, w, h, cwI, panels, pw, variant, relief = 'plain') {
     const cx = w / 2, d = Math.min(w, h) * 0.58;
     ring(ctx, mode, F, cx, cy, d * 0.62, 4 * u, 0.8);
     ring(ctx, mode, F, cx, cy, d * 0.68, 2.2 * u, 0.7);
-    drawGear(ctx, mode, F, cx, cy, d, 1);
+    drawGear(ctx, mode, LF, cx, cy, d, 1);
     return;
   }
   // the front: logo in a notched frame
@@ -246,12 +267,12 @@ function premium(ctx, mode, w, h, cwI, panels, pw, variant, relief = 'plain') {
       ctx.lineTo(x0 + n, y1); ctx.lineTo(x0, y1 - n); ctx.lineTo(x0, y0 + n); ctx.closePath(); ctx.stroke(); ctx.restore();
     };
     frame(0, 3.4 * u, 0.85); frame(11 * u, 1.4 * u, 0.6);
-    drawLockup(ctx, mode, F, px, cy + fh * 0.01, fw * 0.8, fh * 0.8, 1);
+    drawLockup(ctx, mode, LF, px, cy + fh * 0.01, fw * 0.8, fh * 0.8, 1);
     // small foil text in the lower rule band
     const small = 16 * u;
     if (mode === 'color') {
       const g = ctx.createLinearGradient(px - pw * 0.2, 0, px + pw * 0.2, 0);
-      [[0, F[1]], [0.5, F[0]], [1, F[1]]].forEach(([o, c]) => g.addColorStop(o, c));
+      [[0, LF[1]], [0.5, LF[0]], [1, LF[1]]].forEach(([o, c]) => g.addColorStop(o, c));
       txt(ctx, i % 2 === 0 ? 'MADE IN JORDAN  ·  SINCE 1998' : 'صناعة أردنية  ·  منذ 1998', px, h * 0.876, small, g, { spacing: i % 2 === 0 ? 5 * u : 0, weight: 600, font: i % 2 === 0 ? FD : FA });
     } else if (mode === 'relief') {
       txt(ctx, i % 2 === 0 ? 'MADE IN JORDAN  ·  SINCE 1998' : 'صناعة أردنية  ·  منذ 1998', px, h * 0.876, small, gray(0.7), { spacing: i % 2 === 0 ? 5 * u : 0, weight: 600, font: i % 2 === 0 ? FD : FA });
@@ -268,7 +289,8 @@ function seal(ctx, mode, px, cy, r, accent) {
   ctx.save();
   if (mode === 'color') {
     ctx.shadowColor = 'rgba(0,0,0,.35)'; ctx.shadowBlur = r * 0.12; ctx.shadowOffsetY = r * 0.05;
-    ctx.fillStyle = PAL.n900; ctx.beginPath(); ctx.arc(px, cy, r, 0, 7); ctx.fill();
+    const sg = ctx.createLinearGradient(px, cy - r, px, cy + r); sg.addColorStop(0, '#2a6fd6'); sg.addColorStop(1, '#0a3f94');
+    ctx.fillStyle = sg; ctx.beginPath(); ctx.arc(px, cy, r, 0, 7); ctx.fill();
     ctx.shadowColor = 'transparent';
   } else if (mode === 'orm') { ctx.fillStyle = orm(INK_ROUGH, INK_METAL); ctx.beginPath(); ctx.arc(px, cy, r, 0, 7); ctx.fill(); }
   else { ctx.fillStyle = gray(0.25); ctx.beginPath(); ctx.arc(px, cy, r, 0, 7); ctx.fill(); }
@@ -279,25 +301,28 @@ function seal(ctx, mode, px, cy, r, accent) {
 }
 
 /* ------------------------------------------------------------------ industry artwork */
-function industry(ctx, mode, w, h, theme, panels, pw) {
+function industry(ctx, mode, w, h, theme, panels, pw, variant = 'logo') {
   const pwr = pw, k = Math.min(pwr / 1024, h / 640), cy = h / 2;
   const C = mode === 'color';
   const ink = (fn) => { if (C) fn(); };                  // artwork that exists only in the colour map
-  const sealAt = (px) => seal(ctx, mode, px + pwr * 0.29, cy, Math.min(h * 0.15, pwr * 0.1), THEMES[theme] && THEMES[theme].accent);
+  // on the body the seal sits beside the artwork; on the lid of a box (variant 'top') it goes to the bottom-right corner
+  const sealAt = variant === 'top'
+    ? (px) => seal(ctx, mode, px + pwr * 0.36, h * 0.86, Math.min(h, pwr) * 0.085, THEMES[theme] && THEMES[theme].accent)
+    : (px) => seal(ctx, mode, px + pwr * 0.29, cy, Math.min(h * 0.15, pwr * 0.1), THEMES[theme] && THEMES[theme].accent);
   if (!C) {
     ctx.fillStyle = mode === 'orm' ? orm(INK_ROUGH, INK_METAL) : '#000'; ctx.fillRect(0, 0, w, h);
     panels.forEach(sealAt);
     return;
   }
   if (theme === 'olive') {
-    grad(ctx, w, h, '#2a4f2d', '#0d2212', 1);
+    grad(ctx, w, h, '#5aa548', '#1d6b35', 1);
     ringGrid(ctx, w, h, '#d9a93c', 0.07, 130 * k, 44 * k);
     ctx.fillStyle = '#d9a93c'; ctx.fillRect(0, h * 0.06, w, 7 * k); ctx.fillRect(0, h * 0.94 - 7 * k, w, 7 * k);
     const bx = [0, w / 2, w];
     bx.forEach((x) => { if (pwr > 300) branch(ctx, x - 40 * k, h * 0.9, h * 0.1, k); });
     panels.forEach((px) => {
       ctx.save();
-      ctx.fillStyle = 'rgba(8,24,12,0.82)'; ctx.beginPath(); ctx.arc(px, cy, 220 * k, 0, 7); ctx.fill();
+      ctx.fillStyle = 'rgba(12,64,34,0.88)'; ctx.beginPath(); ctx.arc(px, cy, 220 * k, 0, 7); ctx.fill();
       ctx.strokeStyle = '#d9a93c'; ctx.lineWidth = 6 * k; ctx.beginPath(); ctx.arc(px, cy, 214 * k, 0, 7); ctx.stroke();
       ctx.lineWidth = 2 * k; ctx.beginPath(); ctx.arc(px, cy, 196 * k, 0, 7); ctx.stroke();
       ctx.restore();
@@ -307,15 +332,15 @@ function industry(ctx, mode, w, h, theme, panels, pw) {
       txt(ctx, 'زيت زيتون بكر ممتاز', px, cy + 86 * k, 46 * k, '#f3dd9a', { font: FA, weight: 500 });
     });
   } else if (theme === 'eid') {
-    grad(ctx, w, h, PAL.n700, PAL.n950, 1);
-    starLattice(ctx, w, h, 150 * k, '#e9bd5a', 2 * k, 0.4);
+    grad(ctx, w, h, '#2f78e0', '#0a4496', 1);
+    starLattice(ctx, w, h, 150 * k, '#ffe08a', 2 * k, 0.5);
     ctx.fillStyle = '#e9bd5a'; ctx.fillRect(0, h * 0.06, w, 8 * k); ctx.fillRect(0, h * 0.94 - 8 * k, w, 8 * k);
     panels.forEach((px) => {
       ctx.save();
-      ctx.fillStyle = 'rgba(0,19,45,0.88)'; star8(ctx, px, cy, 250 * k, Math.PI / 8); ctx.fill();
+      ctx.fillStyle = '#0a3f94'; star8(ctx, px, cy, 250 * k, Math.PI / 8); ctx.fill();
       ctx.strokeStyle = '#e9bd5a'; ctx.lineWidth = 5 * k; ctx.stroke();
       ctx.fillStyle = '#e9bd5a'; ctx.beginPath(); ctx.arc(px, cy - 108 * k, 46 * k, 0, 7); ctx.fill();
-      ctx.fillStyle = PAL.n950; ctx.beginPath(); ctx.arc(px + 18 * k, cy - 118 * k, 40 * k, 0, 7); ctx.fill();
+      ctx.fillStyle = '#0a3f94'; ctx.beginPath(); ctx.arc(px + 18 * k, cy - 118 * k, 40 * k, 0, 7); ctx.fill();
       ctx.restore();
       txt(ctx, 'رمضان كريم', px, cy - 12 * k, 82 * k, '#ffffff', { font: FA, weight: 600 });
       txt(ctx, 'SWEETS · KA\'AK · CHOCOLATE', px, cy + 66 * k, 24 * k, '#f4d68c', { spacing: 4 * k, weight: 600 });
@@ -359,7 +384,7 @@ function industry(ctx, mode, w, h, theme, panels, pw) {
       txt(ctx, 'حليب بودرة', px, cy + 64 * k, 66 * k, PAL.n100, { font: FA, weight: 600 });
     });
   } else if (theme === 'coffee') {
-    grad(ctx, w, h, '#3a2216', '#150b06', 1);
+    grad(ctx, w, h, '#9a5c34', '#53301a', 1);
     ringGrid(ctx, w, h, '#c8943c', 0.09, 125 * k, 42 * k);
     ctx.fillStyle = '#c8943c'; ctx.fillRect(0, h * 0.06, w, 8 * k); ctx.fillRect(0, h * 0.94 - 8 * k, w, 8 * k);
     panels.forEach((px) => {
@@ -373,7 +398,7 @@ function industry(ctx, mode, w, h, theme, panels, pw) {
       txt(ctx, 'قهوة وشاي', px, cy + 156 * k, 56 * k, '#f3dcae', { font: FA, weight: 500 });
     });
   } else if (theme === 'industrial') {
-    grad(ctx, w, h, '#c9d0da', '#8d97a6', 1);
+    grad(ctx, w, h, '#eef2f7', '#b4bfce', 1);
     ctx.fillStyle = '#e8662a'; ctx.fillRect(0, h * 0.05, w, 16 * k); ctx.fillRect(0, h * 0.95 - 16 * k, w, 16 * k);
     ctx.save(); ctx.globalAlpha = 0.14; ctx.strokeStyle = '#2a3340'; ctx.lineWidth = 3 * k;
     for (let x = -h; x < w; x += 46 * k) { ctx.beginPath(); ctx.moveTo(x, h); ctx.lineTo(x + h, 0); ctx.stroke(); }
@@ -396,7 +421,7 @@ function industry(ctx, mode, w, h, theme, panels, pw) {
 function drawArt(ctx, w, h, theme, cwI, panels, mode = 'color', relief = 'plain', variant = 'logo') {
   const pw = w / panels.length;
   if (theme === 'brand') premium(ctx, mode, w, h, cwI, panels, pw, variant, relief);
-  else industry(ctx, mode, w, h, theme, panels, pw);
+  else industry(ctx, mode, w, h, theme, panels, pw, variant);
 }
 
 function drawLid(ctx, s, theme, cwI, mode = 'color', relief = 'plain') {
@@ -404,14 +429,14 @@ function drawLid(ctx, s, theme, cwI, mode = 'color', relief = 'plain') {
   const premiumLid = theme === 'brand';
   const F = premiumLid ? cw.foil : GOLD;
   const pal = {
-    brand: cw.body, olive: ['#2a4f2d', '#0d2212'], eid: [PAL.n700, PAL.n950], cheese: ['#ffffff', PAL.n100],
-    milk: ['#f5f8fd', PAL.n100], coffee: ['#3a2216', '#150b06'], industrial: ['#c9d0da', '#8d97a6']
+    brand: cw.body, olive: ['#5aa548', '#1d6b35'], eid: ['#2f78e0', '#0a4496'], cheese: ['#ffffff', PAL.n100],
+    milk: ['#f5f8fd', PAL.n100], coffee: ['#9a5c34', '#53301a'], industrial: ['#eef2f7', '#b4bfce']
   }[theme] || cw.body;
   if (mode === 'color') {
     const g = ctx.createRadialGradient(c, c, 10, c, c, c);
-    g.addColorStop(0, pal[0]); g.addColorStop(1, pal[1]);
+    g.addColorStop(0, pal[0]); g.addColorStop(1, premiumLid ? cw.deep : pal[1]);
     ctx.fillStyle = g; ctx.fillRect(0, 0, s, s);
-    if (theme === 'eid') starLattice(ctx, s, s, s * 0.16, '#e9bd5a', 2, 0.35);
+    if (theme === 'eid') starLattice(ctx, s, s, s * 0.16, '#ffe08a', 2, 0.45);
   } else { ctx.fillStyle = mode === 'orm' ? orm(INK_ROUGH, INK_METAL) : '#000'; ctx.fillRect(0, 0, s, s); }
   // foil rings, a beaded ring and fine radial ticks (the rim of the lid), then the gear mark
   ring(ctx, mode, F, c, c, c * 0.92, s * 0.014, 0.9);
@@ -420,7 +445,7 @@ function drawLid(ctx, s, theme, cwI, mode = 'color', relief = 'plain') {
   for (let i = 0; i < 72; i++) { const a = (i / 72) * Math.PI * 2; ctx.beginPath(); ctx.arc(c + Math.cos(a) * c * 0.78, c + Math.sin(a) * c * 0.78, s * 0.0055, 0, 7); ctx.fill(); }
   ctx.restore();
   ring(ctx, mode, F, c, c, c * 0.68, s * 0.006, 0.7);
-  drawGear(ctx, mode, F, c, c, c * 1.0, 1);
+  drawGear(ctx, mode, premiumLid ? (cw.logo || F) : F, c, c, c * 1.0, 1);
 }
 
 function noise(ctx, w, h, a) {
