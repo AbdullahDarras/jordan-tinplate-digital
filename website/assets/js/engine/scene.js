@@ -17,7 +17,7 @@ const lerp = (a, b, t) => a + (b - a) * t;
 const FIN = {
   gloss: { metalness: 0.85, roughness: 0.34, clearcoat: 1, clearcoatRoughness: 0.1, sheen: 0, bumpScale: 1.1, bump: 'plain' },
   matte: { metalness: 0.8, roughness: 1.2, clearcoat: 0, clearcoatRoughness: 0.5, sheen: 0, bumpScale: 1.1, bump: 'plain' },
-  soft: { metalness: 0.12, roughness: 2.1, clearcoat: 0, clearcoatRoughness: 0.5, sheen: 1, bumpScale: 0.5, bump: 'plain' },
+  soft: { metalness: 0.12, roughness: 2.1, clearcoat: 0, clearcoatRoughness: 0.5, sheen: 0.7, bumpScale: 0.5, bump: 'plain' },
   rough: { metalness: 0.55, roughness: 1.8, clearcoat: 0, clearcoatRoughness: 0.5, sheen: 0, bumpScale: 1.4, bump: 'rough' },
   emboss: { metalness: 0.85, roughness: 0.5, clearcoat: 0.7, clearcoatRoughness: 0.1, sheen: 0, bumpScale: 2.2, bump: 'emboss' }
 };

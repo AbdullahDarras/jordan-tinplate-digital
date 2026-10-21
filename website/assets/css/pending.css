@@ -1,0 +1,21 @@
+/* Placeholder styles for the items that wait for management. Loaded ONLY when SHOW_PENDING is true in tools/content.mjs
+   (see website/PENDING.md). While the flag is false none of this markup exists and this file is not linked. */
+:root { --tbc-bg: #fff1d6; --tbc-ink: #6b3a00; }
+:root[data-theme="dark"] { --tbc-bg: rgba(244, 179, 76, .14); --tbc-ink: #f4b34c; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme]) { --tbc-bg: rgba(244, 179, 76, .14); --tbc-ink: #f4b34c; } }
+.specrow--tbc { border-style: dashed; border-inline-start-style: dashed; }
+.badge { display: inline-flex; align-items: center; gap: .45em; padding: .25em .8em; border-radius: 999px; background: var(--tbc-bg); color: var(--tbc-ink); font-size: .78rem; font-weight: 700; line-height: 1.5; border: 1px solid color-mix(in srgb, var(--tbc-ink) 35%, transparent); }
+.badge::before { content: "◇"; }
+.tbc { padding: clamp(1.3rem, 3vw, 2rem); border: 2px dashed var(--line); border-radius: var(--radius); background: color-mix(in srgb, var(--card) 70%, transparent); }
+.tbc__title { margin: .8rem 0 .8rem; }
+.tbc ul { margin: 0; padding-inline-start: 1.2rem; display: grid; gap: .35rem; color: var(--mute); }
+.tbc ul li::marker { color: var(--accent-text); }
+.tbc__note { margin: 1rem 0 0; font-size: .92rem; color: var(--mute); }
+.tbc__cards { list-style: none; padding: 0 !important; display: grid; gap: .8rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr)); }
+.tbc__cards li { padding: 1rem 1.2rem; border: 1.5px dashed var(--line); border-radius: 20px; display: flex; flex-direction: column; gap: .5rem; align-items: flex-start; color: var(--ink); font-weight: 600; }
+.proof { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: clamp(2.5rem, 6vw, 5rem); }
+.proof__item { padding: 1.4rem; border: 1.5px dashed var(--line); border-radius: 24px; display: flex; flex-direction: column; gap: .3rem; background: color-mix(in srgb, var(--card) 60%, transparent); }
+.proof__item i { font-style: normal; color: var(--accent-text); font-size: 1.4rem; line-height: 1; }
+.proof__item b { font-family: var(--f-display); font-size: 1.2rem; }
+.proof__item span { color: var(--mute); font-size: .88rem; }
+@media (max-width: 860px) { .proof { grid-template-columns: 1fr; } }

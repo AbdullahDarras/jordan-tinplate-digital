@@ -1,5 +1,5 @@
 /* Jordan Tinplate Canning: shared page script (classic script, no libraries, runs before and without the 3D engine).
-   Menu, theme, language preference, header behaviour, page transitions, review mode, "in season now" badge.
+   Menu, theme, language preference, header behaviour, page transitions, "in season now" badge.
    The engine (assets/js/engine/main.js) listens to the events this file dispatches (jt:theme, jt:menu).
    Everything degrades: without JS the navigation is visible, the language switch is a normal link and every link is a plain link. */
 (function () {
@@ -85,15 +85,6 @@
   Array.prototype.forEach.call(doc.querySelectorAll('[data-months]'), function (el) {
     var r = el.getAttribute('data-months').split('-'); if (m < +r[0] || m > +r[1]) el.style.display = 'none';
   });
-
-  /* ---------- review mode: outline every "to be confirmed" placeholder ---------- */
-  var review = doc.getElementById('reviewBtn');
-  if (review) {
-    review.addEventListener('click', function () {
-      var on = doc.body.classList.toggle('review');
-      review.setAttribute('aria-pressed', on ? 'true' : 'false');
-    });
-  }
 
   /* ---------- page transitions: bars sweep across, then the next page sweeps them away (the arrival is pure CSS) ---------- */
   function leave(href) {

@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 // Headless-Chromium helper. Usage:
-//   node tools/screenshots.mjs og <out.png>                    render tools/og-card.html to the 1200x630 Open Graph image
+//   node tools/screenshots.mjs og-tin <baseUrl>                capture the site's 3D hero tin (transparent) to tools/og-tin.png
+//   node tools/screenshots.mjs og <out.png>                    render tools/og-card.html (with the logo from brand/logo) to the 1200x630 Open Graph image
 //   node tools/screenshots.mjs shots <baseUrl> <outDir> [theme] screenshot every page at 1440 and 390 px (+ console/overflow report)
 // Needs the globally installed `playwright` package and a Chromium (set CHROMIUM_PATH if it is not found).
 import { createRequire } from 'node:module';
@@ -15,11 +16,26 @@ const exe = process.env.CHROMIUM_PATH || ['/opt/pw-browsers/chromium-1194/chrome
 const browser = await chromium.launch({ executablePath: exe, args: ['--no-sandbox'] });
 const [mode, a, b, theme] = process.argv.slice(2);
 
-if (mode === 'og') {
+if (mode === 'og-tin') {
+  // the hero tin of the home page on a transparent background (light lighting, the signature navy-and-gold tin)
+  const page = await browser.newPage({ viewport: { width: 1200, height: 900 }, deviceScaleFactor: 1 });
+  await page.goto(a.replace(/\/$/, '') + '/en/?skip', { waitUntil: 'load' });
+  await page.waitForTimeout(3500);
+  await page.addStyleTag({ content: 'html,body{background:transparent!important}body::before,.grain,.cursor,#curtain{display:none!important}.nav,.hero__text,.scrollcue,.marquee,main>section:not(.hero){visibility:hidden!important}.hero{background:transparent!important}' });
+  const el = await page.$('.hero .stage');
+  await page.evaluate(() => { window.__jt.scene.instance('hero').hold = -0.22; });
+  await page.waitForTimeout(1200);
+  await el.screenshot({ path: path.join(here, 'og-tin.png'), omitBackground: true });
+} else if (mode === 'og') {
+  const { LOGO } = await import('./logo.mjs');
+  const html = fs.readFileSync(path.join(here, 'og-card.html'), 'utf8').replace('<!--LOGO-->', `<svg class="logo" viewBox="${LOGO.H.viewBox.join(' ')}"><path d="${LOGO.H.gear}"/><path d="${LOGO.H.word}${LOGO.H.arabic}"/></svg>`);
+  const tmp = path.join(here, '.og-render.html');
+  fs.writeFileSync(tmp, html);
   const page = await browser.newPage({ viewport: { width: 1200, height: 630 } });
-  await page.goto('file://' + path.join(here, 'og-card.html'));
+  await page.goto('file://' + tmp, { waitUntil: 'networkidle' });
   await page.waitForTimeout(800);
   await page.screenshot({ path: a });
+  fs.rmSync(tmp);
 } else if (mode === 'shots') {
   fs.mkdirSync(b, { recursive: true });
   const sm = fs.readFileSync(path.join(here, '..', 'sitemap.xml'), 'utf8');

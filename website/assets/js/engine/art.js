@@ -283,7 +283,7 @@ function industry(ctx, mode, w, h, theme, panels, pw) {
   const pwr = pw, k = Math.min(pwr / 1024, h / 640), cy = h / 2;
   const C = mode === 'color';
   const ink = (fn) => { if (C) fn(); };                  // artwork that exists only in the colour map
-  const sealAt = (px) => seal(ctx, mode, px + pwr * 0.355, cy, Math.min(h * 0.15, pwr * 0.1), THEMES[theme] && THEMES[theme].accent);
+  const sealAt = (px) => seal(ctx, mode, px + pwr * 0.29, cy, Math.min(h * 0.15, pwr * 0.1), THEMES[theme] && THEMES[theme].accent);
   if (!C) {
     ctx.fillStyle = mode === 'orm' ? orm(INK_ROUGH, INK_METAL) : '#000'; ctx.fillRect(0, 0, w, h);
     panels.forEach(sealAt);
