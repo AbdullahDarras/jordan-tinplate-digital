@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 """Validate the generated site: well-formed HTML, internal links/anchors, hreflang reciprocity,
-canonical, unique title/description, JSON-LD, sitemap. Usage: python3 website/tools/validate.py"""
+canonical, unique title/description, JSON-LD, sitemap, the creative-experience contract (shared chrome, 3D stages with
+fallbacks, entrance only on the home pages, self-hosted libraries, no external JavaScript) and the approved decisions
+(names, order-tool links, no certification named, no Saudi branch, olive-oil sizes).
+Usage: python3 -I website/tools/validate.py"""
 import json, re, sys
 from html.parser import HTMLParser
 from pathlib import Path
@@ -18,6 +21,7 @@ class P(HTMLParser):
         self.canonical = self.title = self.desc = None
         self.in_title = False; self.in_ld = False; self.ld = []; self.h1 = 0
         self.root_attrs = {}; self.meta = {}; self.imgs_no_alt = 0
+        self.anchors = []; self.stages = []; self.scripts = []; self.ids_tag = {}; self.text = []; self.skip_text = 0; self.importmap = []; self.in_importmap = False
     def handle_starttag(self, tag, attrs):
         a = dict(attrs)
         if tag == "html": self.root_attrs = a
@@ -25,7 +29,11 @@ class P(HTMLParser):
             if a["id"] in self.ids: err(f"{self.name}: duplicate id {a['id']}")
             self.ids.add(a["id"])
         if tag == "h1": self.h1 += 1
-        if tag == "a" and "href" in a: self.links.append(a["href"])
+        if tag == "a" and "href" in a: self.links.append(a["href"]); self.anchors.append(a)
+        if "id" in a: self.ids_tag[a["id"]] = tag
+        if "class" in a and "stage" in a["class"].split(): self.stages.append(a)
+        if tag == "script": self.scripts.append(a); self.skip_text += 1
+        if tag == "script" and a.get("type") == "importmap": self.in_importmap = True
         if tag in ("link",) and "href" in a:
             if a.get("rel") == "canonical": self.canonical = a["href"]
             elif a.get("rel") == "alternate" and "hreflang" in a: self.alts[a["hreflang"]] = a["href"]
@@ -49,13 +57,15 @@ class P(HTMLParser):
             return
         self.stack.pop()
         if tag == "title": self.in_title = False
-        if tag == "script": self.in_ld = False
+        if tag == "script": self.in_ld = False; self.in_importmap = False; self.skip_text -= 1
     def handle_data(self, d):
         if self.in_title: self.title = (self.title or "") + d
         if self.in_ld: self.ld.append(d)
+        if self.in_importmap: self.importmap.append(d)
+        if not self.skip_text: self.text.append(d)
 
 pages = sorted(ROOT.rglob("index.html")) + [ROOT / "404.html"]
-pages = [p for p in pages if "tools" not in p.parts and "prototype" not in p.parts]  # /prototype/ is a separate noindex creative preview
+pages = [p for p in pages if "tools" not in p.parts]
 parsed = {}
 for f in pages:
     name = "/" + str(f.relative_to(ROOT))
@@ -122,7 +132,7 @@ for f, p in parsed.items():
         except Exception as e:
             err(f"{n}: JSON-LD invalid: {e}")
         # language switch link points at the equivalent page
-        sw = re.search(r'<a class="tool tool--lang" href="([^"]+)"', f.read_text(encoding="utf-8"))
+        sw = re.search(r'<a class="tool tool--lang"[^>]*? href="([^"]+)"', f.read_text(encoding="utf-8"))
         other = "ar" if lang == "en" else "en"
         if not sw or sw.group(1) != url_of[f].replace(f"/{lang}/", f"/{other}/", 1): err(f"{n}: language switch href {sw and sw.group(1)}")
 
@@ -143,8 +153,72 @@ for block in re.findall(r"<url>(.*?)</url>", sm, re.S):
     if got != alt_map.get(loc): err(f"sitemap alternates for {loc} differ from page hreflang")
 robots = (ROOT / "robots.txt").read_text()
 if "Sitemap:" not in robots: err("robots.txt lacks Sitemap")
-for must in ("assets/img/og-default.png", "assets/img/favicon.svg", "assets/css/site.css", "assets/js/site.js"):
+REQUIRED = ("assets/img/og-default.png", "assets/img/favicon.svg", "assets/css/site.css", "assets/js/site.js",
+            "assets/js/engine/main.js", "assets/js/engine/scene.js", "assets/js/engine/art.js", "assets/data/land-110m.geojson",
+            "assets/vendor/three/three.module.min.js", "assets/vendor/three/addons/environments/RoomEnvironment.js",
+            "assets/vendor/three/addons/geometries/RoundedBoxGeometry.js", "assets/vendor/gsap/gsap.min.js",
+            "assets/vendor/gsap/ScrollTrigger.min.js", "assets/vendor/lenis/lenis.min.js")
+for must in REQUIRED:
     if not (ROOT / must).exists(): err(f"missing {must}")
+if (ROOT / "prototype").exists(): err("website/prototype/ should be gone (superseded by the integrated site)")
+for imp in re.findall(r"""from\s+['"](\.[^'"]+)['"]""", (ROOT / "assets/js/engine/scene.js").read_text()):
+    if not (ROOT / "assets/js/engine" / imp).exists(): err(f"scene.js imports missing {imp}")
+
+# ---- creative-experience contract + approved decisions, per page
+NAME_AR = "الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية"
+FORBIDDEN = ["ISO 9001", "ISO 22000", "HACCP", "FSSC", "BRC", "Saudi branch", "branch in Saudi", "فرع في السعودية", "فرع السعودية", "مصنع الأردنية", "JORDAN CANNING</"]
+for f in site_pages:
+    p = parsed[f]; n = p.name; src = f.read_text(encoding="utf-8")
+    lang = f.parts[len(ROOT.parts)]
+    is_home = url_of[f] in ("/en/", "/ar/")
+    for need, label in (('id="main"', "main landmark"), ('class="skip"', "skip link"), ('id="themeBtn"', "theme button"), ('id="burger"', "menu button"),
+                        ('id="menu"', "mobile menu"), ('id="curtain"', "page-transition curtain"), ('id="jt-data"', "engine data"), ('class="cursor', "custom cursor"),
+                        ('type="importmap"', "import map"), ('assets/js/engine/main.js', "engine script"), ('assets/js/site.js', "site script"),
+                        ('<footer class="foot">', "footer"), ('id="contact"', "contact section"), ('rel="stylesheet" href="/assets/css/site.css', "stylesheet")):
+        if need not in src: err(f"{n}: missing {label}")
+    # no external JavaScript: every script is same-origin (or inline)
+    for sc in p.scripts:
+        if sc.get("src") and re.match(r"^(https?:)?//", sc["src"]): err(f"{n}: external script {sc['src']}")
+    im = json.loads("".join(p.importmap) or "{}").get("imports", {})
+    if not all(v.startswith("/assets/vendor/") for v in im.values()) or "three" not in im: err(f"{n}: import map must point at /assets/vendor/")
+    # entrance: only on the two home pages (once per session, with a Skip button)
+    has_loader = 'id="loader"' in src
+    if has_loader != is_home: err(f"{n}: loader present={has_loader} but home={is_home}")
+    if is_home and ('id="ldSkip"' not in src): err(f"{n}: entrance has no Skip button")
+    if is_home and "jt-intro" not in src: err(f"{n}: home page does not manage the once-per-session flag")
+    # every 3D stage is labelled and carries a drawing fallback (the loader's stage is decorative)
+    for st in p.stages:
+        deco = st.get("aria-hidden") == "true"
+        if not deco and (st.get("role") != "img" or not st.get("aria-label")): err(f"{n}: stage without role=img + aria-label")
+    if f.name == "index.html" and url_of[f] != "/ar/contact/" and url_of[f] != "/en/contact/":
+        if not [s for s in p.stages if s.get("data-pose") == "hero" and s.get("role") == "img"]: err(f"{n}: no hero 3D stage")
+    if src.count('class="stage__fb"') < len([s for s in p.stages if s.get("aria-hidden") != "true"]): err(f"{n}: a stage lacks its SVG fallback")
+    # the order tool opens in a new tab with noopener; mailto fallback exists
+    orders = [a for a in p.anchors if a["href"].startswith("https://jc-order.netlify.app")]
+    if not orders: err(f"{n}: no link to the order tool")
+    for a in orders:
+        if a.get("target") != "_blank" or "noopener" not in a.get("rel", ""): err(f"{n}: order-tool link without target=_blank rel=noopener")
+    if any(a["href"].rstrip("/").endswith("/prototype") or "/prototype/" in a["href"] for a in p.anchors): err(f"{n}: links to /prototype/")
+    # external links never open without noopener
+    for a in p.anchors:
+        if a.get("target") == "_blank" and "noopener" not in a.get("rel", ""): err(f"{n}: target=_blank without noopener: {a['href']}")
+    # decisions
+    visible = " ".join(p.text)
+    for bad in FORBIDDEN:
+        if bad in src: err(f"{n}: forbidden text {bad!r}")
+    if "@jordantinplate" not in src: err(f"{n}: handle @jordantinplate missing")
+    if lang == "ar" and (NAME_AR not in src or p.root_attrs.get("dir") != "rtl"): err(f"{n}: official Arabic name missing")
+    if lang == "en" and "Jordan Tinplate Canning" not in src: err(f"{n}: official English name missing")
+    if re.search(r"\bCanning\b", visible) and "Tinplate Canning" not in visible and "Jordan Canning" in visible: err(f"{n}: 'Canning' used without the full name")
+    if "Al-Zmailat" not in src and lang == "en": err(f"{n}: address missing")
+    if "الزميلات" not in src and lang == "ar": err(f"{n}: address missing")
+    if url_of[f].endswith("/olive-oil/"):
+        for size in ("1 L/kg", "4 L/kg", "8 L/kg", "16 L/kg") if lang == "en" else ("1 لتر/كغ", "4 لتر/كغ", "8 لتر/كغ", "16 لتر/كغ"):
+            if size not in src: err(f"{n}: olive-oil size {size} missing")
+        if 'data-shape="oil8"' not in src: err(f"{n}: olive-oil hero tin not configured")
+    # headings: split-text headings keep their text in the HTML (SEO)
+    for m in re.finditer(r"<h[12][^>]*data-split[^>]*>(.*?)</h[12]>", src, re.S):
+        if not re.sub(r"<[^>]+>", "", m.group(1)).strip(): err(f"{n}: empty split heading")
 
 print(f"checked {len(pages)} html files, {len(alt_map)} sitemap pages")
 if errors:
