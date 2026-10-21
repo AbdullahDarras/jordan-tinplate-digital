@@ -360,6 +360,14 @@ html[lang="ar"] .tab b { letter-spacing: 0; }
 .now { font-style: normal; font-size: .7rem; font-weight: 700; padding: .35em .8em; border-radius: 999px; background: var(--accent); color: var(--on-accent); }
 
 /* ================================================================ range / bento + cards */
+.quality { padding: clamp(3rem, 7vw, 6rem) 0; }
+.quality__grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: 1rem; }
+.quality .card { min-height: 0; } .quality .card h3 { margin: .6rem 0 .6rem; }
+.qlist { margin: 1.2rem 0 0; display: grid; gap: .5rem; }
+.qlist div { display: grid; grid-template-columns: 8rem 1fr; gap: .2rem 1rem; padding-top: .6rem; border-top: 1px solid var(--line); }
+.qlist dt { font-size: .78rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--mute); }
+html[lang="ar"] .qlist dt { letter-spacing: 0; text-transform: none; font-size: .9rem; }
+.qlist dd { margin: 0; font-weight: 600; }
 .range, .story, .news, .industries { padding: clamp(4rem, 9vw, 8rem) 0; }
 .sec .card, .sec .grid { margin: 0; }
 .bento { display: grid; grid-template-columns: repeat(4, 1fr); grid-auto-flow: dense; gap: 1rem; }
@@ -512,6 +520,7 @@ html:not(.js) .nav { border-radius: 28px; flex-wrap: wrap; }
   .foot__grid { grid-template-columns: 1fr 1fr; }
 }
 @media (max-width: 860px) {
+  .quality__grid { grid-template-columns: 1fr; } .qlist div { grid-template-columns: 1fr; }
   .hero { padding-top: 96px; align-items: flex-start; }
   .hero--inner { min-height: 0; padding-top: 104px; }
   .hero__grid, .finish__grid, .shapes__grid, .seasons__grid, .story__grid, .contact__grid { grid-template-columns: 1fr; }

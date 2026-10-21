@@ -12,7 +12,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import { fileURLToPath } from 'node:url';
-import { SITE, LANGS, UI, PAGES, NEWS, NAV, MARQUEE, FINISH_LAB, SHAPES_LAB, RANGE, IND_LIST, SEASONS, STORY, STEPS, PROOF_TBC } from './content.mjs';
+import { SITE, LANGS, UI, PAGES, NEWS, NAV, MARQUEE, FINISH_LAB, SHAPES_LAB, RANGE, IND_LIST, SEASONS, STORY, STEPS, PROOF_TBC, QUALITY } from './content.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const L = Object.keys(LANGS);                       // ['en', 'ar']
@@ -251,6 +251,28 @@ const KINDS = {
 </section>`;
   },
 
+  quality(lang, s) {
+    const id = s.id || 'quality', Q = QUALITY;
+    return `<section class="quality" id="${id}" aria-labelledby="${id}-h">
+  <div class="wrap">
+    ${secHead(lang, s, Q, id)}
+    <div class="quality__grid">
+      <article class="card tilt" data-reveal>
+        <span class="card__idx">01</span>
+        <h3>${T(Q.fssc.h, lang)}</h3>
+        <p>${T(Q.fssc.p, lang)}</p>
+        <dl class="qlist">${Q.fssc.rows.map((r) => `<div><dt>${T(r.k, lang)}</dt><dd>${r.ltr ? `<bdi dir="ltr">${T(r.v, lang)}</bdi>` : T(r.v, lang)}</dd></div>`).join('')}</dl>
+      </article>
+      <article class="card tilt" data-reveal>
+        <span class="card__idx">02</span>
+        <h3>${T(Q.jfda.h, lang)}</h3>
+        <p>${T(Q.jfda.p, lang)}</p>
+      </article>
+    </div>
+  </div>
+</section>`;
+  },
+
   news(lang, s) {
     const id = s.id || 'news';
     const list = s.limit ? NEWS.slice(0, s.limit) : NEWS;
@@ -370,6 +392,7 @@ function footer(lang) {
       <div>
         <a class="brand" href="${rel(lang, byId.home)}" aria-label="${T(UI.brandAria, lang)}">${MARK}${brandWord(lang)}</a>
         <p>${T(UI.footBlurb, lang)}</p>
+        <p class="foot__cert">${T(UI.footCert, lang)}</p>
       </div>
       <nav aria-label="${T(UI.footIndustries, lang)}"><h2>${T(UI.footIndustries, lang)}</h2><ul>${inds.map((p) => `<li><a href="${rel(lang, p)}">${T(p.tile.h, lang)}</a></li>`).join('')}</ul></nav>
       <nav aria-label="${T(UI.footCompany, lang)}"><h2>${T(UI.footCompany, lang)}</h2><ul>${co.map((p) => `<li><a href="${rel(lang, p)}">${T(p.crumb, lang)}</a></li>`).join('')}</ul></nav>

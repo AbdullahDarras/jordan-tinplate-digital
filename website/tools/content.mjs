@@ -87,7 +87,9 @@ export const UI = {
   yearsOf: t('years of making metal packaging', 'عاماً في صناعة التغليف المعدني'),
   loaderSteps: [t('Design & plates', 'التصميم والألواح'), t('Print & coat', 'الطباعة والطلاء'), t('Cut & form', 'القص والتشكيل'), t('Seal & ship', 'الإحكام والشحن')],
   tbcShort: t('To be confirmed with management', 'بانتظار تأكيد الإدارة'),
-  switchMenu: t('Main menu', 'القائمة الرئيسية')
+  switchMenu: t('Main menu', 'القائمة الرئيسية'),
+  footCert: t('FSSC 22000 certified (Bureau Veritas, UKAS-accredited). JFDA-approved food-contact materials.',
+              'حاصلون على FSSC 22000 (Bureau Veritas، معتمدة من UKAS). ومنتجاتنا معتمدة من JFDA كمواد ملامسة للأغذية.')
 };
 
 // ---------------------------------------------------------------- pages
@@ -128,7 +130,6 @@ export const PROOF_TBC = {
   k: 'tbc',
   title: t('Proof points', 'نقاط الإثبات'),
   items: [
-    t('Certifications (copies will be published once received)', 'الشهادات (تُنشر بعد وصول نسخها)'),
     t('Production capacity', 'الطاقة الإنتاجية'),
     t('Clients and case studies', 'العملاء ودراسات الحالة')
   ],
@@ -228,6 +229,31 @@ export const STORY = {
   p2: t('Our mission is to deliver high-end quality products and services using cutting-edge technology and a skilled workforce.', 'ورسالتنا تقديم منتجات وخدمات بجودة عالية باستخدام أحدث التقنيات وكوادر ماهرة.')
 };
 
+// Certifications that have been received (docs/certificates.md). Text only: no logos, no certificate files on the site yet.
+// The JFDA approval is stated WITHOUT its expiry date; no ISO 22000 / ISO 9001 claim of its own, no FDA claim, no warranty letter.
+export const QUALITY = {
+  eyebrow: t('Quality & certifications', 'الجودة والاعتمادات'),
+  title: t('Food safety you can show an auditor.', 'سلامة غذاء يمكنك عرضها على أي مدقّق.'),
+  intro: t('Our food safety management system is certified to FSSC 22000 by Bureau Veritas (UKAS-accredited).',
+           'نظام سلامة الغذاء لدينا حاصل على شهادة FSSC 22000 من Bureau Veritas (معتمدة من UKAS).'),
+  fssc: {
+    h: t('FSSC 22000', 'FSSC 22000'),
+    p: t('Certified by Bureau Veritas (UKAS-accredited). Scope: coating, printing, cutting, forming, welding and seaming of metal cans for food packaging. Certificate JO000011/1, valid until 26 April 2029.',
+         'من Bureau Veritas (معتمدة من UKAS) لنطاق: الطلاء والطباعة والقص والتشكيل واللحام والإغلاق لعلب معدنية مخصصة لتغليف الأغذية. رقم الشهادة JO000011/1، سارية حتى 26 نيسان 2029.'),
+    rows: [
+      { k: t('Certified by', 'الجهة المانحة'), v: t('Bureau Veritas (UKAS-accredited)', 'Bureau Veritas (معتمدة من UKAS)') },
+      { k: t('Scope', 'النطاق'), v: t('Coating, printing, cutting, forming, welding and seaming of metal cans for food packaging', 'الطلاء والطباعة والقص والتشكيل واللحام والإغلاق لعلب معدنية مخصصة لتغليف الأغذية') },
+      { k: t('Certificate', 'رقم الشهادة'), v: t('JO000011/1', 'JO000011/1'), ltr: true },
+      { k: t('Valid until', 'سارية حتى'), v: t('26 April 2029', '26 نيسان 2029') }
+    ]
+  },
+  jfda: {
+    h: t('JFDA food-contact approval', 'اعتماد JFDA للمواد الملامسة للأغذية'),
+    p: t('Our products (metal cans and their lids) are approved by the Jordan Food and Drug Administration (JFDA) as food-contact materials.',
+         'منتجاتنا (العبوات المعدنية وأغطيتها) معتمدة من المؤسسة العامة للغذاء والدواء الأردنية كمواد ملامسة للأغذية.')
+  }
+};
+
 export const PAGES = [
   // ============================================================ HOME
   {
@@ -260,6 +286,7 @@ export const PAGES = [
       { kind: 'industries', id: 'industries' },
       { kind: 'seasons', id: 'seasons' },
       { kind: 'story', id: 'story', link: { to: 'about', label: t('About us', 'من نحن') } },
+      { kind: 'quality', id: 'quality' },
       { kind: 'news', id: 'news', limit: 4, link: { to: 'news', label: t('All news and events', 'كل الأخبار والفعاليات') } }
     ]
   },
@@ -319,7 +346,6 @@ export const PAGES = [
           { k: t('Round gift tins', 'علب هدايا دائرية'), v: t('Ø 73–265 mm · H 34–210 mm', 'قطر 73–265 مم · ارتفاع 34–210 مم'), note: t('For premium and gift packs.', 'للعبوات الفاخرة وعبوات الهدايا.') }
         ] }] },
       { blocks: [{ k: 'tbc', title: t('Still to be confirmed for olive oil', 'ما زال بانتظار التأكيد لزيت الزيتون'), items: [
-        t('Certifications (copies will be published once received)', 'الشهادات (تُنشر بعد وصول نسخها)'),
         t('Minimum order quantity and harvest-season lead times', 'الحد الأدنى للطلب ومدد التسليم في موسم الحصاد')
       ] }] }
     ]
@@ -356,7 +382,6 @@ export const PAGES = [
         t('Interior coating and food-contact compliance', 'الطلاء الداخلي ومطابقة الاستخدام الغذائي'),
         t('Sizes by fill weight', 'المقاسات بحسب وزن التعبئة'),
         t('Recommended ends and sealing', 'الأغطية وطريقة الإغلاق الموصى بها'),
-        t('Relevant certifications', 'الشهادات ذات الصلة'),
         t('Minimum order quantity and lead times', 'الحد الأدنى للطلب ومدد التسليم')
       ] }] }
     ]
@@ -528,7 +553,7 @@ export const PAGES = [
       { blocks: [{ k: 'tbc', title: t('Factory details', 'تفاصيل المصنع'), cards: true, items: [
         t('Production capacity', 'الطاقة الإنتاجية'),
         t('Equipment and line list', 'قائمة المعدات والخطوط'),
-        t('Quality control process and certifications', 'نظام ضبط الجودة والشهادات'),
+        t('Quality control process', 'نظام ضبط الجودة'),
         t('Minimum order quantities and lead times', 'الحد الأدنى للطلب ومدد التسليم')
       ] }] }
     ]
@@ -555,6 +580,7 @@ export const PAGES = [
     },
     sections: [
       { kind: 'story', id: 'story', noProof: true, title: t('A manufacturer that grew with its customers', 'مصنع نما مع عملائه') },
+      { kind: 'quality', id: 'quality' },
       { eyebrow: t('What we do', 'ما نقدّمه'), title: t('From artwork to export-ready packs', 'من التصميم إلى عبوات جاهزة للتصدير'),
         blocks: [{ k: 'prose', ps: [
           t('We make tinplate cans and tins for food and beverage brands, and handle the journey from artwork to export-ready packs.',
@@ -568,7 +594,6 @@ export const PAGES = [
           { k: t('People', 'الفريق'), v: t('About 250 employees', 'نحو 250 موظفاً') }
         ] }] },
       { blocks: [{ k: 'tbc', title: t('Still to be confirmed', 'ما زال بانتظار التأكيد'), cards: true, items: [
-        t('Certifications (copies will be published once received)', 'الشهادات (تُنشر بعد وصول نسخها)'),
         t('Production capacity', 'الطاقة الإنتاجية'),
         t('Clients and case studies', 'العملاء ودراسات الحالة'),
         t('Team and leadership', 'الفريق والإدارة'),

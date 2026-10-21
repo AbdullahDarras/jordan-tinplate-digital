@@ -166,7 +166,7 @@ for imp in re.findall(r"""from\s+['"](\.[^'"]+)['"]""", (ROOT / "assets/js/engin
 
 # ---- creative-experience contract + approved decisions, per page
 NAME_AR = "الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية"
-FORBIDDEN = ["ISO 9001", "ISO 22000", "HACCP", "FSSC", "BRC", "Saudi branch", "branch in Saudi", "فرع في السعودية", "فرع السعودية", "مصنع الأردنية", "JORDAN CANNING</"]
+FORBIDDEN = ["ISO 9001", "ISO 22000", "HACCP", "BRC", "UKAS-accredited logo", "31 December 2026", "2026-12-31", "31/12/2026", "Saudi branch", "branch in Saudi", "فرع في السعودية", "فرع السعودية", "مصنع الأردنية", "JORDAN CANNING</"]
 for f in site_pages:
     p = parsed[f]; n = p.name; src = f.read_text(encoding="utf-8")
     lang = f.parts[len(ROOT.parts)]
@@ -206,6 +206,14 @@ for f in site_pages:
     visible = " ".join(p.text)
     for bad in FORBIDDEN:
         if bad in src: err(f"{n}: forbidden text {bad!r}")
+    if re.search(r"(?<!J)FDA", visible.replace("JFDA", "")) or "warranty" in visible.lower(): err(f"{n}: FDA claim / warranty text")
+    if "<img" in src: err(f"{n}: images/logos are not used yet (text only)")
+    if is_home or url_of[f].endswith("/about/"):
+        need = ("FSSC 22000", "JO000011/1", "UKAS", "Bureau Veritas") ; need_ar = ("FSSC 22000", "JO000011/1", "26 نيسان 2029", "UKAS", "JFDA")
+        for w in (need_ar if lang == "ar" else need + ("26 April 2029", "JFDA")):
+            if w not in visible: err(f"{n}: quality section lacks {w!r}")
+        if 'class="quality"' not in src: err(f"{n}: quality section missing")
+    if "FSSC 22000" not in visible.replace("\n", " ") or "JFDA" not in src: err(f"{n}: footer/certification line missing")
     if "@jordantinplate" not in src: err(f"{n}: handle @jordantinplate missing")
     if lang == "ar" and (NAME_AR not in src or p.root_attrs.get("dir") != "rtl"): err(f"{n}: official Arabic name missing")
     if lang == "en" and "Jordan Tinplate Canning" not in src: err(f"{n}: official English name missing")
