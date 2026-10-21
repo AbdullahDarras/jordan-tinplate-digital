@@ -1,0 +1,112 @@
+{
+  "source": "https://jc3dstudio.netlify.app/ (js/data.js, DEFAULT_APP_DATA.sizes)",
+  "fetched": "2026-10-21",
+  "unit": "mm",
+  "note": "Studio catalogue page says: library under preparation; these are the 8 built-in templates.",
+  "sizes": [
+    {
+      "id": "sqbox160_low",
+      "nameAr": "علبة مربعة بغطاء وقاعدة (16×16 سم - بودي قصير)",
+      "shape": "box",
+      "width": 160,
+      "depth": 160,
+      "height": 42,
+      "lidCut": 200,
+      "lidSafe": 160,
+      "lidFold": 20,
+      "baseSafe": 152,
+      "noteAr": "مقاس وجه السطح 16×16 سم (160×160 ملم) مع شفة غطاء 20 ملم، والقاعدة السفلية 16×16 سم."
+    },
+    {
+      "id": "sqbox70_low",
+      "nameAr": "علبة مربعة بغطاء وقاعدة (7×7 سم - بودي قصير)",
+      "shape": "box",
+      "width": 70,
+      "depth": 70,
+      "height": 32,
+      "lidCut": 110,
+      "lidSafe": 70,
+      "lidFold": 20,
+      "baseSafe": 65,
+      "noteAr": "الغطاء قص 110×110 ملم (صافي السطح 70×70 + ثني جانبي 20 ملم)، والقاعدة صافي آمن 65×65 ملم للبيانات والباركود."
+    },
+    {
+      "id": "sqbox70_130",
+      "nameAr": "علبة مربعة 7×7 سم بارتفاع 13 سم (غطاء 110×110)",
+      "shape": "box",
+      "width": 70,
+      "depth": 70,
+      "height": 130,
+      "lidCut": 110,
+      "lidSafe": 70,
+      "lidFold": 20,
+      "baseSafe": 65,
+      "noteAr": "الغطاء العلوي 110×110 ملم (صافي 70×70 + 20 ملم ثني جانبي)، والقاعدة السفلية صافي 65×65 ملم."
+    },
+    {
+      "id": "olive16",
+      "nameAr": "تنكة زيت زيتون 16 كغم (مربعة)",
+      "shape": "box",
+      "width": 235,
+      "depth": 235,
+      "height": 350,
+      "lidCut": null,
+      "lidSafe": null,
+      "lidFold": null,
+      "baseSafe": null,
+      "noteAr": "انتبه لخط الطيّ الوسطي (90°) بحيث لا يقع وسط نص مهم أو باركود."
+    },
+    {
+      "id": "olive4",
+      "nameAr": "تنكة زيت 4 لتر (مستطيلة)",
+      "shape": "box",
+      "width": 175,
+      "depth": 115,
+      "height": 245,
+      "lidCut": null,
+      "lidSafe": null,
+      "lidFold": null,
+      "baseSafe": null,
+      "noteAr": "الواجهتان العريضتان (175 ملم) للتصميم الرئيسي، والجانبان (115 ملم) للبيانات الغذائية."
+    },
+    {
+      "id": "can400",
+      "nameAr": "علبة معلبات قياسية 400 غرام",
+      "shape": "cylinder",
+      "width": 73,
+      "depth": 73,
+      "height": 110,
+      "lidCut": null,
+      "lidSafe": null,
+      "lidFold": null,
+      "baseSafe": null,
+      "noteAr": "اترك 3 ملم صفيح عارٍ على الطرفين للحام الكهربائي، و2 ملم Bleed أعلى وأسفل."
+    },
+    {
+      "id": "cheese1k",
+      "nameAr": "علبة أجبان / حلاوة 1 كغم",
+      "shape": "cylinder",
+      "width": 99,
+      "depth": 99,
+      "height": 119,
+      "lidCut": null,
+      "lidSafe": null,
+      "lidFold": null,
+      "baseSafe": null,
+      "noteAr": "تأكد من عدم وضع نصوص صغيرة قريبة من منطقة الفلنجة (Flanging) أعلى وأسفل العلبة بـ 4 ملم."
+    },
+    {
+      "id": "tuna83",
+      "nameAr": "علبة تونة قياسية",
+      "shape": "cylinder",
+      "width": 83,
+      "depth": 83,
+      "height": 38,
+      "lidCut": null,
+      "lidSafe": null,
+      "lidFold": null,
+      "baseSafe": null,
+      "noteAr": "ارتفاع قصير جداً؛ احرص على ترك منطقة الدسر العلوية والسفلية خالية من النصوص."
+    }
+  ]
+}
