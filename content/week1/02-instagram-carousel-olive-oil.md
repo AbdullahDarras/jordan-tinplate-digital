@@ -9,7 +9,7 @@
 | **Format** | 6 slides, 1080x1350 px (4:5). Caption Arabic first, then English |
 | **Status** | Copy updated with management's approved decisions. **Slides 2 to 4 (light, toughness, stacking) still need technical review** (Month-1 plan: posts 2, 3, 7). Slide 6 (sizes, interior lacquer) is confirmed. Design can start now on slides 1, 5, 6 |
 
-> Convention: `[TBC]` / `[تحقق]` marks a technical statement not yet confirmed. **Now confirmed by management (`docs/decisions.md`) and stated without a marker:** the company makes olive-oil tins in 1, 4, 8 and 16 L/kg, and the interior lacquer meets the highest food-grade hygiene standards (no standard is named; do not name one). **Still marked:** the light, toughness and pallet-stacking sentences (slides 2 to 4). The copy makes **no** claim about shelf life, oil quality, certifications (they exist but none may be named), capacity or clients, and it does not depend on detailed oil-tin specifications (decision, round 2: not needed). Remove a marker only after the existing technical body confirms (no reviewer name is needed), or use the fallback in section 7.
+> Convention: `[TBC]` / `[تحقق]` marks a technical statement not yet confirmed. **Now confirmed by management (`docs/decisions.md`) and stated without a marker:** the company makes olive-oil tins in 1, 4, 8 and 16 L/kg, and the interior lacquer meets the highest food-grade hygiene standards (no standard is named; do not name one). **Still marked:** the light, toughness and pallet-stacking sentences (slides 2 to 4). The copy makes **no** claim about shelf life, oil quality, certificates (FSSC 22000 and the JFDA food-contact approval may now be named, but not in this post, and never as a statement about the oil tins' lacquer or the oil), capacity or clients, and it does not depend on detailed oil-tin specifications (decision, round 2: not needed). Remove a marker only after the existing technical body confirms (no reviewer name is needed), or use the fallback in section 7.
 > The **official Arabic name «الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية»** is confirmed (round 3, 2026-10-21) and used in all Arabic copy. Management approved keeping the [تحقق] / [TBC] markers on slides 2 to 4 until the technical body reviews them (round 3).
 
 ---
@@ -127,14 +127,14 @@ Save this post and share it with someone filling oil this season.
 
 **Resolved (management decisions, `docs/decisions.md`):**
 - [x] The company **produces olive-oil tins** in 1, 4, 8 and 16 L/kg; sizes may be named publicly (slide 6, caption)
-- [x] **Interior lacquer** meets the highest food-grade hygiene standards: use this generic wording only; name no standard or number until the certificates arrive
+- [x] **Interior lacquer** meets the highest food-grade hygiene standards: use this generic wording only; name no standard or number. Do not link it to FSSC 22000 or JFDA (they cover the food safety system and the cans and ends as food-contact materials, not the lacquer)
 - [x] Brand name **Jordan Tinplate Canning**, written in full; official Arabic name «الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية» (confirmed, round 3)
 
 **Technical (to be cleared by the existing technical body before publishing slides 2 to 4; no reviewer name is needed):**
 - [ ] Slide 2: wording on **light** is acceptable for oil. We state only that metal is opaque; no quality or shelf-life claim [تحقق]
 - [ ] Slide 3: wording on **toughness** (compared with glass) is acceptable [تحقق]
 - [ ] Slide 4: **stacking on pallets** applies to the oil tins in question [تحقق]
-- [ ] Certifications (ISO, FSSC and others): **not mentioned**. They exist, but none may be named until copies arrive [تحقق]
+- [ ] Certificates: **not mentioned in this post** (the two that arrived, FSSC 22000 and the JFDA food-contact approval, are announced separately; see `docs/certificates.md` and `content/week2-bonus/`). No other certificate or standard is named (no ISO 9001, no standalone ISO 22000, no FDA, no BRC) [تحقق]
 - [ ] Any **shelf-life or oil-quality claim**: deliberately not made [تحقق]
 
 **General:**
