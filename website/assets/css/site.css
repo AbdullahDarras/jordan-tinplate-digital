@@ -82,6 +82,20 @@ main:focus, section[tabindex="-1"]:focus { outline: none; }
 #gl { position: fixed; left: -200vw; top: 0; width: 8px; height: 8px; pointer-events: none; visibility: hidden; }
 .stage__cv { position: absolute; left: 50%; top: 50%; width: 124%; height: 124%; transform: translate(-50%, -50%); pointer-events: none; opacity: 0; transition: opacity .9s var(--ease); }
 .stage__cv.is-on { opacity: 1; }
+/* A soft studio spotlight behind every product tin, so it glows against either page: warm white on the light page, a blue-and-gold spot with a pool of
+   warm light on the dark page (the page itself stays dark). The 3D canvas is drawn on top of it. */
+.stage[data-rig="product"]::before, .journey .stage::before {
+  content: ""; position: absolute; inset: -6% -10%; pointer-events: none; border-radius: 50%;
+  background: radial-gradient(40% 12% at 50% 84%, rgba(255, 224, 160, .5), transparent 100%), radial-gradient(closest-side, rgba(255, 255, 255, .95), rgba(255, 238, 200, .38) 56%, transparent 100%);
+}
+:root[data-theme="dark"] .stage[data-rig="product"]::before, :root[data-theme="dark"] .journey .stage::before {
+  background: radial-gradient(38% 11% at 50% 84%, rgba(255, 214, 140, .42), transparent 100%), radial-gradient(closest-side, rgba(150, 196, 255, .44), rgba(58, 112, 205, .22) 52%, transparent 100%);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) .stage[data-rig="product"]::before, :root:not([data-theme]) .journey .stage::before {
+    background: radial-gradient(38% 11% at 50% 84%, rgba(255, 214, 140, .42), transparent 100%), radial-gradient(closest-side, rgba(150, 196, 255, .44), rgba(58, 112, 205, .22) 52%, transparent 100%);
+  }
+}
 
 .grain {
   position: fixed; inset: 0; z-index: 60; pointer-events: none; opacity: var(--grain); mix-blend-mode: multiply;
@@ -158,7 +172,7 @@ html:not(.js) .cursor, html.no-fx .cursor { display: none; }
 #loader { display: none; }
 html.intro #loader {
   display: grid; position: fixed; inset: 0; z-index: 300; color: #fff; place-items: center; --r: 0%;
-  background: radial-gradient(60% 55% at 50% 42%, var(--navy-500) 0%, var(--navy) 55%, var(--navy-900) 100%);
+  background: radial-gradient(34% 36% at 50% 43%, rgba(255, 226, 150, .3), transparent 100%), radial-gradient(60% 55% at 50% 42%, var(--navy-400) 0%, var(--navy-500) 30%, var(--navy) 62%, var(--navy-900) 100%);
   -webkit-mask: radial-gradient(circle farthest-corner at 50% 50%, transparent var(--r), #000 calc(var(--r) + .6%));
   mask: radial-gradient(circle farthest-corner at 50% 50%, transparent var(--r), #000 calc(var(--r) + .6%));
 }

@@ -166,8 +166,8 @@ export const FINISH_LAB = {
   plate: { h: t('One plate, many designs.', 'لوح واحد، تصاميم متعددة.'), p: t('Variable printing puts several versions of the same pack on a single printing plate.', 'الطباعة المتغيّرة تضع عدة نسخ من العبوة نفسها على لوح طباعة واحد.') },
   cwAria: t('Colourways', 'ألوان التصميم'),
   cws: [
-    { label: t('Navy & gold', 'كحلي وذهبي'), a: '#002F6C', b: '#e3c06c' }, { label: t('Copper & gold', 'نحاسي وذهبي'), a: '#b4521f', b: '#e6c98a' },
-    { label: t('Teal & gold', 'أخضر مزرق وذهبي'), a: '#0e6f69', b: '#e0c070' }, { label: t('Cream & navy', 'كريمي وكحلي'), a: '#f6edd8', b: '#002F6C' }
+    { label: t('Royal blue & gold', 'أزرق ملكي وذهبي'), a: '#0b55c0', b: '#f0c867' }, { label: t('Pearl, navy & gold', 'لؤلؤي وكحلي وذهبي'), a: '#f6ecd2', b: '#0a4496' },
+    { label: t('Turquoise & gold', 'فيروزي وذهبي'), a: '#1fbdb4', b: '#f0c867' }, { label: t('Coral & rose-gold', 'مرجاني وذهبي وردي'), a: '#ff7d6e', b: '#f6c4ae' }
   ]
 };
 
@@ -176,7 +176,11 @@ const SHAPE_ITEMS = [
   { id: 'square', label: t('Square', 'مربعة'), name: t('Square tin', 'علبة مربعة'), dim: t('120–240 mm sides · H 40–100 mm', 'ضلع 120–240 مم · ارتفاع 40–100 مم'), note: t('Five standard sizes, from about 100 g to 1 kg.', 'خمسة مقاسات قياسية، من نحو 100 غ إلى 1 كغ.') },
   { id: 'rect', label: t('Rectangular', 'مستطيلة'), name: t('Rectangular tin', 'علبة مستطيلة'), dim: t('Sizes on request', 'المقاسات عند الطلب'), note: t('Made to your specification.', 'تُصنَّع وفق مواصفاتك.') },
   { id: 'oval', label: t('Oval', 'بيضاوية'), name: t('Oval tin', 'علبة بيضاوية'), dim: t('Ø 300 mm · H 40–100 mm', 'قطر 300 مم · ارتفاع 40–100 مم'), note: t('A special-mold shape for presentation packs.', 'شكل بقالب خاص لعلب التقديم.') },
-  { id: 'oil', label: t('Oil tin', 'تنكة زيت'), name: t('Olive-oil tin', 'تنكة زيت الزيتون'), dim: t('1, 4, 8 and 16 L/kg', '1 و4 و8 و16 لتر/كغ'), note: t('Produced in all four sizes. The 3D view is illustrative.', 'تُنتَج بالأحجام الأربعة كلها. والمجسّم توضيحي.') }
+  { id: 'oil', label: t('Oil tin', 'تنكة زيت'), name: t('Olive-oil tin', 'تنكة زيت الزيتون'), dim: t('1, 4, 8 and 16 L/kg', '1 و4 و8 و16 لتر/كغ'), note: t('Produced in all four sizes. The 3D view is illustrative.', 'تُنتَج بالأحجام الأربعة كلها. والمجسّم توضيحي.') },
+  { id: 'can', label: t('Food can', 'علبة أغذية'), name: t('Food can', 'علبة أغذية'), dim: t('Standard food can', 'علبة معلبات قياسية'), note: t('The everyday can for vegetables, legumes and ready meals.', 'العلبة اليومية للخضار والبقوليات والوجبات الجاهزة.') },
+  { id: 'cheese', label: t('Cheese & halawa', 'جبنة وحلاوة'), name: t('Cheese and halawa can', 'علبة جبنة وحلاوة'), dim: t('Wide and sturdy', 'عريضة ومتينة'), note: t('For white cheese, halawa and spreads.', 'للجبنة البيضاء والحلاوة والمعجنات القابلة للدهن.') },
+  { id: 'tuna', label: t('Tuna can', 'علبة تونة'), name: t('Tuna can', 'علبة تونة'), dim: t('Low and wide', 'منخفضة وعريضة'), note: t('The short, flat can for tuna and fish.', 'العلبة القصيرة المسطحة للتونة والأسماك.') },
+  { id: 'tall', label: t('Tall box', 'علبة عالية'), name: t('Tall square box', 'علبة مربعة عالية'), dim: t('Square and tall', 'مربعة وعالية'), note: t('For coffee, tea and spices.', 'للقهوة والشاي والبهارات.') }
 ];
 export const SHAPES_LAB = {
   eyebrow: t('Shapes', 'الأشكال'),
@@ -184,7 +188,7 @@ export const SHAPES_LAB = {
   aria: t('3D tin shapes', 'أشكال العلب بثلاثية الأبعاد'),
   chipsAria: t('Shapes', 'الأشكال'),
   items: SHAPE_ITEMS,
-  fine: t('3D views are illustrative. Sizes come from our product tables; custom sizes are available on request.', 'المجسّمات ثلاثية الأبعاد توضيحية. المقاسات من جداول منتجاتنا، والمقاسات الخاصة متاحة عند الطلب.')
+  fine: t('3D views show our standard tins and boxes in true proportion; the artwork is a sample. Custom sizes are available on request.', 'المجسّمات ثلاثية الأبعاد تعرض علبنا وصناديقنا القياسية بنسبها الحقيقية، والتصميم المعروض نموذج توضيحي. والمقاسات الخاصة متاحة عند الطلب.')
 };
 export const SHAPES_SWEETS = SHAPE_ITEMS.slice(0, 4);
 
@@ -227,7 +231,7 @@ export const SEASONS = {
   tabs: [
     { id: 'olive', k: t('Autumn', 'الخريف'), h: t('Olive oil', 'زيت الزيتون'), now: true, shape: 'oil', theme: 'olive', finish: 'gloss', to: 'ind-olive',
       desc: t('Olive-oil tins in 1, 4, 8 and 16 L/kg, ready before the pressing season.', 'تنكات زيت الزيتون بسعات 1 و4 و8 و16 لتر/كغ، جاهزة قبل موسم العصر.'), more: t('Olive-oil tins', 'تنكات زيت الزيتون') },
-    { id: 'eid', k: t('Ramadan & Eid', 'رمضان والعيد'), h: t('Sweets, ka’ak & chocolate', 'حلويات وكعك وشوكولاتة'), shape: 'round', theme: 'eid', finish: 'emboss', to: 'ind-sweets',
+    { id: 'eid', k: t('Ramadan & Eid', 'رمضان والعيد'), h: t('Sweets, ka’ak & chocolate', 'حلويات وكعك وشوكولاتة'), shape: 'square', theme: 'eid', finish: 'emboss', to: 'ind-sweets',
       desc: t('Gift tins for sweets, ka’ak and chocolate: embossed, soft-touch and unmistakably festive.', 'علب هدايا للحلويات والكعك والشوكولاتة: بنقش بارز وملمس ناعم وطابع احتفالي لا يُخطئ.'), more: t('Gift tins', 'علب الهدايا') },
     { id: 'cheese', k: t('Spring', 'الربيع'), h: t('White cheese', 'الجبنة البيضاء'), shape: 'cheese', theme: 'cheese', finish: 'matte', to: 'ind-cheese',
       desc: t('Tins for the spring white-cheese season.', 'علب لموسم الجبنة البيضاء في الربيع.'), more: t('White-cheese tins', 'علب الجبنة البيضاء') }
@@ -431,8 +435,8 @@ export const PAGES = [
       eyebrow: t('Industry · Sweets, ka’ak & chocolate', 'القطاع · الحلويات والكعك والشوكولاتة'),
       h1: t('Gift tins for sweets, ka’ak and chocolate', 'علب هدايا للحلويات والكعك والشوكولاتة'),
       lead: t('Embossed, soft-touch and unmistakably festive: tins that make Ramadan and Eid gifts worth keeping.', 'بنقش بارز وملمس ناعم وطابع احتفالي لا يُخطئ: علب تجعل هدايا رمضان والعيد تستحق الاحتفاظ بها.'),
-      art: 'square', stage: { shape: 'round', theme: 'eid', finish: 'emboss', label: t('3D gift tin: drag to rotate', 'علبة هدايا ثلاثية الأبعاد: اسحب لتدويرها') },
-      picker: { kind: 'shape', target: 'hero', initial: 'round', aria: t('Gift-tin shapes', 'أشكال علب الهدايا'), items: SHAPES_SWEETS },
+      art: 'square', stage: { shape: 'square', theme: 'eid', finish: 'emboss', label: t('3D gift tin: drag to rotate', 'علبة هدايا ثلاثية الأبعاد: اسحب لتدويرها') },
+      picker: { kind: 'shape', target: 'hero', initial: 'square', aria: t('Gift-tin shapes', 'أشكال علب الهدايا'), items: SHAPES_SWEETS },
       ctas: [quoteCta(), { label: t('All products', 'كل المنتجات'), to: 'products', kind: 'ghost' }]
     },
     sections: [

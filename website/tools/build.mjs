@@ -50,7 +50,7 @@ const ART = {
   can: `<ellipse class="a-shadow" cx="100" cy="166" rx="56" ry="10"/><path class="a-body" d="M56 40V146C56 156 76 164 100 164S144 156 144 146V40Z"/><path class="a-band" d="M56 76C56 86 76 94 100 94S144 86 144 76V108C144 118 124 126 100 126S56 118 56 108Z"/><ellipse class="a-top" cx="100" cy="40" rx="44" ry="12"/><ellipse class="a-ln" cx="100" cy="40" rx="34" ry="8"/><use class="a-gear" href="#lg-gear" transform="translate(82 96) scale(.13)"/>`,
   oil: `<ellipse class="a-shadow" cx="100" cy="170" rx="58" ry="8"/><path class="a-l" d="M52 70H148V158Q148 168 138 168H62Q52 168 52 158Z"/><path class="a-band" d="M52 100H148V136H52Z"/><path class="a-top" d="M52 70L78 44H122L148 70Z"/><rect class="a-r" x="92" y="22" width="16" height="24"/><rect class="a-band2" x="87" y="14" width="26" height="9" rx="3"/><path class="a-ln2" d="M126 52C172 34 178 84 148 88"/>`
 };
-const SHAPE_ART = { round: 'round', square: 'square', rect: 'rect', oval: 'oval', oil: 'oil', oil1: 'oil', oil4: 'oil', oil8: 'oil', oil16: 'oil', cheese: 'oval', milk: 'can', coffee: 'square', paint: 'can' };
+const SHAPE_ART = { round: 'round', square: 'square', rect: 'rect', oval: 'oval', oil: 'oil', oil1: 'oil', oil4: 'oil', oil8: 'oil', oil16: 'oil', can: 'can', cheese: 'can', tuna: 'oval', milk: 'can', box70: 'square', tall: 'square', coffee: 'square', paint: 'can' };
 const art = (key, cls = '') => {
   if (key === 'hero') {
     return `<svg class="art ${cls}" viewBox="0 0 520 420" aria-hidden="true" focusable="false"><svg x="240" y="8" width="250" height="225" viewBox="0 0 200 180">${ART.can}</svg><svg x="0" y="130" width="320" height="288" viewBox="0 0 200 180">${ART.round}</svg><svg x="300" y="210" width="210" height="190" viewBox="0 0 200 180">${ART.square}</svg></svg>`;
