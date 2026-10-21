@@ -23,15 +23,17 @@
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية: علب معدنية مخصّصة لعلامات الأغذية والمشروبات">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@jordantinplate">
 <meta name="twitter:title" content="الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية | تغليف معدني مخصّص للأغذية والمشروبات">
 <meta name="twitter:description" content="تصمّم الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية علب الصفيح المعدنية وعلب الهدايا وتطبعها وتشكّلها وتجهّزها للشحن لعلامات الأغذية والمشروبات. صناعة أردنية منذ عام 1998.">
 <meta name="twitter:image" content="https://www.jordantinplate.com/assets/img/og-default.png">
 <link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml">
-<script>(function(){var d=document.documentElement;d.classList.add('js');try{var t=localStorage.getItem('jt-theme');if(t==='dark'||t==='light')d.setAttribute('data-theme',t)}catch(e){}})()</script>
+<script>(function(){var d=document.documentElement;d.classList.add('js');try{var t=localStorage.getItem('jt-theme');if(t!=='dark'&&t!=='light')t=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';d.setAttribute('data-theme',t)}catch(e){}try{if(sessionStorage.getItem('jt-arrive')){sessionStorage.removeItem('jt-arrive');d.classList.add('arrive')}}catch(e){}try{if(!/[?&]skip/.test(location.search)&&!sessionStorage.getItem('jt-intro')&&!matchMedia('(prefers-reduced-motion: reduce)').matches)d.classList.add('intro')}catch(e){}})()</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=DM+Sans:wght@400;500;600&family=Readex+Pro:wght@300..700&display=swap">
-<link rel="stylesheet" href="/assets/css/site.css?v=139aefad">
+<link rel="stylesheet" href="/assets/css/site.css?v=e2456f8e">
+<script type="importmap">{"imports":{"three":"/assets/vendor/three/three.module.min.js","three/addons/":"/assets/vendor/three/addons/"}}</script>
 <script type="application/ld+json">{
  "@context": "https://schema.org",
  "@graph": [
@@ -63,7 +65,8 @@
    "sameAs": [
     "https://www.linkedin.com/company/jordan-tin-plate-canning-printing-industrial-co",
     "https://www.instagram.com/jordantinplate",
-    "https://www.facebook.com/JordanTinplate"
+    "https://x.com/jordantinplate",
+    "https://www.facebook.com/jordantinplate"
    ]
   },
   {
@@ -96,72 +99,211 @@
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs><linearGradient id="g-body" x1="0" x2="1" y1="0" y2="0"><stop offset="0" class="stop-a"/><stop offset=".38" class="stop-b"/><stop offset=".7" class="stop-c"/><stop offset="1" class="stop-a"/></linearGradient></defs></svg>
+<canvas id="gl" aria-hidden="true"></canvas>
+<div class="grain" aria-hidden="true"></div>
+<div class="cursor is-hidden" aria-hidden="true"><i></i><span>اسحب</span></div>
+<div id="loader" aria-busy="true">
+  <button class="ld__skip" id="ldSkip" type="button"><span>تخطَّ المقدمة</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5l8 7-8 7M14 5l8 7-8 7"/></svg></button>
+  <div class="stage ld__stage" data-rig="journey" data-pose="hero" aria-hidden="true"><div class="ld__wait"><i></i></div></div>
+  <div class="ld__meta" aria-hidden="true">
+    <div class="ld__num"><b id="loaderNum">0</b><small>%</small></div>
+    <div class="ld__step" id="ldStep">التصميم والألواح</div>
+    <div class="ld__name">الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية</div>
+  </div>
+</div>
+<p class="vh" id="ldAnnounce" role="status"></p>
+<div id="curtain" aria-hidden="true"><i style="--n:0"></i><i style="--n:1"></i><i style="--n:2"></i><i style="--n:3"></i><i style="--n:4"></i></div>
 <a class="skip" href="#main">انتقل إلى المحتوى الرئيسي</a>
-<header class="site-header">
-  <div class="bar">
-    <a class="brand" href="/ar/" aria-label="الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية، الصفحة الرئيسية"><svg viewBox="0 0 40 40" class="brand__mark" aria-hidden="true" focusable="false"><circle cx="20" cy="20" r="17" fill="none" stroke="currentColor" stroke-width="2.4"/><circle cx="20" cy="20" r="10.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-dasharray="3 3"/><circle cx="20" cy="20" r="3.4" fill="var(--accent)"/></svg><span class="brand__word">JORDAN <b>TINPLATE</b> CANNING</span></a>
-    <nav class="nav" id="primary-nav" aria-label="القائمة الرئيسية"><a href="/ar/products/">المنتجات</a><a href="/ar/capabilities/">قدراتنا</a><a href="/ar/about/">من نحن</a><a href="/ar/news/">الأخبار</a><a href="/ar/contact/">تواصل معنا</a><a class="nav__cta" href="https://jc-order.netlify.app/" target="_blank" rel="noopener">اطلب عرض سعر<span class="vh"> (يُفتح في تبويب جديد)</span></a></nav>
-    <div class="tools">
-      <a class="tool tool--lang" href="/en/" hreflang="en" lang="en" aria-label="Switch to English" data-lang-switch>English</a>
-      <button class="tool" id="theme-btn" type="button" aria-label="التبديل بين الوضع الفاتح والداكن" aria-pressed="false">
-        <svg class="i-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.6M12 18.9v2.6M2.5 12h2.6M18.9 12h2.6M5.3 5.3l1.8 1.8M16.9 16.9l1.8 1.8M5.3 18.7l1.8-1.8M16.9 7.1l1.8-1.8"/></svg>
-        <svg class="i-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5z"/></svg>
-      </button>
-      <a class="btn btn--sm" href="https://jc-order.netlify.app/" target="_blank" rel="noopener">اطلب عرض سعر<span class="vh"> (يُفتح في تبويب جديد)</span></a>
-      <button class="burger" id="menu-btn" type="button" aria-label="القائمة" aria-expanded="false" aria-controls="primary-nav"><i></i><i></i></button>
-    </div>
+<header class="nav" id="nav">
+  <a class="brand" href="/ar/" aria-label="الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية، الصفحة الرئيسية"><svg viewBox="0 0 40 40" class="brand__mark" aria-hidden="true" focusable="false"><circle cx="20" cy="20" r="17" fill="none" stroke="currentColor" stroke-width="2.4"/><circle cx="20" cy="20" r="10.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-dasharray="3 3"/><circle cx="20" cy="20" r="3.4" fill="var(--accent)"/></svg><span class="brand__word"><span><b>الشركة الأردنية</b></span><span class="brand__sub">لصناعة وطباعة الصفيح والعبوات المعدنية</span></span></a>
+  <nav class="nav__links" aria-label="القائمة الرئيسية"><a href="/ar/products/">المنتجات</a><a href="/ar/capabilities/">قدراتنا</a><a href="/ar/about/">من نحن</a><a href="/ar/news/">الأخبار</a><a href="/ar/contact/">تواصل معنا</a></nav>
+  <div class="nav__tools">
+    <a class="tool tool--lang" id="langBtn" href="/en/" hreflang="en" lang="en" aria-label="Switch to English" data-lang-switch>English</a>
+    <button class="tool" id="themeBtn" type="button" aria-label="التبديل بين الوضع الفاتح والداكن" aria-pressed="false">
+      <svg class="i-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.6M12 18.9v2.6M2.5 12h2.6M18.9 12h2.6M5.3 5.3l1.8 1.8M16.9 16.9l1.8 1.8M5.3 18.7l1.8-1.8M16.9 7.1l1.8-1.8"/></svg>
+      <svg class="i-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5z"/></svg>
+    </button>
+    <a class="btn btn--sm magnetic" href="https://jc-order.netlify.app/" target="_blank" rel="noopener"><span>اطلب عرض سعر</span><span class="vh"> (يُفتح في تبويب جديد)</span></a>
+    <button class="burger" id="burger" type="button" aria-label="القائمة" aria-expanded="false" aria-controls="menu"><i></i><i></i></button>
   </div>
 </header>
+<div class="menu" id="menu" inert>
+  <a href="/ar/products/">المنتجات</a>
+  <a href="/ar/capabilities/">قدراتنا</a>
+  <a href="/ar/about/">من نحن</a>
+  <a href="/ar/news/">الأخبار</a>
+  <a href="/ar/contact/">تواصل معنا</a>
+  <a href="https://jc-order.netlify.app/" target="_blank" rel="noopener">اطلب عرض سعر<span class="vh"> (يُفتح في تبويب جديد)</span></a>
+</div>
 <main id="main" tabindex="-1">
-<section class="hero hero--home">
-  <div class="wrap hero__grid">
-    <div>
+<section class="hero hero--home" id="hero">
+  <div class="hero__grid wrap">
+    <div class="hero__text">
       
-      <p class="eyebrow"><span class="dot"></span>تغليف معدني · صناعة أردنية · منذ عام 1998</p>
-      <h1 class="h1">علب معدنية مخصّصة لعلامات الأغذية والمشروبات</h1>
-      <p class="lead">من التصميم والألواح إلى علب مطبوعة ومشكَّلة وجاهزة للتصدير: مصنع أردني تقوده عائلة واحدة، ويقدّم الرحلة كاملة تحت سقف واحد.</p>
-      <div class="cta-row"><a class="btn" href="https://jc-order.netlify.app/" target="_blank" rel="noopener">اطلب عرض سعر<span class="vh"> (يُفتح في تبويب جديد)</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a><a class="btn btn--ghost" href="/ar/products/">تصفّح المنتجات حسب القطاع</a></div>
-      <ul class="stats"><li><b>1998</b><span>تأسس في الأردن</span></li><li><b>الثالث</b><span>الجيل الذي يقود الشركة اليوم من العائلة</span></li><li><b>نحو 250</b><span>موظفاً يعملون معنا</span></li><li><b>داخلياً</b><span>التصميم وتصنيع الألواح (CTP)</span></li></ul>
+      <p class="eyebrow"><span class="dot"></span>علب معدنية مخصّصة · صناعة أردنية · منذ عام 1998</p>
+      <h1 class="display" id="heroTitle"><span class="line" data-split>نطبع.</span><span class="line line--accent" data-split>ونعلّب.</span></h1>
+      <p class="lead" data-reveal>علب معدنية مخصّصة لعلامات الأغذية والمشروبات، من التصميم والألواح إلى علب مطبوعة ومشكَّلة وجاهزة للتصدير. مصنع أردني تقوده عائلة واحدة، ويقدّم الرحلة كاملة تحت سقف واحد.</p>
+      <div class="hero__cta" data-reveal><a class="btn magnetic" href="https://jc-order.netlify.app/" target="_blank" rel="noopener"><span>اطلب عرض سعر</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg><span class="vh"> (يُفتح في تبويب جديد)</span></a><a class="btn btn--ghost magnetic" href="/ar/products/"><span>تصفّح المنتجات حسب القطاع</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div>
+      
+      <ul class="facts" data-reveal><li><b>1998</b><span>تأسس في الأردن</span></li><li><b>الثالث</b><span>الجيل الذي يقود الشركة اليوم من العائلة</span></li><li><b>نحو 250</b><span>موظفاً يعملون معنا</span></li></ul>
     </div>
-    <figure class="hero__art"><svg class="art " viewBox="0 0 520 420" aria-hidden="true" focusable="false"><svg x="240" y="8" width="250" height="225" viewBox="0 0 200 180"><ellipse class="a-shadow" cx="100" cy="166" rx="56" ry="10"/><path class="a-body" d="M56 40V146C56 156 76 164 100 164S144 156 144 146V40Z"/><path class="a-band" d="M56 76C56 86 76 94 100 94S144 86 144 76V108C144 118 124 126 100 126S56 118 56 108Z"/><ellipse class="a-top" cx="100" cy="40" rx="44" ry="12"/><ellipse class="a-ln" cx="100" cy="40" rx="34" ry="8"/></svg><svg x="0" y="130" width="320" height="288" viewBox="0 0 200 180"><ellipse class="a-shadow" cx="100" cy="150" rx="82" ry="18"/><path class="a-body" d="M20 60V120C20 133 56 144 100 144S180 133 180 120V60Z"/><path class="a-band" d="M20 84C20 97 56 108 100 108S180 97 180 84V102C180 115 144 126 100 126S20 115 20 102Z"/><ellipse class="a-top" cx="100" cy="60" rx="80" ry="24"/><ellipse class="a-ln" cx="100" cy="60" rx="64" ry="18"/></svg><svg x="300" y="210" width="210" height="190" viewBox="0 0 200 180"><ellipse class="a-shadow" cx="100" cy="162" rx="84" ry="12"/><path class="a-l" d="M24 62L100 94V160L24 128Z"/><path class="a-r" d="M176 62L100 94V160L176 128Z"/><path class="a-band" d="M24 90L100 122V138L24 106Z"/><path class="a-band2" d="M176 90L100 122V138L176 106Z"/><path class="a-top" d="M100 30L176 62L100 94L24 62Z"/><path class="a-ln" d="M100 42L162 68L100 86L38 68Z"/></svg></svg><figcaption class="fine">رسم توضيحي وليس تصميم عميل.</figcaption></figure>
+    <div class="stage " data-rig="product" data-pose="hero" data-cursor="drag" data-shape="round" data-theme="brand" data-cw="0" data-finish="gloss" role="img" aria-label="علبة ثلاثية الأبعاد: اسحب لتدويرها"><div class="stage__fb" aria-hidden="true"><svg class="art " viewBox="0 0 200 180" aria-hidden="true" focusable="false"><ellipse class="a-shadow" cx="100" cy="150" rx="82" ry="18"/><path class="a-body" d="M20 60V120C20 133 56 144 100 144S180 133 180 120V60Z"/><path class="a-band" d="M20 84C20 97 56 108 100 108S180 97 180 84V102C180 115 144 126 100 126S20 115 20 102Z"/><ellipse class="a-top" cx="100" cy="60" rx="80" ry="24"/><ellipse class="a-ln" cx="100" cy="60" rx="64" ry="18"/></svg></div></div>
+  </div>
+  <div class="scrollcue" aria-hidden="true"><i></i><span>مرّر</span></div>
+</section>
+<section class="marquee" aria-label="القطاعات التي نخدمها"><div class="marquee__track"><div class="marquee__row" data-marquee><span>زيت الزيتون</span><i></i><span>حليب البودرة</span><i></i><span>كعك وحلويات</span><i></i><span>شوكولاتة</span><i></i><span>جبنة بيضاء</span><i></i><span>قهوة</span><i></i><span>شاي</span><i></i><span>زيوت</span><i></i><span>علب هدايا</span><i></i></div></div></section>
+<section class="journey" id="journey" aria-labelledby="journey-h">
+  <div class="journey__pin">
+    <div class="journey__grid wrap">
+      <div class="journey__text">
+        <p class="eyebrow"><span class="dot"></span>سقف واحد، وشريك واحد</p>
+        <h2 class="h2" data-split id="journey-h">من الصفيحة إلى الرف.</h2>
+        <div class="steps" id="steps"><article class="step is-active" data-step="0"><span class="step__n">01</span><h3>التصميم والألواح</h3><p>يجهّز مصمّمونا عملك الفني داخل المصنع، وتقنية CTP (من الحاسوب إلى اللوح) تضمن دقة كل لوح طباعة.</p></article><article class="step" data-step="1"><span class="step__n">02</span><h3>الطباعة والطلاء والتشطيب</h3><p>أحبار وطلاءات عالية الجودة مع مؤثرات متنوعة: لامع، مطفي، ملمس ناعم، ملمس خشن، ونقش بارز.</p></article><article class="step" data-step="2"><span class="step__n">03</span><h3>القص والتشكيل</h3><p>تُقصّ الصفائح بدقة وتُشكَّل بالهيئة التي تريدها: دائرية أو مربعة أو مستطيلة أو بشكل خاص.</p></article><article class="step" data-step="3"><span class="step__n">04</span><h3>التغليف على الباليتات</h3><p>تُرتَّب الكراتين على باليتات بطرق تناسب كل عميل وتصلح للشحن إلى الخارج.</p></article><article class="step" data-step="4"><span class="step__n">05</span><h3>التخزين والشحن</h3><p>يمكننا تخزين منتجك الجاهز لدينا لتوفير مساحة التخزين لديك، ثم شحنه إلى أسواقك.</p></article></div>
+        <div class="rail" aria-hidden="true"><i id="railFill"></i><b></b><b></b><b></b><b></b><b></b></div>
+      </div>
+      <div class="stage " data-rig="journey" data-pose="hero" role="img" aria-label="رحلة الصفيحة المعدنية بثلاثية الأبعاد: تُطبع وتُشكَّل علبةً وتُرتَّب على بالتات وتُشحن"><div class="stage__fb" aria-hidden="true"><svg class="art " viewBox="0 0 520 420" aria-hidden="true" focusable="false"><svg x="240" y="8" width="250" height="225" viewBox="0 0 200 180"><ellipse class="a-shadow" cx="100" cy="166" rx="56" ry="10"/><path class="a-body" d="M56 40V146C56 156 76 164 100 164S144 156 144 146V40Z"/><path class="a-band" d="M56 76C56 86 76 94 100 94S144 86 144 76V108C144 118 124 126 100 126S56 118 56 108Z"/><ellipse class="a-top" cx="100" cy="40" rx="44" ry="12"/><ellipse class="a-ln" cx="100" cy="40" rx="34" ry="8"/></svg><svg x="0" y="130" width="320" height="288" viewBox="0 0 200 180"><ellipse class="a-shadow" cx="100" cy="150" rx="82" ry="18"/><path class="a-body" d="M20 60V120C20 133 56 144 100 144S180 133 180 120V60Z"/><path class="a-band" d="M20 84C20 97 56 108 100 108S180 97 180 84V102C180 115 144 126 100 126S20 115 20 102Z"/><ellipse class="a-top" cx="100" cy="60" rx="80" ry="24"/><ellipse class="a-ln" cx="100" cy="60" rx="64" ry="18"/></svg><svg x="300" y="210" width="210" height="190" viewBox="0 0 200 180"><ellipse class="a-shadow" cx="100" cy="162" rx="84" ry="12"/><path class="a-l" d="M24 62L100 94V160L24 128Z"/><path class="a-r" d="M176 62L100 94V160L176 128Z"/><path class="a-band" d="M24 90L100 122V138L24 106Z"/><path class="a-band2" d="M176 90L100 122V138L176 106Z"/><path class="a-top" d="M100 30L176 62L100 94L24 62Z"/><path class="a-ln" d="M100 42L162 68L100 86L38 68Z"/></svg></svg></div></div>
+    </div>
+  </div>
+  <p class="more wrap" data-reveal><a class="go" href="/ar/capabilities/">تعرّف على قدراتنا<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></p>
+</section>
+<section class="finish" id="finish" aria-labelledby="finish-h">
+  <div class="finish__grid wrap">
+    <div class="stage " data-rig="product" data-pose="finish" data-cursor="drag" data-shape="round" data-theme="brand" data-cw="0" data-finish="gloss" role="img" aria-label="علبة ثلاثية الأبعاد يمكنك تغيير تشطيبها"><div class="stage__fb" aria-hidden="true"><svg class="art " viewBox="0 0 200 180" aria-hidden="true" focusable="false"><ellipse class="a-shadow" cx="100" cy="150" rx="82" ry="18"/><path class="a-body" d="M20 60V120C20 133 56 144 100 144S180 133 180 120V60Z"/><path class="a-band" d="M20 84C20 97 56 108 100 108S180 97 180 84V102C180 115 144 126 100 126S20 115 20 102Z"/><ellipse class="a-top" cx="100" cy="60" rx="80" ry="24"/><ellipse class="a-ln" cx="100" cy="60" rx="64" ry="18"/></svg></div></div>
+    <div class="finish__text">
+      <p class="eyebrow"><span class="dot"></span>مختبر التشطيبات</p>
+      <h2 class="h2" data-split id="finish-h">جرّب الملمس قبل الطباعة.</h2>
+      <p class="lead" data-reveal>اختر تشطيباً وشاهد المعدن يستجيب. كل هذه التشطيبات متوفرة على خطوطنا.</p>
+      <div class="chips " role="group" aria-label="التشطيبات" data-reveal><button class="chip is-on" type="button" data-pick="finish" data-target="finish" data-id="gloss" aria-pressed="true">لامع</button><button class="chip" type="button" data-pick="finish" data-target="finish" data-id="matte" aria-pressed="false">مطفي</button><button class="chip" type="button" data-pick="finish" data-target="finish" data-id="soft" aria-pressed="false">ملمس ناعم</button><button class="chip" type="button" data-pick="finish" data-target="finish" data-id="rough" aria-pressed="false">ملمس خشن</button><button class="chip" type="button" data-pick="finish" data-target="finish" data-id="emboss" aria-pressed="false">نقش بارز</button></div><div class="finish__desc" aria-live="polite" data-reveal><p class="pane is-on" data-pane="gloss">لمعة خاصة، منفردة أو مع التشطيب المطفي، لمظهر مشرق وحيّ على المعدن.</p><p class="pane" data-pane="matte">سطح قليل الانعكاس يمنح الألوان مظهراً أهدأ وأعمق.</p><p class="pane" data-pane="soft">طلاء حريري على العبوة كلها يدعو إلى لمسها.</p><p class="pane" data-pane="rough">طلاء بملمس خشن يحفّز الحواس ويمنح العبوة طابعاً مميزاً.</p><p class="pane" data-pane="emboss">تأثيرات بارزة وغائرة على الغطاء والجسم تضيف حركة وتُبرز التصميم.</p></div>
+      <div class="plate" data-reveal>
+        <h3>لوح واحد، تصاميم متعددة.</h3>
+        <p>الطباعة المتغيّرة تضع عدة نسخ من العبوة نفسها على لوح طباعة واحد.</p>
+        <div class="swatches" role="group" aria-label="ألوان التصميم"><button class="sw is-on" type="button" data-pick="cw" data-target="finish" data-id="0" aria-pressed="true" style="--a:#002F6C;--b:#f2a93b" aria-label="كحلي"></button><button class="sw" type="button" data-pick="cw" data-target="finish" data-id="1" aria-pressed="false" style="--a:#c2561f;--b:#ffe0a8" aria-label="نحاسي"></button><button class="sw" type="button" data-pick="cw" data-target="finish" data-id="2" aria-pressed="false" style="--a:#0f7a73;--b:#f6d27a" aria-label="أخضر مزرق"></button><button class="sw" type="button" data-pick="cw" data-target="finish" data-id="3" aria-pressed="false" style="--a:#f3e9d4;--b:#002F6C" aria-label="كريمي"></button></div>
+      </div>
+    </div>
   </div>
 </section>
-<section class="sec" id="industries" aria-labelledby="industries-h">
-  <div class="wrap stack">
-    <div class="sec__head" data-reveal><p class="eyebrow"><span class="dot"></span>حسب القطاع</p><h2 class="h2" id="industries-h">علب تناسب ما بداخلها.</h2><p class="lead">اختر منتجك لتتعرّف على الأحجام والتشطيبات والمواسم الأنسب له.</p></div>
-    <ul class="grid grid--tiles" data-reveal><li><a class="card tile" href="/ar/products/olive-oil/"><div class="card__art"><svg class="art " viewBox="0 0 200 180" aria-hidden="true" focusable="false"><ellipse class="a-shadow" cx="100" cy="170" rx="58" ry="8"/><path class="a-l" d="M52 70H148V158Q148 168 138 168H62Q52 168 52 158Z"/><path class="a-band" d="M52 100H148V136H52Z"/><path class="a-top" d="M52 70L78 44H122L148 70Z"/><rect class="a-r" x="92" y="22" width="16" height="24"/><rect class="a-band2" x="87" y="14" width="26" height="9" rx="3"/><path class="a-ln2" d="M126 52C172 34 178 84 148 88"/></svg></div><h3 class="h3">زيت الزيتون</h3><p>تنكات بأحجام 1 و4 و8 و16 لتر/كغ لموسم العصر في الخريف.</p><span class="go">استكشف<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></a></li><li><a class="card tile" href="/ar/products/milk-powder-dairy/"><div class="card__art"><svg class="art " viewBox="0 0 200 180" aria-hidden="true" focusable="false"><ellipse class="a-shadow" cx="100" cy="166" rx="56" ry="10"/><path class="a-body" d="M56 40V146C56 156 76 164 100 164S144 156 144 146V40Z"/><path class="a-band" d="M56 76C56 86 76 94 100 94S144 86 144 76V108C144 118 124 126 100 126S56 118 56 108Z"/><ellipse class="a-top" cx="100" cy="40" rx="44" ry="12"/><ellipse class="a-ln" cx="100" cy="40" rx="34" ry="8"/></svg></div><h3 class="h3">حليب البودرة والألبان</h3><p>علب كبيرة الحجم للبودرة والألبان.</p><span class="go">استكشف<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></a></li><li><a class="card tile" href="/ar/products/sweets-kaak-chocolate/"><div class="card__art"><svg class="art " viewBox="0 0 200 180" aria-hidden="true" focusable="false"><ellipse class="a-shadow" cx="100" cy="162" rx="84" ry="12"/><path class="a-l" d="M24 62L100 94V160L24 128Z"/><path class="a-r" d="M176 62L100 94V160L176 128Z"/><path class="a-band" d="M24 90L100 122V138L24 106Z"/><path class="a-band2" d="M176 90L100 122V138L176 106Z"/><path class="a-top" d="M100 30L176 62L100 94L24 62Z"/><path class="a-ln" d="M100 42L162 68L100 86L38 68Z"/></svg></div><h3 class="h3">الحلويات والكعك والشوكولاتة</h3><p>علب هدايا لرمضان والعيد وكل المواسم.</p><span class="go">استكشف<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></a></li><li><a class="card tile" href="/ar/products/white-cheese/"><div class="card__art"><svg class="art " viewBox="0 0 200 180" aria-hidden="true" focusable="false"><ellipse class="a-shadow" cx="100" cy="160" rx="88" ry="12"/><path class="a-l" d="M14 74L88 104V150L14 120Z"/><path class="a-r" d="M186 62L88 104V150L186 108Z"/><path class="a-band" d="M14 96L88 126V138L14 108Z"/><path class="a-band2" d="M186 82L88 124V136L186 94Z"/><path class="a-top" d="M14 74L112 32L186 62L88 104Z"/><path class="a-ln" d="M34 74L112 42L168 63L90 94Z"/></svg></div><h3 class="h3">الجبنة البيضاء</h3><p>علب لموسم الجبنة في الربيع.</p><span class="go">استكشف<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></a></li><li><a class="card tile" href="/ar/products/coffee-tea/"><div class="card__art"><svg class="art " viewBox="0 0 200 180" aria-hidden="true" focusable="false"><ellipse class="a-shadow" cx="100" cy="150" rx="82" ry="18"/><path class="a-body" d="M20 60V120C20 133 56 144 100 144S180 133 180 120V60Z"/><path class="a-band" d="M20 84C20 97 56 108 100 108S180 97 180 84V102C180 115 144 126 100 126S20 115 20 102Z"/><ellipse class="a-top" cx="100" cy="60" rx="80" ry="24"/><ellipse class="a-ln" cx="100" cy="60" rx="64" ry="18"/></svg></div><h3 class="h3">القهوة والشاي</h3><p>قوالب خاصة تحفظ العبير.</p><span class="go">استكشف<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></a></li><li><a class="card tile" href="/ar/products/industrial/"><div class="card__art"><svg class="art " viewBox="0 0 200 180" aria-hidden="true" focusable="false"><ellipse class="a-shadow" cx="100" cy="166" rx="56" ry="10"/><path class="a-body" d="M56 40V146C56 156 76 164 100 164S144 156 144 146V40Z"/><path class="a-band" d="M56 76C56 86 76 94 100 94S144 86 144 76V108C144 118 124 126 100 126S56 118 56 108Z"/><ellipse class="a-top" cx="100" cy="40" rx="44" ry="12"/><ellipse class="a-ln" cx="100" cy="40" rx="34" ry="8"/></svg></div><h3 class="h3">الصناعي</h3><p>علب للدهانات والكيماويات والبراميل.</p><span class="go">استكشف<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></a></li></ul>
+<section class="shapes" id="shapes" aria-labelledby="shapes-h">
+  <div class="shapes__grid wrap">
+    <div class="shapes__text">
+      <p class="eyebrow"><span class="dot"></span>الأشكال</p>
+      <h2 class="h2" data-split id="shapes-h">كل شكل تحتاجه علامتك.</h2>
+      <div class="chips " role="group" aria-label="الأشكال" data-reveal><button class="chip is-on" type="button" data-pick="shape" data-target="shapes" data-id="round" aria-pressed="true">دائرية</button><button class="chip" type="button" data-pick="shape" data-target="shapes" data-id="square" aria-pressed="false">مربعة</button><button class="chip" type="button" data-pick="shape" data-target="shapes" data-id="rect" aria-pressed="false">مستطيلة</button><button class="chip" type="button" data-pick="shape" data-target="shapes" data-id="oval" aria-pressed="false">بيضاوية</button><button class="chip" type="button" data-pick="shape" data-target="shapes" data-id="oil" aria-pressed="false">تنكة زيت</button></div><div class="spec" aria-live="polite" data-reveal><div class="pane is-on" data-pane="round"><div class="spec__k">علبة دائرية</div><div class="spec__v">قطر 73–265 مم · ارتفاع 34–210 مم</div><p>ستة أقطار قياسية، بارتفاعات متعددة.</p></div><div class="pane" data-pane="square"><div class="spec__k">علبة مربعة</div><div class="spec__v">ضلع 120–240 مم · ارتفاع 40–100 مم</div><p>خمسة مقاسات قياسية، من نحو 100 غ إلى 1 كغ.</p></div><div class="pane" data-pane="rect"><div class="spec__k">علبة مستطيلة</div><div class="spec__v">المقاسات عند الطلب</div><p>تُصنَّع وفق مواصفاتك.</p></div><div class="pane" data-pane="oval"><div class="spec__k">علبة بيضاوية</div><div class="spec__v">قطر 300 مم · ارتفاع 40–100 مم</div><p>شكل بقالب خاص لعلب التقديم.</p></div><div class="pane" data-pane="oil"><div class="spec__k">تنكة زيت الزيتون</div><div class="spec__v">1 و4 و8 و16 لتر/كغ</div><p>تُنتَج بالأحجام الأربعة كلها. والمجسّم توضيحي.</p></div></div>
+      <p class="fine" data-reveal>المجسّمات ثلاثية الأبعاد توضيحية. المقاسات من جداول منتجاتنا، والمقاسات الخاصة متاحة عند الطلب.</p>
+      
+    </div>
+    <div class="stage " data-rig="product" data-pose="shapes" data-cursor="drag" data-shape="round" data-theme="brand" data-cw="0" data-finish="gloss" role="img" aria-label="أشكال العلب بثلاثية الأبعاد"><div class="stage__fb" aria-hidden="true"><svg class="art " viewBox="0 0 200 180" aria-hidden="true" focusable="false"><ellipse class="a-shadow" cx="100" cy="150" rx="82" ry="18"/><path class="a-body" d="M20 60V120C20 133 56 144 100 144S180 133 180 120V60Z"/><path class="a-band" d="M20 84C20 97 56 108 100 108S180 97 180 84V102C180 115 144 126 100 126S20 115 20 102Z"/><ellipse class="a-top" cx="100" cy="60" rx="80" ry="24"/><ellipse class="a-ln" cx="100" cy="60" rx="64" ry="18"/></svg></div></div>
   </div>
 </section>
-<section class="sec" id="journey" aria-labelledby="journey-h">
-  <div class="wrap stack">
-    <div class="sec__head" data-reveal><p class="eyebrow"><span class="dot"></span>سقف واحد، وشريك واحد</p><h2 class="h2" id="journey-h">من الصفيحة إلى الرف.</h2></div>
-    <ol class="steps" data-reveal><li><h3 class="h3">التصميم والألواح</h3><p>يجهّز مصمّمونا عملك الفني داخل المصنع، وتقنية CTP (من الحاسوب إلى اللوح) تضمن دقة كل لوح طباعة.</p></li><li><h3 class="h3">الطباعة والطلاء والتشطيب</h3><p>أحبار وطلاءات عالية الجودة مع مؤثرات متنوعة: لامع، مطفي، ملمس ناعم، ملمس خشن، ونقش بارز.</p></li><li><h3 class="h3">القص والتشكيل</h3><p>تُقصّ الصفائح بدقة وتُشكَّل بالهيئة التي تريدها: دائرية أو مربعة أو مستطيلة أو بشكل خاص.</p></li><li><h3 class="h3">التغليف على الباليتات</h3><p>تُرتَّب الكراتين على باليتات بطرق تناسب كل عميل وتصلح للشحن إلى الخارج.</p></li><li><h3 class="h3">التخزين والشحن</h3><p>يمكننا تخزين منتجك الجاهز لدينا لتوفير مساحة التخزين لديك، ثم شحنه إلى أسواقك.</p></li></ol>
-<p><a class="go" href="/ar/capabilities/">تعرّف على قدراتنا<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></p>
-  </div>
-</section>
-<section class="sec" id="story" aria-labelledby="story-h">
-  <div class="wrap stack">
-    <div class="sec__head" data-reveal><p class="eyebrow"><span class="dot"></span>قصتنا</p><h2 class="h2" id="story-h">معدن تصنعه عائلة واحدة منذ عام 1998.</h2></div>
-    <div class="prose" data-reveal><p>تأسس المصنع عام 1998 ويقوده اليوم الجيل الثالث من العائلة، وهو يعمل اليوم بخطوط إنتاج أوتوماتيكية بالكامل وفريق تصميم داخلي وكوادر ماهرة.</p></div>
-<blockquote class="quote" data-reveal>رؤيتنا: أن نكون روّاد التغليف المعدني في المنطقة والخيار الأول للعملاء حول العالم.</blockquote>
-<p><a class="go" href="/ar/about/">من نحن<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></p>
-<div class="tbc" data-tbc data-reveal role="group" aria-labelledby="story-tbc"><h3 class="h3 tbc__title" id="story-tbc">نقاط الإثبات</h3><ul class="tbc__cards"><li><span class="badge">بانتظار التأكيد</span><span>الشهادات (تُنشر بعد وصول نسخها)</span></li><li><span class="badge">بانتظار التأكيد</span><span>الطاقة الإنتاجية</span></li><li><span class="badge">بانتظار التأكيد</span><span>العملاء ودراسات الحالة</span></li></ul></div>
-  </div>
-</section>
-<section class="sec" id="news" aria-labelledby="news-h">
-  <div class="wrap stack">
-    <div class="sec__head" data-reveal><p class="eyebrow"><span class="dot"></span>الأخبار والفعاليات</p><h2 class="h2" id="news-h">حاضرون في الأسواق.</h2></div>
-    <ul class="grid grid--2 news" data-reveal><li class="card"><span class="tag">مقابلة · نيسان 2025</span><h3 class="h3"><a href="https://en.sharikatmubasher.com/media-hub/news/21479228/jordan-canning-eyes-expanding-into-saudi-arabia" target="_blank" rel="noopener noreferrer">معرض Saudi Food Manufacturing 2025<span class="vh"> (يُفتح في تبويب جديد)</span></a></h3><p>أجرى موقع «شركات مباشر» مقابلة مع شريكنا Omar Abu Salha خلال معرض Saudi Food Manufacturing 2025.</p><span class="go">اقرأ<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></li></ul>
-<p><a class="go" href="/ar/news/">كل الأخبار والفعاليات<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></p>
-  </div>
-</section>
-<section class="cta" aria-labelledby="cta-h">
+<section class="range" id="range" aria-labelledby="range-h">
   <div class="wrap">
-    <div class="panel" data-reveal>
-      <p class="eyebrow"><span class="dot"></span>اطلب عرض سعر</p>
-      <h2 class="h2" id="cta-h">لنطبع علامتك على المعدن.</h2>
-      <p class="lead">أخبرنا بما تريد تعبئته ومقاس العبوة وفكرة التصميم، وسنردّ عليك بعرض سعر.</p>
-      <div class="cta-row"><a class="btn" href="https://jc-order.netlify.app/" target="_blank" rel="noopener">اطلب عرض سعر<span class="vh"> (يُفتح في تبويب جديد)</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a><a class="btn btn--ghost" href="mailto:sales@jordantinplate.com"><span class="ltr">sales@jordantinplate.com</span></a><a class="btn btn--ghost" href="tel:+96264051125"><span class="ltr">+962 6 4051125</span></a></div>
+    <header class="sec-head"><p class="eyebrow"><span class="dot"></span>المنتجات</p><h2 class="h2" data-split id="range-h">علب تناسب ما بداخلها.</h2></header>
+    <div class="bento"><article class="card tilt card--xl" data-reveal>
+        <span class="card__idx">01</span>
+        <h3>علب فاخرة</h3>
+        <p>علب هدايا دائرية ومربعة ومستطيلة وبيضاوية للحلويات والكعك والشوكولاتة والقهوة وغيرها.</p>
+        <div class="card__meta"><span>دائرية بقطر 73–265 مم · مربعة 120–240 مم</span></div>
+        <svg class="card__art" viewBox="0 0 120 120" aria-hidden="true"><ellipse cx="60" cy="38" rx="42" ry="14"/><path d="M18 38v44c0 8 19 14 42 14s42-6 42-14V38"/><path d="M18 56c0 8 19 14 42 14s42-6 42-14"/></svg>
+      </article><article class="card tilt" data-reveal>
+        <span class="card__idx">02</span>
+        <h3>علب أغذية</h3>
+        <p>تسعة أقطار من 52 إلى 215 مم.</p>
+        <div class="card__meta"><span>من 60 مل إلى 8 لترات</span></div>
+        
+      </article><article class="card tilt" data-reveal>
+        <span class="card__idx">03</span>
+        <h3>علب حليب البودرة</h3>
+        <p>علب كبيرة الحجم للبودرة والألبان.</p>
+        <div class="card__meta"><span>قطر 99–189 مم · حتى 5.5 كغ</span></div>
+        
+      </article><article class="card tilt card--wide" data-reveal>
+        <span class="card__idx">04</span>
+        <h3>حاويات وصواني أغذية</h3>
+        <p>ومنها صواني دائرية ناعمة للكنافة والمنسف.</p>
+        
+        
+      </article><article class="card tilt card--wide" data-reveal>
+        <span class="card__idx">05</span>
+        <h3>قوالب خاصة</h3>
+        <p>علب قهوة تحفظ العبير، وعلب من قطعتين بلا لحام، وعلب بنافذة شفافة، وعلب تبغ، وأي شكل حسب الطلب.</p>
+        
+        
+      </article><article class="card tilt" data-reveal>
+        <span class="card__idx">06</span>
+        <h3>الأغطية والقطع</h3>
+        <p>أغطية Easy Open وPeel Off وPenny Lever وألمنيوم وأغطية عادية.</p>
+        
+        
+      </article><article class="card tilt" data-reveal>
+        <span class="card__idx">07</span>
+        <h3>علب صناعية</h3>
+        <p>للدهانات والكيماويات والبراميل.</p>
+        
+        
+      </article></div>
+    <div class="range__cta" data-reveal>
+      <a class="btn magnetic" href="https://www.jordantinplate.com/pdf/catalog.pdf" target="_blank" rel="noopener"><span>حمّل الكتالوج (PDF)</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11M7 11l5 5 5-5M5 20h14"/></svg><span class="vh"> (يُفتح في تبويب جديد)</span></a>
+      
+    </div>
+  </div>
+</section>
+<section class="industries" id="industries" aria-labelledby="industries-h">
+  <div class="wrap">
+    <header class="sec-head"><p class="eyebrow"><span class="dot"></span>حسب القطاع</p><h2 class="h2" data-split id="industries-h">ابحث عن قطاعك</h2><p class="lead" data-reveal>اختر منتجك لتتعرّف على الأحجام والتشطيبات والمواسم الأنسب له.</p></header>
+    <ol class="indlist" data-reveal><li><a class="indrow" href="/ar/products/olive-oil/"><span class="indrow__n">01</span><span class="indrow__h">زيت الزيتون</span><span class="indrow__p">تنكات بأحجام 1 و4 و8 و16 لتر/كغ لموسم العصر في الخريف.</span><span class="indrow__go"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></a></li><li><a class="indrow" href="/ar/products/milk-powder-dairy/"><span class="indrow__n">02</span><span class="indrow__h">حليب البودرة والألبان</span><span class="indrow__p">علب كبيرة الحجم للبودرة والألبان.</span><span class="indrow__go"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></a></li><li><a class="indrow" href="/ar/products/sweets-kaak-chocolate/"><span class="indrow__n">03</span><span class="indrow__h">الحلويات والكعك والشوكولاتة</span><span class="indrow__p">علب هدايا لرمضان والعيد وكل المواسم.</span><span class="indrow__go"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></a></li><li><a class="indrow" href="/ar/products/white-cheese/"><span class="indrow__n">04</span><span class="indrow__h">الجبنة البيضاء</span><span class="indrow__p">علب لموسم الجبنة في الربيع.</span><span class="indrow__go"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></a></li><li><a class="indrow" href="/ar/products/coffee-tea/"><span class="indrow__n">05</span><span class="indrow__h">القهوة والشاي</span><span class="indrow__p">قوالب خاصة تحفظ العبير.</span><span class="indrow__go"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></a></li><li><a class="indrow" href="/ar/products/industrial/"><span class="indrow__n">06</span><span class="indrow__h">الصناعي</span><span class="indrow__p">علب للدهانات والكيماويات والبراميل.</span><span class="indrow__go"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></a></li></ol>
+  </div>
+</section>
+<section class="seasons" id="seasons" data-season="olive" aria-labelledby="seasons-h">
+  <div class="seasons__grid wrap">
+    <div class="seasons__text">
+      <p class="eyebrow"><span class="dot"></span>المواسم</p>
+      <h2 class="h2" data-split id="seasons-h">تغليف يتبع المواسم.</h2>
+      <p class="lead" data-reveal>للأغذية مواسمها، وعلبك يجب أن تكون جاهزة قبلها.</p>
+      <div class="tabs" role="tablist" aria-orientation="vertical" aria-label="المواسم" data-reveal><button class="tab is-on" role="tab" type="button" id="tab-olive" data-season="olive" data-shape="oil" data-theme="olive" data-finish="gloss" aria-selected="true" aria-controls="pane-olive" tabindex="0"><span class="tab__k">الخريف</span><b>زيت الزيتون</b><em class="now" data-months="8-11">الموسم الآن</em></button><button class="tab" role="tab" type="button" id="tab-eid" data-season="eid" data-shape="round" data-theme="eid" data-finish="emboss" aria-selected="false" aria-controls="pane-eid" tabindex="-1"><span class="tab__k">رمضان والعيد</span><b>حلويات وكعك وشوكولاتة</b></button><button class="tab" role="tab" type="button" id="tab-cheese" data-season="cheese" data-shape="cheese" data-theme="cheese" data-finish="matte" aria-selected="false" aria-controls="pane-cheese" tabindex="-1"><span class="tab__k">الربيع</span><b>الجبنة البيضاء</b></button></div>
+      <div class="season__desc"><div class="pane is-on" role="tabpanel" id="pane-olive" aria-labelledby="tab-olive" data-pane="olive"><p>تنكات زيت الزيتون بسعات 1 و4 و8 و16 لتر/كغ، جاهزة قبل موسم العصر.</p><a class="go" href="/ar/products/olive-oil/">تنكات زيت الزيتون<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div><div class="pane" role="tabpanel" id="pane-eid" aria-labelledby="tab-eid" data-pane="eid"><p>علب هدايا للحلويات والكعك والشوكولاتة: بنقش بارز وملمس ناعم وطابع احتفالي لا يُخطئ.</p><a class="go" href="/ar/products/sweets-kaak-chocolate/">علب الهدايا<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div><div class="pane" role="tabpanel" id="pane-cheese" aria-labelledby="tab-cheese" data-pane="cheese"><p>علب لموسم الجبنة البيضاء في الربيع.</p><a class="go" href="/ar/products/white-cheese/">علب الجبنة البيضاء<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div></div>
+      <p class="fine" data-reveal>التصميم المعروض نموذج توضيحي وليس تصميم عميل.</p>
+    </div>
+    <div class="stage " data-rig="product" data-pose="seasons" data-cursor="drag" data-shape="oil" data-theme="olive" data-cw="0" data-finish="gloss" role="img" aria-label="علبة موسمية ثلاثية الأبعاد"><div class="stage__fb" aria-hidden="true"><svg class="art " viewBox="0 0 200 180" aria-hidden="true" focusable="false"><ellipse class="a-shadow" cx="100" cy="170" rx="58" ry="8"/><path class="a-l" d="M52 70H148V158Q148 168 138 168H62Q52 168 52 158Z"/><path class="a-band" d="M52 100H148V136H52Z"/><path class="a-top" d="M52 70L78 44H122L148 70Z"/><rect class="a-r" x="92" y="22" width="16" height="24"/><rect class="a-band2" x="87" y="14" width="26" height="9" rx="3"/><path class="a-ln2" d="M126 52C172 34 178 84 148 88"/></svg></div></div>
+  </div>
+</section>
+<section class="story" id="story" aria-labelledby="story-h">
+  <div class="wrap">
+    <header class="sec-head"><p class="eyebrow"><span class="dot"></span>قصتنا</p><h2 class="h2" data-split id="story-h">معدن تصنعه عائلة واحدة منذ عام 1998.</h2></header>
+    <div class="story__grid">
+      <div class="bignum" data-reveal><b id="years" data-count-years="1998" aria-label="28">28</b><span>عاماً في صناعة التغليف المعدني</span></div>
+      <div class="story__copy" data-reveal>
+        <p>تأسس المصنع عام 1998 ويقوده اليوم الجيل الثالث من العائلة، وهو يعمل اليوم بخطوط إنتاج أوتوماتيكية بالكامل وفريق تصميم داخلي وكوادر ماهرة.</p>
+        <blockquote><span>رؤيتنا: أن نكون روّاد التغليف المعدني في المنطقة والخيار الأول للعملاء حول العالم.</span></blockquote>
+        <p>ورسالتنا تقديم منتجات وخدمات بجودة عالية باستخدام أحدث التقنيات وكوادر ماهرة.</p>
+      </div>
+    </div>
+    <div class="proof" data-reveal><div class="proof__item" data-tbc><i>◇</i><b>الشهادات (تُنشر بعد وصول نسخها)</b><span>بانتظار تأكيد الإدارة</span></div><div class="proof__item" data-tbc><i>◇</i><b>الطاقة الإنتاجية</b><span>بانتظار تأكيد الإدارة</span></div><div class="proof__item" data-tbc><i>◇</i><b>العملاء ودراسات الحالة</b><span>بانتظار تأكيد الإدارة</span></div></div>
+  </div>
+  <p class="more wrap" data-reveal><a class="go" href="/ar/about/">من نحن<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></p>
+</section>
+<section class="news" id="news" aria-labelledby="news-h">
+  <div class="wrap">
+    <header class="sec-head"><p class="eyebrow"><span class="dot"></span>الأخبار والفعاليات</p><h2 class="h2" data-split id="news-h">حاضرون في الأسواق.</h2></header>
+    <div class="news__grid"><a class="ncard tilt" data-reveal href="https://en.sharikatmubasher.com/media-hub/news/21479228/jordan-canning-eyes-expanding-into-saudi-arabia" target="_blank" rel="noopener noreferrer"><span class="ncard__tag">مقابلة · نيسان 2025</span><h3>معرض Saudi Food Manufacturing 2025</h3><p>أجرى موقع «شركات مباشر» مقابلة مع شريكنا Omar Abu Salha خلال معرض Saudi Food Manufacturing 2025.</p><span class="ncard__go">اقرأ<span class="vh"> (يُفتح في تبويب جديد)</span></span></a><article class="ncard" data-reveal><span class="ncard__tag">دبي · 2017</span><h3>معرض Gulfood Manufacturing</h3><p>لقاء مصنّعي الأغذية من أنحاء المنطقة.</p></article><article class="ncard" data-reveal><span class="ncard__tag">نيويورك · 2017</span><h3>معرض Fancy Food Show</h3><p>علبنا في جناحنا في أمريكا الشمالية.</p></article><article class="ncard" data-reveal><span class="ncard__tag">بغداد · 2017</span><h3>معرض بغداد الدولي</h3><p>لقاء السوق العراقي وجهاً لوجه.</p></article></div>
+  </div>
+  <p class="more wrap" data-reveal><a class="go" href="/ar/news/">كل الأخبار والفعاليات<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></p>
+</section>
+<section class="contact" id="contact" aria-labelledby="contact-h">
+  <div class="wrap contact__grid">
+    <div>
+      <p class="eyebrow"><span class="dot"></span>لنتحدث</p>
+      <h2 class="mega" data-split id="contact-h">لنطبع علامتك على المعدن.</h2>
+      <ul class="contact__list" data-reveal>
+        <li><span>الهاتف</span><a href="tel:+96264051125" dir="ltr">+962 6 4051125</a></li>
+        <li><span>البريد الإلكتروني</span><a href="mailto:sales@jordantinplate.com">sales@jordantinplate.com</a></li>
+        <li><span>العنوان</span><em>الزميلات – الموقّر، عمّان، الأردن</em></li>
+      </ul>
+      <ul class="social" data-reveal><li><a href="https://www.linkedin.com/company/jordan-tin-plate-canning-printing-industrial-co" target="_blank" rel="noopener noreferrer">LinkedIn<span class="vh"> (يُفتح في تبويب جديد)</span></a></li><li><a href="https://www.instagram.com/jordantinplate" target="_blank" rel="noopener noreferrer">Instagram <bdi dir="ltr">@jordantinplate</bdi><span class="vh"> (يُفتح في تبويب جديد)</span></a></li><li><a href="https://x.com/jordantinplate" target="_blank" rel="noopener noreferrer">X <bdi dir="ltr">@jordantinplate</bdi><span class="vh"> (يُفتح في تبويب جديد)</span></a></li><li><a href="https://www.facebook.com/jordantinplate" target="_blank" rel="noopener noreferrer">Facebook <bdi dir="ltr">@jordantinplate</bdi><span class="vh"> (يُفتح في تبويب جديد)</span></a></li></ul>
+    </div>
+    <div class="quote" id="order" data-reveal>
+      <h3 class="quote__t">اطلب عرض سعرك إلكترونياً</h3>
+      <p class="quote__p">أخبرنا بما تريد تعبئته ومقاس العبوة وفكرة التصميم، وسنردّ عليك بعرض سعر. استخدم أداة الطلب الإلكترونية لوصف عبوتك. وتُفتح في تبويب جديد.</p>
+      <a class="btn magnetic" href="https://jc-order.netlify.app/" target="_blank" rel="noopener"><span>افتح أداة الطلب</span><svg class="ext" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg><span class="vh"> (يُفتح في تبويب جديد)</span></a>
+      <p class="quote__alt">أو راسلنا بالبريد: <a href="mailto:sales@jordantinplate.com"><bdi dir="ltr">sales@jordantinplate.com</bdi></a></p>
     </div>
   </div>
 </section>
@@ -170,24 +312,33 @@
   <div class="wrap">
     <div class="foot__grid">
       <div>
-        <a class="brand" href="/ar/" aria-label="الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية، الصفحة الرئيسية"><svg viewBox="0 0 40 40" class="brand__mark" aria-hidden="true" focusable="false"><circle cx="20" cy="20" r="17" fill="none" stroke="currentColor" stroke-width="2.4"/><circle cx="20" cy="20" r="10.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-dasharray="3 3"/><circle cx="20" cy="20" r="3.4" fill="var(--accent)"/></svg><span class="brand__word" style="display:inline">JORDAN <b>TINPLATE</b> CANNING</span></a>
+        <a class="brand" href="/ar/" aria-label="الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية، الصفحة الرئيسية"><svg viewBox="0 0 40 40" class="brand__mark" aria-hidden="true" focusable="false"><circle cx="20" cy="20" r="17" fill="none" stroke="currentColor" stroke-width="2.4"/><circle cx="20" cy="20" r="10.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-dasharray="3 3"/><circle cx="20" cy="20" r="3.4" fill="var(--accent)"/></svg><span class="brand__word"><span><b>الشركة الأردنية</b></span><span class="brand__sub">لصناعة وطباعة الصفيح والعبوات المعدنية</span></span></a>
         <p>علب معدنية مخصّصة لعلامات الأغذية والمشروبات. صناعة أردنية منذ عام 1998.</p>
       </div>
       <nav aria-label="القطاعات"><h2>القطاعات</h2><ul><li><a href="/ar/products/olive-oil/">زيت الزيتون</a></li><li><a href="/ar/products/milk-powder-dairy/">حليب البودرة والألبان</a></li><li><a href="/ar/products/sweets-kaak-chocolate/">الحلويات والكعك والشوكولاتة</a></li><li><a href="/ar/products/white-cheese/">الجبنة البيضاء</a></li><li><a href="/ar/products/coffee-tea/">القهوة والشاي</a></li><li><a href="/ar/products/industrial/">الصناعي</a></li></ul></nav>
       <nav aria-label="الشركة"><h2>الشركة</h2><ul><li><a href="/ar/products/">المنتجات</a></li><li><a href="/ar/capabilities/">قدراتنا</a></li><li><a href="/ar/about/">من نحن</a></li><li><a href="/ar/news/">الأخبار</a></li><li><a href="/ar/contact/">تواصل معنا</a></li></ul></nav>
-      <div><h2>التواصل</h2><ul>
-        <li><a href="tel:+96264051125" class="ltr">+962 6 4051125</a></li>
-        <li><a href="mailto:sales@jordantinplate.com">sales@jordantinplate.com</a></li>
-        <li><a href="https://www.linkedin.com/company/jordan-tin-plate-canning-printing-industrial-co" target="_blank" rel="noopener noreferrer">LinkedIn<span class="vh"> (يُفتح في تبويب جديد)</span></a></li><li><a href="https://www.instagram.com/jordantinplate" target="_blank" rel="noopener noreferrer">Instagram<span class="vh"> (يُفتح في تبويب جديد)</span></a></li><li><a href="https://www.facebook.com/JordanTinplate" target="_blank" rel="noopener noreferrer">Facebook<span class="vh"> (يُفتح في تبويب جديد)</span></a></li>
-      </ul></div>
     </div>
     <div class="foot__base">
-      <span>© 2026 الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية. جميع الحقوق محفوظة.</span>
+      <span class="foot__c">© <bdi>2026</bdi> <bdi>الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية</bdi>. جميع الحقوق محفوظة.</span>
       <span>محتوى أولي: العناصر المعلَّمة «بانتظار التأكيد» تنتظر موافقة الإدارة.</span>
-      <button class="linkbtn" id="review-btn" type="button" aria-pressed="false">وضع المراجعة</button>
+      <span class="review-only" data-tbc>الشعار النهائي (Vector)</span>
+      <button class="linkbtn" id="reviewBtn" type="button" aria-pressed="false">وضع المراجعة</button>
     </div>
   </div>
 </footer>
-<script src="/assets/js/site.js?v=f00c3ab8" defer></script>
+<script type="application/json" id="jt-data">{"lang":"ar","ld":["التصميم والألواح","الطباعة والطلاء","القص والتشكيل","الإحكام والشحن"],"cursor":"اسحب","loading":"جارٍ التحميل","ready":"الصفحة جاهزة","home":true}</script>
+<script src="/assets/js/site.js?v=d78925fd" defer></script>
+<script src="/assets/vendor/gsap/gsap.min.js" defer></script>
+<script src="/assets/vendor/gsap/ScrollTrigger.min.js" defer></script>
+<script src="/assets/vendor/lenis/lenis.min.js" defer></script>
+<script type="module" src="/assets/js/engine/main.js?v=e44a630a"></script>
+<script>
+  // Last-resort guard: if the engine never starts (blocked, old browser) the page must not stay covered or scroll-locked.
+  setTimeout(function () {
+    if (window.__jtBooted) return;
+    var l = document.getElementById('loader'); if (l) l.remove();
+    var h = document.documentElement; h.classList.remove('intro'); h.classList.add('no-fx');
+  }, 8000);
+</script>
 </body>
 </html>
