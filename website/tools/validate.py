@@ -2,7 +2,8 @@
 """Validate the generated site: well-formed HTML, internal links/anchors, hreflang reciprocity,
 canonical, unique title/description, JSON-LD, sitemap, the creative-experience contract (shared chrome, 3D stages with
 fallbacks, entrance only on the home pages, self-hosted libraries, no external JavaScript) and the approved decisions
-(names, order-tool links, no certification named, no Saudi branch, olive-oil sizes).
+(names, order-tool links, no certification named, no Saudi branch, olive-oil sizes), the final logo, the PANTONE 294 C palette
+(WCAG contrast of the tokens) and that nothing "to be confirmed" is visible while SHOW_PENDING is false (see website/PENDING.md).
 Usage: python3 -I website/tools/validate.py"""
 import json, re, sys
 from html.parser import HTMLParser
@@ -10,6 +11,8 @@ from pathlib import Path
 from urllib.parse import urlparse, urldefrag
 
 ROOT = Path(__file__).resolve().parent.parent
+CONTENT = (ROOT / "tools/content.mjs").read_text(encoding="utf-8")
+SHOW_PENDING = bool(re.search(r"export const SHOW_PENDING\s*=\s*true", CONTENT))
 VOID = {"meta", "link", "br", "hr", "img", "input", "source", "area", "base", "col", "embed", "track", "wbr"}
 errors = []
 def err(msg): errors.append(msg)
@@ -227,6 +230,77 @@ for f in site_pages:
     # headings: split-text headings keep their text in the HTML (SEO)
     for m in re.finditer(r"<h[12][^>]*data-split[^>]*>(.*?)</h[12]>", src, re.S):
         if not re.sub(r"<[^>]+>", "", m.group(1)).strip(): err(f"{n}: empty split heading")
+
+# ---- everything that waits for management stays hidden (website/PENDING.md lists it); one flag restores it
+PENDING_RX = re.compile(r"to be confirmed|بانتظار التأكيد|بانتظار تأكيد|more to come|coming soon|المزيد قريباً|قريباً|draft content|محتوى أولي|review mode|وضع المراجعة|logo pending|الشعار النهائي|final logo|preliminary", re.I)
+PENDING_MARKUP = ('data-tbc', 'class="tbc', 'class="badge', 'class="proof', 'reviewBtn', 'review-only', 'specrow--tbc', 'pending.css')
+for f in pages:
+    src = f.read_text(encoding="utf-8"); n = "/" + str(f.relative_to(ROOT))
+    if not SHOW_PENDING:
+        m = PENDING_RX.search(src)
+        if m: err(f"{n}: pending wording is visible while SHOW_PENDING is false: {m.group(0)!r}")
+        for mk in PENDING_MARKUP:
+            if mk in src: err(f"{n}: placeholder markup {mk!r} while SHOW_PENDING is false")
+pend = (ROOT / "PENDING.md").read_text(encoding="utf-8") if (ROOT / "PENDING.md").exists() else ""
+if not pend: err("website/PENDING.md is missing")
+for title in re.findall(r"k: 'tbc', title: t\('([^']+)'", CONTENT):
+    if title not in pend: err(f"PENDING.md does not list the hidden block {title!r}")
+if "SHOW_PENDING" not in CONTENT: err("content.mjs has no SHOW_PENDING flag")
+if (ROOT / "assets/js/site.js").read_text().count("review") or "body.review" in (ROOT / "assets/css/site.css").read_text(): err("Review-mode code is still in site.js / site.css")
+
+# ---- the final logo (brand/logo/*.svg) is the brand mark: one sprite per page, <use> in header and footer, accessible name, no old mark
+for f in site_pages:
+    src = f.read_text(encoding="utf-8"); n = "/" + str(f.relative_to(ROOT))
+    if src.count('id="lg-gear"') != 1 or src.count('id="lg-word"') != 1: err(f"{n}: logo sprite must be defined once")
+    if len(re.findall(r'<svg class="logo"[^>]*>\s*<use class="logo__gear" href="#lg-gear"/>\s*<use href="#lg-word"/>', src)) < 2: err(f"{n}: logo missing from header and footer")
+    if 'class="brand__mark"' in src or "brand__word" in src: err(f"{n}: old temporary brand mark still present")
+    for m in re.finditer(r'<a class="brand"[^>]*aria-label="([^"]+)"', src):
+        if "Jordan Tinplate Canning" not in m.group(1) and NAME_AR not in m.group(1): err(f"{n}: brand link name {m.group(1)!r} lacks the official name")
+    if 'name="theme-color" content="#002F6C"' not in src: err(f"{n}: theme-color must be the Pantone 294 C approximation #002F6C")
+    if url_of[f] in ("/en/", "/ar/") and 'class="ld__logo"' not in src: err(f"{n}: entrance lacks the logo")
+fav = (ROOT / "assets/img/favicon.svg").read_text()
+if "#002F6C" not in fav or "<path" not in fav: err("favicon.svg is not the gear mark in #002F6C")
+og = (ROOT / "assets/img/og-default.png").read_bytes()
+if og[:8] != b"\x89PNG\r\n\x1a\n" or int.from_bytes(og[16:20], "big") != 1200 or int.from_bytes(og[20:24], "big") != 630: err("og-default.png must be a 1200x630 PNG")
+
+# ---- no section is left with a heading and nothing else
+for f in site_pages:
+    src = f.read_text(encoding="utf-8"); n = "/" + str(f.relative_to(ROOT))
+    for m in re.finditer(r'<section class="sec"[^>]*>(.*?)</section>', src, re.S):
+        body = re.sub(r'<header class="sec-head">.*?</header>', "", m.group(1), flags=re.S)
+        if not re.search(r"<(p|ul|ol|dl|blockquote|article|a)\b", body): err(f"{n}: a section has a heading but no content")
+
+# ---- palette: every token comes from PANTONE 294 C (#002F6C) and text passes WCAG AA (4.5:1) in light and dark
+css = (ROOT / "assets/css/site.css").read_text(encoding="utf-8")
+def lum(h):
+    h = h.lstrip("#"); r, g, b = [int(h[i:i+2], 16) / 255 for i in (0, 2, 4)]
+    f = lambda v: v / 12.92 if v <= 0.03928 else ((v + 0.055) / 1.055) ** 2.4
+    return 0.2126 * f(r) + 0.7152 * f(g) + 0.0722 * f(b)
+def cr(a, b):
+    la, lb = sorted((lum(a), lum(b)), reverse=True); return (la + 0.05) / (lb + 0.05)
+toks = dict(re.findall(r"(--navy[\w-]*|--gold):\s*(#[0-9a-fA-F]{6})", css))
+if toks.get("--navy", "").lower() != "#002f6c": err("--navy must be #002F6C (PANTONE 294 C)")
+def block(sel):
+    m = re.search(re.escape(sel) + r"\s*\{(.*?)\}", css, re.S); return m.group(1) if m else ""
+def tok(blk, name):
+    m = re.search(r"(?<![\w-])" + name + r":\s*([^;]+);", blk)
+    if not m: return None
+    v = m.group(1).strip(); mv = re.match(r"var\((--[\w-]+)\)", v)
+    return toks.get(mv.group(1)) if mv else (v if v.startswith("#") else None)
+for label, blk in (("light", block(':root, :root[data-theme="light"]')), ("dark", block(':root[data-theme="dark"]'))):
+    bg, bg2, ink, mute, acc = (tok(blk, k) for k in ("--bg", "--bg2", "--ink", "--mute", "--accent-text"))
+    if not all((bg, bg2, ink, mute, acc)): err(f"palette {label}: could not read the tokens"); continue
+    for fg, name in ((ink, "ink"), (mute, "mute"), (acc, "accent-text")):
+        for b, bn in ((bg, "bg"), (bg2, "bg2")):
+            if cr(fg, b) < 4.5: err(f"palette {label}: {name} on {bn} is {cr(fg, b):.2f}:1 (needs 4.5)")
+if cr("#ffffff", toks.get("--navy", "#002F6C")) < 4.5: err("white on navy below 4.5:1")
+if cr("#f4b34c", toks.get("--navy", "#002F6C")) < 4.5: err("amber on navy below 4.5:1")
+if cr("#1a1204", "#d98b14") < 4.5: err("button text on the amber accent below 4.5:1")
+OLD_BLUES = ("#213469", "#3d58a6", "#14224a", "#17365b", "#2c4486", "#0b1233", "#060a18", "#0b1228", "#dfe6fb", "#2a6fb8", "#1f5fae", "#1b4f8a", "#5b7cff")
+for fn in ("assets/css/site.css", "assets/js/engine/art.js", "assets/js/engine/scene.js", "tools/og-card.html"):
+    t = (ROOT / fn).read_text(encoding="utf-8").lower()
+    for c in OLD_BLUES:
+        if c in t: err(f"{fn}: leftover blue {c} outside the Pantone 294 C palette")
 
 print(f"checked {len(pages)} html files, {len(alt_map)} sitemap pages")
 if errors:

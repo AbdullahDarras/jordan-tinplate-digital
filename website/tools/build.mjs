@@ -12,10 +12,20 @@ import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import { fileURLToPath } from 'node:url';
-import { SITE, LANGS, UI, PAGES, NEWS, NAV, MARQUEE, FINISH_LAB, SHAPES_LAB, RANGE, IND_LIST, SEASONS, STORY, STEPS, PROOF_TBC, QUALITY } from './content.mjs';
+import { SITE, LANGS, UI, PAGES as ALL_PAGES, NEWS, NAV, MARQUEE, FINISH_LAB, SHAPES_LAB, RANGE, IND_LIST, SEASONS, STORY, STEPS, PROOF_TBC, QUALITY, SHOW_PENDING } from './content.mjs';
+import { logoSprite, logoSvg } from './logo.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const L = Object.keys(LANGS);                       // ['en', 'ar']
+// Items that wait for management (blocks of kind 'tbc', rows with tbc: true, the proof boxes, the draft notice) are hidden unless
+// SHOW_PENDING is true in content.mjs. A section whose blocks are all hidden disappears with them. See website/PENDING.md.
+const keepBlock = (b) => SHOW_PENDING || b.k !== 'tbc';
+const PAGES = ALL_PAGES.map((p) => SHOW_PENDING ? p : ({
+  ...p,
+  sections: p.sections
+    .map((s) => (s.blocks ? { ...s, blocks: s.blocks.filter(keepBlock).map((b) => (b.k === 'specs' ? { ...b, rows: b.rows.filter((r) => !r.tbc) } : b)) } : s))
+    .filter((s) => !s.blocks || s.blocks.length)
+}));
 const byId = Object.fromEntries(PAGES.map((p) => [p.id, p]));
 
 // ---------------------------------------------------------------- helpers
@@ -26,18 +36,18 @@ const rel = (lang, page) => `/${lang}/${page.path}`;                          //
 const abs = (lang, page) => SITE.origin + rel(lang, page);
 const other = (lang) => L.find((l) => l !== lang);
 const hashOf = (f) => crypto.createHash('sha1').update(fs.readFileSync(path.join(ROOT, f))).digest('hex').slice(0, 8);
-const V = { css: hashOf('assets/css/site.css'), js: hashOf('assets/js/site.js'), eng: hashOf('assets/js/engine/main.js') };
+const V = { css: hashOf('assets/css/site.css'), pend: hashOf('assets/css/pending.css'), js: hashOf('assets/js/site.js'), eng: hashOf('assets/js/engine/main.js') };
 const brandName = (lang) => (lang === 'ar' ? SITE.nameAr : SITE.name);   // display name per language
 const OG_IMG = SITE.origin + '/assets/img/og-default.png';
 const pad2 = (n) => String(n).padStart(2, '0');
 
 // ---------------------------------------------------------------- tin illustrations (inline SVG): the no-3D fallback inside every stage
 const ART = {
-  round: `<ellipse class="a-shadow" cx="100" cy="150" rx="82" ry="18"/><path class="a-body" d="M20 60V120C20 133 56 144 100 144S180 133 180 120V60Z"/><path class="a-band" d="M20 84C20 97 56 108 100 108S180 97 180 84V102C180 115 144 126 100 126S20 115 20 102Z"/><ellipse class="a-top" cx="100" cy="60" rx="80" ry="24"/><ellipse class="a-ln" cx="100" cy="60" rx="64" ry="18"/>`,
+  round: `<ellipse class="a-shadow" cx="100" cy="150" rx="82" ry="18"/><path class="a-body" d="M20 60V120C20 133 56 144 100 144S180 133 180 120V60Z"/><path class="a-band" d="M20 84C20 97 56 108 100 108S180 97 180 84V102C180 115 144 126 100 126S20 115 20 102Z"/><ellipse class="a-top" cx="100" cy="60" rx="80" ry="24"/><ellipse class="a-ln" cx="100" cy="60" rx="64" ry="18"/><use class="a-gear" href="#lg-gear" transform="translate(80 85) scale(.145)"/>`,
   oval: `<ellipse class="a-shadow" cx="100" cy="148" rx="90" ry="16"/><path class="a-body" d="M14 64V104C14 124 52 140 100 140S186 124 186 104V64Z"/><path class="a-band" d="M14 84C14 104 52 118 100 118S186 104 186 84V98C186 118 148 132 100 132S14 118 14 98Z"/><ellipse class="a-top" cx="100" cy="64" rx="86" ry="32"/><ellipse class="a-ln" cx="100" cy="64" rx="70" ry="25"/>`,
   square: `<ellipse class="a-shadow" cx="100" cy="162" rx="84" ry="12"/><path class="a-l" d="M24 62L100 94V160L24 128Z"/><path class="a-r" d="M176 62L100 94V160L176 128Z"/><path class="a-band" d="M24 90L100 122V138L24 106Z"/><path class="a-band2" d="M176 90L100 122V138L176 106Z"/><path class="a-top" d="M100 30L176 62L100 94L24 62Z"/><path class="a-ln" d="M100 42L162 68L100 86L38 68Z"/>`,
   rect: `<ellipse class="a-shadow" cx="100" cy="160" rx="88" ry="12"/><path class="a-l" d="M14 74L88 104V150L14 120Z"/><path class="a-r" d="M186 62L88 104V150L186 108Z"/><path class="a-band" d="M14 96L88 126V138L14 108Z"/><path class="a-band2" d="M186 82L88 124V136L186 94Z"/><path class="a-top" d="M14 74L112 32L186 62L88 104Z"/><path class="a-ln" d="M34 74L112 42L168 63L90 94Z"/>`,
-  can: `<ellipse class="a-shadow" cx="100" cy="166" rx="56" ry="10"/><path class="a-body" d="M56 40V146C56 156 76 164 100 164S144 156 144 146V40Z"/><path class="a-band" d="M56 76C56 86 76 94 100 94S144 86 144 76V108C144 118 124 126 100 126S56 118 56 108Z"/><ellipse class="a-top" cx="100" cy="40" rx="44" ry="12"/><ellipse class="a-ln" cx="100" cy="40" rx="34" ry="8"/>`,
+  can: `<ellipse class="a-shadow" cx="100" cy="166" rx="56" ry="10"/><path class="a-body" d="M56 40V146C56 156 76 164 100 164S144 156 144 146V40Z"/><path class="a-band" d="M56 76C56 86 76 94 100 94S144 86 144 76V108C144 118 124 126 100 126S56 118 56 108Z"/><ellipse class="a-top" cx="100" cy="40" rx="44" ry="12"/><ellipse class="a-ln" cx="100" cy="40" rx="34" ry="8"/><use class="a-gear" href="#lg-gear" transform="translate(82 96) scale(.13)"/>`,
   oil: `<ellipse class="a-shadow" cx="100" cy="170" rx="58" ry="8"/><path class="a-l" d="M52 70H148V158Q148 168 138 168H62Q52 168 52 158Z"/><path class="a-band" d="M52 100H148V136H52Z"/><path class="a-top" d="M52 70L78 44H122L148 70Z"/><rect class="a-r" x="92" y="22" width="16" height="24"/><rect class="a-band2" x="87" y="14" width="26" height="9" rx="3"/><path class="a-ln2" d="M126 52C172 34 178 84 148 88"/>`
 };
 const SHAPE_ART = { round: 'round', square: 'square', rect: 'rect', oval: 'oval', oil: 'oil', oil1: 'oil', oil4: 'oil', oil8: 'oil', oil16: 'oil', cheese: 'oval', milk: 'can', coffee: 'square', paint: 'can' };
@@ -52,10 +62,9 @@ const ARROW = `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 
 const DOWN = `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11M7 11l5 5 5-5M5 20h14"/></svg>`;
 const EXT = `<svg class="ext" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg>`;
 const SKIPI = `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5l8 7-8 7M14 5l8 7-8 7"/></svg>`;
-const MARK = `<svg viewBox="0 0 40 40" class="brand__mark" aria-hidden="true" focusable="false"><circle cx="20" cy="20" r="17" fill="none" stroke="currentColor" stroke-width="2.4"/><circle cx="20" cy="20" r="10.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-dasharray="3 3"/><circle cx="20" cy="20" r="3.4" fill="var(--accent)"/></svg>`;
-const brandWord = (lang) => lang === 'ar'
-  ? `<span class="brand__word"><span><b>الشركة الأردنية</b></span><span class="brand__sub">لصناعة وطباعة الصفيح والعبوات المعدنية</span></span>`
-  : `<span class="brand__word"><span>JORDAN <b>TINPLATE</b></span><span class="brand__sub">CANNING</span></span>`;
+// The brand mark is the factory's final vector logo (gear + wordmark + Arabic line), drawn once per page in a hidden sprite (#lg-gear, #lg-word)
+// and referenced with <use>, so it takes the CSS colour: Pantone navy in light mode, white in dark mode and on the navy sections.
+const MARK = logoSvg('logo');
 
 // ---------------------------------------------------------------- small blocks
 const tbcBadge = (lang) => `<span class="badge">${T(UI.tbc, lang)}</span>`;
@@ -245,7 +254,7 @@ const KINDS = {
         <p>${T(St.p2, lang)}</p>
       </div>
     </div>
-    ${s.noProof ? '' : `<div class="proof" data-reveal>${PROOF_TBC.items.map((i) => `<div class="proof__item" data-tbc><i>◇</i><b>${T(i, lang)}</b><span>${T(UI.tbcShort, lang)}</span></div>`).join('')}</div>`}
+    ${s.noProof || !SHOW_PENDING ? '' : `<div class="proof" data-reveal>${PROOF_TBC.items.map((i) => `<div class="proof__item" data-tbc><i>◇</i><b>${T(i, lang)}</b><span>${T(UI.tbcShort, lang)}</span></div>`).join('')}</div>`}
   </div>
   ${moreLink(lang, s.link)}
 </section>`;
@@ -322,7 +331,7 @@ const loader = (lang) => `<div id="loader" aria-busy="true">
   <div class="ld__meta" aria-hidden="true">
     <div class="ld__num"><b id="loaderNum">0</b><small>%</small></div>
     <div class="ld__step" id="ldStep">${T(UI.loaderSteps[0], lang)}</div>
-    <div class="ld__name">${lang === 'ar' ? esc(SITE.nameAr) : 'JORDAN&nbsp;TINPLATE&nbsp;CANNING'}</div>
+    ${logoSvg('ld__logo')}
   </div>
 </div>
 <p class="vh" id="ldAnnounce" role="status"></p>`;
@@ -341,7 +350,7 @@ function header(lang, page) {
   });
   return `<a class="skip" href="#main">${T(UI.skip, lang)}</a>
 <header class="nav" id="nav">
-  <a class="brand" href="${rel(lang, byId.home)}" aria-label="${T(UI.brandAria, lang)}">${MARK}${brandWord(lang)}</a>
+  <a class="brand" href="${rel(lang, byId.home)}" aria-label="${T(UI.brandAria, lang)}">${MARK}</a>
   <nav class="nav__links" aria-label="${T(UI.primaryNav, lang)}">${nav.join('')}</nav>
   <div class="nav__tools">
     <a class="tool tool--lang" id="langBtn" href="${rel(alt, page)}" hreflang="${alt}" lang="${alt}" aria-label="${esc(A.switchAria)}" data-lang-switch>${esc(A.switchLabel)}</a>
@@ -390,7 +399,7 @@ function footer(lang) {
   <div class="wrap">
     <div class="foot__grid">
       <div>
-        <a class="brand" href="${rel(lang, byId.home)}" aria-label="${T(UI.brandAria, lang)}">${MARK}${brandWord(lang)}</a>
+        <a class="brand" href="${rel(lang, byId.home)}" aria-label="${T(UI.brandAria, lang)}">${MARK}</a>
         <p>${T(UI.footBlurb, lang)}</p>
         <p class="foot__cert">${T(UI.footCert, lang)}</p>
       </div>
@@ -399,9 +408,7 @@ function footer(lang) {
     </div>
     <div class="foot__base">
       <span class="foot__c">© <bdi>${SITE.year}</bdi> <bdi>${esc(brandName(lang))}</bdi>. ${T(UI.rights, lang)}</span>
-      <span>${T(UI.footDraft, lang)}</span>
-      <span class="review-only" data-tbc>${T(t2('Final logo (vector)', 'الشعار النهائي (Vector)'), lang)}</span>
-      <button class="linkbtn" id="reviewBtn" type="button" aria-pressed="false">${T(UI.review, lang)}</button>
+      ${SHOW_PENDING ? `<span>${T(UI.footDraft, lang)}</span>` : ''}
     </div>
   </div>
 </footer>`;
@@ -520,11 +527,13 @@ ${hreflangs}
 ${headScript(isHome)}
 ${FONTS}
 <link rel="stylesheet" href="/assets/css/site.css?v=${V.css}">
+${SHOW_PENDING ? `<link rel="stylesheet" href="/assets/css/pending.css?v=${V.pend}">` : ''}
 ${IMPORTMAP}
 ${jsonLd(lang, page)}
 </head>
 <body>
 ${GRADIENT_DEFS}
+${logoSprite()}
 <canvas id="gl" aria-hidden="true"></canvas>
 <div class="grain" aria-hidden="true"></div>
 <div class="cursor is-hidden" aria-hidden="true"><i></i><span>${T(UI.cursorDrag, lang)}</span></div>
@@ -583,7 +592,8 @@ ${FONTS}
 <body class="plain">
 <main class="chooser" id="main">
   <div>
-    <a class="brand" href="/en/" aria-label="Jordan Tinplate Canning">${MARK}<span class="brand__word"><span>JORDAN <b>TINPLATE</b></span><span class="brand__sub">CANNING</span></span></a>
+    ${logoSprite()}
+    <a class="brand" href="/en/" aria-label="Jordan Tinplate Canning">${MARK}</a>
     <h1>Custom tinplate packaging · علب معدنية مخصّصة</h1>
     <p>Choose your language · اختر اللغة</p>
     <div class="cta-row"><a class="btn" href="/en/" hreflang="en" lang="en"><span>English</span></a><a class="btn btn--ghost" href="/ar/" hreflang="ar" lang="ar" dir="rtl"><span>العربية</span></a></div>

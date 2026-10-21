@@ -3,10 +3,15 @@
 //
 // RULES
 //  - Only facts that exist in the repo (README, website-prototype, offsite plan) are stated as facts.
-//  - Anything unconfirmed is a `tbc` block/row, which renders as an explicit "To be confirmed" placeholder.
+//  - Anything unconfirmed is kept here as a `tbc` block or a row with `tbc: true`, but it is HIDDEN on the site while SHOW_PENDING is false
+//    (build.mjs drops it, and validate.py fails if a "to be confirmed" string reaches a page). website/PENDING.md lists every hidden item.
 //  - Arabic is written as natural Arabic copy, not word-for-word translation.
 
 export const t = (en, ar) => ({ en, ar });
+
+// One switch for everything that waits for management (placeholder blocks, rows, proof boxes, draft notice).
+// false = hidden (the site as presented). true = the placeholders render again (with assets/css/pending.css). See website/PENDING.md.
+export const SHOW_PENDING = false;
 
 export const SITE = {
   // Production origin used for canonical / hreflang / sitemap. Confirmed by management (round 2, 2026-10-20).
@@ -62,7 +67,6 @@ export const UI = {
   footDraft: t('Draft content: items marked “to be confirmed” are waiting for management approval.',
                'محتوى أولي: العناصر المعلَّمة «بانتظار التأكيد» تنتظر موافقة الإدارة.'),
   rights: t('All rights reserved.', 'جميع الحقوق محفوظة.'),
-  review: t('Review mode', 'وضع المراجعة'),
   catalogue: t('Download the catalogue (PDF)', 'حمّل الكتالوج (PDF)'),
   opensNew: t('opens in a new tab', 'يُفتح في تبويب جديد'),
   brandAria: t('Jordan Tinplate Canning, home page', 'الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية، الصفحة الرئيسية'),
@@ -154,8 +158,8 @@ export const FINISH_LAB = {
   plate: { h: t('One plate, many designs.', 'لوح واحد، تصاميم متعددة.'), p: t('Variable printing puts several versions of the same pack on a single printing plate.', 'الطباعة المتغيّرة تضع عدة نسخ من العبوة نفسها على لوح طباعة واحد.') },
   cwAria: t('Colourways', 'ألوان التصميم'),
   cws: [
-    { label: t('Navy', 'كحلي'), a: '#002F6C', b: '#f2a93b' }, { label: t('Copper', 'نحاسي'), a: '#c2561f', b: '#ffe0a8' },
-    { label: t('Teal', 'أخضر مزرق'), a: '#0f7a73', b: '#f6d27a' }, { label: t('Cream', 'كريمي'), a: '#f3e9d4', b: '#002F6C' }
+    { label: t('Navy & gold', 'كحلي وذهبي'), a: '#002F6C', b: '#e3c06c' }, { label: t('Copper & gold', 'نحاسي وذهبي'), a: '#b4521f', b: '#e6c98a' },
+    { label: t('Teal & gold', 'أخضر مزرق وذهبي'), a: '#0e6f69', b: '#e0c070' }, { label: t('Cream & navy', 'كريمي وكحلي'), a: '#f6edd8', b: '#002F6C' }
   ]
 };
 
@@ -367,7 +371,7 @@ export const PAGES = [
       ctas: [quoteCta(), { label: t('All products', 'كل المنتجات'), to: 'products', kind: 'ghost' }]
     },
     sections: [
-      { eyebrow: t('The range', 'المجموعة'), title: t('Cans and ends for powder and dairy', 'علب وأغطية للبودرة والألبان'),
+      { eyebrow: t('The range', 'المجموعة'), title: t('Cans for powder and dairy', 'علب للبودرة والألبان'),
         blocks: [{ k: 'specs', rows: [
           { k: t('Milk powder cans', 'علب حليب البودرة'), v: t('Ø 99–189 mm · up to 5.5 kg', 'قطر 99–189 مم · حتى 5.5 كغ'), note: t('Large-format cans for powder and dairy.', 'علب كبيرة الحجم للبودرة والألبان.'), art: 'can' },
           { k: t('Ends', 'الأغطية'), v: t('Easy open · peel off · penny lever · aluminium · normal', 'Easy Open · Peel Off · Penny Lever · ألمنيوم · عادي'), note: t('Which ends suit milk powder is to be confirmed.', 'الأغطية الأنسب لحليب البودرة بانتظار التأكيد.'), tbc: true }
@@ -510,6 +514,12 @@ export const PAGES = [
           { h: t('Chemical cans', 'علب كيماويات'), art: 'can', p: t('Cans for chemical products.', 'علب للمنتجات الكيماوية.') },
           { h: t('Drums', 'براميل'), art: 'can', p: t('Drums for industrial use.', 'براميل للاستخدام الصناعي.') }
         ] }, { k: 'link', to: 'capabilities', label: t('Printing, forming and packing capabilities', 'قدراتنا في الطباعة والتشكيل والتغليف') }] },
+      { eyebrow: t('How we work', 'كيف نعمل'), title: t('From the sheet to your pallet', 'من الصفيحة إلى الباليت'),
+        blocks: [{ k: 'cards', cols: 3, items: [
+          { h: STEPS[2].h, p: STEPS[2].p },
+          { h: t('Palletised for shipping', 'مرتَّبة على باليتات للشحن'), p: STEPS[3].p },
+          { h: STEPS[4].h, p: STEPS[4].p }
+        ] }] },
       { blocks: [{ k: 'tbc', title: t('Industrial technical details', 'التفاصيل الفنية للقطاع الصناعي'), items: [
         t('Sizes and capacities', 'المقاسات والسعات'),
         t('Closure and end options', 'خيارات الأغطية والإغلاق'),
@@ -596,8 +606,7 @@ export const PAGES = [
       { blocks: [{ k: 'tbc', title: t('Still to be confirmed', 'ما زال بانتظار التأكيد'), cards: true, items: [
         t('Production capacity', 'الطاقة الإنتاجية'),
         t('Clients and case studies', 'العملاء ودراسات الحالة'),
-        t('Team and leadership', 'الفريق والإدارة'),
-        t('Final logo (vector version)', 'الشعار النهائي (نسخة Vector)')
+        t('Team and leadership', 'الفريق والإدارة')
       ] }] }
     ]
   },
