@@ -32,6 +32,7 @@ export const SITE = {
     Facebook: 'https://www.facebook.com/jordantinplate'
   },
   handle: '@jordantinplate',                   // same username on every platform (decision 14)
+  mainVideoId: 'xozO8TLl6T8',                  // the featured video on the About page (a YouTube ID from VIDEOS below): change it here only
   year: 2026
 };
 
@@ -92,8 +93,15 @@ export const UI = {
   loaderSteps: [t('Design & plates', 'التصميم والألواح'), t('Print & coat', 'الطباعة والطلاء'), t('Cut & form', 'القص والتشكيل'), t('Seal & ship', 'الإحكام والشحن')],
   tbcShort: t('To be confirmed with management', 'بانتظار تأكيد الإدارة'),
   switchMenu: t('Main menu', 'القائمة الرئيسية'),
-  footCert: t('FSSC 22000 certified (Bureau Veritas, UKAS-accredited). JFDA-approved food-contact materials.',
-              'حاصلون على FSSC 22000 (Bureau Veritas، معتمدة من UKAS). ومنتجاتنا معتمدة من JFDA كمواد ملامسة للأغذية.')
+  // gallery, video facades, lightbox
+  playVideo: t('Play video', 'تشغيل الفيديو'),
+  watchYoutube: t('Watch on YouTube', 'شاهد على يوتيوب'),
+  moreGallery: t('More in the gallery', 'المزيد في المعرض'),
+  viewLarger: t('View larger', 'عرض أكبر'),
+  lbLabel: t('Image viewer', 'عارض الصور'),
+  lbClose: t('Close', 'إغلاق'),
+  lbPrev: t('Previous image', 'الصورة السابقة'),
+  lbNext: t('Next image', 'الصورة التالية')
 };
 
 // ---------------------------------------------------------------- pages
@@ -233,28 +241,48 @@ export const STORY = {
   p2: t('Our mission is to deliver high-end quality products and services using cutting-edge technology and a skilled workforce.', 'ورسالتنا تقديم منتجات وخدمات بجودة عالية باستخدام أحدث التقنيات وكوادر ماهرة.')
 };
 
-// Certifications that have been received (docs/certificates.md). Text only: no logos, no certificate files on the site yet.
-// The JFDA approval is stated WITHOUT its expiry date; no ISO 22000 / ISO 9001 claim of its own, no FDA claim, no warranty letter.
-export const QUALITY = {
-  eyebrow: t('Quality & certifications', 'الجودة والاعتمادات'),
-  title: t('Food safety you can show an auditor.', 'سلامة غذاء يمكنك عرضها على أي مدقّق.'),
-  intro: t('Our food safety management system is certified to FSSC 22000 by Bureau Veritas (UKAS-accredited).',
-           'نظام سلامة الغذاء لدينا حاصل على شهادة FSSC 22000 من Bureau Veritas (معتمدة من UKAS).'),
-  fssc: {
-    h: t('FSSC 22000', 'FSSC 22000'),
-    p: t('Certified by Bureau Veritas (UKAS-accredited). Scope: coating, printing, cutting, forming, welding and seaming of metal cans for food packaging. Certificate JO000011/1, valid until 26 April 2029.',
-         'من Bureau Veritas (معتمدة من UKAS) لنطاق: الطلاء والطباعة والقص والتشكيل واللحام والإغلاق لعلب معدنية مخصصة لتغليف الأغذية. رقم الشهادة JO000011/1، سارية حتى 26 نيسان 2029.'),
-    rows: [
-      { k: t('Certified by', 'الجهة المانحة'), v: t('Bureau Veritas (UKAS-accredited)', 'Bureau Veritas (معتمدة من UKAS)') },
-      { k: t('Scope', 'النطاق'), v: t('Coating, printing, cutting, forming, welding and seaming of metal cans for food packaging', 'الطلاء والطباعة والقص والتشكيل واللحام والإغلاق لعلب معدنية مخصصة لتغليف الأغذية') },
-      { k: t('Certificate', 'رقم الشهادة'), v: t('JO000011/1', 'JO000011/1'), ltr: true },
-      { k: t('Valid until', 'سارية حتى'), v: t('26 April 2029', '26 نيسان 2029') }
-    ]
+// Certifications (round 6): a heading and two cards, each the certificate IMAGE and ONLY its name. No scope text, numbers, validity dates or tables on the page
+// (the images themselves are the proof). Do not use the FSSC / UKAS / JFDA logo files separately and do not publish the warranty letter.
+// w / h are the real pixel sizes of the files (validate.py checks them), so the browser can reserve the space before the image loads.
+export const CERTS = {
+  title: t('Certifications', 'الاعتمادات'),
+  items: [
+    { id: 'fssc', file: '/assets/img/certs/fssc-22000', w: 1075, h: 1521,
+      name: t('FSSC 22000', 'FSSC 22000'), sub: t('Bureau Veritas', 'Bureau Veritas'),
+      alt: t('FSSC 22000 certificate, Bureau Veritas', 'شهادة FSSC 22000 من Bureau Veritas') },
+    { id: 'jfda', file: '/assets/img/certs/jfda-food-contact', w: 1105, h: 1430,
+      name: t('Food-contact materials approval — JFDA', 'اعتماد مواد ملامسة للأغذية — المؤسسة العامة للغذاء والدواء (JFDA)'),
+      alt: t('Food-contact materials approval certificate, JFDA', 'شهادة اعتماد مواد ملامسة للأغذية من المؤسسة العامة للغذاء والدواء (JFDA)') }
+  ]
+};
+
+// ---------------------------------------------------------------- gallery
+// VIDEOS: YouTube IDs (from the youtu.be links management sent). One list, easy to edit: add, remove or re-order entries, then run `node tools/build.mjs`.
+// Labels are neutral on purpose (nobody on the build side has watched the videos, so no titles are invented). Replace them with real titles when management gives them.
+export const VIDEOS = [
+  { id: 'xozO8TLl6T8', label: t('Factory video 1', 'فيديو المصنع 1') },
+  { id: 'CQW1UaWpC2k', label: t('Factory video 2', 'فيديو المصنع 2') }
+];
+
+// PHOTOS: empty until management sends photographs. While the list is empty NOTHING is rendered for photos (no section, no placeholder).
+// To add one: copy the file into website/assets/img/gallery/ and add an entry, e.g.
+//   { src: '/assets/img/gallery/printing-line.jpg', alt_en: 'The printing line at Jordan Tinplate Canning', alt_ar: 'خط الطباعة في المصنع' },
+// Optional w / h = the file's pixel size. See website/README.md ("Gallery: how to add photos").
+export const PHOTOS = [];
+
+export const GALLERY = {
+  videosTitle: t('Videos', 'الفيديوهات'),
+  photosTitle: t('Photos', 'الصور'),
+  fb: {
+    tag: t('Facebook', 'فيس بوك'),
+    h: t('More videos on Facebook', 'المزيد من الفيديوهات على فيس بوك'),
+    p: t('Our longer videos are on the company Facebook page.', 'فيديوهاتنا الأطول على صفحة الشركة في فيس بوك.'),
+    cta: t('Open the Facebook page', 'افتح صفحة فيس بوك')
   },
-  jfda: {
-    h: t('JFDA food-contact approval', 'اعتماد JFDA للمواد الملامسة للأغذية'),
-    p: t('Our products (metal cans and their lids) are approved by the Jordan Food and Drug Administration (JFDA) as food-contact materials.',
-         'منتجاتنا (العبوات المعدنية وأغطيتها) معتمدة من المؤسسة العامة للغذاء والدواء الأردنية كمواد ملامسة للأغذية.')
+  featured: {
+    eyebrow: t('Video', 'فيديو'),
+    title: t('Factory video', 'فيديو المصنع'),
+    fallback: t('Factory video', 'فيديو المصنع')
   }
 };
 
@@ -289,8 +317,8 @@ export const PAGES = [
       { kind: 'range', id: 'range' },
       { kind: 'industries', id: 'industries' },
       { kind: 'seasons', id: 'seasons' },
-      { kind: 'story', id: 'story', link: { to: 'about', label: t('About us', 'من نحن') } },
-      { kind: 'quality', id: 'quality' },
+      { kind: 'story', id: 'story', link: [{ to: 'about', label: t('About us', 'من نحن') }, { to: 'gallery', label: t('Photos & videos gallery', 'معرض الصور والفيديوهات') }] },
+      { kind: 'certs', id: 'certifications' },
       { kind: 'news', id: 'news', limit: 4, link: { to: 'news', label: t('All news and events', 'كل الأخبار والفعاليات') } }
     ]
   },
@@ -589,8 +617,9 @@ export const PAGES = [
       ]
     },
     sections: [
+      { kind: 'featuredVideo', id: 'video' },
       { kind: 'story', id: 'story', noProof: true, title: t('A manufacturer that grew with its customers', 'مصنع نما مع عملائه') },
-      { kind: 'quality', id: 'quality' },
+      { kind: 'certs', id: 'certifications' },
       { eyebrow: t('What we do', 'ما نقدّمه'), title: t('From artwork to export-ready packs', 'من التصميم إلى عبوات جاهزة للتصدير'),
         blocks: [{ k: 'prose', ps: [
           t('We make tinplate cans and tins for food and beverage brands, and handle the journey from artwork to export-ready packs.',
@@ -608,6 +637,28 @@ export const PAGES = [
         t('Clients and case studies', 'العملاء ودراسات الحالة'),
         t('Team and leadership', 'الفريق والإدارة')
       ] }] }
+    ]
+  },
+
+  // ============================================================ GALLERY
+  {
+    id: 'gallery', path: 'gallery/', navKey: 'gallery', parent: 'home',
+    title: t('Photos & Videos Gallery | Jordan Tinplate Canning', 'معرض الصور والفيديوهات | الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية'),
+    description: t('Videos from the Jordan Tinplate Canning factory in Jordan, with links to our longer videos on Facebook.',
+                   'فيديوهات من مصنع الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية في الأردن، مع رابط لفيديوهاتنا الأطول على فيس بوك.'),
+    crumb: t('Gallery', 'المعرض'),
+    hero: {
+      eyebrow: t('Gallery', 'المعرض'),
+      h1: t('Photos & videos gallery', 'معرض الصور والفيديوهات'),
+      lead: PHOTOS.length
+        ? t('Videos and photos from the Jordan Tinplate Canning factory.', 'فيديوهات وصور من مصنع الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية.')
+        : t('Videos from the Jordan Tinplate Canning factory.', 'فيديوهات من مصنع الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية.'),
+      art: 'round', stage: { shape: 'round', theme: 'brand', cw: 0, finish: 'soft' },
+      ctas: [quoteCta(), { label: t('About us', 'من نحن'), to: 'about', kind: 'ghost' }]
+    },
+    sections: [
+      { kind: 'videos', id: 'videos' },
+      { kind: 'photos', id: 'photos' }
     ]
   },
 
@@ -664,6 +715,7 @@ export const NAV = [
   { key: 'products', page: 'products', label: t('Products', 'المنتجات') },
   { key: 'capabilities', page: 'capabilities', label: t('Capabilities', 'قدراتنا') },
   { key: 'about', page: 'about', label: t('About', 'من نحن') },
+  { key: 'gallery', page: 'gallery', label: t('Gallery', 'المعرض') },
   { key: 'news', page: 'news', label: t('News', 'الأخبار') },
   { key: 'contact', page: 'contact', label: t('Contact', 'تواصل معنا') }
 ];
