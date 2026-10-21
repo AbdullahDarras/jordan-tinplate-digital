@@ -150,7 +150,7 @@
       if (e.key === 'Escape' && !modal) { e.preventDefault(); closeLb(); }
       else if (e.key === 'ArrowLeft') { e.preventDefault(); step(rtl ? 1 : -1); }
       else if (e.key === 'ArrowRight') { e.preventDefault(); step(rtl ? -1 : 1); }
-      else if (e.key === 'Tab' && !modal) { // hand-made focus trap (only where <dialog>.showModal is missing)
+      else if (e.key === 'Tab') { // focus never leaves the dialog (showModal() already confines it; this also covers the browser-UI hop and old browsers)
         var f = Array.prototype.filter.call(lb.querySelectorAll('button'), function (b) { return !b.hidden; });
         if (!f.length) return; var first = f[0], last = f[f.length - 1];
         if (e.shiftKey && doc.activeElement === first) { e.preventDefault(); last.focus(); } else if (!e.shiftKey && doc.activeElement === last) { e.preventDefault(); first.focus(); }
