@@ -23,8 +23,10 @@ export const SITE = {
   social: {
     LinkedIn: 'https://www.linkedin.com/company/jordan-tin-plate-canning-printing-industrial-co',
     Instagram: 'https://www.instagram.com/jordantinplate',
-    Facebook: 'https://www.facebook.com/JordanTinplate'
+    X: 'https://x.com/jordantinplate',
+    Facebook: 'https://www.facebook.com/jordantinplate'
   },
+  handle: '@jordantinplate',                   // same username on every platform (decision 14)
   year: 2026
 };
 
@@ -70,7 +72,22 @@ export const UI = {
   orderTitle: t('Request your quote online', 'اطلب عرض سعرك إلكترونياً'),
   orderLead: t('Use our online order tool to describe your pack. It opens in a new tab.',
                'استخدم أداة الطلب الإلكترونية لوصف عبوتك. وتُفتح في تبويب جديد.'),
-  orderEmail: t('Or email us', 'أو راسلنا بالبريد')
+  orderEmail: t('Or email us', 'أو راسلنا بالبريد'),
+  // creative experience
+  dragTin: t('3D tin: drag to rotate', 'علبة ثلاثية الأبعاد: اسحب لتدويرها'),
+  cursorDrag: t('Drag', 'اسحب'),
+  skipIntro: t('Skip intro', 'تخطَّ المقدمة'),
+  loading: t('Loading', 'جارٍ التحميل'),
+  ready: t('Page ready', 'الصفحة جاهزة'),
+  scroll: t('Scroll', 'مرّر'),
+  sectors: t('Sectors we serve', 'القطاعات التي نخدمها'),
+  nowLabel: t('In season now', 'الموسم الآن'),
+  letsTalk: t('Let’s talk', 'لنتحدث'),
+  allIndustries: t('All industries', 'كل القطاعات'),
+  yearsOf: t('years of making metal packaging', 'عاماً في صناعة التغليف المعدني'),
+  loaderSteps: [t('Design & plates', 'التصميم والألواح'), t('Print & coat', 'الطباعة والطلاء'), t('Cut & form', 'القص والتشكيل'), t('Seal & ship', 'الإحكام والشحن')],
+  tbcShort: t('To be confirmed with management', 'بانتظار تأكيد الإدارة'),
+  switchMenu: t('Main menu', 'القائمة الرئيسية')
 };
 
 // ---------------------------------------------------------------- pages
@@ -89,7 +106,7 @@ const FINISH_CARDS = [
   { h: t('Embossing', 'نقش بارز'), p: t('Raised and recessed effects on lid and body that add movement and make the design stand out.', 'تأثيرات بارزة وغائرة على الغطاء والجسم تضيف حركة وتُبرز التصميم.') }
 ];
 
-const STEPS = [
+export const STEPS = [
   { h: t('Design & plates', 'التصميم والألواح'),
     p: t('In-house designers prepare your artwork, and CTP (Computer-to-Plate) makes every printing plate precise.',
          'يجهّز مصمّمونا عملك الفني داخل المصنع، وتقنية CTP (من الحاسوب إلى اللوح) تضمن دقة كل لوح طباعة.') },
@@ -107,7 +124,7 @@ const STEPS = [
          'يمكننا تخزين منتجك الجاهز لدينا لتوفير مساحة التخزين لديك، ثم شحنه إلى أسواقك.') }
 ];
 
-const PROOF_TBC = {
+export const PROOF_TBC = {
   k: 'tbc',
   title: t('Proof points', 'نقاط الإثبات'),
   items: [
@@ -116,6 +133,99 @@ const PROOF_TBC = {
     t('Clients and case studies', 'العملاء ودراسات الحالة')
   ],
   cards: true
+};
+
+
+// ---------------------------------------------------------------- creative sections (shared by several pages)
+// Copy for the sections of the creative homepage. Arabic strings come from the approved prototype copy (website-prototype/js/i18n.js).
+export const MARQUEE = [
+  t('Olive oil', 'زيت الزيتون'), t('Milk powder', 'حليب البودرة'), t('Ka’ak & sweets', 'كعك وحلويات'), t('Chocolate', 'شوكولاتة'), t('White cheese', 'جبنة بيضاء'),
+  t('Coffee', 'قهوة'), t('Tea', 'شاي'), t('Edible oils', 'زيوت'), t('Gift tins', 'علب هدايا')
+];
+
+export const FINISH_LAB = {
+  eyebrow: t('Finish Lab', 'مختبر التشطيبات'),
+  title: t('Touch it before you print it.', 'جرّب الملمس قبل الطباعة.'),
+  lead: t('Pick a finish and watch the metal respond. Every one is available on our lines.', 'اختر تشطيباً وشاهد المعدن يستجيب. كل هذه التشطيبات متوفرة على خطوطنا.'),
+  aria: t('3D tin you can restyle', 'علبة ثلاثية الأبعاد يمكنك تغيير تشطيبها'),
+  chipsAria: t('Finishes', 'التشطيبات'),
+  items: ['gloss', 'matte', 'soft', 'rough', 'emboss'].map((id, i) => ({ id, label: FINISH_CARDS[i].h, desc: FINISH_CARDS[i].p })),
+  plate: { h: t('One plate, many designs.', 'لوح واحد، تصاميم متعددة.'), p: t('Variable printing puts several versions of the same pack on a single printing plate.', 'الطباعة المتغيّرة تضع عدة نسخ من العبوة نفسها على لوح طباعة واحد.') },
+  cwAria: t('Colourways', 'ألوان التصميم'),
+  cws: [
+    { label: t('Navy', 'كحلي'), a: '#002F6C', b: '#f2a93b' }, { label: t('Copper', 'نحاسي'), a: '#c2561f', b: '#ffe0a8' },
+    { label: t('Teal', 'أخضر مزرق'), a: '#0f7a73', b: '#f6d27a' }, { label: t('Cream', 'كريمي'), a: '#f3e9d4', b: '#002F6C' }
+  ]
+};
+
+const SHAPE_ITEMS = [
+  { id: 'round', label: t('Round', 'دائرية'), name: t('Round tin', 'علبة دائرية'), dim: t('Ø 73–265 mm · H 34–210 mm', 'قطر 73–265 مم · ارتفاع 34–210 مم'), note: t('Six standard diameters, in many heights.', 'ستة أقطار قياسية، بارتفاعات متعددة.') },
+  { id: 'square', label: t('Square', 'مربعة'), name: t('Square tin', 'علبة مربعة'), dim: t('120–240 mm sides · H 40–100 mm', 'ضلع 120–240 مم · ارتفاع 40–100 مم'), note: t('Five standard sizes, from about 100 g to 1 kg.', 'خمسة مقاسات قياسية، من نحو 100 غ إلى 1 كغ.') },
+  { id: 'rect', label: t('Rectangular', 'مستطيلة'), name: t('Rectangular tin', 'علبة مستطيلة'), dim: t('Sizes on request', 'المقاسات عند الطلب'), note: t('Made to your specification.', 'تُصنَّع وفق مواصفاتك.') },
+  { id: 'oval', label: t('Oval', 'بيضاوية'), name: t('Oval tin', 'علبة بيضاوية'), dim: t('Ø 300 mm · H 40–100 mm', 'قطر 300 مم · ارتفاع 40–100 مم'), note: t('A special-mold shape for presentation packs.', 'شكل بقالب خاص لعلب التقديم.') },
+  { id: 'oil', label: t('Oil tin', 'تنكة زيت'), name: t('Olive-oil tin', 'تنكة زيت الزيتون'), dim: t('1, 4, 8 and 16 L/kg', '1 و4 و8 و16 لتر/كغ'), note: t('Produced in all four sizes. The 3D view is illustrative.', 'تُنتَج بالأحجام الأربعة كلها. والمجسّم توضيحي.') }
+];
+export const SHAPES_LAB = {
+  eyebrow: t('Shapes', 'الأشكال'),
+  title: t('Every shape your brand needs.', 'كل شكل تحتاجه علامتك.'),
+  aria: t('3D tin shapes', 'أشكال العلب بثلاثية الأبعاد'),
+  chipsAria: t('Shapes', 'الأشكال'),
+  items: SHAPE_ITEMS,
+  fine: t('3D views are illustrative. Sizes come from our product tables; custom sizes are available on request.', 'المجسّمات ثلاثية الأبعاد توضيحية. المقاسات من جداول منتجاتنا، والمقاسات الخاصة متاحة عند الطلب.')
+};
+export const SHAPES_SWEETS = SHAPE_ITEMS.slice(0, 4);
+
+const OIL_SIZES = [1, 4, 8, 16].map((n) => ({
+  id: 'oil' + n, label: t(`${n} L/kg`, `${n} لتر/كغ`), name: t('Olive-oil tin', 'تنكة زيت الزيتون'), dim: t(`${n} L/kg`, `${n} لتر/كغ`),
+  note: t('One of the four sizes we make: 1, 4, 8 and 16 L/kg. The 3D view is illustrative.', 'أحد الأحجام الأربعة التي ننتجها: 1 و4 و8 و16 لتر/كغ. والمجسّم توضيحي.')
+}));
+
+const TYPE_CARDS = [
+  { h: t('Fancy tins', 'علب فاخرة'), art: 'round',
+    p: t('Round, square, rectangular and oval gift tins for sweets, ka’ak, chocolate, coffee and more.', 'علب هدايا دائرية ومربعة ومستطيلة وبيضاوية للحلويات والكعك والشوكولاتة والقهوة وغيرها.'),
+    meta: t('Round Ø 73–265 mm · Square 120–240 mm', 'دائرية بقطر 73–265 مم · مربعة 120–240 مم') },
+  { h: t('Food cans', 'علب أغذية'), art: 'can',
+    p: t('Nine diameters from 52 to 215 mm.', 'تسعة أقطار من 52 إلى 215 مم.'), meta: t('60 ml – 8 L', 'من 60 مل إلى 8 لترات') },
+  { h: t('Milk powder cans', 'علب حليب البودرة'), art: 'can',
+    p: t('Large-format cans for powder and dairy.', 'علب كبيرة الحجم للبودرة والألبان.'), meta: t('Ø 99–189 mm · up to 5.5 kg', 'قطر 99–189 مم · حتى 5.5 كغ') },
+  { h: t('Food containers & trays', 'حاويات وصواني أغذية'), art: 'oval',
+    p: t('Including smooth round trays for knafeh and mansaf.', 'ومنها صواني دائرية ناعمة للكنافة والمنسف.') },
+  { h: t('Special molds', 'قوالب خاصة'), art: 'rect',
+    p: t('Coffee tins that protect aroma, seamless two-piece cans, windowed boxes, tobacco tins and fully custom shapes.',
+         'علب قهوة تحفظ العبير، وعلب من قطعتين بلا لحام، وعلب بنافذة شفافة، وعلب تبغ، وأي شكل حسب الطلب.') },
+  { h: t('Ends & components', 'الأغطية والقطع'), art: 'round',
+    p: t('Easy open, peel off, penny lever, aluminium and normal ends.', 'أغطية Easy Open وPeel Off وPenny Lever وألمنيوم وأغطية عادية.') },
+  { h: t('Industrial cans', 'علب صناعية'), art: 'can',
+    p: t('Paints, chemicals and drums.', 'للدهانات والكيماويات والبراميل.') }
+];
+export const RANGE = {
+  eyebrow: t('The range', 'المنتجات'), title: t('Cans for what you put inside.', 'علب تناسب ما بداخلها.'),
+  cards: TYPE_CARDS
+};
+export const IND_LIST = {
+  eyebrow: t('By industry', 'حسب القطاع'), title: t('Find your industry', 'ابحث عن قطاعك'),
+  intro: t('Choose your product to see the formats, finishes and seasons that matter for it.', 'اختر منتجك لتتعرّف على الأحجام والتشطيبات والمواسم الأنسب له.')
+};
+export const SEASONS = {
+  eyebrow: t('Seasons', 'المواسم'), title: t('Packaging that follows the harvest.', 'تغليف يتبع المواسم.'),
+  lead: t('Food has seasons. Your tins should be ready before them.', 'للأغذية مواسمها، وعلبك يجب أن تكون جاهزة قبلها.'),
+  fine: t('Artwork shown is a sample, not a client design.', 'التصميم المعروض نموذج توضيحي وليس تصميم عميل.'),
+  aria: t('3D seasonal tin', 'علبة موسمية ثلاثية الأبعاد'), tabsAria: t('Seasons', 'المواسم'),
+  tabs: [
+    { id: 'olive', k: t('Autumn', 'الخريف'), h: t('Olive oil', 'زيت الزيتون'), now: true, shape: 'oil', theme: 'olive', finish: 'gloss', to: 'ind-olive',
+      desc: t('Olive-oil tins in 1, 4, 8 and 16 L/kg, ready before the pressing season.', 'تنكات زيت الزيتون بسعات 1 و4 و8 و16 لتر/كغ، جاهزة قبل موسم العصر.'), more: t('Olive-oil tins', 'تنكات زيت الزيتون') },
+    { id: 'eid', k: t('Ramadan & Eid', 'رمضان والعيد'), h: t('Sweets, ka’ak & chocolate', 'حلويات وكعك وشوكولاتة'), shape: 'round', theme: 'eid', finish: 'emboss', to: 'ind-sweets',
+      desc: t('Gift tins for sweets, ka’ak and chocolate: embossed, soft-touch and unmistakably festive.', 'علب هدايا للحلويات والكعك والشوكولاتة: بنقش بارز وملمس ناعم وطابع احتفالي لا يُخطئ.'), more: t('Gift tins', 'علب الهدايا') },
+    { id: 'cheese', k: t('Spring', 'الربيع'), h: t('White cheese', 'الجبنة البيضاء'), shape: 'cheese', theme: 'cheese', finish: 'matte', to: 'ind-cheese',
+      desc: t('Tins for the spring white-cheese season.', 'علب لموسم الجبنة البيضاء في الربيع.'), more: t('White-cheese tins', 'علب الجبنة البيضاء') }
+  ]
+};
+export const STORY = {
+  eyebrow: t('Our story', 'قصتنا'), title: t('Metal, made by one family, since 1998.', 'معدن تصنعه عائلة واحدة منذ عام 1998.'),
+  p1: t('Founded in 1998 and led today by the third generation of the family, Jordan Tinplate Canning has grown into a manufacturer with fully automatic production lines, in-house design and skilled people.',
+        'تأسس المصنع عام 1998 ويقوده اليوم الجيل الثالث من العائلة، وهو يعمل اليوم بخطوط إنتاج أوتوماتيكية بالكامل وفريق تصميم داخلي وكوادر ماهرة.'),
+  vision: t('Our vision: to lead metal packaging in the region and be the first choice for customers around the globe.', 'رؤيتنا: أن نكون روّاد التغليف المعدني في المنطقة والخيار الأول للعملاء حول العالم.'),
+  p2: t('Our mission is to deliver high-end quality products and services using cutting-edge technology and a skilled workforce.', 'ورسالتنا تقديم منتجات وخدمات بجودة عالية باستخدام أحدث التقنيات وكوادر ماهرة.')
 };
 
 export const PAGES = [
@@ -127,36 +237,30 @@ export const PAGES = [
                    'تصمّم الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية علب الصفيح المعدنية وعلب الهدايا وتطبعها وتشكّلها وتجهّزها للشحن لعلامات الأغذية والمشروبات. صناعة أردنية منذ عام 1998.'),
     crumb: t('Home', 'الرئيسية'),
     hero: {
-      eyebrow: t('Metal packaging · Made in Jordan · Since 1998', 'تغليف معدني · صناعة أردنية · منذ عام 1998'),
-      h1: t('Custom tinplate packaging for food & beverage brands', 'علب معدنية مخصّصة لعلامات الأغذية والمشروبات'),
-      lead: t('From artwork and plates to printed, formed, export-ready tins: one family-led manufacturer in Jordan, doing the whole journey under one roof.',
-              'من التصميم والألواح إلى علب مطبوعة ومشكَّلة وجاهزة للتصدير: مصنع أردني تقوده عائلة واحدة، ويقدّم الرحلة كاملة تحت سقف واحد.'),
+      eyebrow: t('Custom tinplate packaging · Made in Jordan · Since 1998', 'علب معدنية مخصّصة · صناعة أردنية · منذ عام 1998'),
+      lines: [t('We print.', 'نطبع.'), t('We can.', 'ونعلّب.')],
+      h1: t('We print. We can.', 'نطبع. ونعلّب.'),
+      lead: t('Custom tinplate packaging for food & beverage brands, from artwork and plates to printed, formed, export-ready tins. One family-led manufacturer in Jordan, doing the whole journey under one roof.',
+              'علب معدنية مخصّصة لعلامات الأغذية والمشروبات، من التصميم والألواح إلى علب مطبوعة ومشكَّلة وجاهزة للتصدير. مصنع أردني تقوده عائلة واحدة، ويقدّم الرحلة كاملة تحت سقف واحد.'),
       art: 'hero',
+      stage: { shape: 'round', theme: 'brand', cw: 0, finish: 'gloss' },
       ctas: [quoteCta(), { label: t('See products by industry', 'تصفّح المنتجات حسب القطاع'), to: 'products', kind: 'ghost' }],
       stats: [
         { big: '1998', small: t('Founded in Jordan', 'تأسس في الأردن') },
         { big: t('3rd', 'الثالث'), small: t('generation of the family leads the company', 'الجيل الذي يقود الشركة اليوم من العائلة') },
-        { big: t('~250', 'نحو 250'), small: t('people work with us', 'موظفاً يعملون معنا') },
-        { big: t('In-house', 'داخلياً'), small: t('design and plate-making (CTP)', 'التصميم وتصنيع الألواح (CTP)') }
+        { big: t('~250', 'نحو 250'), small: t('people work with us', 'موظفاً يعملون معنا') }
       ]
     },
     sections: [
-      { id: 'industries', eyebrow: t('By industry', 'حسب القطاع'), title: t('Cans for what you put inside.', 'علب تناسب ما بداخلها.'),
-        intro: t('Choose your product to see the formats, finishes and seasons that matter for it.', 'اختر منتجك لتتعرّف على الأحجام والتشطيبات والمواسم الأنسب له.'),
-        blocks: [{ k: 'tiles', ids: ['ind-olive', 'ind-dairy', 'ind-sweets', 'ind-cheese', 'ind-coffee', 'ind-industrial'] }] },
-      { id: 'journey', eyebrow: t('One roof, one partner', 'سقف واحد، وشريك واحد'), title: t('From sheet to shelf.', 'من الصفيحة إلى الرف.'),
-        blocks: [{ k: 'steps', items: STEPS }, { k: 'link', to: 'capabilities', label: t('See our capabilities', 'تعرّف على قدراتنا') }] },
-      { id: 'story', eyebrow: t('Our story', 'قصتنا'), title: t('Metal, made by one family, since 1998.', 'معدن تصنعه عائلة واحدة منذ عام 1998.'),
-        blocks: [
-          { k: 'prose', ps: [t('Founded in 1998 and led today by the third generation of the family, Jordan Tinplate Canning has grown into a manufacturer with fully automatic production lines, in-house design and skilled people.',
-                                 'تأسس المصنع عام 1998 ويقوده اليوم الجيل الثالث من العائلة، وهو يعمل اليوم بخطوط إنتاج أوتوماتيكية بالكامل وفريق تصميم داخلي وكوادر ماهرة.')] },
-          { k: 'quote', text: t('Our vision: to lead metal packaging in the region and be the first choice for customers around the globe.',
-                               'رؤيتنا: أن نكون روّاد التغليف المعدني في المنطقة والخيار الأول للعملاء حول العالم.') },
-          { k: 'link', to: 'about', label: t('About us', 'من نحن') },
-          PROOF_TBC
-        ] },
-      { id: 'news', eyebrow: t('News & events', 'الأخبار والفعاليات'), title: t('Out in the world.', 'حاضرون في الأسواق.'),
-        blocks: [{ k: 'news', limit: 1 }, { k: 'link', to: 'news', label: t('All news and events', 'كل الأخبار والفعاليات') }] }
+      { kind: 'marquee' },
+      { kind: 'journey', id: 'journey', link: { to: 'capabilities', label: t('See our capabilities', 'تعرّف على قدراتنا') } },
+      { kind: 'finish', id: 'finish' },
+      { kind: 'shapes', id: 'shapes' },
+      { kind: 'range', id: 'range' },
+      { kind: 'industries', id: 'industries' },
+      { kind: 'seasons', id: 'seasons' },
+      { kind: 'story', id: 'story', link: { to: 'about', label: t('About us', 'من نحن') } },
+      { kind: 'news', id: 'news', limit: 4, link: { to: 'news', label: t('All news and events', 'كل الأخبار والفعاليات') } }
     ]
   },
 
@@ -172,46 +276,14 @@ export const PAGES = [
       h1: t('Tinplate cans and tins, made to fit what goes inside', 'علب صفيح معدنية تُصنع لتناسب ما بداخلها'),
       lead: t('Start from your industry, or browse the full range by type. Sizes below come from our product tables; custom sizes are available on request.',
               'ابدأ من قطاعك، أو تصفّح المجموعة كاملة حسب النوع. المقاسات أدناه من جداول منتجاتنا، والمقاسات الخاصة متاحة عند الطلب.'),
-      art: 'round', ctas: [quoteCta(), { label: UI.catalogue, to: 'catalogue', kind: 'ghost' }]
+      art: 'round', stage: { shape: 'round', theme: 'brand', cw: 0, finish: 'gloss' },
+      ctas: [quoteCta(), { label: UI.catalogue, to: 'catalogue', kind: 'ghost' }]
     },
     sections: [
-      { id: 'by-industry', eyebrow: t('By industry', 'حسب القطاع'), title: t('Find your industry', 'ابحث عن قطاعك'),
-        blocks: [{ k: 'tiles', ids: ['ind-olive', 'ind-dairy', 'ind-sweets', 'ind-cheese', 'ind-coffee', 'ind-industrial'] }] },
-      { id: 'by-type', eyebrow: t('By type', 'حسب النوع'), title: t('The full range', 'المجموعة كاملة'),
-        blocks: [{ k: 'cards', cols: 3, items: [
-          { h: t('Fancy tins', 'علب فاخرة'), art: 'round',
-            p: t('Round, square, rectangular and oval gift tins for sweets, ka’ak, chocolate, coffee and more.', 'علب هدايا دائرية ومربعة ومستطيلة وبيضاوية للحلويات والكعك والشوكولاتة والقهوة وغيرها.'),
-            meta: t('Round Ø 73–265 mm · Square 120–240 mm', 'دائرية بقطر 73–265 مم · مربعة 120–240 مم') },
-          { h: t('Food cans', 'علب أغذية'), art: 'can',
-            p: t('Nine diameters from 52 to 215 mm.', 'تسعة أقطار من 52 إلى 215 مم.'),
-            meta: t('60 ml – 8 L', 'من 60 مل إلى 8 لترات') },
-          { h: t('Milk powder cans', 'علب حليب البودرة'), art: 'can',
-            p: t('Large-format cans for powder and dairy.', 'علب كبيرة الحجم للبودرة والألبان.'),
-            meta: t('Ø 99–189 mm · up to 5.5 kg', 'قطر 99–189 مم · حتى 5.5 كغ') },
-          { h: t('Food containers & trays', 'حاويات وصواني أغذية'), art: 'oval',
-            p: t('Including smooth round trays for knafeh and mansaf.', 'ومنها صواني دائرية ناعمة للكنافة والمنسف.') },
-          { h: t('Special molds', 'قوالب خاصة'), art: 'rect',
-            p: t('Coffee tins that protect aroma, seamless two-piece cans, windowed boxes, tobacco tins and fully custom shapes.',
-                 'علب قهوة تحفظ العبير، وعلب من قطعتين بلا لحام، وعلب بنافذة شفافة، وعلب تبغ، وأي شكل حسب الطلب.') },
-          { h: t('Ends & components', 'الأغطية والقطع'), art: 'round',
-            p: t('Easy open, peel off, penny lever, aluminium and normal ends.', 'أغطية Easy Open وPeel Off وPenny Lever وألمنيوم وأغطية عادية.') },
-          { h: t('Industrial cans', 'علب صناعية'), art: 'can',
-            p: t('Paints, chemicals and drums.', 'للدهانات والكيماويات والبراميل.') }
-        ] }] },
-      { id: 'shapes', eyebrow: t('Shapes', 'الأشكال'), title: t('Every shape your brand needs.', 'كل شكل تحتاجه علامتك.'),
-        blocks: [
-          { k: 'specs', rows: [
-            { k: t('Round tin', 'علبة دائرية'), v: t('Ø 73–265 mm · H 34–210 mm', 'قطر 73–265 مم · ارتفاع 34–210 مم'), note: t('Six standard diameters, in many heights.', 'ستة أقطار قياسية، بارتفاعات متعددة.'), art: 'round' },
-            { k: t('Square tin', 'علبة مربعة'), v: t('120–240 mm sides · H 40–100 mm', 'ضلع 120–240 مم · ارتفاع 40–100 مم'), note: t('Five standard sizes, from about 100 g to 1 kg.', 'خمسة مقاسات قياسية، من نحو 100 غ إلى 1 كغ.'), art: 'square' },
-            { k: t('Rectangular tin', 'علبة مستطيلة'), v: t('Sizes on request', 'المقاسات عند الطلب'), note: t('Made to your specification.', 'تُصنَّع وفق مواصفاتك.'), art: 'rect' },
-            { k: t('Oval tin', 'علبة بيضاوية'), v: t('Ø 300 mm · H 40–100 mm', 'قطر 300 مم · ارتفاع 40–100 مم'), note: t('A special-mold shape for presentation packs.', 'شكل بقالب خاص لعلب التقديم.'), art: 'oval' },
-            { k: t('Olive-oil tin', 'تنكة زيت الزيتون'), v: t('1, 4, 8 and 16 L/kg', '1 و4 و8 و16 لتر/كغ'), note: t('Produced in all four sizes.', 'تُنتَج بالأحجام الأربعة كلها.'), art: 'oil' }
-          ] },
-          { k: 'fine', text: t('Drawings are illustrative. Custom sizes are available on request.', 'الرسومات توضيحية. والمقاسات الخاصة متاحة عند الطلب.') }
-        ] },
-      { id: 'finishes', eyebrow: t('Finishes', 'التشطيبات'), title: t('Touch it before you print it.', 'جرّب الملمس قبل الطباعة.'),
-        intro: t('Every finish below is available on our lines.', 'كل التشطيبات التالية متوفرة على خطوطنا.'),
-        blocks: [{ k: 'cards', cols: 3, items: FINISH_CARDS }] }
+      { kind: 'industries', id: 'by-industry', eyebrow: t('By industry', 'حسب القطاع'), title: t('Find your industry', 'ابحث عن قطاعك') },
+      { kind: 'range', id: 'by-type', eyebrow: t('By type', 'حسب النوع'), title: t('The full range', 'المجموعة كاملة') },
+      { kind: 'shapes', id: 'shapes' },
+      { kind: 'finish', id: 'finishes' }
     ]
   },
 
@@ -228,7 +300,9 @@ export const PAGES = [
       h1: t('Tinplate tins for olive oil brands', 'علب صفيح لعلامات زيت الزيتون'),
       lead: t('Olive oil has its season, and your tins should be ready before it starts. We design, print, form and pack tinplate for oil brands in one place.',
               'لزيت الزيتون موسمه، وعلبك يجب أن تكون جاهزة قبل أن يبدأ. نصمّم علب الصفيح ونطبعها ونشكّلها ونجهّزها لعلامات الزيت في مكان واحد.'),
-      art: 'oil', ctas: [quoteCta(), { label: t('All products', 'كل المنتجات'), to: 'products', kind: 'ghost' }]
+      art: 'oil', stage: { shape: 'oil8', theme: 'olive', finish: 'gloss', label: t('3D olive-oil tin: drag to rotate', 'تنكة زيت زيتون ثلاثية الأبعاد: اسحب لتدويرها') },
+      picker: { kind: 'shape', target: 'hero', initial: 'oil8', aria: t('Olive-oil tin sizes', 'أحجام تنكات زيت الزيتون'), items: OIL_SIZES },
+      ctas: [quoteCta(), { label: t('All products', 'كل المنتجات'), to: 'products', kind: 'ghost' }]
     },
     sections: [
       { eyebrow: t('What we offer', 'ما نقدّمه'), title: t('Printed, finished and ready to ship', 'مطبوعة ومشطَّبة وجاهزة للشحن'),
@@ -263,7 +337,8 @@ export const PAGES = [
       eyebrow: t('Industry · Milk powder & dairy', 'القطاع · حليب البودرة والألبان'),
       h1: t('Milk powder cans for dairy brands', 'علب حليب البودرة لعلامات الألبان'),
       lead: t('Large-format cans for powder and dairy, printed to your artwork and packed for export.', 'علب كبيرة الحجم للبودرة والألبان، مطبوعة وفق تصميمك ومجهّزة للتصدير.'),
-      art: 'can', ctas: [quoteCta(), { label: t('All products', 'كل المنتجات'), to: 'products', kind: 'ghost' }]
+      art: 'can', stage: { shape: 'milk', theme: 'milk', finish: 'gloss', label: t('3D milk powder can: drag to rotate', 'علبة حليب بودرة ثلاثية الأبعاد: اسحب لتدويرها') },
+      ctas: [quoteCta(), { label: t('All products', 'كل المنتجات'), to: 'products', kind: 'ghost' }]
     },
     sections: [
       { eyebrow: t('The range', 'المجموعة'), title: t('Cans and ends for powder and dairy', 'علب وأغطية للبودرة والألبان'),
@@ -299,7 +374,9 @@ export const PAGES = [
       eyebrow: t('Industry · Sweets, ka’ak & chocolate', 'القطاع · الحلويات والكعك والشوكولاتة'),
       h1: t('Gift tins for sweets, ka’ak and chocolate', 'علب هدايا للحلويات والكعك والشوكولاتة'),
       lead: t('Embossed, soft-touch and unmistakably festive: tins that make Ramadan and Eid gifts worth keeping.', 'بنقش بارز وملمس ناعم وطابع احتفالي لا يُخطئ: علب تجعل هدايا رمضان والعيد تستحق الاحتفاظ بها.'),
-      art: 'square', ctas: [quoteCta(), { label: t('All products', 'كل المنتجات'), to: 'products', kind: 'ghost' }]
+      art: 'square', stage: { shape: 'round', theme: 'eid', finish: 'emboss', label: t('3D gift tin: drag to rotate', 'علبة هدايا ثلاثية الأبعاد: اسحب لتدويرها') },
+      picker: { kind: 'shape', target: 'hero', initial: 'round', aria: t('Gift-tin shapes', 'أشكال علب الهدايا'), items: SHAPES_SWEETS },
+      ctas: [quoteCta(), { label: t('All products', 'كل المنتجات'), to: 'products', kind: 'ghost' }]
     },
     sections: [
       { eyebrow: t('Shapes and sizes', 'الأشكال والمقاسات'), title: t('Four shapes, many sizes', 'أربعة أشكال ومقاسات متعددة'),
@@ -336,7 +413,8 @@ export const PAGES = [
       h1: t('Tinplate tins for white cheese brands', 'علب صفيح لعلامات الجبنة البيضاء'),
       lead: t('Spring is white-cheese season. We print and form tinplate for dairy brands, from artwork and plates to export-ready packs.',
               'الربيع هو موسم الجبنة البيضاء. نطبع الصفيح ونشكّله لعلامات الألبان، من التصميم والألواح حتى العبوة الجاهزة للتصدير.'),
-      art: 'rect', ctas: [quoteCta(), { label: t('All products', 'كل المنتجات'), to: 'products', kind: 'ghost' }]
+      art: 'rect', stage: { shape: 'cheese', theme: 'cheese', finish: 'matte', label: t('3D white-cheese tin: drag to rotate', 'علبة جبنة بيضاء ثلاثية الأبعاد: اسحب لتدويرها') },
+      ctas: [quoteCta(), { label: t('All products', 'كل المنتجات'), to: 'products', kind: 'ghost' }]
     },
     sections: [
       { eyebrow: t('What we offer', 'ما نقدّمه'), title: t('Printing, finishing and packing', 'الطباعة والتشطيب والتغليف'),
@@ -364,7 +442,8 @@ export const PAGES = [
       eyebrow: t('Industry · Coffee & tea', 'القطاع · القهوة والشاي'),
       h1: t('Tins for coffee and tea brands', 'علب لعلامات القهوة والشاي'),
       lead: t('Printed tins in round, square and special-mold shapes, including coffee tins that protect aroma.', 'علب مطبوعة بأشكال دائرية ومربعة وبقوالب خاصة، ومنها علب قهوة تحفظ العبير.'),
-      art: 'round', ctas: [quoteCta(), { label: t('All products', 'كل المنتجات'), to: 'products', kind: 'ghost' }]
+      art: 'round', stage: { shape: 'coffee', theme: 'coffee', finish: 'matte', label: t('3D coffee and tea tin: drag to rotate', 'علبة قهوة وشاي ثلاثية الأبعاد: اسحب لتدويرها') },
+      ctas: [quoteCta(), { label: t('All products', 'كل المنتجات'), to: 'products', kind: 'ghost' }]
     },
     sections: [
       { eyebrow: t('The range', 'المجموعة'), title: t('Shapes for coffee and tea', 'أشكال للقهوة والشاي'),
@@ -396,7 +475,8 @@ export const PAGES = [
       eyebrow: t('Industry · Industrial', 'القطاع · الصناعي'),
       h1: t('Industrial cans for paints, chemicals and drums', 'علب صناعية للدهانات والكيماويات والبراميل'),
       lead: t('Beyond food and beverage, we also make cans for industrial products.', 'إلى جانب الأغذية والمشروبات، نصنع أيضاً علباً للمنتجات الصناعية.'),
-      art: 'can', ctas: [quoteCta(), { label: t('All products', 'كل المنتجات'), to: 'products', kind: 'ghost' }]
+      art: 'can', stage: { shape: 'paint', theme: 'industrial', finish: 'matte', label: t('3D industrial paint can: drag to rotate', 'علبة دهان صناعية ثلاثية الأبعاد: اسحب لتدويرها') },
+      ctas: [quoteCta(), { label: t('All products', 'كل المنتجات'), to: 'products', kind: 'ghost' }]
     },
     sections: [
       { eyebrow: t('What we make', 'ما نصنعه'), title: t('Industrial packaging', 'عبوات صناعية'),
@@ -427,26 +507,19 @@ export const PAGES = [
       h1: t('The whole tinplate journey, under one roof', 'رحلة الصفيح كاملة تحت سقف واحد'),
       lead: t('Fully automatic production lines, in-house design and skilled people: from artwork and plates to formed, palletised, export-ready tins.',
               'خطوط إنتاج أوتوماتيكية بالكامل، وتصميم داخلي، وكوادر ماهرة: من التصميم والألواح إلى علب مشكَّلة ومرتَّبة على باليتات وجاهزة للتصدير.'),
-      art: 'hero', ctas: [quoteCta(), { label: t('See products', 'تصفّح المنتجات'), to: 'products', kind: 'ghost' }]
+      art: 'hero', stage: { shape: 'round', theme: 'brand', cw: 0, finish: 'emboss' },
+      ctas: [quoteCta(), { label: t('See products', 'تصفّح المنتجات'), to: 'products', kind: 'ghost' }]
     },
     sections: [
-      { id: 'journey', eyebrow: t('Step by step', 'خطوة بخطوة'), title: t('From sheet to shelf.', 'من الصفيحة إلى الرف.'), blocks: [{ k: 'steps', items: STEPS }] },
+      { kind: 'journey', id: 'journey', eyebrow: t('Step by step', 'خطوة بخطوة') },
       { id: 'design', eyebrow: t('Design & CTP', 'التصميم وCTP'), title: t('Artwork and plates, done in-house', 'العمل الفني والألواح داخل المصنع'),
         blocks: [{ k: 'prose', ps: [
           t('Our designers prepare your artwork, and CTP (Computer-to-Plate) makes every printing plate precise.', 'يجهّز مصمّمونا عملك الفني، وتقنية CTP (من الحاسوب إلى اللوح) تضمن دقة كل لوح طباعة.'),
           t('Variable printing puts several versions of the same pack on a single printing plate: one plate, many designs.', 'تضع الطباعة المتغيّرة عدة نسخ من العبوة نفسها على لوح طباعة واحد: لوح واحد وتصاميم متعددة.')
         ] }] },
-      { id: 'finishes', eyebrow: t('Printing & finishes', 'الطباعة والتشطيبات'), title: t('Touch it before you print it.', 'جرّب الملمس قبل الطباعة.'),
-        intro: t('High-end inks and coatings, plus effects. Every finish below is available on our lines.', 'أحبار وطلاءات عالية الجودة مع مؤثرات متنوعة. وكل التشطيبات التالية متوفرة على خطوطنا.'),
-        blocks: [{ k: 'cards', cols: 3, items: FINISH_CARDS }] },
-      { id: 'forming', eyebrow: t('Forming', 'التشكيل'), title: t('Cut on exact lines, formed to your shape', 'قصّ دقيق وتشكيل بالهيئة التي تريدها'),
-        blocks: [{ k: 'specs', rows: [
-          { k: t('Round tin', 'علبة دائرية'), v: t('Ø 73–265 mm · H 34–210 mm', 'قطر 73–265 مم · ارتفاع 34–210 مم'), art: 'round' },
-          { k: t('Square tin', 'علبة مربعة'), v: t('120–240 mm sides · H 40–100 mm', 'ضلع 120–240 مم · ارتفاع 40–100 مم'), art: 'square' },
-          { k: t('Rectangular tin', 'علبة مستطيلة'), v: t('Sizes on request', 'المقاسات عند الطلب'), art: 'rect' },
-          { k: t('Oval tin', 'علبة بيضاوية'), v: t('Ø 300 mm · H 40–100 mm', 'قطر 300 مم · ارتفاع 40–100 مم'), art: 'oval' },
-          { k: t('Special molds', 'قوالب خاصة'), v: t('Coffee tins, seamless two-piece cans, windowed boxes, tobacco tins, custom shapes', 'علب قهوة، وعلب من قطعتين بلا لحام، وعلب بنافذة شفافة، وعلب تبغ، وأشكال حسب الطلب'), art: 'rect' }
-        ] }] },
+      { kind: 'finish', id: 'finishes', eyebrow: t('Printing & finishes', 'الطباعة والتشطيبات') },
+      { kind: 'shapes', id: 'forming', eyebrow: t('Forming', 'التشكيل'), title: t('Cut on exact lines, formed to your shape', 'قصّ دقيق وتشكيل بالهيئة التي تريدها'),
+        after: [{ k: 'prose', ps: [t('Special molds: coffee tins, seamless two-piece cans, windowed boxes, tobacco tins and fully custom shapes.', 'قوالب خاصة: علب قهوة، وعلب من قطعتين بلا لحام، وعلب بنافذة شفافة، وعلب تبغ، وأشكال حسب الطلب.')] }] },
       { id: 'export', eyebrow: t('Packing, storage & export', 'التغليف والتخزين والتصدير'), title: t('Ready for your markets', 'جاهزة لأسواقك'),
         blocks: [{ k: 'prose', ps: [
           t('Cartons are palletised with methods tailored to each client and suited to overseas shipping.', 'تُرتَّب الكراتين على باليتات بطرق تناسب كل عميل وتصلح للشحن إلى الخارج.'),
@@ -472,7 +545,8 @@ export const PAGES = [
       eyebrow: t('About us', 'من نحن'),
       h1: t('Metal, made by one family, since 1998.', 'معدن تصنعه عائلة واحدة منذ عام 1998.'),
       lead: t('Founded in 1998 and led today by the third generation of the family.', 'تأسس المصنع عام 1998 ويقوده اليوم الجيل الثالث من العائلة.'),
-      art: 'hero', ctas: [quoteCta(), { label: t('Our capabilities', 'قدراتنا'), to: 'capabilities', kind: 'ghost' }],
+      art: 'hero', stage: { shape: 'round', theme: 'brand', cw: 0, finish: 'gloss' },
+      ctas: [quoteCta(), { label: t('Our capabilities', 'قدراتنا'), to: 'capabilities', kind: 'ghost' }],
       stats: [
         { big: '1998', small: t('Founded in Jordan', 'تأسس في الأردن') },
         { big: t('3rd', 'الثالث'), small: t('generation of the family leads the company', 'الجيل الذي يقود الشركة اليوم من العائلة') },
@@ -480,16 +554,12 @@ export const PAGES = [
       ]
     },
     sections: [
-      { eyebrow: t('Our story', 'قصتنا'), title: t('A manufacturer that grew with its customers', 'مصنع نما مع عملائه'),
+      { kind: 'story', id: 'story', noProof: true, title: t('A manufacturer that grew with its customers', 'مصنع نما مع عملائه') },
+      { eyebrow: t('What we do', 'ما نقدّمه'), title: t('From artwork to export-ready packs', 'من التصميم إلى عبوات جاهزة للتصدير'),
         blocks: [{ k: 'prose', ps: [
-          t('Jordan Tinplate Canning has grown into a manufacturer with fully automatic production lines, in-house design and skilled people. We make tinplate cans and tins for food and beverage brands, and handle the journey from artwork to export-ready packs.',
-            'نما المصنع حتى أصبح يعمل بخطوط إنتاج أوتوماتيكية بالكامل وفريق تصميم داخلي وكوادر ماهرة. نصنع علب الصفيح للأغذية والمشروبات، ونتولى الرحلة كاملة من التصميم حتى العبوة الجاهزة للتصدير.')
-        ] }] },
-      { eyebrow: t('Vision & mission', 'الرؤية والرسالة'), title: t('Where we are going', 'إلى أين نتجه'),
-        blocks: [
-          { k: 'quote', text: t('Our vision: to lead metal packaging in the region and be the first choice for customers around the globe.', 'رؤيتنا: أن نكون روّاد التغليف المعدني في المنطقة والخيار الأول للعملاء حول العالم.') },
-          { k: 'prose', ps: [t('Our mission is to deliver high-end quality products and services using cutting-edge technology and a skilled workforce.', 'ورسالتنا تقديم منتجات وخدمات بجودة عالية باستخدام أحدث التقنيات وكوادر ماهرة.')] }
-        ] },
+          t('We make tinplate cans and tins for food and beverage brands, and handle the journey from artwork to export-ready packs.',
+            'نصنع علب الصفيح للأغذية والمشروبات، ونتولى الرحلة كاملة من التصميم حتى العبوة الجاهزة للتصدير.')
+        ] }, { k: 'link', to: 'capabilities', label: t('Our capabilities', 'قدراتنا') }] },
       { eyebrow: t('Company details', 'بيانات الشركة'), title: t('Who we are', 'من نحن'),
         blocks: [{ k: 'specs', rows: [
           { k: t('Official name (English)', 'الاسم الرسمي بالإنجليزية'), v: t('Jordan Tinplate Canning', 'Jordan Tinplate Canning') },
@@ -518,10 +588,10 @@ export const PAGES = [
       eyebrow: t('News & events', 'الأخبار والفعاليات'),
       h1: t('Out in the world.', 'حاضرون في الأسواق.'),
       lead: t('Interviews and the exhibitions where you can meet us.', 'مقابلات ومعارض يمكنك أن تلتقي بنا فيها.'),
-      art: 'round', ctas: [quoteCta()]
+      art: 'round', stage: { shape: 'round', theme: 'brand', cw: 1, finish: 'gloss' }, ctas: [quoteCta()]
     },
     sections: [
-      { blocks: [{ k: 'news' }] },
+      { kind: 'news', id: 'news-list' },
       { blocks: [{ k: 'tbc', title: t('More to come', 'المزيد قريباً'), items: [
         t('Upcoming exhibitions and event calendar', 'المعارض القادمة وجدول الفعاليات'),
         t('Company news and product guides', 'أخبار الشركة وأدلة المنتجات')
@@ -539,9 +609,9 @@ export const PAGES = [
     hero: {
       eyebrow: t('Contact', 'تواصل معنا'),
       h1: t('Request a quote', 'اطلب عرض سعر'),
-      lead: UI.ctaLead, art: 'hero', ctas: []
+      lead: UI.ctaLead, ctas: []
     },
-    sections: [{ id: 'quote', blocks: [{ k: 'contact' }] }]
+    sections: []
   }
 ];
 
