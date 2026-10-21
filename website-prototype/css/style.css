@@ -1,6 +1,6 @@
 /* ================================================================ tokens */
 :root {
-  --navy: #213469;
+  --navy: #002F6C;
   --f-display: "Bricolage Grotesque", "Readex Pro", system-ui, sans-serif;
   --f-body: "DM Sans", "Readex Pro", system-ui, sans-serif;
   --gut: clamp(20px, 4vw, 56px);

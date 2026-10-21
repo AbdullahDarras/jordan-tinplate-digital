@@ -29,7 +29,7 @@ Conventions: copy is final-draft Arabic (X first), counted with Python (`len` af
 ```
 28 عاماً مع المعدن.
 
-بدأنا عام 1998، ويقود مصنع الأردنية للصفيح والعبوات المعدنية اليوم الجيل الثالث من العائلة، بفريق من نحو 250 زميلاً.
+بدأنا عام 1998، ويقود الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية اليوم الجيل الثالث من العائلة، بفريق من نحو 250 زميلاً.
 
 القصة كاملة على لينكد إن اليوم.
 
@@ -46,7 +46,7 @@ Run by the third generation of the founding family, making metal packaging in Jo
 
 **Needs confirmation:**
 
-- [ ] Official Arabic name «مصنع الأردنية للصفيح والعبوات المعدنية» (see X-E01).
+- [ ] Official Arabic name «الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية» (see X-E01).
 - [ ] Final wording of the family story is approved with LinkedIn #13; if its text changes, change this post.
 - [ ] If photos are used, management supplies them and agrees to their use.
 

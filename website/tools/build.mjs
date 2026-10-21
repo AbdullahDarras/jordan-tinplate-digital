@@ -285,7 +285,7 @@ function renderPage(lang, page) {
 <link rel="canonical" href="${url}">
 ${hreflangs}
 <meta name="robots" content="index, follow, max-image-preview:large">
-<meta name="theme-color" content="#213469">
+<meta name="theme-color" content="#002F6C">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="${esc(brandName(lang))}">
 <meta property="og:title" content="${esc(title)}">
@@ -339,7 +339,7 @@ function chooser() {
 <meta name="description" content="Choose your language: Jordan Tinplate Canning, custom tinplate packaging for food and beverage brands. اختر اللغة.">
 <meta name="robots" content="noindex, follow">
 <link rel="canonical" href="${SITE.origin}/">
-<meta name="theme-color" content="#213469">
+<meta name="theme-color" content="#002F6C">
 <link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml">
 ${THEME_SCRIPT}
 <link rel="stylesheet" href="/assets/css/site.css?v=${V.css}">

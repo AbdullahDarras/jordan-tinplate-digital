@@ -10,7 +10,7 @@
 | **Format** | Text post + 1 image (4:5, 1080x1350 px) |
 | **Status** | Copy updated with management's approved decisions (`docs/decisions.md`). Design not started. Needs final text sign-off; the company-page update must happen first (see checklist) |
 
-> Convention: `[TBC]` / `[تحقق]` marks anything not confirmed. Nothing in this post uses an unconfirmed claim; the only open points are the final sign-off and the page set-up. The **official Arabic name «مصنع الأردنية للصفيح والعبوات المعدنية»** is confirmed (round 2, 2026-10-20) and is used in all Arabic copy; the English name stays **Jordan Tinplate Canning**.
+> Convention: `[TBC]` / `[تحقق]` marks anything not confirmed. Nothing in this post uses an unconfirmed claim; the only open points are the final sign-off and the page set-up. The **official Arabic name «الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية»** is confirmed (round 2, 2026-10-20) and is used in all Arabic copy; the English name stays **Jordan Tinplate Canning**.
 
 ---
 
@@ -41,17 +41,17 @@ jordantinplate.com
 
 Over the next weeks we will share how a flat sheet of tinplate becomes a can, how finishes work, and what to look for when choosing metal packaging. Follow the page to see it.
 
-الملخص بالعربية: مصنع الأردنية للصفيح والعبوات المعدنية متخصص في التغليف المعدني لعلامات الأغذية والمشروبات منذ عام 1998، في الزميلات – الموقّر، يعمل فيه نحو 250 موظفاً ويديره اليوم الجيل الثالث من العائلة المؤسِّسة. نقدّم الرحلة كاملة في مكان واحد، من التصميم وألواح الطباعة (CTP) إلى الطباعة والطلاء والتشكيل والتغليف الجاهز للتصدير، مع إمكانية تخزين المنتج الجاهز. للتواصل: sales@jordantinplate.com
+الملخص بالعربية: الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية متخصص في التغليف المعدني لعلامات الأغذية والمشروبات منذ عام 1998، في الزميلات – الموقّر، يعمل فيه نحو 250 موظفاً ويديره اليوم الجيل الثالث من العائلة المؤسِّسة. نقدّم الرحلة كاملة في مكان واحد، من التصميم وألواح الطباعة (CTP) إلى الطباعة والطلاء والتشكيل والتغليف الجاهز للتصدير، مع إمكانية تخزين المنتج الجاهز. للتواصل: sales@jordantinplate.com
 
 #MetalPackaging #FoodAndBeverage #MadeInJordan #JordanTinplateCanning #تغليف_معدني
 ```
 
 ## 2) Final copy: Arabic (summary, also usable as the Arabic page About or a standalone Arabic post)
 
-**الاسم العربي الرسمي:** «مصنع الأردنية للصفيح والعبوات المعدنية» (معتمد). يُكتب كاملاً في النصوص العربية، ويبقى الاسم الإنجليزي Jordan Tinplate Canning في النصوص الإنجليزية.
+**الاسم العربي الرسمي:** «الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية» (معتمد). يُكتب كاملاً في النصوص العربية، ويبقى الاسم الإنجليزي Jordan Tinplate Canning في النصوص الإنجليزية.
 
 ```
-مصنع الأردنية للصفيح والعبوات المعدنية متخصص في التغليف المعدني لعلامات الأغذية والمشروبات، بدأت قصته عام 1998، ويعمل فيه اليوم نحو 250 موظفاً من مقرنا في الزميلات – الموقّر، ويديره الجيل الثالث من العائلة المؤسِّسة.
+الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية متخصص في التغليف المعدني لعلامات الأغذية والمشروبات، بدأت قصته عام 1998، ويعمل فيه اليوم نحو 250 موظفاً من مقرنا في الزميلات – الموقّر، ويديره الجيل الثالث من العائلة المؤسِّسة.
 
 نقدّم الرحلة كاملة في مكان واحد:
 - التصميم والعمل الفني
@@ -114,7 +114,7 @@ sales@jordantinplate.com
 ## 8) Needs confirmation (checklist)
 
 **Resolved (management decisions, `docs/decisions.md`):**
-- [x] Official brand name **Jordan Tinplate Canning**, written in full; official Arabic name «مصنع الأردنية للصفيح والعبوات المعدنية» (confirmed, round 2)
+- [x] Official brand name **Jordan Tinplate Canning**, written in full; official Arabic name «الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية» (confirmed, round 2)
 - [x] Address: Al-Zmailat – Al-Muwaqqar (not Sahab); about 250 employees
 - [x] Olive-oil tins in 1, 4, 8 and 16 L/kg may be named publicly
 - [x] Bio/About approved provisionally; account access with the marketing lead (2FA on)

@@ -9,7 +9,7 @@
 | **Format** | Motion graphic combined with real footage from the company's **4–5 professional videos** (lines and samples), 9:16, 1080x1920 px, 30 fps, **30 seconds**. No voice-over; on-screen text in Arabic with a smaller English line; instrumental music |
 | **Status** | Script and storyboard ready. Needs motion design and an edit with the professional videos (they exist; **delivery/upload location pending from management**). Wording check needed from management (all text comes from the website's journey section) |
 
-> Convention: `[TBC]` / `[تحقق]` marks anything not confirmed. This reel contains **no** technical claims beyond the services already on the website. No capacity, speed, certification, client or market is mentioned. The **official Arabic name «مصنع الأردنية للصفيح والعبوات المعدنية»** is confirmed and is used on the Arabic end card and caption.
+> Convention: `[TBC]` / `[تحقق]` marks anything not confirmed. This reel contains **no** technical claims beyond the services already on the website. No capacity, speed, certification, client or market is mentioned. The **official Arabic name «الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية»** is confirmed and is used on the Arabic end card and caption.
 
 **Source of the six stages:** the Month-1 plan lists "design, CTP, print, forming, packing, storage". The website's journey section has the same content in five steps (it joins design and plates in step 1). For the reel we split step 1 into two scenes so the title promise "6 stages" is true. Confirm with management that this split matches how they describe the process.
 
@@ -29,7 +29,7 @@
 | 4 | 0:15 to 0:19 | **04 Cut and form** | Guide lines appear on the printed sheet; it is cut and bends into a tin. Then the tin morphs through three shapes (round, square, rectangular) in a loop of about one second each | **04 · القص والتشكيل** / دائرية أو مربعة أو مستطيلة أو بشكل خاص | 04 · Cut and form / Round, square, rectangular or custom | Cut snap, shape thunks |
 | 5 | 0:19 to 0:23 | **05 Pack and palletise** | Tins drop into cartons; cartons build up on a pallet, wrapped with a simple line animation. Camera pulls back to show the pallet | **05 · التغليف على البالتات** / بطرق تناسب كل عميل والشحن الخارجي | 05 · Pack and palletise / Methods tailored to each client and suited to overseas shipping | Box thuds, stretch-wrap sound |
 | 6 | 0:23 to 0:27 | **06 Store and ship** | The pallet slides onto a simple warehouse shelf line, then the shelf fades into a route line leaving the frame (no map, no named markets) | **06 · التخزين والشحن** / نخزّن منتجك الجاهز عند الحاجة ثم نشحنه | 06 · Store and ship / We can hold your finished stock, then ship it on | Whoosh out |
-| 7 | 0:27 to 0:30 | **End card** | Back to a single finished printed tin, centred, slow rotation. Wordmark "Jordan Tinplate Canning" (temporary until the final logo and Pantone arrive) above it. Contact below | **مصنع الأردنية للصفيح والعبوات المعدنية** · علب معدنية للأغذية والمشروبات · منذ 1998 | Jordan Tinplate Canning · Metal packaging for food & beverage brands · Since 1998 | Music resolves, one soft chime |
+| 7 | 0:27 to 0:30 | **End card** | Back to a single finished printed tin, centred, slow rotation. Wordmark "Jordan Tinplate Canning" (temporary until the final logo and Pantone arrive) above it. Contact below | **الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية** · علب معدنية للأغذية والمشروبات · منذ 1998 | Jordan Tinplate Canning · Metal packaging for food & beverage brands · Since 1998 | Music resolves, one soft chime |
 | | | End card contact line | | sales@jordantinplate.com · jordantinplate.com | same | |
 
 **Stage timings:** hook 3 s + 6 stages x 4 s (24 s) + end card 3 s = 30 s.
@@ -60,7 +60,7 @@
 5) التغليف على البالتات
 6) التخزين والشحن
 
-نحن في مصنع الأردنية للصفيح والعبوات المعدنية نصنع علباً معدنية لعلامات الأغذية والمشروبات منذ عام 1998، ويديرنا اليوم الجيل الثالث من العائلة المؤسِّسة.
+نحن في الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية نصنع علباً معدنية لعلامات الأغذية والمشروبات منذ عام 1998، ويديرنا اليوم الجيل الثالث من العائلة المؤسِّسة.
 
 أي مرحلة تهمّك أكثر؟ اكتب لنا في التعليقات، أو راسلنا: sales@jordantinplate.com
 
@@ -105,7 +105,7 @@ Which stage interests you most? Tell us in the comments, or write to us: sales@j
 
 **Resolved (management decisions, `docs/decisions.md`):**
 - [x] 4–5 professional videos of the lines and samples exist and are the source footage for this reel (no quick shoot needed)
-- [x] Brand name **Jordan Tinplate Canning** in full on the English end card; official Arabic name «مصنع الأردنية للصفيح والعبوات المعدنية» on the Arabic line (confirmed, round 2)
+- [x] Brand name **Jordan Tinplate Canning** in full on the English end card; official Arabic name «الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية» on the Arabic line (confirmed, round 2)
 
 **Still open:**
 - [ ] **Video delivery:** where management uploads or hands over the videos, and when (needed before editing scenes 3 to 5)

@@ -5,10 +5,10 @@ const FD = '"Bricolage Grotesque","Readex Pro",system-ui,sans-serif';
 const FA = '"Readex Pro","Bricolage Grotesque",system-ui,sans-serif';
 
 export const COLORWAYS = [
-  { a: '#213469', b: '#0b1330', accent: '#f2a93b', ink: '#ffffff' }, // brand navy
+  { a: '#002F6C', b: '#0b1330', accent: '#f2a93b', ink: '#ffffff' }, // brand navy
   { a: '#c2561f', b: '#5a1f0a', accent: '#ffe0a8', ink: '#ffffff' }, // copper
   { a: '#0f7a73', b: '#05302e', accent: '#f6d27a', ink: '#ffffff' }, // teal
-  { a: '#f3e9d4', b: '#d9c6a0', accent: '#213469', ink: '#213469' }  // cream
+  { a: '#f3e9d4', b: '#d9c6a0', accent: '#002F6C', ink: '#002F6C' }  // cream
 ];
 
 const cache = new Map();

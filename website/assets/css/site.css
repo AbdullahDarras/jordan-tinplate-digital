@@ -4,20 +4,20 @@
 
 /* ================================================================ tokens */
 :root {
-  --navy: #213469;
+  --navy: #002F6C;
   --f-display: "Bricolage Grotesque", "Readex Pro", system-ui, sans-serif;
   --f-body: "DM Sans", "Readex Pro", system-ui, sans-serif;
   --gut: clamp(20px, 4vw, 56px);
   --ease: cubic-bezier(.2, .8, .2, 1);
   --radius: 28px;
-  --tin-hi: #dfe6fb; --tin-a: #3d58a6; --tin-b: #213469; --tin-c: #14224a;
+  --tin-hi: #dfe6fb; --tin-a: #3d58a6; --tin-b: #002F6C; --tin-c: #14224a;
   color-scheme: light;
 }
 :root, :root[data-theme="light"] {
   --bg: #efede6; --bg2: #e5e1d6; --ink: #0d1530; --mute: #4b5575; --line: rgba(13, 21, 48, .18);
   --card: rgba(255, 255, 255, .66); --accent: #d98b14; --accent-text: #8a4f00; --on-accent: #1a1204;
-  --glow: rgba(33, 52, 105, .16); --focus: #213469;
-  --tbc-bg: #fff1d6; --tbc-ink: #6b3a00; --panel: #213469;
+  --glow: rgba(33, 52, 105, .16); --focus: #002F6C;
+  --tbc-bg: #fff1d6; --tbc-ink: #6b3a00; --panel: #002F6C;
 }
 :root[data-theme="dark"] {
   --bg: #060a18; --bg2: #0b1228; --ink: #edf1ff; --mute: #a5b0d6; --line: rgba(190, 205, 255, .2);

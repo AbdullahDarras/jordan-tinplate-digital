@@ -17,7 +17,7 @@ const FIN = {
   rough: { metalness: 0.25, roughness: 0.8, clearcoat: 0, clearcoatRoughness: 0.5, sheen: 0, bumpScale: 1.3, bump: 'rough' },
   emboss: { metalness: 0.6, roughness: 0.24, clearcoat: 0.7, clearcoatRoughness: 0.1, sheen: 0, bumpScale: 1.6, bump: 'emboss' }
 };
-const ACCENT = { brand: ['#f2a93b', '#ffe0a8', '#f6d27a', '#213469'], olive: '#d9a93c', eid: '#e9bd5a', cheese: '#2a6fb8' };
+const ACCENT = { brand: ['#f2a93b', '#ffe0a8', '#f6d27a', '#002F6C'], olive: '#d9a93c', eid: '#e9bd5a', cheese: '#2a6fb8' };
 
 export function createScene(canvas) {
   const gsap = window.gsap;

@@ -3,7 +3,7 @@
 
 Ready-to-design copy for posts #1 to #4 of the [Month-1 content plan](../../Jordan-Tinplate-Month1-Content-Plan.md). Theme of the week: **we introduce ourselves and open the olive-oil season**. All files are drafts updated with management's approved decisions ([docs/decisions.md](../../docs/decisions.md), 2026-10-20) and still pending final sign-off.
 
-مسودات جاهزة للتصميم للمنشورات الأربعة الأولى من خطة الشهر الأول، محدَّثة بقرارات الإدارة المعتمدة. موضوع الأسبوع: نعرّف بـJordan Tinplate Canning ونفتح موسم زيت الزيتون. الاسم العربي الرسمي المعتمد: «مصنع الأردنية للصفيح والعبوات المعدنية». والاسم الإنجليزي Jordan Tinplate Canning.
+مسودات جاهزة للتصميم للمنشورات الأربعة الأولى من خطة الشهر الأول، محدَّثة بقرارات الإدارة المعتمدة. موضوع الأسبوع: نعرّف بـJordan Tinplate Canning ونفتح موسم زيت الزيتون. الاسم العربي الرسمي المعتمد: «الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية». والاسم الإنجليزي Jordan Tinplate Canning.
 
 ## Index and status
 
@@ -28,7 +28,7 @@ Each post file contains: metadata, final copy (Arabic and English), the visual s
 
 | Decision | Effect on Week 1 |
 |---|---|
-| Official name **Jordan Tinplate Canning**, always in full (old name Jordan Canning is legal/historical only) | All copy, hashtags (`#JordanTinplateCanning`), X display name. Never "Canning" alone. Arabic: «مصنع الأردنية للصفيح والعبوات المعدنية» (official, confirmed round 2) |
+| Official name **Jordan Tinplate Canning**, always in full (old name Jordan Canning is legal/historical only) | All copy, hashtags (`#JordanTinplateCanning`), X display name. Never "Canning" alone. Arabic: «الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية» (official, confirmed round 2) |
 | Address: Al-Zmailat – Al-Muwaqqar (not Sahab) | Used in the LinkedIn post and bios. Full street address still pending |
 | About 250 employees | Stated in post #1 |
 | No Saudi branch exists | No Saudi reference in any copy. The Saudi Food Manufacturing 2025 item is participation/interview only (not part of Week 1) |
@@ -55,7 +55,7 @@ Each post file contains: metadata, final copy (Arabic and English), the visual s
 
 | Fact used in the copy | Source |
 |---|---|
-| Brand name Jordan Tinplate Canning; official Arabic name «مصنع الأردنية للصفيح والعبوات المعدنية» | `docs/decisions.md` (item 1, round 2) |
+| Brand name Jordan Tinplate Canning; official Arabic name «الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية» | `docs/decisions.md` (item 1, round 2) |
 | Address Al-Zmailat – Al-Muwaqqar; about 250 employees | `docs/decisions.md` (items 3, 10) |
 | Olive-oil tins in 1, 4, 8 and 16 L/kg; interior lacquer meeting the highest food-grade hygiene standards | `docs/decisions.md` (items 7, 8) |
 | Founded 1998; run by the third generation | Off-site plan (About text, section 3), website prototype story section; About approved provisionally (decisions item 4) |
@@ -69,8 +69,8 @@ Each post file contains: metadata, final copy (Arabic and English), the visual s
 ## Conventions
 
 - `[تحقق]` (Arabic) and `[TBC]` (English) mark anything not confirmed. They stay in the files so nobody publishes an unconfirmed statement by accident; remove them only after confirmation. The olive-oil size and interior-lacquer statements are now confirmed and carry no marker; the light, toughness and stacking statements keep theirs, with fallbacks.
-- The official Arabic name «مصنع الأردنية للصفيح والعبوات المعدنية» is written in full in all Arabic copy. There is no provisional marker any more.
-- Hashtag for the brand is always the full `#JordanTinplateCanning`. Username: `@jordantinplate` on every platform (decision, round 2), subject to availability. The profile display name is the official name (English: Jordan Tinplate Canning; Arabic: «مصنع الأردنية للصفيح والعبوات المعدنية»); only the handle is short.
+- The official Arabic name «الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية» is written in full in all Arabic copy. There is no provisional marker any more.
+- Hashtag for the brand is always the full `#JordanTinplateCanning`. Username: `@jordantinplate` on every platform (decision, round 2), subject to availability. The profile display name is the official name (English: Jordan Tinplate Canning; Arabic: «الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية»); only the handle is short.
 - Arabic is written in clear Modern Standard Arabic that reads naturally for Jordan and the Gulf, not translated word by word. Dialect words are avoided except where they are the normal trade term ("تنكة").
 - Numerals are Western (1 to 6, 25/10) as in the plan. No emojis in the copy, by design.
 - Sample artwork only on any tin shown. No real client brand.

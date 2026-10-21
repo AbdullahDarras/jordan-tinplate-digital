@@ -1,7 +1,7 @@
 // English copy lives in index.html (read back at runtime). This file holds the Arabic copy and the dynamic strings.
 // Arabic copy still needs a pass by a native reviewer before launch (see README, "Remaining placeholders").
 const E = (s) => '<span class="dot"></span>' + s;
-export const NAME_AR = 'مصنع الأردنية للصفيح والعبوات المعدنية';
+export const NAME_AR = 'الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية';
 
 export const AR = {
   'brand.word': '<span>مصنع <b>الأردنية</b></span><span class="brand__sub">للصفيح والعبوات المعدنية</span>',

@@ -153,7 +153,7 @@ There are no sales targets in Month 1 and no baseline yet, so no numeric targets
 
 | Item | Affects | Status |
 |---|---|---|
-| Official Arabic name «مصنع الأردنية للصفيح والعبوات المعدنية» | E01, E10 | Given in the brief; **`docs/decisions.md` still lists the Arabic name as pending (provisional «جوردن تينبليت كانينغ» [مؤقت] elsewhere in the repo)**. Confirm, then log it; if different, swap in these two posts only |
+| Official Arabic name «الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية» | E01, E10 | Given in the brief; **`docs/decisions.md` still lists the Arabic name as pending (provisional «جوردن تينبليت كانينغ» [مؤقت] elsewhere in the repo)**. Confirm, then log it; if different, swap in these two posts only |
 | Delivery of the 4-5 professional videos and clip selection | E03, E06, E09 | Pending. Fallbacks: designed stills (E03), a site photo (E06), a designed card (E09) |
 | Family-story wording and photos | E10 | Same dependency as LinkedIn #13 |
 | White-cheese tin details (specs still "to be confirmed") | E11 | E11 names the season only; hold it if IG #14 is held |

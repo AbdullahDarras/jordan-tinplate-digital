@@ -29,7 +29,7 @@ Prototype of the new homepage, for approving the **style and the method** before
 - Header wordmark is a two-line lock-up that also fits at 390 px.
 
 **Content (decisions applied)**
-- Brand name **Jordan Tinplate Canning** in wordmark, `<title>`, meta, OG, loader, footer and the sample tin artwork. Arabic UI uses **«مصنع الأردنية للصفيح والعبوات المعدنية»** (wordmark, title, loader, footer, aria-label).
+- Brand name **Jordan Tinplate Canning** in wordmark, `<title>`, meta, OG, loader, footer and the sample tin artwork. Arabic UI uses **«الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية»** (wordmark, title, loader, footer, aria-label).
 - Social handle **@jordantinplate** on Instagram, X and Facebook links. Address **Al-Zmailat – Al-Muwaqqar / الزميلات – الموقّر** (full street address still pending).
 - No Saudi branch or expansion claim: the Saudi Food Manufacturing 2025 card now says only that our partner was interviewed at the show. (The linked third-party article's own headline says "expanding into Saudi Arabia"; the link is kept as a source, see "Remaining placeholders".)
 - Olive-oil tins shown as 1 · 4 · 8 · 16 L/kg (confirmed). The "to be confirmed" technical text for oil and white-cheese tins is gone; copy is general. No certification is named. No employee count is shown (about 250 if wanted).

@@ -29,7 +29,7 @@ Conventions: copy is final-draft Arabic (X first), counted with Python (`len` af
 ```
 أهلاً بكم.
 
-نحن مصنع الأردنية للصفيح والعبوات المعدنية (Jordan Tinplate Canning): علب معدنية للأغذية والمشروبات منذ 1998، يقودنا الجيل الثالث من العائلة، ونحو 250 زميلاً في الزميلات – الموقّر، عمّان.
+نحن الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية (Jordan Tinplate Canning): علب معدنية للأغذية والمشروبات منذ 1998، يقودنا الجيل الثالث من العائلة، ونحو 250 زميلاً في الزميلات – الموقّر، عمّان.
 
 ما المنتج الذي تبحث له عن عبوة؟ أخبرنا في الردود.
 
@@ -46,7 +46,7 @@ Conventions: copy is final-draft Arabic (X first), counted with Python (`len` af
 
 **Needs confirmation:**
 
-- [ ] Official Arabic name «مصنع الأردنية للصفيح والعبوات المعدنية»: given in the brief but not yet in `docs/decisions.md` (still listed as pending there). Confirm, add it to the log, then keep. If different, replace here and in X-E10 only.
+- [ ] Official Arabic name «الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية»: given in the brief but not yet in `docs/decisions.md` (still listed as pending there). Confirm, add it to the log, then keep. If different, replace here and in X-E10 only.
 - [ ] X account is live and bio updated first (handle `@jordantinplate`, if available).
 - [ ] "Third generation" and "since 1998" wording signed off with the About text (approved provisionally).
 
