@@ -97,7 +97,7 @@ html[lang="ar"] .w { padding: .32em .1em .55em; margin: -.32em -.1em -.55em; }
 .btn > * { position: relative; z-index: 1; }
 .btn:hover::before { transform: none; } .btn:hover { color: var(--bg); border-color: var(--ink); }
 .btn svg { width: 1.15em; height: 1.15em; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-html[dir="rtl"] .btn svg { transform: scaleX(-1); }
+html[dir="rtl"] .btn svg { transform: scaleX(-1); } html[dir="rtl"] .btn svg.ext { transform: none; } /* the external-link arrow does not mirror */
 .btn--ghost { background: transparent; color: var(--ink); border-color: var(--line); } .btn--ghost:hover { border-color: var(--ink); }
 .btn--sm { padding: .7em 1.2em; font-size: .88rem; }
 .chips { display: flex; flex-wrap: wrap; gap: .6rem; margin-top: 2rem; }
@@ -332,7 +332,7 @@ html[lang="ar"] .ncard__tag { letter-spacing: 0; text-transform: none; font-size
 html[lang="ar"] .contact__list span { letter-spacing: 0; text-transform: none; font-size: .9rem; }
 .contact__list a, .contact__list em { font-style: normal; font-size: 1.15rem; font-weight: 500; } .contact__list a:hover { color: #f2a93b; }
 .social { display: flex; gap: .7rem; margin-top: 1.6rem; flex-wrap: wrap; }
-.social a { padding: .65em 1.1em; border: 1px solid rgba(255, 255, 255, .28); border-radius: 999px; font-size: .88rem; font-weight: 600; transition: all .3s; } .social a:hover { background: #fff; color: var(--navy); }
+.social a { direction: ltr; unicode-bidi: isolate; padding: .65em 1.1em; border: 1px solid rgba(255, 255, 255, .28); border-radius: 999px; font-size: .88rem; font-weight: 600; transition: all .3s; } .social a:hover { background: #fff; color: var(--navy); }
 .quote { display: flex; flex-direction: column; align-items: flex-start; gap: 1.1rem; padding: clamp(1.4rem, 3vw, 2.2rem); border-radius: 28px; background: rgba(255, 255, 255, .07); border: 1px solid rgba(255, 255, 255, .16); backdrop-filter: blur(10px); }
 .quote__t { margin: 0; font-family: var(--f-display); font-size: clamp(1.6rem, 2.6vw, 2.2rem); letter-spacing: -.02em; line-height: 1.15; }
 html[lang="ar"] .quote__t { letter-spacing: 0; line-height: 1.35; }
@@ -342,7 +342,7 @@ html[lang="ar"] .quote__t { letter-spacing: 0; line-height: 1.35; }
 .quote__alt a { text-decoration: underline; text-underline-offset: 4px; font-weight: 600; color: #fff; } .quote__alt a:hover { color: #f2a93b; }
 .foot { display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; padding: 2.4rem 0; margin-top: clamp(3rem, 7vw, 6rem); border-top: 1px solid rgba(255, 255, 255, .16); font-size: .85rem; color: rgba(255, 255, 255, .78); }
 .review-only { display: none; }
-body.review .review-only { display: inline; }
+body.review .review-only { display: inline-block; padding: .55em .7em .15em; }
 
 /* ================================================================ review mode (placeholders) */
 body.review [data-tbc] { outline: 2px dashed #ff4d6d; outline-offset: 6px; position: relative; }
@@ -383,3 +383,6 @@ html:not(.js) .marquee { display: none; }
 @media (prefers-reduced-motion: reduce) {
   .marquee__row { animation: none; } .scrollcue i::after { animation: none; }
 }
+
+/* sections receive programmatic focus after an in-page jump; they should not show a ring */
+main:focus, section[tabindex="-1"]:focus { outline: none; }

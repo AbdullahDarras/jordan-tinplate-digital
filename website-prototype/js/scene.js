@@ -166,7 +166,14 @@ export function createScene(canvas) {
       model.print.forEach((m) => applyFinish(m, S.finish, true));
       syncEnv();
       holder.add(model.group);
+      // Measure the model in its own units. Box3.setFromObject works in world space, so when a tin is rebuilt after its stage has
+      // been laid out (colourway / shape change) the root scale, spin and bob would inflate the size and the shadow came out
+      // several times too big (a hard-edged grey block clipped by the canvas). Measure with a neutral transform instead.
+      const keep = [root.scale.clone(), root.position.clone(), tilt.rotation.clone(), holder.scale.clone(), holder.rotation.clone()];
+      root.scale.set(1, 1, 1); root.position.set(0, 0, 0); tilt.rotation.set(0, 0, 0); holder.scale.set(1, 1, 1); holder.rotation.set(0, 0, 0);
+      root.updateMatrixWorld(true);
       const box = new THREE.Box3().setFromObject(model.group);
+      root.scale.copy(keep[0]); root.position.copy(keep[1]); tilt.rotation.copy(keep[2]); holder.scale.copy(keep[3]); holder.rotation.copy(keep[4]);
       box.getSize(modelSize);
       model.group.position.y -= box.getCenter(new THREE.Vector3()).y;
       shadow.position.y = -modelSize.y / 2 - 0.12;
