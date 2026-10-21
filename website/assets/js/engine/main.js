@@ -53,6 +53,7 @@ const unlockScroll = () => { if (lenis) lenis.start(); };
 /* theme + menu events come from /assets/js/site.js */
 window.addEventListener('jt:theme', (e) => { if (scene && !loaderOwns) scene.setTheme(e.detail); });
 window.addEventListener('jt:menu', (e) => { if (lenis) { if (e.detail) lenis.stop(); else if (!loaderEl()) lenis.start(); } });
+window.addEventListener('jt:lock', (e) => { if (lenis) { if (e.detail) lenis.stop(); else if (!loaderEl()) lenis.start(); } }); // lightbox open / closed
 
 /* ============================================================ text splitting + reveals */
 const splitTriggers = [];

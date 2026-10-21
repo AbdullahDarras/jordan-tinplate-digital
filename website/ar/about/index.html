@@ -32,7 +32,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=DM+Sans:wght@400;500;600&family=Readex+Pro:wght@300..700&display=swap">
-<link rel="stylesheet" href="/assets/css/site.css?v=f9e61bff">
+<link rel="stylesheet" href="/assets/css/site.css?v=9eca2859">
 
 <script type="importmap">{"imports":{"three":"/assets/vendor/three/three.module.min.js","three/addons/":"/assets/vendor/three/addons/"}}</script>
 <script type="application/ld+json">{
@@ -130,7 +130,7 @@
 <a class="skip" href="#main">انتقل إلى المحتوى الرئيسي</a>
 <header class="nav" id="nav">
   <a class="brand" href="/ar/" aria-label="الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية، الصفحة الرئيسية"><svg class="logo" viewBox="0 0 1016.89 275.9" aria-hidden="true" focusable="false"><use class="logo__gear" href="#lg-gear"/><use href="#lg-word"/></svg></a>
-  <nav class="nav__links" aria-label="القائمة الرئيسية"><a href="/ar/products/">المنتجات</a><a href="/ar/capabilities/">قدراتنا</a><a href="/ar/about/" aria-current="page">من نحن</a><a href="/ar/news/">الأخبار</a><a href="/ar/contact/">تواصل معنا</a></nav>
+  <nav class="nav__links" aria-label="القائمة الرئيسية"><a href="/ar/products/">المنتجات</a><a href="/ar/capabilities/">قدراتنا</a><a href="/ar/about/" aria-current="page">من نحن</a><a href="/ar/gallery/">المعرض</a><a href="/ar/news/">الأخبار</a><a href="/ar/contact/">تواصل معنا</a></nav>
   <div class="nav__tools">
     <a class="tool tool--lang" id="langBtn" href="/en/about/" hreflang="en" lang="en" aria-label="Switch to English" data-lang-switch>English</a>
     <button class="tool" id="themeBtn" type="button" aria-label="التبديل بين الوضع الفاتح والداكن" aria-pressed="false">
@@ -145,6 +145,7 @@
   <a href="/ar/products/">المنتجات</a>
   <a href="/ar/capabilities/">قدراتنا</a>
   <a href="/ar/about/" aria-current="page">من نحن</a>
+  <a href="/ar/gallery/">المعرض</a>
   <a href="/ar/news/">الأخبار</a>
   <a href="/ar/contact/">تواصل معنا</a>
   <a href="https://jc-order.netlify.app/" target="_blank" rel="noopener">اطلب عرض سعر<span class="vh"> (يُفتح في تبويب جديد)</span></a>
@@ -165,6 +166,21 @@
   </div>
   
 </section>
+<section class="featured" id="video" aria-labelledby="video-h">
+  <div class="wrap">
+    <header class="sec-head"><p class="eyebrow"><span class="dot"></span>فيديو</p><h2 class="h2" data-split id="video-h">فيديو المصنع</h2></header>
+    <div class="vcard" data-reveal>
+      <div class="vid" data-vid="xozO8TLl6T8" data-title="فيديو المصنع 1">
+      <a class="vid__play" href="https://www.youtube.com/watch?v=xozO8TLl6T8" target="_blank" rel="noopener noreferrer" aria-label="تشغيل الفيديو: فيديو المصنع 1">
+        <svg class="vid__gear" viewBox="0 0 274 275.9" aria-hidden="true" focusable="false"><use href="#lg-gear"/></svg>
+        <img class="vid__poster" src="https://i.ytimg.com/vi/xozO8TLl6T8/hqdefault.jpg" alt="" width="480" height="360" loading="lazy" decoding="async" referrerpolicy="no-referrer">
+        <span class="vid__btn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8.5 5.2v13.6a.6.6 0 0 0 .9.5l11-6.8a.6.6 0 0 0 0-1L9.4 4.7a.6.6 0 0 0-.9.5z"/></svg></span>
+      </a>
+    </div>
+      <div class="vcard__cap"><a class="go go--sm" href="https://www.youtube.com/watch?v=xozO8TLl6T8" target="_blank" rel="noopener noreferrer">شاهد على يوتيوب<svg class="ext" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg><span class="vh"> (يُفتح في تبويب جديد)</span></a><a class="go" href="/ar/gallery/">المزيد في المعرض<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div>
+    </div>
+  </div>
+</section>
 <section class="story" id="story" aria-labelledby="story-h">
   <div class="wrap">
     <header class="sec-head"><p class="eyebrow"><span class="dot"></span>قصتنا</p><h2 class="h2" data-split id="story-h">مصنع نما مع عملائه</h2></header>
@@ -180,34 +196,38 @@
   </div>
   
 </section>
-<section class="quality" id="quality" aria-labelledby="quality-h">
+<section class="certs" id="certifications" aria-labelledby="certifications-h">
   <div class="wrap">
-    <header class="sec-head"><p class="eyebrow"><span class="dot"></span>الجودة والاعتمادات</p><h2 class="h2" data-split id="quality-h">سلامة غذاء يمكنك عرضها على أي مدقّق.</h2><p class="lead" data-reveal>نظام سلامة الغذاء لدينا حاصل على شهادة FSSC 22000 من Bureau Veritas (معتمدة من UKAS).</p></header>
-    <div class="quality__grid">
-      <article class="card tilt" data-reveal>
-        <span class="card__idx">01</span>
-        <h3>FSSC 22000</h3>
-        <p>من Bureau Veritas (معتمدة من UKAS) لنطاق: الطلاء والطباعة والقص والتشكيل واللحام والإغلاق لعلب معدنية مخصصة لتغليف الأغذية. رقم الشهادة JO000011/1، سارية حتى 26 نيسان 2029.</p>
-        <dl class="qlist"><div><dt>الجهة المانحة</dt><dd>Bureau Veritas (معتمدة من UKAS)</dd></div><div><dt>النطاق</dt><dd>الطلاء والطباعة والقص والتشكيل واللحام والإغلاق لعلب معدنية مخصصة لتغليف الأغذية</dd></div><div><dt>رقم الشهادة</dt><dd><bdi dir="ltr">JO000011/1</bdi></dd></div><div><dt>سارية حتى</dt><dd>26 نيسان 2029</dd></div></dl>
-      </article>
-      <article class="card tilt" data-reveal>
-        <span class="card__idx">02</span>
-        <h3>اعتماد JFDA للمواد الملامسة للأغذية</h3>
-        <p>منتجاتنا (العبوات المعدنية وأغطيتها) معتمدة من المؤسسة العامة للغذاء والدواء الأردنية كمواد ملامسة للأغذية.</p>
-      </article>
-    </div>
-  </div>
-</section>
-<section class="sec" id="s3" aria-labelledby="s3-h">
-  <div class="wrap stack">
-    <header class="sec-head"><p class="eyebrow"><span class="dot"></span>ما نقدّمه</p><h2 class="h2" data-split id="s3-h">من التصميم إلى عبوات جاهزة للتصدير</h2></header>
-    <div class="prose" data-reveal><p>نصنع علب الصفيح للأغذية والمشروبات، ونتولى الرحلة كاملة من التصميم حتى العبوة الجاهزة للتصدير.</p></div>
-<p data-reveal><a class="go" href="/ar/capabilities/">قدراتنا<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></p>
+    <header class="sec-head"><h2 class="h2" data-split id="certifications-h">الاعتمادات</h2></header>
+    <ul class="certs__grid" data-reveal><li class="cert" style="--rest:-1deg">
+        <figure>
+          <a class="cert__open tilt" href="/assets/img/certs/fssc-22000.jpg" target="_blank" rel="noopener" data-lightbox="certs" aria-label="عرض أكبر: شهادة FSSC 22000 من Bureau Veritas">
+            <picture><source type="image/webp" srcset="/assets/img/certs/fssc-22000.webp"><img src="/assets/img/certs/fssc-22000.jpg" width="1075" height="1521" alt="شهادة FSSC 22000 من Bureau Veritas" loading="lazy" decoding="async"></picture>
+            <span class="cert__zoom" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6"/><path d="M15 15l5 5M10.5 8v5M8 10.5h5"/></svg></span>
+          </a>
+          <figcaption><b>FSSC 22000</b><span>Bureau Veritas</span></figcaption>
+        </figure>
+      </li><li class="cert" style="--rest:1deg">
+        <figure>
+          <a class="cert__open tilt" href="/assets/img/certs/jfda-food-contact.jpg" target="_blank" rel="noopener" data-lightbox="certs" aria-label="عرض أكبر: شهادة اعتماد مواد ملامسة للأغذية من المؤسسة العامة للغذاء والدواء (JFDA)">
+            <picture><source type="image/webp" srcset="/assets/img/certs/jfda-food-contact.webp"><img src="/assets/img/certs/jfda-food-contact.jpg" width="1105" height="1430" alt="شهادة اعتماد مواد ملامسة للأغذية من المؤسسة العامة للغذاء والدواء (JFDA)" loading="lazy" decoding="async"></picture>
+            <span class="cert__zoom" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6"/><path d="M15 15l5 5M10.5 8v5M8 10.5h5"/></svg></span>
+          </a>
+          <figcaption><b>اعتماد مواد ملامسة للأغذية — المؤسسة العامة للغذاء والدواء (JFDA)</b></figcaption>
+        </figure>
+      </li></ul>
   </div>
 </section>
 <section class="sec" id="s4" aria-labelledby="s4-h">
   <div class="wrap stack">
-    <header class="sec-head"><p class="eyebrow"><span class="dot"></span>بيانات الشركة</p><h2 class="h2" data-split id="s4-h">من نحن</h2></header>
+    <header class="sec-head"><p class="eyebrow"><span class="dot"></span>ما نقدّمه</p><h2 class="h2" data-split id="s4-h">من التصميم إلى عبوات جاهزة للتصدير</h2></header>
+    <div class="prose" data-reveal><p>نصنع علب الصفيح للأغذية والمشروبات، ونتولى الرحلة كاملة من التصميم حتى العبوة الجاهزة للتصدير.</p></div>
+<p data-reveal><a class="go" href="/ar/capabilities/">قدراتنا<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></p>
+  </div>
+</section>
+<section class="sec" id="s5" aria-labelledby="s5-h">
+  <div class="wrap stack">
+    <header class="sec-head"><p class="eyebrow"><span class="dot"></span>بيانات الشركة</p><h2 class="h2" data-split id="s5-h">من نحن</h2></header>
     <dl class="specs" data-reveal><div class="specrow specrow--noart"><dt>الاسم الرسمي بالإنجليزية</dt><dd><span class="spec__v">Jordan Tinplate Canning</span></dd></div><div class="specrow specrow--noart"><dt>الاسم الرسمي بالعربية</dt><dd><span class="spec__v">الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية</span></dd></div><div class="specrow specrow--noart"><dt>الموقع</dt><dd><span class="spec__v">الزميلات – الموقّر، عمّان، الأردن</span></dd></div><div class="specrow specrow--noart"><dt>الفريق</dt><dd><span class="spec__v">نحو 250 موظفاً</span></dd></div></dl>
   </div>
 </section>
@@ -238,10 +258,9 @@
       <div>
         <a class="brand" href="/ar/" aria-label="الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية، الصفحة الرئيسية"><svg class="logo" viewBox="0 0 1016.89 275.9" aria-hidden="true" focusable="false"><use class="logo__gear" href="#lg-gear"/><use href="#lg-word"/></svg></a>
         <p>علب معدنية مخصّصة لعلامات الأغذية والمشروبات. صناعة أردنية منذ عام 1998.</p>
-        <p class="foot__cert">حاصلون على FSSC 22000 (Bureau Veritas، معتمدة من UKAS). ومنتجاتنا معتمدة من JFDA كمواد ملامسة للأغذية.</p>
       </div>
       <nav aria-label="القطاعات"><h2>القطاعات</h2><ul><li><a href="/ar/products/olive-oil/">زيت الزيتون</a></li><li><a href="/ar/products/milk-powder-dairy/">حليب البودرة والألبان</a></li><li><a href="/ar/products/sweets-kaak-chocolate/">الحلويات والكعك والشوكولاتة</a></li><li><a href="/ar/products/white-cheese/">الجبنة البيضاء</a></li><li><a href="/ar/products/coffee-tea/">القهوة والشاي</a></li><li><a href="/ar/products/industrial/">الصناعي</a></li></ul></nav>
-      <nav aria-label="الشركة"><h2>الشركة</h2><ul><li><a href="/ar/products/">المنتجات</a></li><li><a href="/ar/capabilities/">قدراتنا</a></li><li><a href="/ar/about/">من نحن</a></li><li><a href="/ar/news/">الأخبار</a></li><li><a href="/ar/contact/">تواصل معنا</a></li></ul></nav>
+      <nav aria-label="الشركة"><h2>الشركة</h2><ul><li><a href="/ar/products/">المنتجات</a></li><li><a href="/ar/capabilities/">قدراتنا</a></li><li><a href="/ar/about/">من نحن</a></li><li><a href="/ar/gallery/">المعرض</a></li><li><a href="/ar/news/">الأخبار</a></li><li><a href="/ar/contact/">تواصل معنا</a></li></ul></nav>
     </div>
     <div class="foot__base">
       <span class="foot__c">© <bdi>2026</bdi> <bdi>الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية</bdi>. جميع الحقوق محفوظة.</span>
@@ -249,12 +268,18 @@
     </div>
   </div>
 </footer>
+<dialog class="lb" id="lightbox" aria-label="عارض الصور">
+  <button class="lb__x" type="button" aria-label="إغلاق"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+  <button class="lb__nav lb__prev" type="button" aria-label="الصورة السابقة" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+  <div class="lb__stage"></div>
+  <button class="lb__nav lb__next" type="button" aria-label="الصورة التالية" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+</dialog>
 <script type="application/json" id="jt-data">{"lang":"ar","ld":["التصميم والألواح","الطباعة والطلاء","القص والتشكيل","الإحكام والشحن"],"cursor":"اسحب","loading":"جارٍ التحميل","ready":"الصفحة جاهزة","home":false}</script>
-<script src="/assets/js/site.js?v=89a45212" defer></script>
+<script src="/assets/js/site.js?v=e3697347" defer></script>
 <script src="/assets/vendor/gsap/gsap.min.js" defer></script>
 <script src="/assets/vendor/gsap/ScrollTrigger.min.js" defer></script>
 <script src="/assets/vendor/lenis/lenis.min.js" defer></script>
-<script type="module" src="/assets/js/engine/main.js?v=e44a630a"></script>
+<script type="module" src="/assets/js/engine/main.js?v=e6f798f7"></script>
 <script>
   // Last-resort guard: if the engine never starts (blocked, old browser) the page must not stay covered or scroll-locked.
   setTimeout(function () {

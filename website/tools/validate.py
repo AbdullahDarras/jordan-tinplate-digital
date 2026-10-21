@@ -2,7 +2,8 @@
 """Validate the generated site: well-formed HTML, internal links/anchors, hreflang reciprocity,
 canonical, unique title/description, JSON-LD, sitemap, the creative-experience contract (shared chrome, 3D stages with
 fallbacks, entrance only on the home pages, self-hosted libraries, no external JavaScript) and the approved decisions
-(names, order-tool links, no certification named, no Saudi branch, olive-oil sizes), the final logo, the PANTONE 294 C palette
+(names, order-tool links, certificates shown only as image + name, no Saudi branch, olive-oil sizes), the gallery (click-to-load video facades,
+photo grid only when photos exist, nav / sitemap / hreflang wiring, image files and dimensions), the final logo, the PANTONE 294 C palette
 (WCAG contrast of the tokens) and that nothing "to be confirmed" is visible while SHOW_PENDING is false (see website/PENDING.md).
 Usage: python3 -I website/tools/validate.py"""
 import json, re, sys
@@ -169,7 +170,39 @@ for imp in re.findall(r"""from\s+['"](\.[^'"]+)['"]""", (ROOT / "assets/js/engin
 
 # ---- creative-experience contract + approved decisions, per page
 NAME_AR = "الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية"
-FORBIDDEN = ["ISO 9001", "ISO 22000", "HACCP", "BRC", "UKAS-accredited logo", "31 December 2026", "2026-12-31", "31/12/2026", "Saudi branch", "branch in Saudi", "فرع في السعودية", "فرع السعودية", "مصنع الأردنية", "JORDAN CANNING</"]
+def image_size(path):
+    """(width, height) of a JPEG or WebP file read from its header (stdlib only)"""
+    b = path.read_bytes()
+    if b[:2] == b"\xff\xd8":
+        i = 2
+        while i < len(b):
+            if b[i] != 0xFF: i += 1; continue
+            mk = b[i + 1]
+            if mk in (0xD8, 0x01) or 0xD0 <= mk <= 0xD7: i += 2; continue
+            ln = int.from_bytes(b[i + 2:i + 4], "big")
+            if 0xC0 <= mk <= 0xCF and mk not in (0xC4, 0xC8, 0xCC): return int.from_bytes(b[i + 7:i + 9], "big"), int.from_bytes(b[i + 5:i + 7], "big")
+            i += 2 + ln
+    if b[:4] == b"RIFF" and b[8:12] == b"WEBP":
+        k = b[12:16]
+        if k == b"VP8X": return int.from_bytes(b[24:27], "little") + 1, int.from_bytes(b[27:30], "little") + 1
+        if k == b"VP8 ": return int.from_bytes(b[26:28], "little") & 0x3FFF, int.from_bytes(b[28:30], "little") & 0x3FFF
+        if k == b"VP8L": v = int.from_bytes(b[21:25], "little"); return (v & 0x3FFF) + 1, ((v >> 14) & 0x3FFF) + 1
+    return None
+IMG_SIZES = {}
+for base in ("fssc-22000", "jfda-food-contact"):
+    sizes = {ext: image_size(ROOT / f"assets/img/certs/{base}.{ext}") if (ROOT / f"assets/img/certs/{base}.{ext}").exists() else None for ext in ("jpg", "webp")}
+    if None in sizes.values() or sizes["jpg"] != sizes["webp"]: err(f"certificate image {base}: missing file or jpg/webp sizes differ {sizes}")
+    IMG_SIZES[base] = sizes["jpg"]
+MAIN_VIDEO = (re.search(r"mainVideoId:\s*'([\w-]{11})'", CONTENT) or [None, ""])[1]
+VIDEO_IDS = re.findall(r"\{ id: '([\w-]{11})', label: t\(", CONTENT)
+if not MAIN_VIDEO or MAIN_VIDEO not in VIDEO_IDS: err("SITE.mainVideoId must be one of the VIDEOS ids")
+if sorted(VIDEO_IDS) != ["CQW1UaWpC2k", "xozO8TLl6T8"]: err(f"VIDEOS ids are {VIDEO_IDS}")
+SITE_FB = (re.search(r"Facebook: '([^']+)'", CONTENT) or [None, ""])[1]
+PHOTO_ENTRIES = len(re.findall(r"alt_en:", (re.search(r"export const PHOTOS = \[(.*?)\n?\];", CONTENT, re.S) or [None, ""])[1]))
+for pm in re.finditer(r"\{[^{}]*src:\s*'([^']+)'[^{}]*\}", (re.search(r"export const PHOTOS = \[(.*?)\n?\];", CONTENT, re.S) or [None, ""])[1]):
+    if not (ROOT / pm.group(1).lstrip("/")).exists(): err(f"PHOTOS: file {pm.group(1)} does not exist")
+    if "alt_en" not in pm.group(0) or "alt_ar" not in pm.group(0): err(f"PHOTOS: {pm.group(1)} lacks alt_en / alt_ar")
+FORBIDDEN = ["ISO 9001", "ISO 22000", "HACCP", "BRC", "UKAS", "JO000011", "COID", "2029", "31 December 2026", "2026-12-31", "31/12/2026", "Saudi branch", "branch in Saudi", "فرع في السعودية", "فرع السعودية", "مصنع الأردنية", "JORDAN CANNING</"]
 for f in site_pages:
     p = parsed[f]; n = p.name; src = f.read_text(encoding="utf-8")
     lang = f.parts[len(ROOT.parts)]
@@ -210,13 +243,64 @@ for f in site_pages:
     for bad in FORBIDDEN:
         if bad in src: err(f"{n}: forbidden text {bad!r}")
     if re.search(r"(?<!J)FDA", visible.replace("JFDA", "")) or "warranty" in visible.lower(): err(f"{n}: FDA claim / warranty text")
-    if "<img" in src: err(f"{n}: images/logos are not used yet (text only)")
-    if is_home or url_of[f].endswith("/about/"):
-        need = ("FSSC 22000", "JO000011/1", "UKAS", "Bureau Veritas") ; need_ar = ("FSSC 22000", "JO000011/1", "26 نيسان 2029", "UKAS", "JFDA")
-        for w in (need_ar if lang == "ar" else need + ("26 April 2029", "JFDA")):
-            if w not in visible: err(f"{n}: quality section lacks {w!r}")
-        if 'class="quality"' not in src: err(f"{n}: quality section missing")
-    if "FSSC 22000" not in visible.replace("\n", " ") or "JFDA" not in src: err(f"{n}: footer/certification line missing")
+    # certifications: a heading and two cards (certificate image + name only). No table, list of facts, number, date or scope text.
+    m = re.search(r'<section class="certs"[^>]*>(.*?)</section>', src, re.S)
+    if not m:
+        if is_home or url_of[f].endswith("/about/"): err(f"{n}: certifications section missing")
+    else:
+        cs = m.group(1)
+        if len(re.findall(r'<li class="cert"', cs)) != 2: err(f"{n}: certifications must be exactly two cards")
+        if len(re.findall(r"<h[1-6]\b", cs)) != 1 or not re.search(r"<h2[^>]*>" + ("الاعتمادات" if lang == "ar" else "Certifications") + "</h2>", cs): err(f"{n}: certifications heading must be the only heading and read Certifications / الاعتمادات")
+        for bad in ("<table", "<tr", "<td", "<th", "<dl", "<dt", "<dd", "qlist", "valid", "Valid", "Scope", "scope", "سارية", "النطاق", "رقم الشهادة"):
+            if bad in cs: err(f"{n}: certifications block contains {bad!r} (image + name only)")
+        if len(re.findall(r"\d", re.sub(r"<[^>]+>", " ", cs).replace("22000", ""))): err(f"{n}: certifications block shows a number or date in its text")
+        names = re.findall(r"<figcaption>(.*?)</figcaption>", cs, re.S)
+        want = (["FSSC 22000", "Bureau Veritas"], ["اعتماد مواد ملامسة للأغذية — المؤسسة العامة للغذاء والدواء (JFDA)"]) if lang == "ar" else (["FSSC 22000", "Bureau Veritas"], ["Food-contact materials approval — JFDA"])
+        if len(names) != 2 or any(w not in names[i] for i, ws in enumerate(want) for w in ws): err(f"{n}: certificate names wrong: {names}")
+        pics = re.findall(r"<picture>(.*?)</picture>", cs, re.S)
+        if len(pics) != 2: err(f"{n}: each certificate needs a <picture>")
+        for pic, base in zip(pics, ("fssc-22000", "jfda-food-contact")):
+            if f"/assets/img/certs/{base}.webp" not in pic or f'src="/assets/img/certs/{base}.jpg"' not in pic: err(f"{n}: <picture> for {base} lacks the webp source / jpg fallback")
+            im = re.search(r"<img\b([^>]*)>", pic)
+            at = dict(re.findall(r'([\w-]+)="([^"]*)"', im.group(1))) if im else {}
+            if not at.get("alt", "").strip(): err(f"{n}: certificate image {base} has no alt text")
+            if at.get("loading") != "lazy": err(f"{n}: certificate image {base} is not lazy-loaded")
+            real = IMG_SIZES.get(base)
+            if not real or (at.get("width"), at.get("height")) != (str(real[0]), str(real[1])): err(f"{n}: certificate image {base} width/height {at.get('width')}x{at.get('height')} != file {real}")
+        if 'id="lightbox"' not in src or src.count('data-lightbox="certs"') != 2: err(f"{n}: certificate lightbox wiring missing")
+    # images on the page: always alt + dimensions or a fixed frame; only the approved sources (no separate FSSC / UKAS / JFDA / Bureau Veritas logo files)
+    for im in re.finditer(r"<img\b([^>]*)>", src):
+        at = dict(re.findall(r'([\w-]+)="([^"]*)"', im.group(1)))
+        if "alt" not in at: err(f"{n}: <img> without alt: {at.get('src')}")
+        sp = at.get("src", "")
+        if not (sp.startswith("/assets/img/certs/") or sp.startswith("/assets/img/gallery/") or re.match(r"https://i\.ytimg\.com/vi/[\w-]{11}/hqdefault\.jpg$", sp)): err(f"{n}: image from an unapproved source {sp}")
+        if sp.startswith("/assets/") and not (ROOT / sp.lstrip("/")).exists(): err(f"{n}: image file missing {sp}")
+        if re.search(r"logo|ukas|fssc-mark|bureau", sp, re.I): err(f"{n}: logo file used as an image: {sp}")
+    # video facades: no iframe or YouTube script is ever in the page (it is created on click); only the youtube-nocookie embed is allowed in script
+    if "<iframe" in src: err(f"{n}: an iframe is in the HTML (videos must be click-to-load facades)")
+    if re.search(r'<script[^>]+src="[^"]*(youtube|ytimg|facebook)', src): err(f"{n}: third-party video script")
+    for vm in re.finditer(r'<div class="vid" data-vid="([^"]*)" data-title="([^"]*)">(.*?)</a>\s*</div>', src, re.S):
+        vid, title, body = vm.groups()
+        if not re.fullmatch(r"[\w-]{11}", vid): err(f"{n}: bad YouTube id {vid!r}")
+        if not title.strip() or 'aria-label="' not in body or f"https://www.youtube.com/watch?v={vid}" not in body: err(f"{n}: video facade {vid} lacks title / aria-label / no-JS link")
+        if 'class="vid__gear"' not in body or 'class="vid__btn"' not in body or f"https://i.ytimg.com/vi/{vid}/hqdefault.jpg" not in body: err(f"{n}: video facade {vid} lacks poster / fallback pieces")
+    # nav wiring of the gallery page: header, mobile menu and footer
+    gl = f"/{lang}/gallery/"
+    if src.count(f'href="{gl}"') < 3: err(f"{n}: gallery link must be in the header nav, the mobile menu and the footer (found {src.count(f'href={chr(34)}{gl}{chr(34)}')})")
+    if 'class="foot__cert"' in src or re.search(r"<footer.*?FSSC", src, re.S): err(f"{n}: the footer must not carry certification text")
+    if is_home and f'href="{gl}"' not in re.search(r'<section class="story".*?</section>', src, re.S).group(0): err(f"{n}: home page has no gallery link in the story section")
+    if url_of[f].endswith("/about/"):
+        am = re.search(r'<section class="featured".*?</section>', src, re.S)
+        if not am or f'data-vid="{MAIN_VIDEO}"' not in am.group(0) or f'href="{gl}"' not in am.group(0): err(f"{n}: About page lacks the featured video (SITE.mainVideoId) with its gallery link")
+        elif src.index('class="featured"') > src.index('class="story"'): err(f"{n}: the featured video must come before the story")
+    if url_of[f].endswith("/gallery/"):
+        for vid_id in VIDEO_IDS:
+            if f'data-vid="{vid_id}"' not in src: err(f"{n}: gallery lacks video {vid_id}")
+        if SITE_FB not in src: err(f"{n}: gallery lacks the Facebook page card")
+        has_sec = 'id="photos"' in src
+        if PHOTO_ENTRIES == 0 and (has_sec or 'class="photos"' in src): err(f"{n}: empty PHOTOS list must render nothing for photos")
+        if PHOTO_ENTRIES and (not has_sec or src.count('data-lightbox="photos"') != PHOTO_ENTRIES): err(f"{n}: photo grid does not match PHOTOS ({PHOTO_ENTRIES})")
+    elif 'class="photos"' in src or 'data-lightbox="photos"' in src: err(f"{n}: photo grid outside the gallery")
     if "@jordantinplate" not in src: err(f"{n}: handle @jordantinplate missing")
     if lang == "ar" and (NAME_AR not in src or p.root_attrs.get("dir") != "rtl"): err(f"{n}: official Arabic name missing")
     if lang == "en" and "Jordan Tinplate Canning" not in src: err(f"{n}: official English name missing")

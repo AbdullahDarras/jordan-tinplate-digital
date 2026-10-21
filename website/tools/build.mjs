@@ -12,7 +12,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import { fileURLToPath } from 'node:url';
-import { SITE, LANGS, UI, PAGES as ALL_PAGES, NEWS, NAV, MARQUEE, FINISH_LAB, SHAPES_LAB, RANGE, IND_LIST, SEASONS, STORY, STEPS, PROOF_TBC, QUALITY, SHOW_PENDING } from './content.mjs';
+import { SITE, LANGS, UI, PAGES as ALL_PAGES, NEWS, NAV, MARQUEE, FINISH_LAB, SHAPES_LAB, RANGE, IND_LIST, SEASONS, STORY, STEPS, PROOF_TBC, CERTS, VIDEOS, PHOTOS, GALLERY, SHOW_PENDING } from './content.mjs';
 import { logoSprite, logoSvg } from './logo.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -61,6 +61,8 @@ const GRADIENT_DEFS = `<svg width="0" height="0" style="position:absolute" aria-
 const ARROW = `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>`;
 const DOWN = `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11M7 11l5 5 5-5M5 20h14"/></svg>`;
 const EXT = `<svg class="ext" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg>`;
+const PLAY = `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8.5 5.2v13.6a.6.6 0 0 0 .9.5l11-6.8a.6.6 0 0 0 0-1L9.4 4.7a.6.6 0 0 0-.9.5z"/></svg>`;
+const ZOOM = `<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6"/><path d="M15 15l5 5M10.5 8v5M8 10.5h5"/></svg>`;
 const SKIPI = `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5l8 7-8 7M14 5l8 7-8 7"/></svg>`;
 // The brand mark is the factory's final vector logo (gear + wordmark + Arabic line), drawn once per page in a hidden sprite (#lg-gear, #lg-word)
 // and referenced with <use>, so it takes the CSS colour: Pantone navy in light mode, white in dark mode and on the navy sections.
@@ -126,7 +128,24 @@ function renderBlock(b, lang, ctx) {
 
 // ---------------------------------------------------------------- creative section kinds (home + shared with inner pages)
 const secHead = (lang, s, def, id) => `<header class="sec-head">${eyebrow(s.eyebrow || def.eyebrow, lang)}<h2 class="h2" data-split id="${id}-h">${T(s.title || def.title, lang)}</h2>${(s.intro || def.intro) ? `<p class="lead" data-reveal>${T(s.intro || def.intro, lang)}</p>` : ''}</header>`;
-const moreLink = (lang, l) => (l ? `<p class="more wrap" data-reveal>${goLink(rel(lang, byId[l.to]), T(l.label, lang))}</p>` : '');
+const moreLink = (lang, l) => { const ls = [].concat(l || []); return ls.length ? `<p class="more more--row wrap" data-reveal>${ls.map((x) => goLink(rel(lang, byId[x.to]), T(x.label, lang))).join('')}</p>` : ''; };
+
+// ---- video facade: a poster and a play button. The YouTube iframe (youtube-nocookie.com) is created by site.js only when the visitor clicks,
+// so no third-party code loads before that click. Without JavaScript the play button is a normal link to YouTube. The poster is the only
+// third-party request (an image); if it fails to load the on-brand fallback (gradient + gear + play icon) stays visible.
+const YT = (id) => `https://www.youtube.com/watch?v=${id}`;
+const ytLink = (lang, id) => `<a class="go go--sm" href="${YT(id)}" target="_blank" rel="noopener noreferrer">${T(UI.watchYoutube, lang)}${EXT}<span class="vh"> (${T(UI.opensNew, lang)})</span></a>`;
+function facade(lang, id, label) {
+  const name = T(label, lang);
+  return `<div class="vid" data-vid="${id}" data-title="${name}">
+      <a class="vid__play" href="${YT(id)}" target="_blank" rel="noopener noreferrer" aria-label="${T(UI.playVideo, lang)}: ${name}">
+        <svg class="vid__gear" viewBox="0 0 274 275.9" aria-hidden="true" focusable="false"><use href="#lg-gear"/></svg>
+        <img class="vid__poster" src="https://i.ytimg.com/vi/${id}/hqdefault.jpg" alt="" width="480" height="360" loading="lazy" decoding="async" referrerpolicy="no-referrer">
+        <span class="vid__btn">${PLAY}</span>
+      </a>
+    </div>`;
+}
+const imgSize = (v) => (v && v.w && v.h ? ` width="${v.w}" height="${v.h}"` : '');
 
 const KINDS = {
   marquee(lang) {
@@ -260,24 +279,70 @@ const KINDS = {
 </section>`;
   },
 
-  quality(lang, s) {
-    const id = s.id || 'quality', Q = QUALITY;
-    return `<section class="quality" id="${id}" aria-labelledby="${id}-h">
+  // Certifications: a heading and two cards, each the certificate image and only its name (no scope, numbers, dates or tables).
+  // The image link opens the lightbox (site.js); without JavaScript it opens the JPEG in a new tab.
+  certs(lang, s) {
+    const id = s.id || 'certifications', C = CERTS;
+    const card = (c, i) => `<li class="cert" style="--rest:${i % 2 ? 1 : -1}deg">
+        <figure>
+          <a class="cert__open tilt" href="${c.file}.jpg" target="_blank" rel="noopener" data-lightbox="certs" aria-label="${T(UI.viewLarger, lang)}: ${T(c.alt, lang)}">
+            <picture><source type="image/webp" srcset="${c.file}.webp"><img src="${c.file}.jpg" width="${c.w}" height="${c.h}" alt="${T(c.alt, lang)}" loading="lazy" decoding="async"></picture>
+            <span class="cert__zoom" aria-hidden="true">${ZOOM}</span>
+          </a>
+          <figcaption><b>${T(c.name, lang)}</b>${c.sub ? `<span>${T(c.sub, lang)}</span>` : ''}</figcaption>
+        </figure>
+      </li>`;
+    return `<section class="certs" id="${id}" aria-labelledby="${id}-h">
   <div class="wrap">
-    ${secHead(lang, s, Q, id)}
-    <div class="quality__grid">
-      <article class="card tilt" data-reveal>
-        <span class="card__idx">01</span>
-        <h3>${T(Q.fssc.h, lang)}</h3>
-        <p>${T(Q.fssc.p, lang)}</p>
-        <dl class="qlist">${Q.fssc.rows.map((r) => `<div><dt>${T(r.k, lang)}</dt><dd>${r.ltr ? `<bdi dir="ltr">${T(r.v, lang)}</bdi>` : T(r.v, lang)}</dd></div>`).join('')}</dl>
-      </article>
-      <article class="card tilt" data-reveal>
-        <span class="card__idx">02</span>
-        <h3>${T(Q.jfda.h, lang)}</h3>
-        <p>${T(Q.jfda.p, lang)}</p>
-      </article>
+    <header class="sec-head"><h2 class="h2" data-split id="${id}-h">${T(C.title, lang)}</h2></header>
+    <ul class="certs__grid" data-reveal>${C.items.map(card).join('')}</ul>
+  </div>
+</section>`;
+  },
+
+  // The About page's featured video (SITE.mainVideoId), same click-to-load facade as the gallery.
+  featuredVideo(lang, s) {
+    const id = s.id || 'video', G = GALLERY.featured;
+    const v = VIDEOS.find((x) => x.id === SITE.mainVideoId);
+    const label = v ? v.label : G.fallback;
+    return `<section class="featured" id="${id}" aria-labelledby="${id}-h">
+  <div class="wrap">
+    <header class="sec-head">${eyebrow(G.eyebrow, lang)}<h2 class="h2" data-split id="${id}-h">${T(G.title, lang)}</h2></header>
+    <div class="vcard" data-reveal>
+      ${facade(lang, SITE.mainVideoId, label)}
+      <div class="vcard__cap">${ytLink(lang, SITE.mainVideoId)}${goLink(rel(lang, byId.gallery), T(UI.moreGallery, lang))}</div>
     </div>
+  </div>
+</section>`;
+  },
+
+  // Gallery: videos (facades + a card to the Facebook page).
+  videos(lang, s) {
+    const id = s.id || 'videos', G = GALLERY;
+    return `<section class="gal" id="${id}" aria-labelledby="${id}-h">
+  <div class="wrap">
+    <header class="sec-head"><h2 class="h2" data-split id="${id}-h">${T(G.videosTitle, lang)}</h2></header>
+    <div class="gal__videos">${VIDEOS.map((v) => `<figure class="vcard" data-reveal>
+      ${facade(lang, v.id, v.label)}
+      <figcaption class="vcard__cap"><b>${T(v.label, lang)}</b>${ytLink(lang, v.id)}</figcaption>
+    </figure>`).join('\n    ')}</div>
+    <div class="fbcard" data-reveal>
+      <div><span class="ncard__tag">${T(G.fb.tag, lang)}</span><h3>${T(G.fb.h, lang)}</h3><p>${T(G.fb.p, lang)}</p></div>
+      <a class="btn btn--ghost magnetic" href="${SITE.social.Facebook}" target="_blank" rel="noopener noreferrer"><span>${T(G.fb.cta, lang)}</span>${EXT}<span class="vh"> (${T(UI.opensNew, lang)})</span></a>
+    </div>
+  </div>
+</section>`;
+  },
+
+  // Gallery: photos. Rendered ONLY when PHOTOS (content.mjs) has entries: an empty list leaves no section and no placeholder.
+  photos(lang, s) {
+    if (!PHOTOS.length) return '';
+    const id = s.id || 'photos';
+    const alt = (p) => esc(lang === 'ar' ? p.alt_ar : p.alt_en);
+    return `<section class="gal" id="${id}" aria-labelledby="${id}-h">
+  <div class="wrap">
+    <header class="sec-head"><h2 class="h2" data-split id="${id}-h">${T(GALLERY.photosTitle, lang)}</h2></header>
+    <ul class="photos" data-reveal>${PHOTOS.map((p) => `<li><a class="photo__open" href="${esc(p.src)}" target="_blank" rel="noopener" data-lightbox="photos" aria-label="${T(UI.viewLarger, lang)}: ${alt(p)}"><img src="${esc(p.src)}" alt="${alt(p)}"${imgSize(p)} loading="lazy" decoding="async"></a></li>`).join('')}</ul>
   </div>
 </section>`;
   },
@@ -368,6 +433,16 @@ function header(lang, page) {
 </div>`;
 }
 
+// One lightbox per page that has an image to enlarge (certificates, photos). site.js drives it; it stays closed (and invisible) without JavaScript.
+const LB_CLOSE = `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>`;
+const lightbox = (lang) => `<dialog class="lb" id="lightbox" aria-label="${T(UI.lbLabel, lang)}">
+  <button class="lb__x" type="button" aria-label="${T(UI.lbClose, lang)}">${LB_CLOSE}</button>
+  <button class="lb__nav lb__prev" type="button" aria-label="${T(UI.lbPrev, lang)}" hidden>${ARROW}</button>
+  <div class="lb__stage"></div>
+  <button class="lb__nav lb__next" type="button" aria-label="${T(UI.lbNext, lang)}" hidden>${ARROW}</button>
+</dialog>`;
+const needsLightbox = (page) => page.sections.some((s) => s.kind === 'certs' || (s.kind === 'photos' && PHOTOS.length));
+
 function contactSection(lang, page) {
   const onContact = page.id === 'contact';
   return `<section class="contact" id="contact"${onContact ? '' : ' aria-labelledby="contact-h"'}>
@@ -394,14 +469,13 @@ function contactSection(lang, page) {
 
 function footer(lang) {
   const inds = PAGES.filter((p) => p.id.startsWith('ind-'));
-  const co = ['products', 'capabilities', 'about', 'news', 'contact'].map((id) => byId[id]);
+  const co = ['products', 'capabilities', 'about', 'gallery', 'news', 'contact'].map((id) => byId[id]);
   return `<footer class="foot">
   <div class="wrap">
     <div class="foot__grid">
       <div>
         <a class="brand" href="${rel(lang, byId.home)}" aria-label="${T(UI.brandAria, lang)}">${MARK}</a>
         <p>${T(UI.footBlurb, lang)}</p>
-        <p class="foot__cert">${T(UI.footCert, lang)}</p>
       </div>
       <nav aria-label="${T(UI.footIndustries, lang)}"><h2>${T(UI.footIndustries, lang)}</h2><ul>${inds.map((p) => `<li><a href="${rel(lang, p)}">${T(p.tile.h, lang)}</a></li>`).join('')}</ul></nav>
       <nav aria-label="${T(UI.footCompany, lang)}"><h2>${T(UI.footCompany, lang)}</h2><ul>${co.map((p) => `<li><a href="${rel(lang, p)}">${T(p.crumb, lang)}</a></li>`).join('')}</ul></nav>
@@ -546,6 +620,7 @@ ${sections(lang, page)}
 ${contactSection(lang, page)}
 </main>
 ${footer(lang)}
+${needsLightbox(page) ? lightbox(lang) : ''}
 <script type="application/json" id="jt-data">${JSON.stringify(data).replace(/</g, '\\u003c')}</script>
 <script src="/assets/js/site.js?v=${V.js}" defer></script>
 <script src="/assets/vendor/gsap/gsap.min.js" defer></script>
