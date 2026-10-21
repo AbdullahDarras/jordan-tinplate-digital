@@ -43,7 +43,9 @@ Status: round 5 (2026-10-21). Source of truth: [docs/decisions.md](../docs/decis
 | `--navy-900` | `#00193b` | dark-mode secondary background, entrance edge |
 | `--navy-950` | `#00132d` | light-mode text, dark-mode background |
 | `--accent` / `--accent-text` | `#d98b14` / `#865000` (light), `#f4b34c` (dark) | buttons and highlights (unchanged amber) |
-| champagne gold | `#fffaE6 · #f7e0a0 · #d9b560 · #a07a30` | foil on the premium tin (not a UI colour) |
+| champagne gold | `#fffbe8 · #ffe9a6 · #ecc25a · #b4852c` | foil on the premium tin (not a UI colour) |
+
+**Tin palette (3D tins, round 7: bright and festive).** The default tin's lacquer is a *lit* royal blue made from PANTONE 294 C: `#2a6fdc` (top) to `#0848ac` (body), with **`#002F6C` only as the deepest shade** at the foot of the tin and in shadows. Colourways of the premium tin: royal blue `#2a6fdc / #0848ac` with champagne gold; pearl / ivory `#fffbee / #eddcb6` with a **navy** logo (`#5d97ea · #2a68c4 · #0a4496 · #002F6C`) and deeper gold rules (`#f6df95 · #dcaa3c · #b8862a · #8a5f14`); turquoise `#1cc7bb / #078a92` with gold; coral `#ff7b66 / #dc4264` with rose-gold foil (`#fffaf3 · #ffe3d2 · #f2b8a2 · #c27a6c`). Industry tins keep their themed colourways, brightened: olive-oil emerald `#5aa548 / #1d6b35`, Eid royal blue `#2f78e0 / #0a4496` with gold stars, white cheese and milk white with royal blue, coffee caramel `#9a5c34 / #53301a`, industrial light grey `#eef2f8 / #b4bfce` with orange. These are artwork colours on the 3D tins, not UI tokens, and printed tins use the Pantone swatch.
 
 - **The Pantone-to-screen conversion is approximate.** `#002F6C` is the usual sRGB value for 294 C, but different screens, browsers and colour profiles show it slightly differently.
 - **Anything printed (packaging samples, brochures, signage, stationery) must use the physical Pantone 294 C swatch, never the hex value.** Ask the printer for a Pantone proof.
