@@ -10,7 +10,7 @@
 | **Format** | Text post + 1 image (4:5, 1080x1350 px) |
 | **Status** | Copy updated with management's approved decisions (`docs/decisions.md`). Design not started. Needs final text sign-off; the company-page update must happen first (see checklist) |
 
-> Convention: `[TBC]` / `[تحقق]` marks anything not confirmed. Nothing in this post uses an unconfirmed claim; the only open points are the final sign-off and the page set-up. The **official Arabic name «الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية»** is confirmed (round 2, 2026-10-20) and is used in all Arabic copy; the English name stays **Jordan Tinplate Canning**.
+> Convention: `[TBC]` / `[تحقق]` marks anything not confirmed. Nothing in this post uses an unconfirmed claim; the only open points are the final sign-off and the page set-up. The **official Arabic name «الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية»** is confirmed (round 3, 2026-10-21; it supersedes the round-2 wording) and is used in all Arabic copy; the English name stays **Jordan Tinplate Canning**.
 
 ---
 
@@ -41,17 +41,17 @@ jordantinplate.com
 
 Over the next weeks we will share how a flat sheet of tinplate becomes a can, how finishes work, and what to look for when choosing metal packaging. Follow the page to see it.
 
-الملخص بالعربية: الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية متخصص في التغليف المعدني لعلامات الأغذية والمشروبات منذ عام 1998، في الزميلات – الموقّر، يعمل فيه نحو 250 موظفاً ويديره اليوم الجيل الثالث من العائلة المؤسِّسة. نقدّم الرحلة كاملة في مكان واحد، من التصميم وألواح الطباعة (CTP) إلى الطباعة والطلاء والتشكيل والتغليف الجاهز للتصدير، مع إمكانية تخزين المنتج الجاهز. للتواصل: sales@jordantinplate.com
+الملخص بالعربية: الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية متخصصة في التغليف المعدني لعلامات الأغذية والمشروبات منذ عام 1998، في الزميلات – الموقّر، يعمل فيها نحو 250 موظفاً ويديرها اليوم الجيل الثالث من العائلة المؤسِّسة. نقدّم الرحلة كاملة في مكان واحد، من التصميم وألواح الطباعة (CTP) إلى الطباعة والطلاء والتشكيل والتغليف الجاهز للتصدير، مع إمكانية تخزين المنتج الجاهز. للتواصل: sales@jordantinplate.com
 
 #MetalPackaging #FoodAndBeverage #MadeInJordan #JordanTinplateCanning #تغليف_معدني
 ```
 
 ## 2) Final copy: Arabic (summary, also usable as the Arabic page About or a standalone Arabic post)
 
-**الاسم العربي الرسمي:** «الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية» (معتمد). يُكتب كاملاً في النصوص العربية، ويبقى الاسم الإنجليزي Jordan Tinplate Canning في النصوص الإنجليزية.
+**الاسم العربي الرسمي:** «الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية» (معتمد في الجولة الثالثة). يُكتب كاملاً في النصوص العربية، ويبقى الاسم الإنجليزي Jordan Tinplate Canning في النصوص الإنجليزية.
 
 ```
-الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية متخصص في التغليف المعدني لعلامات الأغذية والمشروبات، بدأت قصته عام 1998، ويعمل فيه اليوم نحو 250 موظفاً من مقرنا في الزميلات – الموقّر، ويديره الجيل الثالث من العائلة المؤسِّسة.
+الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية متخصصة في التغليف المعدني لعلامات الأغذية والمشروبات، بدأت قصتها عام 1998، ويعمل فيها اليوم نحو 250 موظفاً من مقرنا في الزميلات – الموقّر، ويقودها الجيل الثالث من العائلة المؤسِّسة.
 
 نقدّم الرحلة كاملة في مكان واحد:
 - التصميم والعمل الفني
@@ -88,12 +88,12 @@ sales@jordantinplate.com
 
 | Element | Direction |
 |---|---|
-| Hero | A tidy group of 3 to 5 tins in different shapes (round, square, rectangular), on a clean ground. Use stills from the professional videos or real product photos if available (video delivery is pending); otherwise the 3D sample render of tins (the website prototype's sample artwork). Sample artwork must carry no real client brand |
+| Hero | A tidy group of 3 to 5 tins in different shapes (round, square, rectangular), on a clean ground. Use stills from the professional videos or real product photos if available (clips still to be selected from the received video links); otherwise the 3D sample render of tins (the website prototype's sample artwork). Sample artwork must carry no real client brand |
 | Headline (EN) | **Made in Jordan since 1998** |
 | Sub-line (EN) | Metal packaging for food & beverage brands |
 | Headline (AR) | **صُنع في الأردن منذ 1998** (smaller, under the English, or mirrored on the right) |
 | Sub-line (AR) | تغليف معدني لعلامات الأغذية والمشروبات |
-| Footer | Wordmark "Jordan Tinplate Canning" (temporary until the final logo and Pantone arrive) + `jordantinplate.com` |
+| Footer | Wordmark "Jordan Tinplate Canning" (temporary until the final vector logo arrives; colour PANTONE 294 C, about `#002F6C`) + `jordantinplate.com` |
 | Do not add | Certification badges, capacity numbers, client logos, any Saudi reference (there is no Saudi branch or office), a map with markets |
 
 **Optional variant (if design time allows):** 5-page PDF document post: (1) cover "Meet Jordan Tinplate Canning", (2) 1998 + third generation + a team of about 250, (3) the 6 services, (4) what we make, (5) contact. Same words as above. Do not add new claims.
@@ -114,7 +114,7 @@ sales@jordantinplate.com
 ## 8) Needs confirmation (checklist)
 
 **Resolved (management decisions, `docs/decisions.md`):**
-- [x] Official brand name **Jordan Tinplate Canning**, written in full; official Arabic name «الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية» (confirmed, round 2)
+- [x] Official brand name **Jordan Tinplate Canning**, written in full; official Arabic name «الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية» (confirmed, round 3)
 - [x] Address: Al-Zmailat – Al-Muwaqqar (not Sahab); about 250 employees
 - [x] Olive-oil tins in 1, 4, 8 and 16 L/kg may be named publicly
 - [x] Bio/About approved provisionally; account access with the marketing lead (2FA on)
@@ -124,6 +124,6 @@ sales@jordantinplate.com
 - [ ] **Wording of the family story** ("third generation"; 1998 is confirmed)
 - [ ] **Storage of finished goods:** confirm it is offered as a standard service (taken from the site/draft About; wording is "when customers need it")
 - [ ] LinkedIn page updated first: name, tagline, About, address, website link to homepage, logo, cover
-- [ ] Image: stills from the professional videos or real photos (video delivery pending); permission for any product shown
-- [ ] **Deliberately NOT in this post:** any certification (they exist, but none may be named until copies arrive), production capacity, client names, any Saudi reference (no Saudi branch or office exists), export markets by name (Gulf, Iraq), "fully automatic lines", the full street address (pending)
+- [ ] Image: stills from the received videos (links; clips to be selected) or real photos; permission for any product shown
+- [ ] **Deliberately NOT in this post:** any certification (they exist, but none may be named until copies arrive), production capacity, client names, any Saudi reference (no Saudi branch or office exists), export markets by name (Gulf, Iraq), "fully automatic lines"
 - [ ] Optional line if management approves naming markets: "We serve brands in the Gulf and Iraq." [TBC] (not in the copy above)

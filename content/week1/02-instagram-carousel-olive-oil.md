@@ -10,7 +10,7 @@
 | **Status** | Copy updated with management's approved decisions. **Slides 2 to 4 (light, toughness, stacking) still need technical review** (Month-1 plan: posts 2, 3, 7). Slide 6 (sizes, interior lacquer) is confirmed. Design can start now on slides 1, 5, 6 |
 
 > Convention: `[TBC]` / `[تحقق]` marks a technical statement not yet confirmed. **Now confirmed by management (`docs/decisions.md`) and stated without a marker:** the company makes olive-oil tins in 1, 4, 8 and 16 L/kg, and the interior lacquer meets the highest food-grade hygiene standards (no standard is named; do not name one). **Still marked:** the light, toughness and pallet-stacking sentences (slides 2 to 4). The copy makes **no** claim about shelf life, oil quality, certifications (they exist but none may be named), capacity or clients, and it does not depend on detailed oil-tin specifications (decision, round 2: not needed). Remove a marker only after the existing technical body confirms (no reviewer name is needed), or use the fallback in section 7.
-> The **official Arabic name «الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية»** is confirmed and used in all Arabic copy.
+> The **official Arabic name «الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية»** is confirmed (round 3, 2026-10-21) and used in all Arabic copy. Management approved keeping the [تحقق] / [TBC] markers on slides 2 to 4 until the technical body reviews them (round 3).
 
 ---
 
@@ -69,7 +69,7 @@
 | **Contact** | sales@jordantinplate.com · +962 6 4051125 · jordantinplate.com | same |
 | **Sign-off** | الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية · علب معدنية للأغذية والمشروبات · منذ 1998 | Jordan Tinplate Canning · Metal packaging for food & beverage brands · Since 1998 |
 
-**Visual direction:** Return to the cover tin (so the carousel loops), the olive branch smaller. Wordmark "Jordan Tinplate Canning" (temporary until the final logo and Pantone arrive) at the top. The two confirmed facts (sizes, interior lacquer) get their own line each, with the four sizes shown as four small tin silhouettes. No standard name, no badge. Contact lines in large, tappable-looking rows. A small "احفظ المنشور / Save this post" label.
+**Visual direction:** Return to the cover tin (so the carousel loops), the olive branch smaller. Wordmark "Jordan Tinplate Canning" (temporary until the final vector logo arrives; colour PANTONE 294 C, about `#002F6C`) at the top. The two confirmed facts (sizes, interior lacquer) get their own line each, with the four sizes shown as four small tin silhouettes. No standard name, no badge. Contact lines in large, tappable-looking rows. A small "احفظ المنشور / Save this post" label.
 
 **Template notes for the designer:** consistent number position, safe margins 90 px, Arabic is the first line on every slide (RTL reading, swipe direction on Instagram is the same for both), minimum body size about 40 px for phone reading.
 
@@ -128,7 +128,7 @@ Save this post and share it with someone filling oil this season.
 **Resolved (management decisions, `docs/decisions.md`):**
 - [x] The company **produces olive-oil tins** in 1, 4, 8 and 16 L/kg; sizes may be named publicly (slide 6, caption)
 - [x] **Interior lacquer** meets the highest food-grade hygiene standards: use this generic wording only; name no standard or number until the certificates arrive
-- [x] Brand name **Jordan Tinplate Canning**, written in full; official Arabic name «الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية» (confirmed, round 2)
+- [x] Brand name **Jordan Tinplate Canning**, written in full; official Arabic name «الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية» (confirmed, round 3)
 
 **Technical (to be cleared by the existing technical body before publishing slides 2 to 4; no reviewer name is needed):**
 - [ ] Slide 2: wording on **light** is acceptable for oil. We state only that metal is opaque; no quality or shelf-life claim [تحقق]
@@ -140,7 +140,7 @@ Save this post and share it with someone filling oil this season.
 **General:**
 - [ ] Management approval for the caption (same approver as post #1)
 - [ ] Artwork on the tins is sample artwork, not a real client's brand
-- [ ] Optional: stills from the professional videos (lines and samples) can replace illustrated tins on slides 4 and 5 once delivered; no real client brand visible
+- [ ] Optional: stills from the received videos (two YouTube links and long Facebook videos; clips to be selected, see `docs/video-sources.md`) can replace illustrated tins on slides 4 and 5; no real client brand visible
 
 ## 7) Fallback if the technical review of light, toughness and stacking is late
 

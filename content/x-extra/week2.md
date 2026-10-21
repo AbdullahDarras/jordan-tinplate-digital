@@ -82,7 +82,7 @@ Five things food brands check before choosing a metal can. Full article on Linke
 #JordanTinplateCanning
 ```
 
-**Visual need:** Designed image, 1600x900, two panels: "خرافة" (glossy tin only) and "حقيقة" (five finish swatches: gloss, matte, soft touch, rough touch, embossing). Use stills of the real samples from the professional videos if delivered; otherwise sample artwork.
+**Visual need:** Designed image, 1600x900, two panels: "خرافة" (glossy tin only) and "حقيقة" (five finish swatches: gloss, matte, soft touch, rough touch, embossing). Use stills of the real samples from the received professional videos (links; clips to be selected) if usable; otherwise sample artwork.
 
 **Alt text (AR):** لوحتان: خرافة بعلبة لامعة فقط، وحقيقة بخمس عينات من التشطيبات.
 
@@ -121,7 +121,7 @@ Five things food brands check before choosing a metal can. Full article on Linke
 #صنع_في_الأردن #JordanTinplateCanning
 ```
 
-**Visual need:** Existing website/site photo or a 8 to 12 second silent clip from the professional videos (team and line, a different shot from X-E03 and from IG #8). No map pin, no street address.
+**Visual need:** Existing website/site photo or a 8 to 12 second silent clip from the received professional videos (clip to be selected; team and line, a different shot from X-E03 and from IG #8). No map pin, no street address.
 
 **Alt text (AR):** لقطة من داخل المصنع تُظهر خط الإنتاج وفريق العمل.
 
@@ -132,7 +132,7 @@ Five things food brands check before choosing a metal can. Full article on Linke
 **Needs confirmation:**
 
 - [ ] Anyone clearly identifiable in the shot has agreed to appear.
-- [ ] Full street address is still pending; use only Al-Zmailat – Al-Muwaqqar, Amman.
+- [x] Address is final as it is (round 3): use only Al-Zmailat – Al-Muwaqqar, Amman. No street address, no map pin.
 - [ ] No certificate, client brand or Saudi reference visible.
 
 ---

@@ -52,18 +52,17 @@ A "to be confirmed" item is a `tbc` block or a row with `tbc: true`; it renders 
 
 ## Decisions applied (see `docs/decisions.md`)
 
-Official English name **Jordan Tinplate Canning** (always full, never "Canning" alone); official Arabic name **«الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية»** (used on all Arabic pages, titles and JSON-LD) · production domain `https://www.jordantinplate.com` confirmed · every "Request a quote / اطلب عرض سعر" button opens the existing order tool <https://jc-order.netlify.app/> in a new tab (`rel="noopener"`), with `mailto:sales@jordantinplate.com` as the secondary option on the contact page and CTA band · white-cheese and olive-oil fine technical specs are not needed (pages are written without them) · address Al-Zmailat – Al-Muwaqqar, Amman · no Saudi branch (Saudi Food Manufacturing 2025 appears only as a news item) · olive-oil tins in 1, 4, 8, 16 L/kg and food-grade interior lacquer "meeting the highest food-safety standards" (no standard named) · about 250 employees · certifications exist but none is named.
+Official English name **Jordan Tinplate Canning** (always full, never "Canning" alone); official Arabic name **«الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية»** (round 3, supersedes the round-2 wording; used on all Arabic pages, titles and JSON-LD) · production domain `https://www.jordantinplate.com` confirmed · every "Request a quote / اطلب عرض سعر" button opens the existing order tool <https://jc-order.netlify.app/> in a new tab (`rel="noopener"`), with `mailto:sales@jordantinplate.com` as the secondary option on the contact page and CTA band · white-cheese and olive-oil fine technical specs are not needed (pages are written without them) · address Al-Zmailat – Al-Muwaqqar, Amman, **final as it is** (round 3; shown plainly, no "to be confirmed" badge) · brand colour **PANTONE 294 C**, screen approximation `#002F6C` (print must use the Pantone swatch; see `brand/README.md`) · no Saudi branch (Saudi Food Manufacturing 2025 appears only as a news item) · olive-oil tins in 1, 4, 8, 16 L/kg and food-grade interior lacquer "meeting the highest food-safety standards" (no standard named) · about 250 employees · certifications exist but none is named.
 
 ## Open items (shown as "to be confirmed" on the site)
 
-- **Final logo and Pantone code.** The header mark and wordmark are temporary.
-- **Full street address** and map location (area only is shown).
+- **Final logo (vector).** The header mark and wordmark are temporary. Only a preliminary raster of the old logo ("JORDAN CANNING", `brand/`) has arrived; its wordmark conflicts with the official name, so the site does not use it. The Pantone colour is decided (294 C).
 - **Certifications:** exist but not received, so none is named. A placeholder remains.
 - **Production capacity, clients, case studies, team.**
 - **Sector specs:** milk powder/dairy, coffee and tea, industrial (coatings, ends, sizes by weight, MOQ, lead times). White cheese and the olive-oil fine specs (light protection, spout/handle/closure) are deliberately not needed; olive oil still lists certifications and MOQ/lead times.
 - **Saudi Food Manufacturing 2025 news item:** kept (decision, round 2) as interview/participation news only; the site claims no Saudi branch, office or expansion.
 - **Redirects** from the old site's URLs are not planned yet. (The production domain `https://www.jordantinplate.com` is confirmed; `SITE_URL` only overrides it for staging builds.)
-- Product drawings are illustrative inline SVG, not client designs. Real photography and the 4–5 videos are not in phase 1.
+- Product drawings are illustrative inline SVG, not client designs. Real photography and video are not in phase 1 (videos received as links, clips to be selected: `docs/video-sources.md`).
 - Remove or adjust the footer "draft content" line and the Review-mode button before launch.
 - Arabic copy should get one pass from a native-speaking editor, and a real-device accessibility check (screen reader, keyboard) is still worth doing.
 - Not yet built from the proposed structure: Seasons campaign pages, Insights (blog), by-type product pages, catalogue landing page.

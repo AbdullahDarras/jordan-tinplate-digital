@@ -115,7 +115,7 @@ Poll length: 3 days (ends Wed 11/11, the day of the Eid post #11).
 #JordanTinplateCanning
 ```
 
-**Visual need:** One 10 to 15 second clip from the professional videos showing forming or palletising (not a clip used in reel #4, #12 or X-E03), native upload, muted, one burned-in Arabic line.
+**Visual need:** One 10 to 15 second clip from the received professional videos (links; clip to be selected) showing forming or palletising (not a clip used in reel #4, #12 or X-E03), native upload, muted, one burned-in Arabic line.
 
 **Alt text (AR):** مقطع من خط الإنتاج يُظهر تشكيل العلب وترتيبها على بالت.
 

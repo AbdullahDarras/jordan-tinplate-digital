@@ -29,8 +29,8 @@ Prototype of the new homepage, for approving the **style and the method** before
 - Header wordmark is a two-line lock-up that also fits at 390 px.
 
 **Content (decisions applied)**
-- Brand name **Jordan Tinplate Canning** in wordmark, `<title>`, meta, OG, loader, footer and the sample tin artwork. Arabic UI uses **«الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية»** (wordmark, title, loader, footer, aria-label).
-- Social handle **@jordantinplate** on Instagram, X and Facebook links. Address **Al-Zmailat – Al-Muwaqqar / الزميلات – الموقّر** (full street address still pending).
+- Brand name **Jordan Tinplate Canning** in wordmark, `<title>`, meta, OG, loader, footer and the sample tin artwork. Arabic UI uses **«الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية»** (round 3; wordmark, title, loader, footer, aria-label).
+- Social handle **@jordantinplate** on Instagram, X and Facebook links. Address **Al-Zmailat – Al-Muwaqqar / الزميلات – الموقّر** (final as it is, round 3).
 - No Saudi branch or expansion claim: the Saudi Food Manufacturing 2025 card now says only that our partner was interviewed at the show. (The linked third-party article's own headline says "expanding into Saudi Arabia"; the link is kept as a source, see "Remaining placeholders".)
 - Olive-oil tins shown as 1 · 4 · 8 · 16 L/kg (confirmed). The "to be confirmed" technical text for oil and white-cheese tins is gone; copy is general. No certification is named. No employee count is shown (about 250 if wanted).
 - **Quote form replaced by a link to the order tool** https://jc-order.netlify.app/ (new tab, `rel="noopener"`), with `mailto:sales@jordantinplate.com` as a secondary link. The fields and the mailto submit handler were removed, which also removes the "silent lost lead" problem.
@@ -72,9 +72,8 @@ Home
 Each language gets its own URL (`/en/…`, `/ar/…`) with `hreflang`, a real `<title>` / description per page, structured data and a sitemap (that is what `website/` builds). The prototype switches language in-page only, so canonical and hreflang are not added here.
 
 ## Remaining placeholders (review mode outlines these)
-- **Final logo** (the circle mark and two-line wordmark are temporary) and **Pantone** of the brand colour (`#213469` is an approximation).
+- **Final logo (vector)**: the circle mark and two-line wordmark are temporary. Only a preliminary raster of the old logo ("JORDAN CANNING") has arrived (`brand/`) and it is not used. The brand colour is decided: **PANTONE 294 C**, screen approximation `#002F6C` (print must use the Pantone swatch).
 - **Certifications** (none named until copies arrive), **production capacity**, **client names and case studies**.
-- **Full street address** (only Al-Zmailat – Al-Muwaqqar is confirmed).
 - Not outlined but still open: a native Arabic reviewer must read the whole Arabic copy once; the Saudi Food Manufacturing card still needs the partner's approval and the third-party article it links to carries an "expanding into Saudi Arabia" headline; the real order tool has not been tested from here; the sample artwork on the 3D tins is drawn in code and is not a client design; fonts still load from Google Fonts (self-host for fully offline use); performance on a real mid-range phone has not been measured. Cosmetic: the outlined English marquee words still show faint inner overlaps in a few letters (variable-font contours).
 
 ## Files
@@ -98,7 +97,7 @@ Headless Chromium (software WebGL), served by `python3 -m http.server`. Desktop 
 | 10 | Med | Fixed, review pending | «مطّ» became «مطفي» (chip, print step, gloss text); «تصميم داخلي» became «فريق تصميم داخل المصنع». A native reviewer still has to read the whole Arabic file. |
 | 11 | Med | Fixed | `end` is a function and `invalidateOnRefresh: true`; measured 3780 / 2520 / 4620 px for 900 / 600 / 1100 px viewports. |
 | 12 | Low | Fixed | City tags and event names have Arabic keys; the 2017 cards are no longer tilt/hover cards (they are not links). |
-| 13 | Low | Fixed | Footer uses `<bdi>`; reads "© 2026 مصنع الأردنية…" in Arabic and "© 2026 Jordan Tinplate Canning" in English. |
+| 13 | Low | Fixed | Footer uses `<bdi>`; reads "© 2026 الشركة الأردنية…" in Arabic and "© 2026 Jordan Tinplate Canning" in English. |
 | 14 | Low | Fixed | "28" is a gradient fill clipped to the glyphs. Step numbers were checked: their outline is clean at their size. |
 | 15 | Low | Fixed | Cursor starts hidden, shows on the first real mouse move; `cursor:none` is only applied then. |
 | 16 | Low | Fixed | Two-line wordmark (Jordan Tinplate / Canning, or the Arabic name) visible at 390 px. |

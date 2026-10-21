@@ -6,7 +6,7 @@ Conventions: copy is final-draft Arabic (X first), counted with Python (`len` af
 
 | ID | Day and time | Pillar | Type | Characters |
 |---|---|---|---|---|
-| X-E10 | Sunday 15/11, 09:30 | 5 | Quote of the LinkedIn family-story post | 268 |
+| X-E10 | Sunday 15/11, 09:30 | 5 | Quote of the LinkedIn family-story post | 278 |
 | X-E11 | Tuesday 17/11, 13:00 | 6 | Seasonal prompt (white-cheese spring season) | 178 |
 | X-E12 | Thursday 19/11, 20:30 | 3 | Poll (shapes) | 87 |
 
@@ -20,7 +20,7 @@ Conventions: copy is final-draft Arabic (X first), counted with Python (`len` af
 | **Pillar** | 5: Made in Jordan |
 | **Type** | Quote of the LinkedIn family-story post |
 | **Goal** | Bring the family story to X in 3 lines, with an English line for the LinkedIn-style audience. Pairs with LinkedIn #13. |
-| **Characters** | 268 / 280 (Python `len`, NFC; counted with hashtags and line breaks) |
+| **Characters** | 278 / 280 (Python `len`, NFC; counted with hashtags and line breaks) |
 | **Hashtags** | none |
 | **Status** | Draft, pending approval by the marketing lead |
 
@@ -31,7 +31,7 @@ Conventions: copy is final-draft Arabic (X first), counted with Python (`len` af
 
 بدأنا عام 1998، ويقود الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية اليوم الجيل الثالث من العائلة، بفريق من نحو 250 زميلاً.
 
-القصة كاملة على لينكد إن اليوم.
+القصة كاملة على لينكد إن.
 
 Run by the third generation of the founding family, making metal packaging in Jordan since 1998.
 ```
@@ -46,7 +46,7 @@ Run by the third generation of the founding family, making metal packaging in Jo
 
 **Needs confirmation:**
 
-- [ ] Official Arabic name «الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية» (see X-E01).
+- [x] Official Arabic name «الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية» (54 characters): confirmed in round 3 (see X-E01). The closing word "اليوم" was dropped from the LinkedIn line so the post stays under 280 (now 278).
 - [ ] Final wording of the family story is approved with LinkedIn #13; if its text changes, change this post.
 - [ ] If photos are used, management supplies them and agrees to their use.
 

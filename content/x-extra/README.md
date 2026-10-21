@@ -3,7 +3,7 @@
 
 **What this is:** the plan for the **3 extra X posts per week** (12 in total) that the Month-1 content plan and management decision 12 call for ("planned and approved between the marketing lead and Claude"). They sit on top of the four X posts already in the plan (#3, #7, #11, #15) and complement them. Together: **16 X posts in four weeks, 4 a week.**
 
-**Status:** draft for approval by the marketing lead. Nothing is scheduled or posted. Sources: [docs/decisions.md](../../docs/decisions.md) (2026-10-20), [Jordan-Tinplate-Month1-Content-Plan.md](../../Jordan-Tinplate-Month1-Content-Plan.md), the Week-1 pack in [content/week1/](../week1/), and the website content.
+**Status:** draft for approval by the marketing lead. Nothing is scheduled or posted. Sources: [docs/decisions.md](../../docs/decisions.md) (2026-10-21, round 3), [Jordan-Tinplate-Month1-Content-Plan.md](../../Jordan-Tinplate-Month1-Content-Plan.md), the Week-1 pack in [content/week1/](../week1/), and the website content.
 
 | File | What it holds |
 |---|---|
@@ -26,13 +26,13 @@ Each post in the weekly files has: date, day and time, pillar, goal, final Arabi
 | **3** Ramadan and Eid | E07 Poll: when do you plan season tins? (P6) | E08 Question to sweets/ka'ak/chocolate brands (P1) | #11 Eid tin post (P1) | E09 Forming and packing clip (P2) |
 | **4** Identity, spring, close | E10 Family-story card, LinkedIn #13 (P5) | E11 Cheese-season prompt, no specs (P6) | #15 Month harvest + next season (P6) | E12 Poll: shapes, ties to IG #16 (P3) |
 
-Format mix across the 12 extras: **2 polls** (E07, E12; plus the existing poll #7), **3 questions/prompts to buyers or packers** (E02, E08, E11), **2 clips from the professional videos** (E03, E09) plus 1 place-and-people post (E06), **1 myth vs fact** (E05), **2 quote/echo posts of LinkedIn** (E04, E10), **1 intro/short fact** (E01).
+Format mix across the 12 extras: **2 polls** (E07, E12; plus the existing poll #7), **3 questions/prompts to buyers or packers** (E02, E08, E11), **2 clips cut from the received videos** (E03, E09) plus 1 place-and-people post (E06), **1 myth vs fact** (E05), **2 quote/echo posts of LinkedIn** (E04, E10), **1 intro/short fact** (E01).
 
 ---
 
 ## 2) Pillar distribution
 
-Weights are those in the content plan's current table (it says they match the real post distribution of the 16 posts). Extras are spread in roughly the same proportions, with a small lift for pillar 2, which is light this month and now has the professional videos behind it.
+Weights are those in the content plan's current table (it says they match the real post distribution of the 16 posts). Extras are spread in roughly the same proportions, with a small lift for pillar 2, which is light this month and now has the received videos (links; clips to be selected) behind it.
 
 | # | Pillar | Weight in the Month-1 plan (current table) | Plan posts (of 16) | Existing X posts | **Extra X posts** | X total (16) | All platforms with extras (28) |
 |---|---|---|---|---|---|---|---|
@@ -47,7 +47,7 @@ Weights are those in the content plan's current table (it says they match the re
 Why this split:
 
 - **Pillar 5 (3 extras)** is the heaviest pillar in the plan, and X is where a short, human introduction (E01) and a place-and-people post (E06) cost the least to produce.
-- **Pillar 2 (2 extras)** uses the 4-5 professional videos as short native clips (E03, E09): the plan already says the videos allow raising this pillar.
+- **Pillar 2 (2 extras)** uses clips cut from the received professional videos as short native clips (E03, E09; see `docs/video-sources.md`): the plan already says the videos allow raising this pillar.
 - **Pillar 6 (2 extras) and pillar 1 (2 extras)** carry the seasonal calendar: olive season in week 1, Ramadan and Eid in week 3, the white-cheese spring in week 4 (preview only; the fine details of cheese and oil tins stay out, per management).
 - **Pillar 4 (1 extra)** is already served by #3 and the weekly LinkedIn article; X gets one card (E04).
 - **Pillar 3 (2 extras)** uses only the finishes and shapes listed on the website.
@@ -113,7 +113,7 @@ Pairing rule: each extra supports a post of the same day on another platform **w
 
 7. Videos: native upload, 10 to 15 seconds, muted (instrumental or silent), one burned-in Arabic line. Crop or blur any client brand, logo or certificate; no text implying speed, capacity or a named standard; no Saudi reference; anyone clearly visible has agreed. Use different clips from the Instagram reels of the same day.
 8. A poll cannot carry an image on X: E07 and E12 are text polls; options are at most 25 characters (checked).
-9. Images follow the shared template (temporary wordmark until the final logo and Pantone arrive). Illustrations are labelled as sample artwork, not client designs.
+9. Images follow the shared template (temporary wordmark until the final vector logo arrives; colour PANTONE 294 C, about `#002F6C`). Illustrations are labelled as sample artwork, not client designs.
 
 **Engagement**
 
@@ -153,12 +153,12 @@ There are no sales targets in Month 1 and no baseline yet, so no numeric targets
 
 | Item | Affects | Status |
 |---|---|---|
-| Official Arabic name «الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية» | E01, E10 | Given in the brief; **`docs/decisions.md` still lists the Arabic name as pending (provisional «جوردن تينبليت كانينغ» [مؤقت] elsewhere in the repo)**. Confirm, then log it; if different, swap in these two posts only |
-| Delivery of the 4-5 professional videos and clip selection | E03, E06, E09 | Pending. Fallbacks: designed stills (E03), a site photo (E06), a designed card (E09) |
+| Official Arabic name «الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية» (54 characters) | E01, E10 | **Resolved** (round 3, `docs/decisions.md` item 20). No longer pending; it is written in full in the Arabic copy |
+| Videos received (links: two YouTube videos and long Facebook videos); confirm titles and lengths and select the clips | E03, E06, E09 | Links received, clips to be selected (`docs/video-sources.md`). Fallbacks if no clip can be cut: designed stills (E03), a site photo (E06), a designed card (E09) |
 | Family-story wording and photos | E10 | Same dependency as LinkedIn #13 |
-| White-cheese tin details (specs still "to be confirmed") | E11 | E11 names the season only; hold it if IG #14 is held |
-| Technical reviewer's name and route | Existing #3 mainly | The extras avoid light, toughness and stacking claims, so they do not wait for it |
+| White-cheese tin details (not needed: decision 18) | E11 | E11 names the season only; hold it if IG #14 is held |
+| Technical review of the light, toughness and stacking sentences (the [تحقق] markers stay, round 3); no reviewer name is needed | Existing #3 mainly | The extras avoid light, toughness and stacking claims, so they do not wait for it |
 | X handle `@jordantinplate` available, bio updated first | All | To confirm; Instagram handle needed before links in replies |
 | LinkedIn / Instagram links for reply-links | E03, E04, E10 | After those posts are live |
 
-**Not used on purpose** (add only after written confirmation): certification names, capacity, client names and case studies, any Saudi reference, named export markets, the full street address, shelf-life or oil-quality statements, cheese-tin or oil-tin specs beyond what is above.
+**Not used on purpose** (add only after written confirmation): certification names, capacity, client names and case studies, any Saudi reference, named export markets, shelf-life or oil-quality statements, cheese-tin or oil-tin specs beyond what is above.

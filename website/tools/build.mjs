@@ -102,7 +102,7 @@ function contactBlock(lang) {
     <ul class="clist" style="margin-top:2rem">
       <li><span class="k">${T(UI.phone, lang)}</span><a href="tel:${SITE.tel}" class="ltr">${SITE.phone}</a></li>
       <li><span class="k">${T(UI.mail, lang)}</span><a href="mailto:${SITE.email}">${SITE.email}</a></li>
-      <li><span class="k">${T(UI.address, lang)}</span><span>${T(UI.addressArea, lang)}<br><span class="badge" data-tbc>${T(UI.addressTbc, lang)}</span></span></li>
+      <li><span class="k">${T(UI.address, lang)}</span><span>${T(UI.addressArea, lang)}</span></li>
     </ul>
     <ul class="social">${Object.entries(SITE.social).map(([n, u]) => `<li><a href="${u}" target="_blank" rel="noopener noreferrer">${n}<span class="vh"> (${T(UI.opensNew, lang)})</span></a></li>`).join('')}</ul>
     <a class="btn btn--ghost" href="${SITE.catalogue}" target="_blank" rel="noopener noreferrer">${T(UI.catalogue, lang)}${DOWN}</a>

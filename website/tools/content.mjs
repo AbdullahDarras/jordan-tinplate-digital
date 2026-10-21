@@ -13,7 +13,7 @@ export const SITE = {
   // SITE_URL=... can still override it for a staging build.
   origin: process.env.SITE_URL || 'https://www.jordantinplate.com',
   name: 'Jordan Tinplate Canning',           // official English name (always written in full)
-  nameAr: 'الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية',   // official Arabic name (confirmed, round 2)
+  nameAr: 'الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية',   // official Arabic name (confirmed, round 3, 2026-10-21)
   orderUrl: 'https://jc-order.netlify.app/',  // existing online order / quote tool: primary "Request a quote" link
   phone: '+962 6 4051125',
   tel: '+96264051125',
@@ -52,7 +52,6 @@ export const UI = {
   mail: t('Email', 'البريد الإلكتروني'),
   address: t('Address', 'العنوان'),
   addressArea: t('Al-Zmailat – Al-Muwaqqar, Amman, Jordan', 'الزميلات – الموقّر، عمّان، الأردن'),
-  addressTbc: t('Full street address to be confirmed', 'العنوان التفصيلي الكامل بانتظار التأكيد'),
   footIndustries: t('Industries', 'القطاعات'),
   footCompany: t('Company', 'الشركة'),
   footContact: t('Contact', 'التواصل'),
@@ -125,7 +124,7 @@ export const PAGES = [
     id: 'home', path: '', navKey: 'home',
     title: t('Jordan Tinplate Canning | Custom Metal Packaging for Food & Beverage', 'الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية | تغليف معدني مخصّص للأغذية والمشروبات'),
     description: t('Jordan Tinplate Canning designs, prints, forms and packs custom tinplate cans and gift tins for food and beverage brands. Made in Jordan since 1998.',
-                   'يصمّم الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية علب الصفيح المعدنية وعلب الهدايا ويطبعها ويشكّلها ويجهّزها للشحن لعلامات الأغذية والمشروبات. صناعة أردنية منذ عام 1998.'),
+                   'تصمّم الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية علب الصفيح المعدنية وعلب الهدايا وتطبعها وتشكّلها وتجهّزها للشحن لعلامات الأغذية والمشروبات. صناعة أردنية منذ عام 1998.'),
     crumb: t('Home', 'الرئيسية'),
     hero: {
       eyebrow: t('Metal packaging · Made in Jordan · Since 1998', 'تغليف معدني · صناعة أردنية · منذ عام 1998'),
@@ -467,7 +466,7 @@ export const PAGES = [
     id: 'about', path: 'about/', navKey: 'about', parent: 'home',
     title: t('About Us | Family Tinplate Maker Since 1998 | Jordan Tinplate Canning', 'من نحن | الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية، صناعة الصفيح العائلية منذ 1998'),
     description: t('Founded in 1998 and led today by the third generation of the family, Jordan Tinplate Canning makes metal packaging for food and beverage brands in Jordan.',
-                   'تأسس الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية عام 1998 ويقوده اليوم الجيل الثالث من العائلة، ويصنع التغليف المعدني لعلامات الأغذية والمشروبات في الأردن.'),
+                   'تأسست الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية عام 1998 ويقودها اليوم الجيل الثالث من العائلة، وتصنع التغليف المعدني لعلامات الأغذية والمشروبات في الأردن.'),
     crumb: t('About', 'من نحن'),
     hero: {
       eyebrow: t('About us', 'من نحن'),
@@ -499,12 +498,11 @@ export const PAGES = [
           { k: t('People', 'الفريق'), v: t('About 250 employees', 'نحو 250 موظفاً') }
         ] }] },
       { blocks: [{ k: 'tbc', title: t('Still to be confirmed', 'ما زال بانتظار التأكيد'), cards: true, items: [
-        t('Full street address and map location', 'العنوان التفصيلي وموقع الخريطة'),
         t('Certifications (copies will be published once received)', 'الشهادات (تُنشر بعد وصول نسخها)'),
         t('Production capacity', 'الطاقة الإنتاجية'),
         t('Clients and case studies', 'العملاء ودراسات الحالة'),
         t('Team and leadership', 'الفريق والإدارة'),
-        t('Final logo and brand colour', 'الشعار النهائي ولون العلامة')
+        t('Final logo (vector version)', 'الشعار النهائي (نسخة Vector)')
       ] }] }
     ]
   },
