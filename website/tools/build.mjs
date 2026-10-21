@@ -238,7 +238,7 @@ const KINDS = {
   <div class="wrap">
     ${secHead(lang, s, St, id)}
     <div class="story__grid">
-      <div class="bignum" data-reveal><b id="years" data-count-years="1998" aria-label="${years}">${years}</b><span>${T(UI.yearsOf, lang)}</span></div>
+      <div class="bignum" data-reveal><b id="years" data-count-years="1998">${years}</b><span>${T(UI.yearsOf, lang)}</span></div>
       <div class="story__copy" data-reveal>
         <p>${T(St.p1, lang)}</p>
         <blockquote><span>${T(St.vision, lang)}</span></blockquote>

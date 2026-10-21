@@ -73,7 +73,14 @@ Official English name **Jordan Tinplate Canning** (always full, never "Canning" 
 
 ## Verification (headless Chromium, software WebGL)
 
-`validate.py` passes. Home plus two inner pages, in English and Arabic, light and dark, at 1440 and 390 px: no console errors, no failed requests, no external requests other than Google Fonts, no horizontal overflow; entrance plays, finishes by itself and is skipped by the button, Enter, Escape, `?skip` and reduced motion; it does not replay in the same session; keyboard focus ring and mobile menu (inert, Escape, focus return) checked; GSAP / three / `main.js` blocked and JavaScript disabled still give a readable, navigable page. Screenshots are not committed.
+`python3 -I tools/validate.py` passes (and was checked to fail on: an external script, a missing Skip button, a named certification, the old Arabic name, an order link without `noopener`, an unlabelled stage, a missing engine file, a loader on an inner page).
+
+- Home, olive-oil and capabilities pages in English and Arabic, light and dark, at 1440 and 390 px (24 loads), plus **all 12 pages** in EN 1440 light and AR 390 dark: 0 console errors, 0 failed requests, no external request except Google Fonts, no horizontal overflow, one `h1` per page, the engine never fell back to `no-fx`.
+- Entrance: plays, finishes by itself, is skipped by the button (focused on arrival), Enter and Escape, never replays in the same session (also not after landing on an inner page first), is absent with `?skip` and with reduced motion; the page is scrollable and `inert` is released afterwards.
+- Keyboard: the first Tab stop is the skip link, then header, language, theme and quote buttons, with a visible 3 px ring everywhere; mobile menu is `inert` when closed, opens with focus on its first link, Escape closes it and returns focus to the burger (EN and AR). Season tabs and chips change their pane and `aria-selected` / `aria-pressed`.
+- Language switch goes to the equivalent page (`/en/products/sweets-kaak-chocolate/` to `/ar/…`), keeps the choice and the arrival curtain clears itself.
+- Resilience: with JavaScript off, with GSAP blocked, with three.js blocked, with `scene.js` blocked and with `main.js` blocked (8 s guard) the page is readable, scrolls and its links work.
+- Not measured here: real-device frame rate and battery, screen readers, the Arabic text by a native editor.
 
 ## Open items (shown as "to be confirmed" on the site)
 
