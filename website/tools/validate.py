@@ -55,7 +55,7 @@ class P(HTMLParser):
         if self.in_ld: self.ld.append(d)
 
 pages = sorted(ROOT.rglob("index.html")) + [ROOT / "404.html"]
-pages = [p for p in pages if "tools" not in p.parts]
+pages = [p for p in pages if "tools" not in p.parts and "prototype" not in p.parts]  # /prototype/ is a separate noindex creative preview
 parsed = {}
 for f in pages:
     name = "/" + str(f.relative_to(ROOT))
