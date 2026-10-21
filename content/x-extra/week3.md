@@ -80,13 +80,13 @@ Poll length: 3 days (ends Wed 11/11, the day of the Eid post #11).
 
 **Visual need:** Text only (or a plain brand-colour card with the question, 1600x900, if design time allows).
 
-**Engagement mechanic:** Open question; every reply gets an answer within the working day. Questions that need numbers (capacity, certificates, prices) go to the email. Save the questions as input for week 4 and month 2.
+**Engagement mechanic:** Open question; every reply gets an answer within the working day. Questions that need numbers (capacity, prices) go to the email; certificate questions get only the approved wording (`docs/certificates.md`) or the email. Save the questions as input for week 4 and month 2.
 
 **Complements (not duplicates):** Complements the IG finishes carousel (#10) and X #11 (Eid tin, Wed): buyers' questions first, our message second. Different from the poll on Sunday (open text vs vote).
 
 **Needs confirmation:**
 
-- [ ] Reply policy agreed: the marketing lead answers; no answers on capacity, certifications, clients, prices, shelf-life or technical specs (send to email).
+- [ ] Reply policy agreed: the marketing lead answers; no answers on capacity, clients, prices, shelf-life or technical specs (send to email); on certificates only the approved wording for FSSC 22000 and the JFDA food-contact approval, nothing else (send to email).
 - [ ] Confirm sales@jordantinplate.com is monitored for these replies.
 
 ---

@@ -1,6 +1,8 @@
 # Extra X posts, Month 1 (25 October to 19 November 2026)
 # منشورات X الإضافية للشهر الأول
 
+> **Round 4 (2026-10-21), certificates:** two further X posts were added outside the 12-extra split below: **X-E13** (FSSC 22000, Mon 9/11, 13:00) and **X-E14** (JFDA food-contact approval, Mon 16/11, 13:00), drafted in [`../week2-bonus/`](../week2-bonus/) and listed in [calendar.csv](calendar.csv). They use the two Mondays that are otherwise reply-only (replies continue the rest of the day). Only the wording in `docs/certificates.md` is allowed. Counts in sections 1 and 2 below are for the original 12 extras (16 X posts); with the two certificate posts X has 18 posts this month.
+
 **What this is:** the plan for the **3 extra X posts per week** (12 in total) that the Month-1 content plan and management decision 12 call for ("planned and approved between the marketing lead and Claude"). They sit on top of the four X posts already in the plan (#3, #7, #11, #15) and complement them. Together: **16 X posts in four weeks, 4 a week.**
 
 **Status:** draft for approval by the marketing lead. Nothing is scheduled or posted. Sources: [docs/decisions.md](../../docs/decisions.md) (2026-10-21, round 3), [Jordan-Tinplate-Month1-Content-Plan.md](../../Jordan-Tinplate-Month1-Content-Plan.md), the Week-1 pack in [content/week1/](../week1/), and the website content.
@@ -11,7 +13,7 @@
 | [week2.md](week2.md) | X-E04 to X-E06 (1 to 5 Nov) |
 | [week3.md](week3.md) | X-E07 to X-E09 (8 to 12 Nov) |
 | [week4.md](week4.md) | X-E10 to X-E12 (15 to 19 Nov) |
-| [calendar.csv](calendar.csv) | Complete X calendar: 12 extras + the 4 existing posts (`date,day,time,pillar,type,file,status`) |
+| [calendar.csv](calendar.csv) | Complete X calendar: 12 extras + the 4 existing posts + the 2 certificate posts X-E13 and X-E14 (`date,day,time,pillar,type,file,status`) |
 
 Each post in the weekly files has: date, day and time, pillar, goal, final Arabic copy, character count (checked with Python, all at most 280), hashtags (at most 2), visual need, engagement mechanic, how it complements the existing posts, and a "needs confirmation" checklist.
 
@@ -67,7 +69,7 @@ Ramadan and Eid dates are approximate and follow moon sighting, as in the conten
 
 ## 3) Posting days and times (Asia/Amman)
 
-Extras go out on **Sunday, Tuesday and Thursday**. Wednesday stays the day of the existing X post. **Monday is a reply-only day** (no scheduled post; answer replies, comment under buyers' posts, summarise Sunday's results). Friday and Saturday: no scheduled posts.
+Extras go out on **Sunday, Tuesday and Thursday**. Wednesday stays the day of the existing X post. **Monday is a reply-only day** (no scheduled post; answer replies, comment under buyers' posts, summarise Sunday's results), with two exceptions in round 4: X-E13 on Mon 9/11 and X-E14 on Mon 16/11 at 13:00 (certificate posts, see `../week2-bonus/`). Friday and Saturday: no scheduled posts.
 
 | Slot | Time | Why |
 |---|---|---|
@@ -105,7 +107,7 @@ Pairing rule: each extra supports a post of the same day on another platform **w
 1. Arabic first. Natural Modern Standard that reads well in Jordan and the Gulf, no dialect slang. English only where a LinkedIn-style audience is being addressed (E04, E10), as a separate short line.
 2. Maximum **280 characters**, verified with Python before posting (a link counts as 23). Maximum **2 hashtags**; the brand tag is always the full `#JordanTinplateCanning` (never `#Canning`). No emojis, to match the other posts.
 3. Facts only from `docs/decisions.md` and the repo. Usable: Jordan Tinplate Canning, the official Arabic name, `@jordantinplate`, since 1998, third generation, Amman (Al-Zmailat – Al-Muwaqqar), about 250 employees, the services, finishes and shapes on the website, olive-oil tins in 1, 4, 8 and 16 L/kg, interior lacquer meeting the highest food-grade hygiene standards.
-4. **Never** mention: a Saudi branch, office or expansion; any certification by name (they exist; none has arrived); production capacity; client names or logos; shelf-life or oil-quality claims; a named food-contact standard; "fully automatic" lines; named export markets.
+4. **Never** mention: a Saudi branch, office or expansion; any certificate other than the two that arrived (FSSC 22000 by Bureau Veritas, and the JFDA food-contact approval, only in X-E13 / X-E14 or with the approved wording in `docs/certificates.md`, never with the JFDA expiry date, and never FSSC/UKAS/Bureau Veritas logos); ISO 9001, standalone ISO 22000, FDA or BRC; the warranty letter; production capacity; client names or logos; shelf-life or oil-quality claims; any other named food-contact standard; "fully automatic" lines; named export markets.
 5. **No fine technical specifications for cheese tins or oil tins** (management direction). For oil tins only the four sizes and the interior-lacquer line may be said; for cheese tins nothing beyond naming the season and the topic. Questions about specs get: "Please email sales@jordantinplate.com with your specification".
 6. No post repeats a fact already said in the existing X posts in the same week: the olive sizes appear in #3 (post 5/6) and in E02 only; "250 employees" appears in E01 and E10 only; the finishes list appears in E05 only.
 
@@ -118,7 +120,7 @@ Pairing rule: each extra supports a post of the same day on another platform **w
 **Engagement**
 
 10. The marketing lead publishes and replies (account access with the marketing lead, 2FA on). Reply within the working day; Monday is reserved for it.
-11. Replies to third parties use the same facts rule. Anything about price, capacity, certificates, clients, or technical detail goes to sales@jordantinplate.com. No arguments, no competitor names.
+11. Replies to third parties use the same facts rule. Anything about price, capacity, clients, or technical detail goes to sales@jordantinplate.com. Certificate questions get the approved wording only (FSSC 22000 or the JFDA food-contact approval, per `docs/certificates.md`); anything beyond it goes to the email. No arguments, no competitor names.
 12. Do not tag or link a handle until it is confirmed.
 
 ---
@@ -161,4 +163,4 @@ There are no sales targets in Month 1 and no baseline yet, so no numeric targets
 | X handle `@jordantinplate` available, bio updated first | All | To confirm; Instagram handle needed before links in replies |
 | LinkedIn / Instagram links for reply-links | E03, E04, E10 | After those posts are live |
 
-**Not used on purpose** (add only after written confirmation): certification names, capacity, client names and case studies, any Saudi reference, named export markets, shelf-life or oil-quality statements, cheese-tin or oil-tin specs beyond what is above.
+**Not used on purpose** (add only after written confirmation): any certificate other than the two approved ones (and those only in X-E13 / X-E14), capacity, client names and case studies, any Saudi reference, named export markets, shelf-life or oil-quality statements, cheese-tin or oil-tin specs beyond what is above.

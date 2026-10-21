@@ -32,7 +32,7 @@ Each post file contains: metadata, final copy (Arabic and English), the visual s
 | Address: Al-Zmailat – Al-Muwaqqar (not Sahab), final as it is (round 3) | Used in the LinkedIn post and, where space allows, in bios. No further street address is requested |
 | About 250 employees | Stated in post #1 |
 | No Saudi branch exists | No Saudi reference in any copy. The Saudi Food Manufacturing 2025 item is participation/interview only (not part of Week 1) |
-| Certifications exist, none received yet | None named anywhere |
+| Certificates received (round 4): FSSC 22000 (Bureau Veritas) and JFDA food-contact approval may be named; nothing else | Kept out of posts 1 to 4 on purpose (introduction, olive-oil and process posts); announced in their own posts in week 2 onward (`content/week2-bonus/`). No certificate or logo on screen |
 | Olive-oil tins produced in 1, 4, 8 and 16 L/kg | Stated in #1, #2 (slide 6, caption), #3 (post 5/6) |
 | Interior lacquer meets the highest food-grade hygiene standards | Stated in this generic form only, in #2 and #3. No standard named |
 | A technical body exists | Reviews the light, toughness and stacking sentences; no reviewer name is needed |
@@ -43,14 +43,14 @@ Each post file contains: metadata, final copy (Arabic and English), the visual s
 ## Still needed from management (بانتظار الإدارة)
 
 1. The **final logo (vector / high-resolution)**: only a preliminary raster of the old logo has arrived, and its wordmark "JORDAN CANNING" conflicts with the official name (the template uses a temporary wordmark). The Pantone colour (294 C) and the official Arabic name are no longer pending.
-2. **Certificates**: names and copies (none may be named until they arrive).
+2. **Certificates**: received (resolved). Open: name on the FSSC certificate (old name «Jordan Canning Industry»), logo licensing, and the unknown jordancanning.com contact on the warranty letter (`docs/decisions.md`, round 4).
 3. **Videos received (links), clips to be selected**: confirm titles and lengths and mark the clips to cut ([docs/video-sources.md](../../docs/video-sources.md)).
 4. Production **capacity** and **client names** (after launch). The address is final as it is.
 5. **Technical wording (for #2 and #3), cleared by the existing technical body:** the statements on **light** (metal is opaque), **toughness** (does not shatter like glass) and **pallet stacking** for oil tins. No reviewer name is needed, and detailed oil-tin specs (finishes on oil tins, spout-and-handle model) are not needed: the copy is written without them.
 6. **Confirmations for the reel (#4):** the six stages and their order match reality (the website has five steps); the storage service ("we can hold your finished stock") is offered to all customers.
 7. **Wording of the family story** ("since 1998" and "third generation" are in the About that was approved provisionally; the final wording needs sign-off).
 
-**Not used in Week 1, on purpose (add only after written confirmation):** certification names (ISO, FSSC, others), production capacity, client names and logos, case studies, any Saudi reference (no Saudi branch, office or expansion exists), named export markets, "fully automatic lines", any named food-contact standard, shelf-life or oil-quality claims.
+**Not used in Week 1, on purpose (add only after written confirmation):** any certificate in posts 1 to 4 (FSSC 22000 and JFDA are announced separately; ISO 9001, standalone ISO 22000, FDA and BRC are never named), production capacity, client names and logos, case studies, any Saudi reference (no Saudi branch, office or expansion exists), named export markets, "fully automatic lines", any named food-contact standard, shelf-life or oil-quality claims.
 
 ## Facts used and where they come from
 
@@ -59,6 +59,7 @@ Each post file contains: metadata, final copy (Arabic and English), the visual s
 | Brand name Jordan Tinplate Canning; official Arabic name «الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية» | `docs/decisions.md` (items 1 and 20, round 3) |
 | Address Al-Zmailat – Al-Muwaqqar; about 250 employees | `docs/decisions.md` (items 3, 10, 23) |
 | Olive-oil tins in 1, 4, 8 and 16 L/kg; interior lacquer meeting the highest food-grade hygiene standards | `docs/decisions.md` (items 7, 8) |
+| Certificates (not used in Week 1; see `content/week2-bonus/`) | `docs/certificates.md`, `docs/decisions.md` (items 28 to 35) |
 | Founded 1998; run by the third generation | Off-site plan (About text, section 3), website prototype story section; About approved provisionally (decisions item 4) |
 | Jordan-based; metal packaging for food and beverage brands | Off-site plan, section 3 |
 | Services: artwork and design, CTP plates, printing and coating, forming, export-ready packing, storage of finished goods | Off-site plan section 3; website prototype journey section |

@@ -94,7 +94,7 @@ sales@jordantinplate.com
 | Headline (AR) | **صُنع في الأردن منذ 1998** (smaller, under the English, or mirrored on the right) |
 | Sub-line (AR) | تغليف معدني لعلامات الأغذية والمشروبات |
 | Footer | Wordmark "Jordan Tinplate Canning" (temporary until the final vector logo arrives; colour PANTONE 294 C, about `#002F6C`) + `jordantinplate.com` |
-| Do not add | Certification badges, capacity numbers, client logos, any Saudi reference (there is no Saudi branch or office), a map with markets |
+| Do not add | Certification badges, logos or a photo of a certificate (FSSC/UKAS/Bureau Veritas logos are not licensed yet), capacity numbers, client logos, any Saudi reference (there is no Saudi branch or office), a map with markets |
 
 **Optional variant (if design time allows):** 5-page PDF document post: (1) cover "Meet Jordan Tinplate Canning", (2) 1998 + third generation + a team of about 250, (3) the 6 services, (4) what we make, (5) contact. Same words as above. Do not add new claims.
 
@@ -125,5 +125,5 @@ sales@jordantinplate.com
 - [ ] **Storage of finished goods:** confirm it is offered as a standard service (taken from the site/draft About; wording is "when customers need it")
 - [ ] LinkedIn page updated first: name, tagline, About, address, website link to homepage, logo, cover
 - [ ] Image: stills from the received videos (links; clips to be selected) or real photos; permission for any product shown
-- [ ] **Deliberately NOT in this post:** any certification (they exist, but none may be named until copies arrive), production capacity, client names, any Saudi reference (no Saudi branch or office exists), export markets by name (Gulf, Iraq), "fully automatic lines"
+- [ ] **Deliberately NOT in this post:** certificates. Two certificates have arrived and may be named (FSSC 22000 by Bureau Veritas; JFDA food-contact approval; wording in `docs/certificates.md`), but this is the introduction post and stays short, so they are left out here. They are announced separately: LinkedIn Wed 4/11 (`content/week2-bonus/01-linkedin-fssc22000.md`) and on the page's tagline and About. Nothing else is named (no ISO 9001, no standalone ISO 22000, no FDA, no BRC). Also left out: production capacity, client names, any Saudi reference (no Saudi branch or office exists), export markets by name (Gulf, Iraq), "fully automatic lines"
 - [ ] Optional line if management approves naming markets: "We serve brands in the Gulf and Iraq." [TBC] (not in the copy above)

@@ -143,7 +143,7 @@ sales@jordantinplate.com
 
 **Still open:**
 - [ ] **Technical sign-off** on light, toughness (vs glass) and pallet stacking [تحقق] by the existing technical body (same as post #2; no reviewer name is needed)
-- [ ] **No claims** made on: shelf life, oil quality, certifications (they exist; none may be named), capacity, clients. No Saudi reference of any kind (no Saudi branch exists). Keep it that way in replies and quote posts
+- [ ] **No claims** made on: shelf life, oil quality, certificates (FSSC 22000 and the JFDA food-contact approval may be named, but not in this thread; they have their own posts, `content/week2-bonus/`; nothing else may be named), capacity, clients. No Saudi reference of any kind (no Saudi branch exists). Keep it that way in replies and quote posts
 - [ ] X handle: `@jordantinplate`, the same username on all platforms (decision, round 2; 14 characters, so it fits X). The display name is the official name ("Jordan Tinplate Canning"). Do not tag or link a handle in the copy until the account is renamed
 - [ ] X bio updated first (Offsite plan, section 3: English line plus the official Arabic name «الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية», 140 characters of the 160 allowed)
 - [ ] Management approval of the Arabic text

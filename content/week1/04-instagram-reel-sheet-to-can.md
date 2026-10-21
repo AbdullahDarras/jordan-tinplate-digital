@@ -9,7 +9,7 @@
 | **Format** | Motion graphic combined with real footage cut from the company's **professional videos** (lines and samples; links received: two YouTube videos and long videos on the company Facebook page), 9:16, 1080x1920 px, 30 fps, **30 seconds**. No voice-over; on-screen text in Arabic with a smaller English line; instrumental music |
 | **Status** | Script and storyboard ready. Needs motion design and an edit with the professional videos (**videos received as links; clips still to be selected**, see `docs/video-sources.md`). Wording check needed from management (all text comes from the website's journey section) |
 
-> Convention: `[TBC]` / `[تحقق]` marks anything not confirmed. This reel contains **no** technical claims beyond the services already on the website. No capacity, speed, certification, client or market is mentioned. The **official Arabic name «الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية»** is confirmed (round 3, 2026-10-21) and is used on the Arabic end card and caption.
+> Convention: `[TBC]` / `[تحقق]` marks anything not confirmed. This reel contains **no** technical claims beyond the services already on the website. No capacity, speed, certificate (the two that arrived are announced in their own posts, `content/week2-bonus/`), client or market is mentioned. The **official Arabic name «الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية»** is confirmed (round 3, 2026-10-21) and is used on the Arabic end card and caption.
 
 **Source of the six stages:** the Month-1 plan lists "design, CTP, print, forming, packing, storage". The website's journey section has the same content in five steps (it joins design and plates in step 1). For the reel we split step 1 into two scenes so the title promise "6 stages" is true. Confirm with management that this split matches how they describe the process.
 
@@ -114,7 +114,7 @@ Which stage interests you most? Tell us in the comments, or write to us: sales@j
 - [ ] Wording of each stage line: all copied or closely adapted from the website's journey text. Management to approve the Arabic
 - [ ] "Soft touch / embossing / matte / gloss" are the preferred English and Arabic names for the finishes (Arabic used on the site: ملمس ناعم، نقش بارز، مطّ، لمعة)
 - [ ] "We can hold your finished stock" (storage) is offered to all customers, not only some [تحقق]
-- [ ] **Not shown or said (add only if management confirms):** production speed or capacity, "fully automatic lines", certifications (they exist; none may be named until copies arrive), client names or logos, named markets (Gulf, Iraq), any Saudi reference (no Saudi branch or office exists), any named food-contact standard
+- [ ] **Not shown or said (add only if management confirms):** production speed or capacity, "fully automatic lines", certificates (FSSC 22000 and the JFDA food-contact approval may now be named, but not in this reel; nothing else, and no certificate or FSSC/UKAS/Bureau Veritas logo on screen), client names or logos, named markets (Gulf, Iraq), any Saudi reference (no Saudi branch or office exists), any named food-contact standard
 - [ ] Artwork shown on the tins is **abstract sample artwork** with no real brand
 - [ ] Music licence for a business account [TBC]
 - [ ] Final logo/wordmark on the end card (temporary until the final vector logo arrives)
