@@ -23,15 +23,17 @@
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="Jordan Tinplate Canning: custom tinplate packaging for food and beverage brands">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@jordantinplate">
 <meta name="twitter:title" content="Gift Tins for Sweets, Ka’ak &amp; Chocolate | Jordan Tinplate Canning">
 <meta name="twitter:description" content="Round, square, rectangular and oval gift tins for sweets, ka’ak and chocolate, with embossing and soft-touch finishes. Made in Jordan by Jordan Tinplate Canning.">
 <meta name="twitter:image" content="https://www.jordantinplate.com/assets/img/og-default.png">
 <link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml">
-<script>(function(){var d=document.documentElement;d.classList.add('js');try{var t=localStorage.getItem('jt-theme');if(t==='dark'||t==='light')d.setAttribute('data-theme',t)}catch(e){}})()</script>
+<script>(function(){var d=document.documentElement;d.classList.add('js');try{var t=localStorage.getItem('jt-theme');if(t!=='dark'&&t!=='light')t=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';d.setAttribute('data-theme',t)}catch(e){}try{if(sessionStorage.getItem('jt-arrive')){sessionStorage.removeItem('jt-arrive');d.classList.add('arrive')}}catch(e){}try{sessionStorage.setItem('jt-intro','1')}catch(e){}})()</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=DM+Sans:wght@400;500;600&family=Readex+Pro:wght@300..700&display=swap">
-<link rel="stylesheet" href="/assets/css/site.css?v=139aefad">
+<link rel="stylesheet" href="/assets/css/site.css?v=0126110f">
+<script type="importmap">{"imports":{"three":"/assets/vendor/three/three.module.min.js","three/addons/":"/assets/vendor/three/addons/"}}</script>
 <script type="application/ld+json">{
  "@context": "https://schema.org",
  "@graph": [
@@ -63,7 +65,8 @@
    "sameAs": [
     "https://www.linkedin.com/company/jordan-tin-plate-canning-printing-industrial-co",
     "https://www.instagram.com/jordantinplate",
-    "https://www.facebook.com/JordanTinplate"
+    "https://x.com/jordantinplate",
+    "https://www.facebook.com/jordantinplate"
    ]
   },
   {
@@ -123,63 +126,86 @@
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs><linearGradient id="g-body" x1="0" x2="1" y1="0" y2="0"><stop offset="0" class="stop-a"/><stop offset=".38" class="stop-b"/><stop offset=".7" class="stop-c"/><stop offset="1" class="stop-a"/></linearGradient></defs></svg>
+<canvas id="gl" aria-hidden="true"></canvas>
+<div class="grain" aria-hidden="true"></div>
+<div class="cursor is-hidden" aria-hidden="true"><i></i><span>Drag</span></div>
+
+<div id="curtain" aria-hidden="true"><i style="--n:0"></i><i style="--n:1"></i><i style="--n:2"></i><i style="--n:3"></i><i style="--n:4"></i></div>
 <a class="skip" href="#main">Skip to main content</a>
-<header class="site-header">
-  <div class="bar">
-    <a class="brand" href="/en/" aria-label="Jordan Tinplate Canning, home page"><svg viewBox="0 0 40 40" class="brand__mark" aria-hidden="true" focusable="false"><circle cx="20" cy="20" r="17" fill="none" stroke="currentColor" stroke-width="2.4"/><circle cx="20" cy="20" r="10.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-dasharray="3 3"/><circle cx="20" cy="20" r="3.4" fill="var(--accent)"/></svg><span class="brand__word">JORDAN <b>TINPLATE</b> CANNING</span></a>
-    <nav class="nav" id="primary-nav" aria-label="Primary"><a href="/en/products/" class="is-current">Products</a><a href="/en/capabilities/">Capabilities</a><a href="/en/about/">About</a><a href="/en/news/">News</a><a href="/en/contact/">Contact</a><a class="nav__cta" href="https://jc-order.netlify.app/" target="_blank" rel="noopener">Request a quote<span class="vh"> (opens in a new tab)</span></a></nav>
-    <div class="tools">
-      <a class="tool tool--lang" href="/ar/products/sweets-kaak-chocolate/" hreflang="ar" lang="ar" aria-label="التبديل إلى العربية" data-lang-switch>عربي</a>
-      <button class="tool" id="theme-btn" type="button" aria-label="Switch between light and dark mode" aria-pressed="false">
-        <svg class="i-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.6M12 18.9v2.6M2.5 12h2.6M18.9 12h2.6M5.3 5.3l1.8 1.8M16.9 16.9l1.8 1.8M5.3 18.7l1.8-1.8M16.9 7.1l1.8-1.8"/></svg>
-        <svg class="i-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5z"/></svg>
-      </button>
-      <a class="btn btn--sm" href="https://jc-order.netlify.app/" target="_blank" rel="noopener">Request a quote<span class="vh"> (opens in a new tab)</span></a>
-      <button class="burger" id="menu-btn" type="button" aria-label="Menu" aria-expanded="false" aria-controls="primary-nav"><i></i><i></i></button>
-    </div>
+<header class="nav" id="nav">
+  <a class="brand" href="/en/" aria-label="Jordan Tinplate Canning, home page"><svg viewBox="0 0 40 40" class="brand__mark" aria-hidden="true" focusable="false"><circle cx="20" cy="20" r="17" fill="none" stroke="currentColor" stroke-width="2.4"/><circle cx="20" cy="20" r="10.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-dasharray="3 3"/><circle cx="20" cy="20" r="3.4" fill="var(--accent)"/></svg><span class="brand__word"><span>JORDAN <b>TINPLATE</b></span><span class="brand__sub">CANNING</span></span></a>
+  <nav class="nav__links" aria-label="Primary"><a href="/en/products/" class="is-current">Products</a><a href="/en/capabilities/">Capabilities</a><a href="/en/about/">About</a><a href="/en/news/">News</a><a href="/en/contact/">Contact</a></nav>
+  <div class="nav__tools">
+    <a class="tool tool--lang" id="langBtn" href="/ar/products/sweets-kaak-chocolate/" hreflang="ar" lang="ar" aria-label="التبديل إلى العربية" data-lang-switch>عربي</a>
+    <button class="tool" id="themeBtn" type="button" aria-label="Switch between light and dark mode" aria-pressed="false">
+      <svg class="i-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.6M12 18.9v2.6M2.5 12h2.6M18.9 12h2.6M5.3 5.3l1.8 1.8M16.9 16.9l1.8 1.8M5.3 18.7l1.8-1.8M16.9 7.1l1.8-1.8"/></svg>
+      <svg class="i-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5z"/></svg>
+    </button>
+    <a class="btn btn--sm magnetic" href="https://jc-order.netlify.app/" target="_blank" rel="noopener"><span>Request a quote</span><span class="vh"> (opens in a new tab)</span></a>
+    <button class="burger" id="burger" type="button" aria-label="Menu" aria-expanded="false" aria-controls="menu"><i></i><i></i></button>
   </div>
 </header>
+<div class="menu" id="menu" inert>
+  <a href="/en/products/">Products</a>
+  <a href="/en/capabilities/">Capabilities</a>
+  <a href="/en/about/">About</a>
+  <a href="/en/news/">News</a>
+  <a href="/en/contact/">Contact</a>
+  <a href="https://jc-order.netlify.app/" target="_blank" rel="noopener">Request a quote<span class="vh"> (opens in a new tab)</span></a>
+</div>
 <main id="main" tabindex="-1">
-<section class="hero hero--inner">
-  <div class="wrap hero__grid">
-    <div>
+<section class="hero hero--inner" id="hero">
+  <div class="hero__grid wrap">
+    <div class="hero__text">
       <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="/en/">Home</a></li><li><a href="/en/products/">Products</a></li><li><span aria-current="page">Sweets, ka’ak &amp; chocolate</span></li></ol></nav>
       <p class="eyebrow"><span class="dot"></span>Industry · Sweets, ka’ak &amp; chocolate</p>
-      <h1 class="h1">Gift tins for sweets, ka’ak and chocolate</h1>
-      <p class="lead">Embossed, soft-touch and unmistakably festive: tins that make Ramadan and Eid gifts worth keeping.</p>
-      <div class="cta-row"><a class="btn" href="https://jc-order.netlify.app/" target="_blank" rel="noopener">Request a quote<span class="vh"> (opens in a new tab)</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a><a class="btn btn--ghost" href="/en/products/">All products</a></div>
+      <h1 class="h1" data-split>Gift tins for sweets, ka’ak and chocolate</h1>
+      <p class="lead" data-reveal>Embossed, soft-touch and unmistakably festive: tins that make Ramadan and Eid gifts worth keeping.</p>
+      <div class="hero__cta" data-reveal><a class="btn magnetic" href="https://jc-order.netlify.app/" target="_blank" rel="noopener"><span>Request a quote</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg><span class="vh"> (opens in a new tab)</span></a><a class="btn btn--ghost magnetic" href="/en/products/"><span>All products</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div>
+      <div class="chips " role="group" aria-label="Gift-tin shapes" data-reveal><button class="chip is-on" type="button" data-pick="shape" data-target="hero" data-id="round" aria-pressed="true">Round</button><button class="chip" type="button" data-pick="shape" data-target="hero" data-id="square" aria-pressed="false">Square</button><button class="chip" type="button" data-pick="shape" data-target="hero" data-id="rect" aria-pressed="false">Rectangular</button><button class="chip" type="button" data-pick="shape" data-target="hero" data-id="oval" aria-pressed="false">Oval</button></div><div class="spec" aria-live="polite" data-reveal><div class="pane is-on" data-pane="round"><div class="spec__k">Round tin</div><div class="spec__v">Ø 73–265 mm · H 34–210 mm</div><p>Six standard diameters, in many heights.</p></div><div class="pane" data-pane="square"><div class="spec__k">Square tin</div><div class="spec__v">120–240 mm sides · H 40–100 mm</div><p>Five standard sizes, from about 100 g to 1 kg.</p></div><div class="pane" data-pane="rect"><div class="spec__k">Rectangular tin</div><div class="spec__v">Sizes on request</div><p>Made to your specification.</p></div><div class="pane" data-pane="oval"><div class="spec__k">Oval tin</div><div class="spec__v">Ø 300 mm · H 40–100 mm</div><p>A special-mold shape for presentation packs.</p></div></div>
       
     </div>
-    <figure class="hero__art"><svg class="art " viewBox="0 0 200 180" aria-hidden="true" focusable="false"><ellipse class="a-shadow" cx="100" cy="162" rx="84" ry="12"/><path class="a-l" d="M24 62L100 94V160L24 128Z"/><path class="a-r" d="M176 62L100 94V160L176 128Z"/><path class="a-band" d="M24 90L100 122V138L24 106Z"/><path class="a-band2" d="M176 90L100 122V138L176 106Z"/><path class="a-top" d="M100 30L176 62L100 94L24 62Z"/><path class="a-ln" d="M100 42L162 68L100 86L38 68Z"/></svg><figcaption class="fine">Illustrative drawing, not a client design.</figcaption></figure>
+    <div class="stage " data-rig="product" data-pose="hero" data-cursor="drag" data-shape="round" data-theme="eid" data-cw="0" data-finish="emboss" role="img" aria-label="3D gift tin: drag to rotate"><div class="stage__fb" aria-hidden="true"><svg class="art " viewBox="0 0 200 180" aria-hidden="true" focusable="false"><ellipse class="a-shadow" cx="100" cy="150" rx="82" ry="18"/><path class="a-body" d="M20 60V120C20 133 56 144 100 144S180 133 180 120V60Z"/><path class="a-band" d="M20 84C20 97 56 108 100 108S180 97 180 84V102C180 115 144 126 100 126S20 115 20 102Z"/><ellipse class="a-top" cx="100" cy="60" rx="80" ry="24"/><ellipse class="a-ln" cx="100" cy="60" rx="64" ry="18"/></svg></div></div>
   </div>
+  
 </section>
 <section class="sec" id="s1" aria-labelledby="s1-h">
   <div class="wrap stack">
-    <div class="sec__head" data-reveal><p class="eyebrow"><span class="dot"></span>Shapes and sizes</p><h2 class="h2" id="s1-h">Four shapes, many sizes</h2></div>
-    <dl class="specs" data-reveal><div class="spec"><div class="spec__art"><svg class="art " viewBox="0 0 200 180" aria-hidden="true" focusable="false"><ellipse class="a-shadow" cx="100" cy="150" rx="82" ry="18"/><path class="a-body" d="M20 60V120C20 133 56 144 100 144S180 133 180 120V60Z"/><path class="a-band" d="M20 84C20 97 56 108 100 108S180 97 180 84V102C180 115 144 126 100 126S20 115 20 102Z"/><ellipse class="a-top" cx="100" cy="60" rx="80" ry="24"/><ellipse class="a-ln" cx="100" cy="60" rx="64" ry="18"/></svg></div><dt>Round tin</dt><dd><span class="spec__v">Ø 73–265 mm · H 34–210 mm</span><br><span class="spec__n">Six standard diameters, in many heights.</span></dd></div><div class="spec"><div class="spec__art"><svg class="art " viewBox="0 0 200 180" aria-hidden="true" focusable="false"><ellipse class="a-shadow" cx="100" cy="162" rx="84" ry="12"/><path class="a-l" d="M24 62L100 94V160L24 128Z"/><path class="a-r" d="M176 62L100 94V160L176 128Z"/><path class="a-band" d="M24 90L100 122V138L24 106Z"/><path class="a-band2" d="M176 90L100 122V138L176 106Z"/><path class="a-top" d="M100 30L176 62L100 94L24 62Z"/><path class="a-ln" d="M100 42L162 68L100 86L38 68Z"/></svg></div><dt>Square tin</dt><dd><span class="spec__v">120–240 mm sides · H 40–100 mm</span><br><span class="spec__n">Five standard sizes, from about 100 g to 1 kg.</span></dd></div><div class="spec"><div class="spec__art"><svg class="art " viewBox="0 0 200 180" aria-hidden="true" focusable="false"><ellipse class="a-shadow" cx="100" cy="160" rx="88" ry="12"/><path class="a-l" d="M14 74L88 104V150L14 120Z"/><path class="a-r" d="M186 62L88 104V150L186 108Z"/><path class="a-band" d="M14 96L88 126V138L14 108Z"/><path class="a-band2" d="M186 82L88 124V136L186 94Z"/><path class="a-top" d="M14 74L112 32L186 62L88 104Z"/><path class="a-ln" d="M34 74L112 42L168 63L90 94Z"/></svg></div><dt>Rectangular tin</dt><dd><span class="spec__v">Sizes on request</span><br><span class="spec__n">Made to your specification.</span></dd></div><div class="spec"><div class="spec__art"><svg class="art " viewBox="0 0 200 180" aria-hidden="true" focusable="false"><ellipse class="a-shadow" cx="100" cy="148" rx="90" ry="16"/><path class="a-body" d="M14 64V104C14 124 52 140 100 140S186 124 186 104V64Z"/><path class="a-band" d="M14 84C14 104 52 118 100 118S186 104 186 84V98C186 118 148 132 100 132S14 118 14 98Z"/><ellipse class="a-top" cx="100" cy="64" rx="86" ry="32"/><ellipse class="a-ln" cx="100" cy="64" rx="70" ry="25"/></svg></div><dt>Oval tin</dt><dd><span class="spec__v">Ø 300 mm · H 40–100 mm</span><br><span class="spec__n">A special-mold shape for presentation packs.</span></dd></div></dl>
+    <header class="sec-head"><p class="eyebrow"><span class="dot"></span>Shapes and sizes</p><h2 class="h2" data-split id="s1-h">Four shapes, many sizes</h2></header>
+    <dl class="specs" data-reveal><div class="specrow"><div class="specrow__art"><svg class="art " viewBox="0 0 200 180" aria-hidden="true" focusable="false"><ellipse class="a-shadow" cx="100" cy="150" rx="82" ry="18"/><path class="a-body" d="M20 60V120C20 133 56 144 100 144S180 133 180 120V60Z"/><path class="a-band" d="M20 84C20 97 56 108 100 108S180 97 180 84V102C180 115 144 126 100 126S20 115 20 102Z"/><ellipse class="a-top" cx="100" cy="60" rx="80" ry="24"/><ellipse class="a-ln" cx="100" cy="60" rx="64" ry="18"/></svg></div><dt>Round tin</dt><dd><span class="spec__v">Ø 73–265 mm · H 34–210 mm</span><br><span class="spec__n">Six standard diameters, in many heights.</span></dd></div><div class="specrow"><div class="specrow__art"><svg class="art " viewBox="0 0 200 180" aria-hidden="true" focusable="false"><ellipse class="a-shadow" cx="100" cy="162" rx="84" ry="12"/><path class="a-l" d="M24 62L100 94V160L24 128Z"/><path class="a-r" d="M176 62L100 94V160L176 128Z"/><path class="a-band" d="M24 90L100 122V138L24 106Z"/><path class="a-band2" d="M176 90L100 122V138L176 106Z"/><path class="a-top" d="M100 30L176 62L100 94L24 62Z"/><path class="a-ln" d="M100 42L162 68L100 86L38 68Z"/></svg></div><dt>Square tin</dt><dd><span class="spec__v">120–240 mm sides · H 40–100 mm</span><br><span class="spec__n">Five standard sizes, from about 100 g to 1 kg.</span></dd></div><div class="specrow"><div class="specrow__art"><svg class="art " viewBox="0 0 200 180" aria-hidden="true" focusable="false"><ellipse class="a-shadow" cx="100" cy="160" rx="88" ry="12"/><path class="a-l" d="M14 74L88 104V150L14 120Z"/><path class="a-r" d="M186 62L88 104V150L186 108Z"/><path class="a-band" d="M14 96L88 126V138L14 108Z"/><path class="a-band2" d="M186 82L88 124V136L186 94Z"/><path class="a-top" d="M14 74L112 32L186 62L88 104Z"/><path class="a-ln" d="M34 74L112 42L168 63L90 94Z"/></svg></div><dt>Rectangular tin</dt><dd><span class="spec__v">Sizes on request</span><br><span class="spec__n">Made to your specification.</span></dd></div><div class="specrow"><div class="specrow__art"><svg class="art " viewBox="0 0 200 180" aria-hidden="true" focusable="false"><ellipse class="a-shadow" cx="100" cy="148" rx="90" ry="16"/><path class="a-body" d="M14 64V104C14 124 52 140 100 140S186 124 186 104V64Z"/><path class="a-band" d="M14 84C14 104 52 118 100 118S186 104 186 84V98C186 118 148 132 100 132S14 118 14 98Z"/><ellipse class="a-top" cx="100" cy="64" rx="86" ry="32"/><ellipse class="a-ln" cx="100" cy="64" rx="70" ry="25"/></svg></div><dt>Oval tin</dt><dd><span class="spec__v">Ø 300 mm · H 40–100 mm</span><br><span class="spec__n">A special-mold shape for presentation packs.</span></dd></div></dl>
   </div>
 </section>
 <section class="sec" id="s2" aria-labelledby="s2-h">
   <div class="wrap stack">
-    <div class="sec__head" data-reveal><p class="eyebrow"><span class="dot"></span>Finishes</p><h2 class="h2" id="s2-h">Make the gift feel like one</h2></div>
-    <ul class="grid" data-reveal><li class="card"><h3 class="h3">Embossing</h3><p>Raised and recessed effects on lid and body that add movement and make the design stand out.</p></li><li class="card"><h3 class="h3">Soft touch</h3><p>A silky coating over the whole pack that invites touch.</p></li><li class="card"><h3 class="h3">Gloss</h3><p>Special gloss, alone or combined with matte, for bright, lively visuals on the metal.</p></li></ul>
-<p><a class="go" href="/en/capabilities/">All printing and finishing options<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></p>
+    <header class="sec-head"><p class="eyebrow"><span class="dot"></span>Finishes</p><h2 class="h2" data-split id="s2-h">Make the gift feel like one</h2></header>
+    <ul class="grid" data-reveal><li class="card tilt"><h3 class="h3">Embossing</h3><p>Raised and recessed effects on lid and body that add movement and make the design stand out.</p></li><li class="card tilt"><h3 class="h3">Soft touch</h3><p>A silky coating over the whole pack that invites touch.</p></li><li class="card tilt"><h3 class="h3">Gloss</h3><p>Special gloss, alone or combined with matte, for bright, lively visuals on the metal.</p></li></ul>
+<p data-reveal><a class="go" href="/en/capabilities/">All printing and finishing options<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></p>
   </div>
 </section>
 <section class="sec" id="s3" aria-labelledby="s3-h">
   <div class="wrap stack">
-    <div class="sec__head" data-reveal><p class="eyebrow"><span class="dot"></span>Seasons</p><h2 class="h2" id="s3-h">Ready before Ramadan and Eid</h2></div>
+    <header class="sec-head"><p class="eyebrow"><span class="dot"></span>Seasons</p><h2 class="h2" data-split id="s3-h">Ready before Ramadan and Eid</h2></header>
     <div class="prose" data-reveal><p>Food has seasons, and your tins should be ready before them. Variable printing puts several versions of the same pack on one printing plate, so a seasonal range does not need a separate plate for every design.</p></div>
 <div class="tbc" data-tbc data-reveal role="group" aria-labelledby="s3-tbc"><span class="badge">To be confirmed</span><h3 class="h3 tbc__title" id="s3-tbc">Seasonal planning</h3><ul><li>Order deadlines ahead of Ramadan and Eid</li><li>Minimum order quantity</li><li>Food-safe inner lining options</li></ul></div>
   </div>
 </section>
-<section class="cta" aria-labelledby="cta-h">
-  <div class="wrap">
-    <div class="panel" data-reveal>
-      <p class="eyebrow"><span class="dot"></span>Request a quote</p>
-      <h2 class="h2" id="cta-h">Let’s put your brand on metal.</h2>
-      <p class="lead">Tell us what you are packing, the pack size and your artwork idea. We will come back with a quotation.</p>
-      <div class="cta-row"><a class="btn" href="https://jc-order.netlify.app/" target="_blank" rel="noopener">Request a quote<span class="vh"> (opens in a new tab)</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a><a class="btn btn--ghost" href="mailto:sales@jordantinplate.com"><span class="ltr">sales@jordantinplate.com</span></a><a class="btn btn--ghost" href="tel:+96264051125"><span class="ltr">+962 6 4051125</span></a></div>
+<section class="contact" id="contact" aria-labelledby="contact-h">
+  <div class="wrap contact__grid">
+    <div>
+      <p class="eyebrow"><span class="dot"></span>Let’s talk</p>
+      <h2 class="mega" data-split id="contact-h">Let’s put your brand on metal.</h2>
+      <ul class="contact__list" data-reveal>
+        <li><span>Phone</span><a href="tel:+96264051125" dir="ltr">+962 6 4051125</a></li>
+        <li><span>Email</span><a href="mailto:sales@jordantinplate.com">sales@jordantinplate.com</a></li>
+        <li><span>Address</span><em>Al-Zmailat – Al-Muwaqqar, Amman, Jordan</em></li>
+      </ul>
+      <ul class="social" data-reveal><li><a href="https://www.linkedin.com/company/jordan-tin-plate-canning-printing-industrial-co" target="_blank" rel="noopener noreferrer">LinkedIn<span class="vh"> (opens in a new tab)</span></a></li><li><a href="https://www.instagram.com/jordantinplate" target="_blank" rel="noopener noreferrer">Instagram <bdi dir="ltr">@jordantinplate</bdi><span class="vh"> (opens in a new tab)</span></a></li><li><a href="https://x.com/jordantinplate" target="_blank" rel="noopener noreferrer">X <bdi dir="ltr">@jordantinplate</bdi><span class="vh"> (opens in a new tab)</span></a></li><li><a href="https://www.facebook.com/jordantinplate" target="_blank" rel="noopener noreferrer">Facebook <bdi dir="ltr">@jordantinplate</bdi><span class="vh"> (opens in a new tab)</span></a></li></ul>
+    </div>
+    <div class="quote" id="order" data-reveal>
+      <h3 class="quote__t">Request your quote online</h3>
+      <p class="quote__p">Tell us what you are packing, the pack size and your artwork idea. We will come back with a quotation. Use our online order tool to describe your pack. It opens in a new tab.</p>
+      <a class="btn magnetic" href="https://jc-order.netlify.app/" target="_blank" rel="noopener"><span>Open the order tool</span><svg class="ext" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg><span class="vh"> (opens in a new tab)</span></a>
+      <p class="quote__alt">Or email us: <a href="mailto:sales@jordantinplate.com"><bdi dir="ltr">sales@jordantinplate.com</bdi></a></p>
     </div>
   </div>
 </section>
@@ -188,24 +214,34 @@
   <div class="wrap">
     <div class="foot__grid">
       <div>
-        <a class="brand" href="/en/" aria-label="Jordan Tinplate Canning, home page"><svg viewBox="0 0 40 40" class="brand__mark" aria-hidden="true" focusable="false"><circle cx="20" cy="20" r="17" fill="none" stroke="currentColor" stroke-width="2.4"/><circle cx="20" cy="20" r="10.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-dasharray="3 3"/><circle cx="20" cy="20" r="3.4" fill="var(--accent)"/></svg><span class="brand__word" style="display:inline">JORDAN <b>TINPLATE</b> CANNING</span></a>
+        <a class="brand" href="/en/" aria-label="Jordan Tinplate Canning, home page"><svg viewBox="0 0 40 40" class="brand__mark" aria-hidden="true" focusable="false"><circle cx="20" cy="20" r="17" fill="none" stroke="currentColor" stroke-width="2.4"/><circle cx="20" cy="20" r="10.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-dasharray="3 3"/><circle cx="20" cy="20" r="3.4" fill="var(--accent)"/></svg><span class="brand__word"><span>JORDAN <b>TINPLATE</b></span><span class="brand__sub">CANNING</span></span></a>
         <p>Custom tinplate packaging for food and beverage brands. Made in Jordan since 1998.</p>
+        <p class="foot__cert">FSSC 22000 certified (Bureau Veritas, UKAS-accredited). JFDA-approved food-contact materials.</p>
       </div>
       <nav aria-label="Industries"><h2>Industries</h2><ul><li><a href="/en/products/olive-oil/">Olive oil</a></li><li><a href="/en/products/milk-powder-dairy/">Milk powder &amp; dairy</a></li><li><a href="/en/products/sweets-kaak-chocolate/">Sweets, ka’ak &amp; chocolate</a></li><li><a href="/en/products/white-cheese/">White cheese</a></li><li><a href="/en/products/coffee-tea/">Coffee &amp; tea</a></li><li><a href="/en/products/industrial/">Industrial</a></li></ul></nav>
       <nav aria-label="Company"><h2>Company</h2><ul><li><a href="/en/products/">Products</a></li><li><a href="/en/capabilities/">Capabilities</a></li><li><a href="/en/about/">About</a></li><li><a href="/en/news/">News</a></li><li><a href="/en/contact/">Contact</a></li></ul></nav>
-      <div><h2>Contact</h2><ul>
-        <li><a href="tel:+96264051125" class="ltr">+962 6 4051125</a></li>
-        <li><a href="mailto:sales@jordantinplate.com">sales@jordantinplate.com</a></li>
-        <li><a href="https://www.linkedin.com/company/jordan-tin-plate-canning-printing-industrial-co" target="_blank" rel="noopener noreferrer">LinkedIn<span class="vh"> (opens in a new tab)</span></a></li><li><a href="https://www.instagram.com/jordantinplate" target="_blank" rel="noopener noreferrer">Instagram<span class="vh"> (opens in a new tab)</span></a></li><li><a href="https://www.facebook.com/JordanTinplate" target="_blank" rel="noopener noreferrer">Facebook<span class="vh"> (opens in a new tab)</span></a></li>
-      </ul></div>
     </div>
     <div class="foot__base">
-      <span>© 2026 Jordan Tinplate Canning. All rights reserved.</span>
+      <span class="foot__c">© <bdi>2026</bdi> <bdi>Jordan Tinplate Canning</bdi>. All rights reserved.</span>
       <span>Draft content: items marked “to be confirmed” are waiting for management approval.</span>
-      <button class="linkbtn" id="review-btn" type="button" aria-pressed="false">Review mode</button>
+      <span class="review-only" data-tbc>Final logo (vector)</span>
+      <button class="linkbtn" id="reviewBtn" type="button" aria-pressed="false">Review mode</button>
     </div>
   </div>
 </footer>
-<script src="/assets/js/site.js?v=f00c3ab8" defer></script>
+<script type="application/json" id="jt-data">{"lang":"en","ld":["Design & plates","Print & coat","Cut & form","Seal & ship"],"cursor":"Drag","loading":"Loading","ready":"Page ready","home":false}</script>
+<script src="/assets/js/site.js?v=d78925fd" defer></script>
+<script src="/assets/vendor/gsap/gsap.min.js" defer></script>
+<script src="/assets/vendor/gsap/ScrollTrigger.min.js" defer></script>
+<script src="/assets/vendor/lenis/lenis.min.js" defer></script>
+<script type="module" src="/assets/js/engine/main.js?v=e44a630a"></script>
+<script>
+  // Last-resort guard: if the engine never starts (blocked, old browser) the page must not stay covered or scroll-locked.
+  setTimeout(function () {
+    if (window.__jtBooted) return;
+    var l = document.getElementById('loader'); if (l) l.remove();
+    var h = document.documentElement; h.classList.remove('intro'); h.classList.add('no-fx');
+  }, 8000);
+</script>
 </body>
 </html>

@@ -1,4 +1,5 @@
-// Procedural "printed tinplate" artwork. Every texture is drawn on a canvas, so the prototype needs no image files.
+// Procedural "printed tinplate" artwork. Every texture is drawn on a canvas, so the site needs no image files for the 3D tins.
+// Themes: brand (colourways), olive, eid (sweets/ka'ak), cheese, milk (milk powder), coffee (coffee & tea), industrial.
 import * as THREE from 'three';
 
 const FD = '"Bricolage Grotesque","Readex Pro",system-ui,sans-serif';
@@ -181,6 +182,54 @@ function drawArt(ctx, w, h, theme, cwI, panels) {
       txt(ctx, 'جبنة بيضاء', px, cy + 62 * k, 70 * k, '#1b4f8a', { font: FA, weight: 600 });
       txt(ctx, 'SAMPLE ARTWORK', px, cy + 128 * k, 16 * k, '#1b4f8a', { spacing: 6 * k, weight: 500, alpha: 0.5 });
     });
+  } else if (theme === 'milk') {
+    grad(ctx, w, h, '#f6f9ff', '#cfe0f5', 1);
+    ctx.fillStyle = '#1f5fae'; ctx.fillRect(0, h * 0.05, w, 12 * k); ctx.fillRect(0, h * 0.95 - 12 * k, w, 12 * k);
+    ringGrid(ctx, w, h, '#1f5fae', 0.07, 120 * k, 40 * k);
+    panels.forEach((px) => {
+      ctx.save();
+      ctx.fillStyle = '#1f5fae'; ctx.beginPath(); ctx.arc(px, cy - 10 * k, 215 * k, 0, 7); ctx.fill();
+      ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 5 * k; ctx.beginPath(); ctx.arc(px, cy - 10 * k, 198 * k, 0, 7); ctx.stroke();
+      ctx.fillStyle = '#ffffff';
+      ctx.beginPath(); ctx.moveTo(px, cy - 168 * k); ctx.quadraticCurveTo(px + 46 * k, cy - 100 * k, px, cy - 78 * k);
+      ctx.quadraticCurveTo(px - 46 * k, cy - 100 * k, px, cy - 168 * k); ctx.fill();
+      ctx.restore();
+      txt(ctx, 'MILK POWDER', px, cy - 10 * k, 52 * k, '#ffffff', { spacing: 3 * k, weight: 800 });
+      txt(ctx, 'حليب بودرة', px, cy + 64 * k, 66 * k, '#dbe9ff', { font: FA, weight: 600 });
+      txt(ctx, 'SAMPLE ARTWORK', px, cy + 128 * k, 16 * k, '#ffffff', { spacing: 6 * k, weight: 500, alpha: 0.55 });
+    });
+  } else if (theme === 'coffee') {
+    grad(ctx, w, h, '#3a2216', '#150b06', 1);
+    ringGrid(ctx, w, h, '#c8943c', 0.09, 125 * k, 42 * k);
+    ctx.fillStyle = '#c8943c'; ctx.fillRect(0, h * 0.06, w, 8 * k); ctx.fillRect(0, h * 0.94 - 8 * k, w, 8 * k);
+    panels.forEach((px) => {
+      ctx.save();
+      ctx.strokeStyle = '#c8943c'; ctx.lineWidth = 5 * k;
+      ctx.beginPath(); ctx.ellipse(px, cy - 96 * k, 74 * k, 46 * k, -0.35, 0, 7); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(px - 60 * k, cy - 70 * k); ctx.quadraticCurveTo(px, cy - 120 * k, px + 60 * k, cy - 122 * k); ctx.stroke();
+      ctx.restore();
+      txt(ctx, 'COFFEE', px, cy + 10 * k, 92 * k, '#f3dcae', { spacing: 6 * k, weight: 800 });
+      txt(ctx, '& TEA', px, cy + 86 * k, 54 * k, '#c8943c', { spacing: 12 * k, weight: 700 });
+      txt(ctx, 'قهوة وشاي', px, cy + 156 * k, 56 * k, '#f3dcae', { font: FA, weight: 500 });
+      txt(ctx, 'SAMPLE ARTWORK', px, cy + 214 * k, 16 * k, '#ffffff', { spacing: 6 * k, weight: 500, alpha: 0.45 });
+    });
+  } else if (theme === 'industrial') {
+    grad(ctx, w, h, '#c9d0da', '#8d97a6', 1);
+    ctx.fillStyle = '#e8662a'; ctx.fillRect(0, h * 0.05, w, 16 * k); ctx.fillRect(0, h * 0.95 - 16 * k, w, 16 * k);
+    ctx.save(); ctx.globalAlpha = 0.14; ctx.strokeStyle = '#2a3340'; ctx.lineWidth = 3 * k;
+    for (let x = -h; x < w; x += 46 * k) { ctx.beginPath(); ctx.moveTo(x, h); ctx.lineTo(x + h, 0); ctx.stroke(); }
+    ctx.restore();
+    panels.forEach((px) => {
+      ctx.save();
+      ctx.fillStyle = '#ffffff'; ctx.strokeStyle = '#2a3340'; ctx.lineWidth = 6 * k;
+      ctx.beginPath(); ctx.roundRect(px - 235 * k, cy - 150 * k, 470 * k, 300 * k, 30 * k); ctx.fill(); ctx.stroke();
+      ctx.fillStyle = '#e8662a'; ctx.fillRect(px - 235 * k, cy - 150 * k, 470 * k, 70 * k);
+      ctx.restore();
+      txt(ctx, 'INDUSTRIAL', px, cy - 114 * k, 44 * k, '#ffffff', { spacing: 8 * k, weight: 800 });
+      txt(ctx, 'PAINT · CHEMICALS', px, cy - 18 * k, 40 * k, '#2a3340', { spacing: 4 * k, weight: 700 });
+      txt(ctx, 'دهانات · كيماويات', px, cy + 52 * k, 50 * k, '#2a3340', { font: FA, weight: 500 });
+      txt(ctx, 'SAMPLE ARTWORK', px, cy + 114 * k, 16 * k, '#2a3340', { spacing: 6 * k, weight: 500, alpha: 0.5 });
+    });
   }
 }
 
@@ -191,7 +240,10 @@ function drawLid(ctx, s, theme, cwI) {
     brand: [cw.a, cw.b, cw.accent],
     olive: ['#2a4f2d', '#0d2212', '#d9a93c'],
     eid: ['#2a1f73', '#0d0933', '#e9bd5a'],
-    cheese: ['#ffffff', '#dfe8ef', '#2a6fb8']
+    cheese: ['#ffffff', '#dfe8ef', '#2a6fb8'],
+    milk: ['#f6f9ff', '#cfe0f5', '#1f5fae'],
+    coffee: ['#3a2216', '#150b06', '#c8943c'],
+    industrial: ['#c9d0da', '#8d97a6', '#e8662a']
   }[theme] || [cw.a, cw.b, cw.accent];
   const g = ctx.createRadialGradient(c, c, 10, c, c, c);
   g.addColorStop(0, pal[0]); g.addColorStop(1, pal[1]);
@@ -202,6 +254,9 @@ function drawLid(ctx, s, theme, cwI) {
   if (theme === 'eid') { starLattice(ctx, s, s, s * 0.16, pal[2], 2, 0.35); star8(ctx, c, c, c * 0.42, Math.PI / 8); ctx.fillStyle = pal[2]; ctx.fill(); }
   else if (theme === 'olive') { txt(ctx, 'EVOO', c, c, s * 0.2, pal[2], { weight: 800, spacing: 4 }); }
   else if (theme === 'cheese') { txt(ctx, 'جبنة', c, c - s * 0.03, s * 0.24, pal[2], { font: FA, weight: 700 }); }
+  else if (theme === 'milk') { txt(ctx, 'MILK', c, c, s * 0.2, pal[2], { weight: 800, spacing: 4 }); }
+  else if (theme === 'coffee') { txt(ctx, 'COFFEE', c, c, s * 0.15, pal[2], { weight: 800, spacing: 3 }); }
+  else if (theme === 'industrial') { txt(ctx, 'IND', c, c, s * 0.24, pal[2], { weight: 800, spacing: 4 }); }
   else { txt(ctx, 'JT', c, c, s * 0.34, pal[2], { weight: 800 }); }
 }
 

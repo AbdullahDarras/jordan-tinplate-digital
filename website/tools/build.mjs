@@ -1,14 +1,18 @@
 #!/usr/bin/env node
-// Static site generator for Jordan Tinplate Canning (phase 1). No dependencies.
+// Static site generator for Jordan Tinplate Canning. No dependencies.
 //   node website/tools/build.mjs            (SITE_URL=https://example.com node ... to override the production origin)
 // Reads tools/content.mjs, writes en/, ar/, sitemap.xml, robots.txt, index.html (language chooser), 404.html.
 // The generated files are committed; re-run this script after editing content.mjs.
+//
+// Every page (home and inner) shares one chrome: header, footer, tokens, cursor, page transitions and the 3D "stage" engine
+// (assets/js/engine/). All text is written into the HTML at build time, in the page's own language: the 3D layer, the
+// entrance, the animations and the lab controls are progressive enhancements on top of readable, linkable pages.
 
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import { fileURLToPath } from 'node:url';
-import { SITE, LANGS, UI, PAGES, NEWS, NAV } from './content.mjs';
+import { SITE, LANGS, UI, PAGES, NEWS, NAV, MARQUEE, FINISH_LAB, SHAPES_LAB, RANGE, IND_LIST, SEASONS, STORY, STEPS, PROOF_TBC, QUALITY } from './content.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const L = Object.keys(LANGS);                       // ['en', 'ar']
@@ -21,13 +25,13 @@ const T = (v, lang) => esc(tx(v, lang));
 const rel = (lang, page) => `/${lang}/${page.path}`;                          // site-relative URL
 const abs = (lang, page) => SITE.origin + rel(lang, page);
 const other = (lang) => L.find((l) => l !== lang);
-const pageRef = (id) => (id === 'catalogue' ? null : byId[id]);
 const hashOf = (f) => crypto.createHash('sha1').update(fs.readFileSync(path.join(ROOT, f))).digest('hex').slice(0, 8);
-const V = { css: hashOf('assets/css/site.css'), js: hashOf('assets/js/site.js') };
+const V = { css: hashOf('assets/css/site.css'), js: hashOf('assets/js/site.js'), eng: hashOf('assets/js/engine/main.js') };
 const brandName = (lang) => (lang === 'ar' ? SITE.nameAr : SITE.name);   // display name per language
 const OG_IMG = SITE.origin + '/assets/img/og-default.png';
+const pad2 = (n) => String(n).padStart(2, '0');
 
-// ---------------------------------------------------------------- tin illustrations (inline SVG)
+// ---------------------------------------------------------------- tin illustrations (inline SVG): the no-3D fallback inside every stage
 const ART = {
   round: `<ellipse class="a-shadow" cx="100" cy="150" rx="82" ry="18"/><path class="a-body" d="M20 60V120C20 133 56 144 100 144S180 133 180 120V60Z"/><path class="a-band" d="M20 84C20 97 56 108 100 108S180 97 180 84V102C180 115 144 126 100 126S20 115 20 102Z"/><ellipse class="a-top" cx="100" cy="60" rx="80" ry="24"/><ellipse class="a-ln" cx="100" cy="60" rx="64" ry="18"/>`,
   oval: `<ellipse class="a-shadow" cx="100" cy="148" rx="90" ry="16"/><path class="a-body" d="M14 64V104C14 124 52 140 100 140S186 124 186 104V64Z"/><path class="a-band" d="M14 84C14 104 52 118 100 118S186 104 186 84V98C186 118 148 132 100 132S14 118 14 98Z"/><ellipse class="a-top" cx="100" cy="64" rx="86" ry="32"/><ellipse class="a-ln" cx="100" cy="64" rx="70" ry="25"/>`,
@@ -36,45 +40,67 @@ const ART = {
   can: `<ellipse class="a-shadow" cx="100" cy="166" rx="56" ry="10"/><path class="a-body" d="M56 40V146C56 156 76 164 100 164S144 156 144 146V40Z"/><path class="a-band" d="M56 76C56 86 76 94 100 94S144 86 144 76V108C144 118 124 126 100 126S56 118 56 108Z"/><ellipse class="a-top" cx="100" cy="40" rx="44" ry="12"/><ellipse class="a-ln" cx="100" cy="40" rx="34" ry="8"/>`,
   oil: `<ellipse class="a-shadow" cx="100" cy="170" rx="58" ry="8"/><path class="a-l" d="M52 70H148V158Q148 168 138 168H62Q52 168 52 158Z"/><path class="a-band" d="M52 100H148V136H52Z"/><path class="a-top" d="M52 70L78 44H122L148 70Z"/><rect class="a-r" x="92" y="22" width="16" height="24"/><rect class="a-band2" x="87" y="14" width="26" height="9" rx="3"/><path class="a-ln2" d="M126 52C172 34 178 84 148 88"/>`
 };
-let gradId = 0;
+const SHAPE_ART = { round: 'round', square: 'square', rect: 'rect', oval: 'oval', oil: 'oil', oil1: 'oil', oil4: 'oil', oil8: 'oil', oil16: 'oil', cheese: 'oval', milk: 'can', coffee: 'square', paint: 'can' };
 const art = (key, cls = '') => {
   if (key === 'hero') {
     return `<svg class="art ${cls}" viewBox="0 0 520 420" aria-hidden="true" focusable="false"><svg x="240" y="8" width="250" height="225" viewBox="0 0 200 180">${ART.can}</svg><svg x="0" y="130" width="320" height="288" viewBox="0 0 200 180">${ART.round}</svg><svg x="300" y="210" width="210" height="190" viewBox="0 0 200 180">${ART.square}</svg></svg>`;
   }
-  gradId++;
   return `<svg class="art ${cls}" viewBox="0 0 200 180" aria-hidden="true" focusable="false">${ART[key] || ART.round}</svg>`;
 };
 const GRADIENT_DEFS = `<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs><linearGradient id="g-body" x1="0" x2="1" y1="0" y2="0"><stop offset="0" class="stop-a"/><stop offset=".38" class="stop-b"/><stop offset=".7" class="stop-c"/><stop offset="1" class="stop-a"/></linearGradient></defs></svg>`;
 const ARROW = `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>`;
 const DOWN = `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11M7 11l5 5 5-5M5 20h14"/></svg>`;
+const EXT = `<svg class="ext" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg>`;
+const SKIPI = `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5l8 7-8 7M14 5l8 7-8 7"/></svg>`;
 const MARK = `<svg viewBox="0 0 40 40" class="brand__mark" aria-hidden="true" focusable="false"><circle cx="20" cy="20" r="17" fill="none" stroke="currentColor" stroke-width="2.4"/><circle cx="20" cy="20" r="10.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-dasharray="3 3"/><circle cx="20" cy="20" r="3.4" fill="var(--accent)"/></svg>`;
+const brandWord = (lang) => lang === 'ar'
+  ? `<span class="brand__word"><span><b>الشركة الأردنية</b></span><span class="brand__sub">لصناعة وطباعة الصفيح والعبوات المعدنية</span></span>`
+  : `<span class="brand__word"><span>JORDAN <b>TINPLATE</b></span><span class="brand__sub">CANNING</span></span>`;
 
-// ---------------------------------------------------------------- blocks
+// ---------------------------------------------------------------- small blocks
 const tbcBadge = (lang) => `<span class="badge">${T(UI.tbc, lang)}</span>`;
 const goLink = (href, label, extra = '') => `<a class="go" href="${href}"${extra}>${label}${ARROW}</a>`;
 // External "Request a quote" link: the existing online order tool, new tab, rel="noopener".
-const orderLink = (lang, { cls = 'btn', label, icon = ARROW } = {}) =>
-  `<a class="${cls}" href="${SITE.orderUrl}" target="_blank" rel="noopener">${label || T(UI.quote, lang)}<span class="vh"> (${T(UI.opensNew, lang)})</span>${icon}</a>`;
+const orderLink = (lang, { cls = 'btn magnetic', label, icon = ARROW } = {}) =>
+  `<a class="${cls}" href="${SITE.orderUrl}" target="_blank" rel="noopener"><span>${label || T(UI.quote, lang)}</span>${icon}<span class="vh"> (${T(UI.opensNew, lang)})</span></a>`;
 const ctaHref = (c, lang) => {
   if (c.to === 'order') return { href: SITE.orderUrl, ext: true, order: true };
   if (c.to === 'catalogue') return { href: SITE.catalogue, ext: true };
   return { href: rel(lang, byId[c.to]) + (c.query || ''), ext: false };
 };
+const eyebrow = (v, lang) => (v ? `<p class="eyebrow"><span class="dot"></span>${T(v, lang)}</p>` : '');
 
+// 3D stage: an empty, sized box. The engine draws the tin into a canvas inside it; the SVG drawing is the fallback.
+function stage(lang, { pose, shape = 'round', theme = 'brand', cw = 0, finish = 'gloss', label, cls = '', rig = 'product' }) {
+  const lab = label || UI.dragTin;
+  const data = rig === 'journey'
+    ? `data-rig="journey" data-pose="hero"`
+    : `data-rig="product" data-pose="${pose}" data-cursor="drag" data-shape="${shape}" data-theme="${theme}" data-cw="${cw}" data-finish="${finish}"`;
+  return `<div class="stage ${cls}" ${data} role="img" aria-label="${T(lab, lang)}"><div class="stage__fb" aria-hidden="true">${art(rig === 'journey' ? 'hero' : (SHAPE_ART[shape] || 'round'))}</div></div>`;
+}
+
+// chips that switch the 3D tin AND the description pane ("picker"). Every pane is in the HTML; the script shows one.
+function picker(lang, { kind, target, items, aria, initial, panes = true, cls = '' }) {
+  const first = initial || items[0].id;
+  const chips = `<div class="chips ${cls}" role="group" aria-label="${T(aria, lang)}" data-reveal>${items.map((it) =>
+    `<button class="chip${it.id === first ? ' is-on' : ''}" type="button" data-pick="${kind}" data-target="${target}" data-id="${it.id}" aria-pressed="${it.id === first}">${T(it.label, lang)}</button>`).join('')}</div>`;
+  if (!panes) return chips;
+  const body = items.map((it) => it.desc
+    ? `<p class="pane${it.id === first ? ' is-on' : ''}" data-pane="${it.id}">${T(it.desc, lang)}</p>`
+    : `<div class="pane${it.id === first ? ' is-on' : ''}" data-pane="${it.id}"><div class="spec__k">${T(it.name, lang)}</div><div class="spec__v">${T(it.dim, lang)}</div><p>${T(it.note, lang)}</p></div>`).join('');
+  return chips + (items[0].desc ? `<div class="finish__desc" aria-live="polite" data-reveal>${body}</div>` : `<div class="spec" aria-live="polite" data-reveal>${body}</div>`);
+}
+
+// ---------------------------------------------------------------- plain content blocks (inner pages)
 function renderBlock(b, lang, ctx) {
   const lvl = ctx.hasTitle ? 3 : 2;
   switch (b.k) {
     case 'cards':
-      return `<ul class="grid" data-reveal>${b.items.map((i) => `<li class="card">${i.art ? `<div class="card__art">${art(i.art)}</div>` : ''}<h${lvl} class="h3">${T(i.h, lang)}</h${lvl}><p>${T(i.p, lang)}</p>${i.meta ? `<div class="meta"><span>${T(i.meta, lang)}</span></div>` : ''}</li>`).join('')}</ul>`;
-    case 'tiles':
-      return `<ul class="grid grid--tiles" data-reveal>${b.ids.map((id) => {
-        const p = byId[id];
-        return `<li><a class="card tile" href="${rel(lang, p)}"><div class="card__art">${art(p.hero.art)}</div><h${lvl} class="h3">${T(p.tile.h, lang)}</h${lvl}><p>${T(p.tile.p, lang)}</p><span class="go">${T(UI.explore, lang)}${ARROW}</span></a></li>`;
-      }).join('')}</ul>`;
+      return `<ul class="grid" data-reveal>${b.items.map((i) => `<li class="card tilt">${i.art ? `<div class="card__ico">${art(i.art)}</div>` : ''}<h${lvl} class="h3">${T(i.h, lang)}</h${lvl}><p>${T(i.p, lang)}</p>${i.meta ? `<div class="meta"><span>${T(i.meta, lang)}</span></div>` : ''}</li>`).join('')}</ul>`;
     case 'steps':
-      return `<ol class="steps" data-reveal>${b.items.map((i) => `<li><h${lvl} class="h3">${T(i.h, lang)}</h${lvl}><p>${T(i.p, lang)}</p></li>`).join('')}</ol>`;
+      return `<ol class="stepgrid" data-reveal>${b.items.map((i) => `<li><h${lvl} class="h3">${T(i.h, lang)}</h${lvl}><p>${T(i.p, lang)}</p></li>`).join('')}</ol>`;
     case 'specs':
-      return `<dl class="specs" data-reveal>${b.rows.map((r) => `<div class="spec${r.art ? '' : ' spec--noart'}${r.tbc ? ' spec--tbc' : ''}"${r.tbc ? ' data-tbc' : ''}>${r.art ? `<div class="spec__art">${art(r.art)}</div>` : ''}<dt>${T(r.k, lang)}</dt><dd><span class="spec__v">${T(r.v, lang)}</span>${r.tbc ? ' ' + tbcBadge(lang) : ''}${r.note ? `<br><span class="spec__n">${T(r.note, lang)}</span>` : ''}</dd></div>`).join('')}</dl>`;
+      return `<dl class="specs" data-reveal>${b.rows.map((r) => `<div class="specrow${r.art ? '' : ' specrow--noart'}${r.tbc ? ' specrow--tbc' : ''}"${r.tbc ? ' data-tbc' : ''}>${r.art ? `<div class="specrow__art">${art(r.art)}</div>` : ''}<dt>${T(r.k, lang)}</dt><dd><span class="spec__v">${T(r.v, lang)}</span>${r.tbc ? ' ' + tbcBadge(lang) : ''}${r.note ? `<br><span class="spec__n">${T(r.note, lang)}</span>` : ''}</dd></div>`).join('')}</dl>`;
     case 'tbc': {
       const items = b.cards
         ? `<ul class="tbc__cards">${b.items.map((i) => `<li>${tbcBadge(lang)}<span>${T(i, lang)}</span></li>`).join('')}</ul>`
@@ -82,38 +108,205 @@ function renderBlock(b, lang, ctx) {
       return `<div class="tbc" data-tbc data-reveal role="group" aria-labelledby="${ctx.id}-tbc">${b.cards ? '' : tbcBadge(lang)}<h${lvl} class="h3 tbc__title" id="${ctx.id}-tbc">${T(b.title, lang)}</h${lvl}>${items}${b.note ? `<p class="tbc__note">${T(b.note, lang)}</p>` : ''}</div>`;
     }
     case 'prose': return `<div class="prose" data-reveal>${b.ps.map((p) => `<p>${T(p, lang)}</p>`).join('')}</div>`;
-    case 'quote': return `<blockquote class="quote" data-reveal>${T(b.text, lang)}</blockquote>`;
+    case 'quote': return `<blockquote class="pull" data-reveal>${T(b.text, lang)}</blockquote>`;
     case 'fine': return `<p class="fine">${T(b.text, lang)}</p>`;
-    case 'link': return `<p>${goLink(rel(lang, byId[b.to]), T(b.label, lang))}</p>`;
-    case 'news': {
-      const list = b.limit ? NEWS.slice(0, b.limit) : NEWS;
-      return `<ul class="grid grid--2 news" data-reveal>${list.map((n) => `<li class="card"><span class="tag">${T(n.tag, lang)}</span><h${lvl} class="h3">${n.href ? `<a href="${esc(n.href)}" target="_blank" rel="noopener noreferrer">${T(n.h, lang)}<span class="vh"> (${T(UI.opensNew, lang)})</span></a>` : T(n.h, lang)}</h${lvl}><p>${T(n.p, lang)}</p>${n.href ? `<span class="go">${T(UI.read, lang)}${ARROW}</span>` : ''}${n.tbc ? `<span class="badge" data-tbc>${T(n.tbc, lang)}</span>` : ''}</li>`).join('')}</ul>`;
-    }
-    case 'contact': return contactBlock(lang);
+    case 'link': return `<p data-reveal>${goLink(rel(lang, byId[b.to]), T(b.label, lang))}</p>`;
     default: throw new Error('unknown block ' + b.k);
   }
 }
 
-function contactBlock(lang) {
-  return `<div class="panel contact">
-  <div data-reveal>
-    <p class="eyebrow"><span class="dot"></span>${T(UI.quote, lang)}</p>
-    <h2 class="h2">${T(UI.ctaTitle, lang)}</h2>
-    <ul class="clist" style="margin-top:2rem">
-      <li><span class="k">${T(UI.phone, lang)}</span><a href="tel:${SITE.tel}" class="ltr">${SITE.phone}</a></li>
-      <li><span class="k">${T(UI.mail, lang)}</span><a href="mailto:${SITE.email}">${SITE.email}</a></li>
-      <li><span class="k">${T(UI.address, lang)}</span><span>${T(UI.addressArea, lang)}</span></li>
-    </ul>
-    <ul class="social">${Object.entries(SITE.social).map(([n, u]) => `<li><a href="${u}" target="_blank" rel="noopener noreferrer">${n}<span class="vh"> (${T(UI.opensNew, lang)})</span></a></li>`).join('')}</ul>
-    <a class="btn btn--ghost" href="${SITE.catalogue}" target="_blank" rel="noopener noreferrer">${T(UI.catalogue, lang)}${DOWN}</a>
+// ---------------------------------------------------------------- creative section kinds (home + shared with inner pages)
+const secHead = (lang, s, def, id) => `<header class="sec-head">${eyebrow(s.eyebrow || def.eyebrow, lang)}<h2 class="h2" data-split id="${id}-h">${T(s.title || def.title, lang)}</h2>${(s.intro || def.intro) ? `<p class="lead" data-reveal>${T(s.intro || def.intro, lang)}</p>` : ''}</header>`;
+const moreLink = (lang, l) => (l ? `<p class="more wrap" data-reveal>${goLink(rel(lang, byId[l.to]), T(l.label, lang))}</p>` : '');
+
+const KINDS = {
+  marquee(lang) {
+    const items = MARQUEE.map((m) => `<span>${T(m, lang)}</span><i></i>`).join('');
+    return `<section class="marquee" aria-label="${T(UI.sectors, lang)}"><div class="marquee__track"><div class="marquee__row" data-marquee>${items}</div></div></section>`;
+  },
+
+  journey(lang, s) {
+    const id = s.id || 'journey';
+    return `<section class="journey" id="${id}" aria-labelledby="${id}-h">
+  <div class="journey__pin">
+    <div class="journey__grid wrap">
+      <div class="journey__text">
+        ${eyebrow(s.eyebrow || t2('One roof, one partner', 'سقف واحد، وشريك واحد'), lang)}
+        <h2 class="h2" data-split id="${id}-h">${T(s.title || t2('From sheet to shelf.', 'من الصفيحة إلى الرف.'), lang)}</h2>
+        <div class="steps" id="steps">${STEPS.map((st, i) => `<article class="step${i === 0 ? ' is-active' : ''}" data-step="${i}"><span class="step__n">${pad2(i + 1)}</span><h3>${T(st.h, lang)}</h3><p>${T(st.p, lang)}</p></article>`).join('')}</div>
+        <div class="rail" aria-hidden="true"><i id="railFill"></i>${STEPS.map(() => '<b></b>').join('')}</div>
+      </div>
+      ${stage(lang, { rig: 'journey', label: t2('3D journey of a tinplate sheet: printed, rolled into a tin, palletised and shipped', 'رحلة الصفيحة المعدنية بثلاثية الأبعاد: تُطبع وتُشكَّل علبةً وتُرتَّب على بالتات وتُشحن') })}
+    </div>
   </div>
-  <div class="order" id="order" data-reveal>
-    <h3 class="h3">${T(UI.orderTitle, lang)}</h3>
-    <p>${T(UI.orderLead, lang)}</p>
-    <div class="cta-row">${orderLink(lang)}</div>
-    <p class="order__alt">${T(UI.orderEmail, lang)}: <a href="mailto:${SITE.email}" class="ltr">${SITE.email}</a></p>
+  ${moreLink(lang, s.link)}
+</section>`;
+  },
+
+  finish(lang, s) {
+    const id = s.id || 'finish', F = FINISH_LAB;
+    return `<section class="finish" id="${id}" aria-labelledby="${id}-h">
+  <div class="finish__grid wrap">
+    ${stage(lang, { pose: 'finish', label: F.aria })}
+    <div class="finish__text">
+      ${eyebrow(s.eyebrow || F.eyebrow, lang)}
+      <h2 class="h2" data-split id="${id}-h">${T(s.title || F.title, lang)}</h2>
+      <p class="lead" data-reveal>${T(s.intro || F.lead, lang)}</p>
+      ${picker(lang, { kind: 'finish', target: 'finish', items: F.items, aria: F.chipsAria })}
+      <div class="plate" data-reveal>
+        <h3>${T(F.plate.h, lang)}</h3>
+        <p>${T(F.plate.p, lang)}</p>
+        <div class="swatches" role="group" aria-label="${T(F.cwAria, lang)}">${F.cws.map((c, i) => `<button class="sw${i === 0 ? ' is-on' : ''}" type="button" data-pick="cw" data-target="finish" data-id="${i}" aria-pressed="${i === 0}" style="--a:${c.a};--b:${c.b}" aria-label="${T(c.label, lang)}"></button>`).join('')}</div>
+      </div>
+    </div>
   </div>
-</div>`;
+</section>`;
+  },
+
+  shapes(lang, s) {
+    const id = s.id || 'shapes', S = SHAPES_LAB;
+    return `<section class="shapes" id="${id}" aria-labelledby="${id}-h">
+  <div class="shapes__grid wrap">
+    <div class="shapes__text">
+      ${eyebrow(s.eyebrow || S.eyebrow, lang)}
+      <h2 class="h2" data-split id="${id}-h">${T(s.title || S.title, lang)}</h2>
+      ${picker(lang, { kind: 'shape', target: 'shapes', items: S.items, aria: S.chipsAria })}
+      <p class="fine" data-reveal>${T(S.fine, lang)}</p>
+      ${(s.after || []).map((b) => renderBlock(b, lang, { hasTitle: true, id })).join('')}
+    </div>
+    ${stage(lang, { pose: 'shapes', label: S.aria })}
+  </div>
+</section>`;
+  },
+
+  range(lang, s) {
+    const id = s.id || 'range', R = RANGE;
+    const card = (c, i) => `<article class="card tilt${i === 0 ? ' card--xl' : ''}${i === 3 || i === 4 ? ' card--wide' : ''}" data-reveal>
+        <span class="card__idx">${pad2(i + 1)}</span>
+        <h3>${T(c.h, lang)}</h3>
+        <p>${T(c.p, lang)}</p>
+        ${c.meta ? `<div class="card__meta"><span>${T(c.meta, lang)}</span></div>` : ''}
+        ${i === 0 ? `<svg class="card__art" viewBox="0 0 120 120" aria-hidden="true"><ellipse cx="60" cy="38" rx="42" ry="14"/><path d="M18 38v44c0 8 19 14 42 14s42-6 42-14V38"/><path d="M18 56c0 8 19 14 42 14s42-6 42-14"/></svg>` : ''}
+      </article>`;
+    return `<section class="range" id="${id}" aria-labelledby="${id}-h">
+  <div class="wrap">
+    ${secHead(lang, s, R, id)}
+    <div class="bento">${R.cards.map(card).join('')}</div>
+    <div class="range__cta" data-reveal>
+      <a class="btn magnetic" href="${SITE.catalogue}" target="_blank" rel="noopener"><span>${T(UI.catalogue, lang)}</span>${DOWN}<span class="vh"> (${T(UI.opensNew, lang)})</span></a>
+      ${s.link ? `<a class="btn btn--ghost magnetic" href="${rel(lang, byId[s.link.to])}"><span>${T(s.link.label, lang)}</span>${ARROW}</a>` : ''}
+    </div>
+  </div>
+</section>`;
+  },
+
+  industries(lang, s) {
+    const id = s.id || 'industries';
+    const inds = PAGES.filter((p) => p.id.startsWith('ind-'));
+    return `<section class="industries" id="${id}" aria-labelledby="${id}-h">
+  <div class="wrap">
+    ${secHead(lang, s, IND_LIST, id)}
+    <ol class="indlist" data-reveal>${inds.map((p, i) => `<li><a class="indrow" href="${rel(lang, p)}"><span class="indrow__n">${pad2(i + 1)}</span><span class="indrow__h">${T(p.tile.h, lang)}</span><span class="indrow__p">${T(p.tile.p, lang)}</span><span class="indrow__go">${ARROW}</span></a></li>`).join('')}</ol>
+  </div>
+</section>`;
+  },
+
+  seasons(lang, s) {
+    const id = s.id || 'seasons', Z = SEASONS;
+    const month = new Date().getMonth();
+    return `<section class="seasons" id="${id}" data-season="olive" aria-labelledby="${id}-h">
+  <div class="seasons__grid wrap">
+    <div class="seasons__text">
+      ${eyebrow(Z.eyebrow, lang)}
+      <h2 class="h2" data-split id="${id}-h">${T(Z.title, lang)}</h2>
+      <p class="lead" data-reveal>${T(Z.lead, lang)}</p>
+      <div class="tabs" role="tablist" aria-orientation="vertical" aria-label="${T(Z.tabsAria, lang)}" data-reveal>${Z.tabs.map((z, i) =>
+        `<button class="tab${i === 0 ? ' is-on' : ''}" role="tab" type="button" id="tab-${z.id}" data-season="${z.id}" data-shape="${z.shape}" data-theme="${z.theme}" data-finish="${z.finish}" aria-selected="${i === 0}" aria-controls="pane-${z.id}" tabindex="${i === 0 ? 0 : -1}"><span class="tab__k">${T(z.k, lang)}</span><b>${T(z.h, lang)}</b>${z.now ? `<em class="now" data-months="8-11">${T(UI.nowLabel, lang)}</em>` : ''}</button>`).join('')}</div>
+      <div class="season__desc">${Z.tabs.map((z, i) =>
+        `<div class="pane${i === 0 ? ' is-on' : ''}" role="tabpanel" id="pane-${z.id}" aria-labelledby="tab-${z.id}" data-pane="${z.id}"><p>${T(z.desc, lang)}</p><a class="go" href="${rel(lang, byId[z.to])}">${T(z.more, lang)}${ARROW}</a></div>`).join('')}</div>
+      <p class="fine" data-reveal>${T(Z.fine, lang)}</p>
+    </div>
+    ${stage(lang, { pose: 'seasons', shape: 'oil', theme: 'olive', label: Z.aria })}
+  </div>
+</section>`;
+  },
+
+  story(lang, s) {
+    const id = s.id || 'story', St = STORY;
+    const years = SITE.year - 1998;
+    return `<section class="story" id="${id}" aria-labelledby="${id}-h">
+  <div class="wrap">
+    ${secHead(lang, s, St, id)}
+    <div class="story__grid">
+      <div class="bignum" data-reveal><b id="years" data-count-years="1998">${years}</b><span>${T(UI.yearsOf, lang)}</span></div>
+      <div class="story__copy" data-reveal>
+        <p>${T(St.p1, lang)}</p>
+        <blockquote><span>${T(St.vision, lang)}</span></blockquote>
+        <p>${T(St.p2, lang)}</p>
+      </div>
+    </div>
+    ${s.noProof ? '' : `<div class="proof" data-reveal>${PROOF_TBC.items.map((i) => `<div class="proof__item" data-tbc><i>◇</i><b>${T(i, lang)}</b><span>${T(UI.tbcShort, lang)}</span></div>`).join('')}</div>`}
+  </div>
+  ${moreLink(lang, s.link)}
+</section>`;
+  },
+
+  quality(lang, s) {
+    const id = s.id || 'quality', Q = QUALITY;
+    return `<section class="quality" id="${id}" aria-labelledby="${id}-h">
+  <div class="wrap">
+    ${secHead(lang, s, Q, id)}
+    <div class="quality__grid">
+      <article class="card tilt" data-reveal>
+        <span class="card__idx">01</span>
+        <h3>${T(Q.fssc.h, lang)}</h3>
+        <p>${T(Q.fssc.p, lang)}</p>
+        <dl class="qlist">${Q.fssc.rows.map((r) => `<div><dt>${T(r.k, lang)}</dt><dd>${r.ltr ? `<bdi dir="ltr">${T(r.v, lang)}</bdi>` : T(r.v, lang)}</dd></div>`).join('')}</dl>
+      </article>
+      <article class="card tilt" data-reveal>
+        <span class="card__idx">02</span>
+        <h3>${T(Q.jfda.h, lang)}</h3>
+        <p>${T(Q.jfda.p, lang)}</p>
+      </article>
+    </div>
+  </div>
+</section>`;
+  },
+
+  news(lang, s) {
+    const id = s.id || 'news';
+    const list = s.limit ? NEWS.slice(0, s.limit) : NEWS;
+    const head = s.id === 'news' ? secHead(lang, s, { eyebrow: t2('News & events', 'الأخبار والفعاليات'), title: t2('Out in the world.', 'حاضرون في الأسواق.') }, id) : '';
+    const card = (n) => n.href
+      ? `<a class="ncard tilt" data-reveal href="${esc(n.href)}" target="_blank" rel="noopener noreferrer"><span class="ncard__tag">${T(n.tag, lang)}</span><h3>${T(n.h, lang)}</h3><p>${T(n.p, lang)}</p><span class="ncard__go">${T(UI.read, lang)}<span class="vh"> (${T(UI.opensNew, lang)})</span></span></a>`
+      : `<article class="ncard" data-reveal><span class="ncard__tag">${T(n.tag, lang)}</span><h3>${T(n.h, lang)}</h3><p>${T(n.p, lang)}</p></article>`;
+    return `<section class="news" id="${id}"${head ? ` aria-labelledby="${id}-h"` : ''}>
+  <div class="wrap">
+    ${head}
+    <div class="news__grid">${list.map(card).join('')}</div>
+  </div>
+  ${moreLink(lang, s.link)}
+</section>`;
+  }
+};
+function t2(en, ar) { return { en, ar }; }
+
+function sections(lang, page) {
+  return page.sections.map((s, i) => {
+    if (s.kind) return KINDS[s.kind](lang, s, page);
+    const id = s.id || `s${i + 1}`;
+    const hasTitle = !!s.title;
+    const head = hasTitle
+      ? `<header class="sec-head">${eyebrow(s.eyebrow, lang)}<h2 class="h2" data-split id="${id}-h">${T(s.title, lang)}</h2>${s.intro ? `<p class="lead" data-reveal>${T(s.intro, lang)}</p>` : ''}</header>`
+      : '';
+    const body = s.blocks.map((b) => renderBlock(b, lang, { hasTitle, id })).join('\n');
+    return `<section class="sec" id="${id}"${hasTitle ? ` aria-labelledby="${id}-h"` : ''}>
+  <div class="wrap stack">
+    ${head}
+    ${body}
+  </div>
+</section>`;
+  }).join('\n');
 }
 
 // ---------------------------------------------------------------- page chrome
@@ -123,31 +316,71 @@ function crumbTrail(page) {
   return trail;
 }
 
+const loader = (lang) => `<div id="loader" aria-busy="true">
+  <button class="ld__skip" id="ldSkip" type="button"><span>${T(UI.skipIntro, lang)}</span>${SKIPI}</button>
+  <div class="stage ld__stage" data-rig="journey" data-pose="hero" aria-hidden="true"><div class="ld__wait"><i></i></div></div>
+  <div class="ld__meta" aria-hidden="true">
+    <div class="ld__num"><b id="loaderNum">0</b><small>%</small></div>
+    <div class="ld__step" id="ldStep">${T(UI.loaderSteps[0], lang)}</div>
+    <div class="ld__name">${lang === 'ar' ? esc(SITE.nameAr) : 'JORDAN&nbsp;TINPLATE&nbsp;CANNING'}</div>
+  </div>
+</div>
+<p class="vh" id="ldAnnounce" role="status"></p>`;
+
 function header(lang, page) {
   const alt = other(lang), A = LANGS[lang]; // A holds the label/aria for the link that leads to the OTHER language
-  const home = byId.home;
   const nav = NAV.map((n) => {
     const target = byId[n.page];
     const isPage = target.id === page.id;
     const isSection = !isPage && crumbTrail(page).some((p) => p.id === target.id);
     return `<a href="${rel(lang, target)}"${isPage ? ' aria-current="page"' : ''}${isSection ? ' class="is-current"' : ''}>${T(n.label, lang)}</a>`;
-  }).join('');
+  });
+  const menu = NAV.map((n) => {
+    const target = byId[n.page];
+    return `<a href="${rel(lang, target)}"${target.id === page.id ? ' aria-current="page"' : ''}>${T(n.label, lang)}</a>`;
+  });
   return `<a class="skip" href="#main">${T(UI.skip, lang)}</a>
-<header class="site-header">
-  <div class="bar">
-    <a class="brand" href="${rel(lang, home)}" aria-label="${T(UI.brandAria, lang)}">${MARK}<span class="brand__word">JORDAN <b>TINPLATE</b> CANNING</span></a>
-    <nav class="nav" id="primary-nav" aria-label="${T(UI.primaryNav, lang)}">${nav}${orderLink(lang, { cls: 'nav__cta', label: T(UI.quote, lang), icon: '' })}</nav>
-    <div class="tools">
-      <a class="tool tool--lang" href="${rel(alt, page)}" hreflang="${alt}" lang="${alt}" aria-label="${esc(A.switchAria)}" data-lang-switch>${esc(A.switchLabel)}</a>
-      <button class="tool" id="theme-btn" type="button" aria-label="${T(UI.theme, lang)}" aria-pressed="false">
-        <svg class="i-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.6M12 18.9v2.6M2.5 12h2.6M18.9 12h2.6M5.3 5.3l1.8 1.8M16.9 16.9l1.8 1.8M5.3 18.7l1.8-1.8M16.9 7.1l1.8-1.8"/></svg>
-        <svg class="i-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5z"/></svg>
-      </button>
-      ${orderLink(lang, { cls: 'btn btn--sm', icon: '' })}
-      <button class="burger" id="menu-btn" type="button" aria-label="${T(UI.menu, lang)}" aria-expanded="false" aria-controls="primary-nav"><i></i><i></i></button>
+<header class="nav" id="nav">
+  <a class="brand" href="${rel(lang, byId.home)}" aria-label="${T(UI.brandAria, lang)}">${MARK}${brandWord(lang)}</a>
+  <nav class="nav__links" aria-label="${T(UI.primaryNav, lang)}">${nav.join('')}</nav>
+  <div class="nav__tools">
+    <a class="tool tool--lang" id="langBtn" href="${rel(alt, page)}" hreflang="${alt}" lang="${alt}" aria-label="${esc(A.switchAria)}" data-lang-switch>${esc(A.switchLabel)}</a>
+    <button class="tool" id="themeBtn" type="button" aria-label="${T(UI.theme, lang)}" aria-pressed="false">
+      <svg class="i-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.6M12 18.9v2.6M2.5 12h2.6M18.9 12h2.6M5.3 5.3l1.8 1.8M16.9 16.9l1.8 1.8M5.3 18.7l1.8-1.8M16.9 7.1l1.8-1.8"/></svg>
+      <svg class="i-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5z"/></svg>
+    </button>
+    ${orderLink(lang, { cls: 'btn btn--sm magnetic', icon: '' })}
+    <button class="burger" id="burger" type="button" aria-label="${T(UI.menu, lang)}" aria-expanded="false" aria-controls="menu"><i></i><i></i></button>
+  </div>
+</header>
+<div class="menu" id="menu" inert>
+  ${menu.join('\n  ')}
+  <a href="${SITE.orderUrl}" target="_blank" rel="noopener">${T(UI.quote, lang)}<span class="vh"> (${T(UI.opensNew, lang)})</span></a>
+</div>`;
+}
+
+function contactSection(lang, page) {
+  const onContact = page.id === 'contact';
+  return `<section class="contact" id="contact"${onContact ? '' : ' aria-labelledby="contact-h"'}>
+  <div class="wrap contact__grid">
+    <div>
+      ${eyebrow(UI.letsTalk, lang)}
+      <h2 class="mega" data-split id="contact-h">${T(UI.ctaTitle, lang)}</h2>
+      <ul class="contact__list" data-reveal>
+        <li><span>${T(UI.phone, lang)}</span><a href="tel:${SITE.tel}" dir="ltr">${SITE.phone}</a></li>
+        <li><span>${T(UI.mail, lang)}</span><a href="mailto:${SITE.email}">${SITE.email}</a></li>
+        <li><span>${T(UI.address, lang)}</span><em>${T(UI.addressArea, lang)}</em></li>
+      </ul>
+      <ul class="social" data-reveal>${Object.entries(SITE.social).map(([n, u]) => `<li><a href="${u}" target="_blank" rel="noopener noreferrer">${n === 'LinkedIn' ? n : `${n} <bdi dir="ltr">${SITE.handle}</bdi>`}<span class="vh"> (${T(UI.opensNew, lang)})</span></a></li>`).join('')}</ul>
+    </div>
+    <div class="quote" id="order" data-reveal>
+      <h3 class="quote__t">${T(UI.orderTitle, lang)}</h3>
+      <p class="quote__p">${T(UI.ctaLead, lang)} ${T(UI.orderLead, lang)}</p>
+      ${orderLink(lang, { cls: 'btn magnetic', label: t2('Open the order tool', 'افتح أداة الطلب')[lang], icon: EXT })}
+      <p class="quote__alt">${T(UI.orderEmail, lang)}: <a href="mailto:${SITE.email}"><bdi dir="ltr">${SITE.email}</bdi></a></p>
     </div>
   </div>
-</header>`;
+</section>`;
 }
 
 function footer(lang) {
@@ -157,21 +390,18 @@ function footer(lang) {
   <div class="wrap">
     <div class="foot__grid">
       <div>
-        <a class="brand" href="${rel(lang, byId.home)}" aria-label="${T(UI.brandAria, lang)}">${MARK}<span class="brand__word" style="display:inline">JORDAN <b>TINPLATE</b> CANNING</span></a>
+        <a class="brand" href="${rel(lang, byId.home)}" aria-label="${T(UI.brandAria, lang)}">${MARK}${brandWord(lang)}</a>
         <p>${T(UI.footBlurb, lang)}</p>
+        <p class="foot__cert">${T(UI.footCert, lang)}</p>
       </div>
       <nav aria-label="${T(UI.footIndustries, lang)}"><h2>${T(UI.footIndustries, lang)}</h2><ul>${inds.map((p) => `<li><a href="${rel(lang, p)}">${T(p.tile.h, lang)}</a></li>`).join('')}</ul></nav>
       <nav aria-label="${T(UI.footCompany, lang)}"><h2>${T(UI.footCompany, lang)}</h2><ul>${co.map((p) => `<li><a href="${rel(lang, p)}">${T(p.crumb, lang)}</a></li>`).join('')}</ul></nav>
-      <div><h2>${T(UI.footContact, lang)}</h2><ul>
-        <li><a href="tel:${SITE.tel}" class="ltr">${SITE.phone}</a></li>
-        <li><a href="mailto:${SITE.email}">${SITE.email}</a></li>
-        ${Object.entries(SITE.social).map(([n, u]) => `<li><a href="${u}" target="_blank" rel="noopener noreferrer">${n}<span class="vh"> (${T(UI.opensNew, lang)})</span></a></li>`).join('')}
-      </ul></div>
     </div>
     <div class="foot__base">
-      <span>© ${SITE.year} ${esc(brandName(lang))}. ${T(UI.rights, lang)}</span>
+      <span class="foot__c">© <bdi>${SITE.year}</bdi> <bdi>${esc(brandName(lang))}</bdi>. ${T(UI.rights, lang)}</span>
       <span>${T(UI.footDraft, lang)}</span>
-      <button class="linkbtn" id="review-btn" type="button" aria-pressed="false">${T(UI.review, lang)}</button>
+      <span class="review-only" data-tbc>${T(t2('Final logo (vector)', 'الشعار النهائي (Vector)'), lang)}</span>
+      <button class="linkbtn" id="reviewBtn" type="button" aria-pressed="false">${T(UI.review, lang)}</button>
     </div>
   </div>
 </footer>`;
@@ -185,53 +415,29 @@ function hero(lang, page) {
     const { href, ext } = ctaHref(c, lang);
     const label = T(c.label, lang);
     return c.kind === 'ghost'
-      ? `<a class="btn btn--ghost" href="${href}"${ext ? ' target="_blank" rel="noopener noreferrer"' : ''}>${label}${ext ? DOWN : ''}</a>`
-      : `<a class="btn" href="${href}"${ext ? ' target="_blank" rel="noopener"' : ''}>${label}${ext ? `<span class="vh"> (${T(UI.opensNew, lang)})</span>` : ''}${ARROW}</a>`;
+      ? `<a class="btn btn--ghost magnetic" href="${href}"${ext ? ' target="_blank" rel="noopener noreferrer"' : ''}><span>${label}</span>${ext ? DOWN : ARROW}${ext ? `<span class="vh"> (${T(UI.opensNew, lang)})</span>` : ''}</a>`
+      : `<a class="btn magnetic" href="${href}"${ext ? ' target="_blank" rel="noopener"' : ''}><span>${label}</span>${ARROW}${ext ? `<span class="vh"> (${T(UI.opensNew, lang)})</span>` : ''}</a>`;
   }).join('');
-  const stats = h.stats ? `<ul class="stats">${h.stats.map((s) => `<li><b>${T(s.big, lang)}</b><span>${T(s.small, lang)}</span></li>`).join('')}</ul>` : '';
-  const showArt = page.id !== 'contact';
-  return `<section class="hero ${isHome ? 'hero--home' : 'hero--inner'}">
-  <div class="wrap hero__grid">
-    <div>
+  const stats = h.stats ? `<ul class="facts" data-reveal>${h.stats.map((s) => `<li><b>${T(s.big, lang)}</b><span>${T(s.small, lang)}</span></li>`).join('')}</ul>` : '';
+  const title = isHome
+    ? `<h1 class="display" id="heroTitle">${h.lines.map((l, i) => `<span class="line${i ? ' line--accent' : ''}" data-split>${T(l, lang)}</span>`).join('')}</h1>`
+    : `<h1 class="h1" data-split>${T(h.h1, lang)}</h1>`;
+  const st = h.stage;
+  const pick = h.picker ? picker(lang, h.picker) : '';
+  return `<section class="hero ${isHome ? 'hero--home' : 'hero--inner'}" id="hero">
+  <div class="hero__grid wrap${st ? '' : ' hero__grid--solo'}">
+    <div class="hero__text">
       ${crumbs}
-      <p class="eyebrow"><span class="dot"></span>${T(h.eyebrow, lang)}</p>
-      <h1 class="h1">${T(h.h1, lang)}</h1>
-      <p class="lead">${T(h.lead, lang)}</p>
-      ${ctas ? `<div class="cta-row">${ctas}</div>` : ''}
+      ${eyebrow(h.eyebrow, lang)}
+      ${title}
+      <p class="lead" data-reveal>${T(h.lead, lang)}</p>
+      ${ctas ? `<div class="hero__cta" data-reveal>${ctas}</div>` : ''}
+      ${pick}
       ${stats}
     </div>
-    ${showArt ? `<figure class="hero__art">${art(h.art)}<figcaption class="fine">${T(UI.illus, lang)}</figcaption></figure>` : ''}
+    ${st ? stage(lang, { pose: 'hero', ...st }) : ''}
   </div>
-</section>`;
-}
-
-function sections(lang, page) {
-  return page.sections.map((s, i) => {
-    const id = s.id || `s${i + 1}`;
-    const hasTitle = !!s.title;
-    const head = hasTitle
-      ? `<div class="sec__head" data-reveal>${s.eyebrow ? `<p class="eyebrow"><span class="dot"></span>${T(s.eyebrow, lang)}</p>` : ''}<h2 class="h2" id="${id}-h">${T(s.title, lang)}</h2>${s.intro ? `<p class="lead">${T(s.intro, lang)}</p>` : ''}</div>`
-      : '';
-    const body = s.blocks.map((b) => renderBlock(b, lang, { hasTitle, id: `${id}` })).join('\n');
-    return `<section class="sec" id="${id}"${hasTitle ? ` aria-labelledby="${id}-h"` : ''}>
-  <div class="wrap stack">
-    ${head}
-    ${body}
-  </div>
-</section>`;
-  }).join('\n');
-}
-
-function ctaBand(lang) {
-  return `<section class="cta" aria-labelledby="cta-h">
-  <div class="wrap">
-    <div class="panel" data-reveal>
-      <p class="eyebrow"><span class="dot"></span>${T(UI.quote, lang)}</p>
-      <h2 class="h2" id="cta-h">${T(UI.ctaTitle, lang)}</h2>
-      <p class="lead">${T(UI.ctaLead, lang)}</p>
-      <div class="cta-row">${orderLink(lang)}<a class="btn btn--ghost" href="mailto:${SITE.email}"><span class="ltr">${SITE.email}</span></a><a class="btn btn--ghost" href="tel:${SITE.tel}"><span class="ltr">${SITE.phone}</span></a></div>
-    </div>
-  </div>
+  ${isHome ? `<div class="scrollcue" aria-hidden="true"><i></i><span>${T(UI.scroll, lang)}</span></div>` : ''}
 </section>`;
 }
 
@@ -265,16 +471,24 @@ function jsonLd(lang, page) {
 }
 
 // ---------------------------------------------------------------- full document
-const THEME_SCRIPT = `<script>(function(){var d=document.documentElement;d.classList.add('js');try{var t=localStorage.getItem('jt-theme');if(t==='dark'||t==='light')d.setAttribute('data-theme',t)}catch(e){}})()</script>`;
+// Runs before first paint: theme (no flash), the "js" flag, the entrance (home only, once per session, never with ?skip or reduced motion)
+// and the page-transition curtain that was started by the previous page.
+const headScript = (isHome) => `<script>(function(){var d=document.documentElement;d.classList.add('js');try{var t=localStorage.getItem('jt-theme');if(t!=='dark'&&t!=='light')t=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';d.setAttribute('data-theme',t)}catch(e){}try{if(sessionStorage.getItem('jt-arrive')){sessionStorage.removeItem('jt-arrive');d.classList.add('arrive')}}catch(e){}${isHome
+  ? `try{if(!/[?&]skip/.test(location.search)&&!sessionStorage.getItem('jt-intro')&&!matchMedia('(prefers-reduced-motion: reduce)').matches)d.classList.add('intro')}catch(e){}`
+  : `try{sessionStorage.setItem('jt-intro','1')}catch(e){}`}})()</script>`;
+const THEME_ONLY = `<script>(function(){var d=document.documentElement;try{var t=localStorage.getItem('jt-theme');if(t==='dark'||t==='light')d.setAttribute('data-theme',t)}catch(e){}})()</script>`;
 const FONTS = `<link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=DM+Sans:wght@400;500;600&family=Readex+Pro:wght@300..700&display=swap">`;
+const IMPORTMAP = `<script type="importmap">{"imports":{"three":"/assets/vendor/three/three.module.min.js","three/addons/":"/assets/vendor/three/addons/"}}</script>`;
+const CURTAIN = `<div id="curtain" aria-hidden="true"><i style="--n:0"></i><i style="--n:1"></i><i style="--n:2"></i><i style="--n:3"></i><i style="--n:4"></i></div>`;
 
 function renderPage(lang, page) {
   const Lg = LANGS[lang], alt = other(lang);
   const title = tx(page.title, lang), desc = tx(page.description, lang), url = abs(lang, page);
+  const isHome = page.id === 'home';
   const hreflangs = [...L.map((l) => `<link rel="alternate" hreflang="${l}" href="${abs(l, page)}">`), `<link rel="alternate" hreflang="x-default" href="${abs('en', page)}">`].join('\n');
-  const noCta = page.noCta;
+  const data = { lang, ld: UI.loaderSteps.map((s) => tx(s, lang)), cursor: tx(UI.cursorDrag, lang), loading: tx(UI.loading, lang), ready: tx(UI.ready, lang), home: isHome };
   return `<!doctype html>
 <html lang="${lang}" dir="${Lg.dir}">
 <head>
@@ -298,25 +512,45 @@ ${hreflangs}
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="${esc(brandName(lang))}: ${lang === 'ar' ? 'علب معدنية مخصّصة لعلامات الأغذية والمشروبات' : 'custom tinplate packaging for food and beverage brands'}">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="${SITE.handle}">
 <meta name="twitter:title" content="${esc(title)}">
 <meta name="twitter:description" content="${esc(desc)}">
 <meta name="twitter:image" content="${OG_IMG}">
 <link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml">
-${THEME_SCRIPT}
+${headScript(isHome)}
 ${FONTS}
 <link rel="stylesheet" href="/assets/css/site.css?v=${V.css}">
+${IMPORTMAP}
 ${jsonLd(lang, page)}
 </head>
 <body>
 ${GRADIENT_DEFS}
+<canvas id="gl" aria-hidden="true"></canvas>
+<div class="grain" aria-hidden="true"></div>
+<div class="cursor is-hidden" aria-hidden="true"><i></i><span>${T(UI.cursorDrag, lang)}</span></div>
+${isHome ? loader(lang) : ''}
+${CURTAIN}
 ${header(lang, page)}
 <main id="main" tabindex="-1">
 ${hero(lang, page)}
 ${sections(lang, page)}
-${noCta ? '' : ctaBand(lang)}
+${contactSection(lang, page)}
 </main>
 ${footer(lang)}
+<script type="application/json" id="jt-data">${JSON.stringify(data).replace(/</g, '\\u003c')}</script>
 <script src="/assets/js/site.js?v=${V.js}" defer></script>
+<script src="/assets/vendor/gsap/gsap.min.js" defer></script>
+<script src="/assets/vendor/gsap/ScrollTrigger.min.js" defer></script>
+<script src="/assets/vendor/lenis/lenis.min.js" defer></script>
+<script type="module" src="/assets/js/engine/main.js?v=${V.eng}"></script>
+<script>
+  // Last-resort guard: if the engine never starts (blocked, old browser) the page must not stay covered or scroll-locked.
+  setTimeout(function () {
+    if (window.__jtBooted) return;
+    var l = document.getElementById('loader'); if (l) l.remove();
+    var h = document.documentElement; h.classList.remove('intro'); h.classList.add('no-fx');
+  }, 8000);
+</script>
 </body>
 </html>
 `;
@@ -341,17 +575,18 @@ function chooser() {
 <link rel="canonical" href="${SITE.origin}/">
 <meta name="theme-color" content="#002F6C">
 <link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml">
-${THEME_SCRIPT}
+${THEME_ONLY}
+${FONTS}
 <link rel="stylesheet" href="/assets/css/site.css?v=${V.css}">
 <script>(function(){try{var l=localStorage.getItem('jt-lang');if(!l){var n=(navigator.language||'en').toLowerCase();l=n.indexOf('ar')===0?'ar':'en'}if(l==='ar'||l==='en')location.replace('/'+l+'/')}catch(e){}})()</script>
 </head>
-<body>
+<body class="plain">
 <main class="chooser" id="main">
   <div>
-    <a class="brand" href="/en/" aria-label="Jordan Tinplate Canning">${MARK}<span class="brand__word" style="display:inline">JORDAN <b>TINPLATE</b> CANNING</span></a>
+    <a class="brand" href="/en/" aria-label="Jordan Tinplate Canning">${MARK}<span class="brand__word"><span>JORDAN <b>TINPLATE</b></span><span class="brand__sub">CANNING</span></span></a>
     <h1>Custom tinplate packaging · علب معدنية مخصّصة</h1>
     <p>Choose your language · اختر اللغة</p>
-    <div class="cta-row"><a class="btn" href="/en/" hreflang="en" lang="en">English</a><a class="btn btn--ghost" href="/ar/" hreflang="ar" lang="ar" dir="rtl">العربية</a></div>
+    <div class="cta-row"><a class="btn" href="/en/" hreflang="en" lang="en"><span>English</span></a><a class="btn btn--ghost" href="/ar/" hreflang="ar" lang="ar" dir="rtl"><span>العربية</span></a></div>
   </div>
 </main>
 </body>
@@ -368,15 +603,16 @@ function notFound() {
 <title>Page not found | الصفحة غير موجودة</title>
 <meta name="robots" content="noindex">
 <link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml">
-${THEME_SCRIPT}
+${THEME_ONLY}
+${FONTS}
 <link rel="stylesheet" href="/assets/css/site.css?v=${V.css}">
 </head>
-<body>
+<body class="plain">
 <main class="chooser" id="main">
   <div>
     <h1>Page not found · الصفحة غير موجودة</h1>
     <p>The page you are looking for does not exist or has moved. · الصفحة التي تبحث عنها غير موجودة أو تم نقلها.</p>
-    <div class="cta-row"><a class="btn" href="/en/" hreflang="en" lang="en">English home</a><a class="btn btn--ghost" href="/ar/" hreflang="ar" lang="ar" dir="rtl">الصفحة الرئيسية</a></div>
+    <div class="cta-row"><a class="btn" href="/en/" hreflang="en" lang="en"><span>English home</span></a><a class="btn btn--ghost" href="/ar/" hreflang="ar" lang="ar" dir="rtl"><span>الصفحة الرئيسية</span></a></div>
   </div>
 </main>
 </body>

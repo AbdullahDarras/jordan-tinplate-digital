@@ -17,7 +17,7 @@ const FIN = {
   rough: { metalness: 0.25, roughness: 0.8, clearcoat: 0, clearcoatRoughness: 0.5, sheen: 0, bumpScale: 1.3, bump: 'rough' },
   emboss: { metalness: 0.6, roughness: 0.24, clearcoat: 0.7, clearcoatRoughness: 0.1, sheen: 0, bumpScale: 1.6, bump: 'emboss' }
 };
-const ACCENT = { brand: ['#f2a93b', '#ffe0a8', '#f6d27a', '#002F6C'], olive: '#d9a93c', eid: '#e9bd5a', cheese: '#2a6fb8' };
+const ACCENT = { brand: ['#f2a93b', '#ffe0a8', '#f6d27a', '#002F6C'], olive: '#d9a93c', eid: '#e9bd5a', cheese: '#2a6fb8', milk: '#1f5fae', coffee: '#c8943c', industrial: '#e8662a' };
 
 export function createScene(canvas) {
   const gsap = window.gsap;
@@ -102,20 +102,20 @@ export function createScene(canvas) {
     group.add(body, lid);
     return { group, print: [front, side, topPrint], parts: { body, lid, bottom: body } };
   }
-  function buildOil({ theme, cw }) {
-    const w = 1.7, h = 2.1, d = 1.05;
+  function buildOil({ theme, cw, w = 1.7, h = 2.1, d = 1.05 }) {
+    const sc = Math.min(1, w / 1.7 + 0.15); // spout, cap and handle stay in proportion on the smaller tins
     const group = new THREE.Group();
     const metal = metalMat();
     const front = printMat(ART.faceTexture(theme, cw, h / w));
     const side = printMat(ART.faceTexture(theme, cw, h / d));
     const body = new THREE.Mesh(new RoundedBoxGeometry(w, h, d, 6, 0.08), [side, side, metal, metal, front, front]);
     const plate = new THREE.Mesh(new RoundedBoxGeometry(w + 0.02, 0.08, d + 0.02, 3, 0.03), metal); plate.position.y = h / 2 + 0.02;
-    const cap = new THREE.Group(); cap.position.set(0.5, h / 2 + 0.06, 0);
+    const cap = new THREE.Group(); cap.position.set(w * 0.29, h / 2 + 0.06, 0); cap.scale.setScalar(sc);
     const spout = new THREE.Mesh(new THREE.CylinderGeometry(0.17, 0.2, 0.3, 40), metal); spout.position.y = 0.15;
     const cover = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.2, 0.12, 40), metalMat('#f2a93b', 0.3)); cover.position.y = 0.34;
     cap.add(spout, cover);
-    const handle = new THREE.Mesh(new THREE.TorusGeometry(0.38, 0.035, 10, 48, Math.PI), metal);
-    handle.position.set(-0.3, h / 2 + 0.06, 0); handle.rotation.set(0, 0, 0);
+    const handle = new THREE.Mesh(new THREE.TorusGeometry(0.38 * sc, 0.035, 10, 48, Math.PI), metal);
+    handle.position.set(-w * 0.18, h / 2 + 0.06, 0); handle.rotation.set(0, 0, 0);
     group.add(body, plate, cap, handle);
     return { group, print: [front, side], parts: { body, lid: cap, bottom: body } };
   }
@@ -125,7 +125,20 @@ export function createScene(canvas) {
     rect: (t, c) => buildBox({ w: 2.4, h: 1.15, d: 1.4, theme: t, cw: c }),
     oval: (t, c) => { const m = buildRound({ R: 1, H: 1.2, theme: t, cw: c }); m.group.scale.set(1.4, 1, 0.8); return m; },
     oil: (t, c) => buildOil({ theme: t, cw: c }),
-    cheese: (t, c) => buildRound({ R: 1.25, H: 0.85, theme: t, cw: c })
+    // olive-oil tins in the four sizes the factory makes (1, 4, 8 and 16 L/kg); proportions are illustrative
+    oil1: (t, c) => buildOil({ theme: t, cw: c, w: 1.0, h: 1.45, d: 0.66 }),
+    oil4: (t, c) => buildOil({ theme: t, cw: c, w: 1.4, h: 1.85, d: 0.9 }),
+    oil8: (t, c) => buildOil({ theme: t, cw: c, w: 1.75, h: 2.25, d: 1.1 }),
+    oil16: (t, c) => buildOil({ theme: t, cw: c, w: 2.1, h: 2.75, d: 1.3 }),
+    cheese: (t, c) => buildRound({ R: 1.25, H: 0.85, theme: t, cw: c }),
+    milk: (t, c) => buildRound({ R: 0.95, H: 2.0, theme: t, cw: c }),
+    coffee: (t, c) => buildBox({ w: 1.35, h: 2.0, d: 1.35, theme: t, cw: c }),
+    paint: (t, c) => {
+      const m = buildRound({ R: 1.15, H: 1.45, theme: t, cw: c });
+      const bail = new THREE.Mesh(new THREE.TorusGeometry(1.1, 0.03, 8, 64, Math.PI), metalMat('#9aa3b1', 0.3));
+      bail.position.y = 1.45 / 2 + 0.16; m.group.add(bail);
+      return m;
+    }
   };
 
   /* ------------------------------------------------------------ product instances (one per stage) */
@@ -146,7 +159,7 @@ export function createScene(canvas) {
   const POSES = { hero: { ry: -0.55, rx: 0.2, s: 1.0 }, finish: { ry: 0.35, rx: 0.16, s: 1.05 }, shapes: { ry: -0.45, rx: 0.22, s: 1.0 }, seasons: { ry: 0.5, rx: 0.18, s: 1.05 } };
   const ptr = { x: 0, y: 0, sx: 0, sy: 0 };
 
-  function makeProduct(name) {
+  function makeProduct(name, cfg = {}) {
     const root = new THREE.Group(); root.visible = false; scene.add(root);
     const tilt = new THREE.Group(); root.add(tilt);
     const holder = new THREE.Group(); tilt.add(holder);
@@ -155,7 +168,7 @@ export function createScene(canvas) {
     const ring = new THREE.Mesh(new THREE.RingGeometry(0.98, 1, 96), new THREE.MeshBasicMaterial({ color: 0xf2a93b, transparent: true, opacity: 0, side: THREE.DoubleSide, depthWrite: false }));
     ring.rotation.x = -Math.PI / 2; root.add(ring);
 
-    const S = { ...(INITIAL[name] || INITIAL.hero) }, pose = POSES[name] || POSES.hero;
+    const S = { ...(INITIAL[name] || INITIAL.hero), ...cfg }, pose = POSES[name] || POSES.hero;
     let model = null, transitioning = false, pending = null, idle = Math.random() * 6, spinYaw = 0, spinV = 0;
     const bob = Math.random() * 6;
     const modelSize = new THREE.Vector3(2, 2, 2);
@@ -216,10 +229,11 @@ export function createScene(canvas) {
     function intro() {
       const p = model.parts, tl = gsap.timeline();
       holder.scale.set(1, 1, 1);
+      // box-shaped tins use one mesh for body and bottom: two from() tweens on it would end at the first tween's start value (tin lost off screen)
+      if (p.bottom !== p.body) tl.from(p.bottom.position, { y: -9, duration: 1.0, ease: 'power4.out' }, 0.1);
       tl.from(p.body.position, { y: -7, duration: 1.1, ease: 'power4.out' }, 0)
         .from(p.body.rotation, { y: -Math.PI * 5, duration: 1.4, ease: 'power3.out' }, 0)
         .from(p.body.scale, { x: 0.01, y: 0.01, z: 0.01, duration: 1.0, ease: 'back.out(1.4)' }, 0)
-        .from(p.bottom.position, { y: -9, duration: 1.0, ease: 'power4.out' }, 0.1)
         .from(p.lid.position, { y: 7, duration: 0.9, ease: 'bounce.out' }, 0.75)
         .from(p.lid.rotation, { y: Math.PI * 3, duration: 1.0, ease: 'power3.out' }, 0.75)
         .add(burst, 1.45);
@@ -244,214 +258,220 @@ export function createScene(canvas) {
   }
 
 
-  /* ------------------------------------------------------------ journey rig */
-  const journey = new THREE.Group(); journey.visible = false; scene.add(journey);
-  const JR = 0.85, JH = 1.3, JW = TAU * JR, N = 160;
-  const aspect = JH / JW;
-  const blank = ART.blankSheetCanvas(2048, Math.round(2048 * aspect));
-  const printed = ART.artCanvas('brand', 0, aspect);
-  const sheetCanvas = document.createElement('canvas'); sheetCanvas.width = blank.width; sheetCanvas.height = blank.height;
-  const sheetTex = new THREE.CanvasTexture(sheetCanvas); sheetTex.colorSpace = THREE.SRGBColorSpace; sheetTex.anisotropy = 8;
-  let lastPrint = -1;
-  function drawSheet(pr) {
-    const x = sheetCanvas.getContext('2d');
-    x.drawImage(blank, 0, 0);
-    if (pr < 1) {
-      x.save(); x.globalAlpha = (1 - pr) * 0.7; x.strokeStyle = '#2a6fb8'; x.lineWidth = 3; x.setLineDash([22, 14]);
-      x.strokeRect(24, 24, sheetCanvas.width - 48, sheetCanvas.height - 48);
-      x.beginPath(); x.moveTo(sheetCanvas.width / 2, 0); x.lineTo(sheetCanvas.width / 2, sheetCanvas.height); x.stroke(); x.restore();
-    }
-    if (pr > 0) { x.save(); x.beginPath(); x.rect(0, 0, sheetCanvas.width * pr, sheetCanvas.height); x.clip(); x.drawImage(printed, 0, 0); x.restore(); }
-    sheetTex.needsUpdate = true;
-  }
-  drawSheet(0);
-
-  const sheetGeo = new THREE.BufferGeometry();
-  const pos = new Float32Array((N + 1) * 2 * 3), nor = new Float32Array((N + 1) * 2 * 3), uv = new Float32Array((N + 1) * 2 * 2);
-  const idx = [];
-  for (let i = 0; i <= N; i++) for (let j = 0; j < 2; j++) { const k = i * 2 + j; uv[k * 2] = i / N; uv[k * 2 + 1] = j; }
-  for (let i = 0; i < N; i++) { const a = i * 2, b = i * 2 + 1, c = (i + 1) * 2, d = (i + 1) * 2 + 1; idx.push(a, c, b, b, c, d); }
-  sheetGeo.setIndex(idx);
-  sheetGeo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
-  sheetGeo.setAttribute('normal', new THREE.BufferAttribute(nor, 3));
-  sheetGeo.setAttribute('uv', new THREE.BufferAttribute(uv, 2));
-  function bendSheet(b) {
-    for (let i = 0; i <= N; i++) {
-      const s = (i / N - 0.5) * JW;
-      let x, z, nx, nz;
-      if (b < 1e-4) { x = s; z = 0; nx = 0; nz = 1; }
-      else { const r = JR / b, ph = s / r; x = r * Math.sin(ph); z = -r * (1 - Math.cos(ph)); nx = Math.sin(ph); nz = Math.cos(ph); }
-      for (let j = 0; j < 2; j++) {
-        const k = (i * 2 + j) * 3;
-        pos[k] = x; pos[k + 1] = (j ? JH / 2 : -JH / 2); pos[k + 2] = z;
-        nor[k] = nx; nor[k + 1] = 0; nor[k + 2] = nz;
+  /* ------------------------------------------------------------ journey rig (built only on pages that have a journey stage) */
+  let J = null;
+  function makeJourney() {
+    const journey = new THREE.Group(); journey.visible = false; scene.add(journey);
+    const JR = 0.85, JH = 1.3, JW = TAU * JR, N = 160;
+    const aspect = JH / JW;
+    const blank = ART.blankSheetCanvas(2048, Math.round(2048 * aspect));
+    const printed = ART.artCanvas('brand', 0, aspect);
+    const sheetCanvas = document.createElement('canvas'); sheetCanvas.width = blank.width; sheetCanvas.height = blank.height;
+    const sheetTex = new THREE.CanvasTexture(sheetCanvas); sheetTex.colorSpace = THREE.SRGBColorSpace; sheetTex.anisotropy = 8;
+    let lastPrint = -1;
+    function drawSheet(pr) {
+      const x = sheetCanvas.getContext('2d');
+      x.drawImage(blank, 0, 0);
+      if (pr < 1) {
+        x.save(); x.globalAlpha = (1 - pr) * 0.7; x.strokeStyle = '#2a6fb8'; x.lineWidth = 3; x.setLineDash([22, 14]);
+        x.strokeRect(24, 24, sheetCanvas.width - 48, sheetCanvas.height - 48);
+        x.beginPath(); x.moveTo(sheetCanvas.width / 2, 0); x.lineTo(sheetCanvas.width / 2, sheetCanvas.height); x.stroke(); x.restore();
       }
+      if (pr > 0) { x.save(); x.beginPath(); x.rect(0, 0, sheetCanvas.width * pr, sheetCanvas.height); x.clip(); x.drawImage(printed, 0, 0); x.restore(); }
+      sheetTex.needsUpdate = true;
     }
-    sheetGeo.attributes.position.needsUpdate = true; sheetGeo.attributes.normal.needsUpdate = true;
-    sheetGeo.computeBoundingSphere();
-  }
-  const sheetMat = new THREE.MeshPhysicalMaterial({ map: sheetTex, metalness: 0.65, roughness: 0.26, clearcoat: 1, clearcoatRoughness: 0.1, side: THREE.DoubleSide });
-  sheetMat.userData.envBase = 1.1; envMats.add(sheetMat);
-  const sheet = new THREE.Mesh(sheetGeo, sheetMat);
-  const sheetRig = new THREE.Group(); sheetRig.add(sheet); journey.add(sheetRig);
-  bendSheet(0);
+    drawSheet(0);
 
-  const jMetal = metalMat();
-  const capBottom = new THREE.Mesh(new THREE.CircleGeometry(JR, 64), jMetal); capBottom.rotation.x = Math.PI / 2; capBottom.position.y = -JH / 2;
-  const capTop = lidParts(JR, JH, 'brand', 0, jMetal); capTop.position.y = JH / 2 + 3;
-  sheetRig.add(capBottom, capTop);
-
-  const head = new THREE.Mesh(new THREE.PlaneGeometry(0.06, JH + 0.5), new THREE.MeshBasicMaterial({ color: 0xffb454, transparent: true, opacity: 0.95, blending: THREE.AdditiveBlending, depthWrite: false }));
-  sheetRig.add(head);
-
-  // pallet of mini tins
-  const pallet = new THREE.Group(); journey.add(pallet);
-  const miniR = 0.4, miniH = 0.6;
-  const miniBodyGeo = new THREE.CylinderGeometry(miniR, miniR, miniH, 40, 1, true);
-  const miniTopGeo = new THREE.CircleGeometry(miniR + 0.02, 40);
-  const miniBodyMat = printMat(ART.wrapTexture('brand', 0, miniH / (TAU * miniR)));
-  const miniTopMat = printMat(ART.lidTexture('brand', 0));
-  const minis = [];
-  for (let layer = 0; layer < 2; layer++) for (let ix = 0; ix < 3; ix++) for (let iz = 0; iz < 3; iz++) {
-    const g = new THREE.Group();
-    const b = new THREE.Mesh(miniBodyGeo, miniBodyMat); b.rotation.y = -Math.PI / 2;
-    const t = new THREE.Mesh(miniTopGeo, miniTopMat); t.rotation.x = -Math.PI / 2; t.position.y = miniH / 2 + 0.005;
-    g.add(b, t);
-    g.position.set((ix - 1) * 0.86, 0.18 + miniH / 2 + layer * (miniH + 0.02), (iz - 1) * 0.86);
-    g.userData.order = (layer * 9 + ix * 3 + iz);
-    g.scale.setScalar(0.001);
-    pallet.add(g); minis.push(g);
-  }
-  const wood = new THREE.MeshStandardMaterial({ color: '#b98a54', roughness: 0.85, metalness: 0 });
-  for (let i = -1; i <= 1; i++) { const pl = new THREE.Mesh(new THREE.BoxGeometry(2.8, 0.06, 0.5), wood); pl.position.set(0, 0.03, i * 0.95); pallet.add(pl); }
-  for (let i = -1; i <= 1; i++) { const bl = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.12, 2.8), wood); bl.position.set(i * 1.2, 0.0, 0); pallet.add(bl); }
-  const wrapFilm = new THREE.Mesh(new THREE.BoxGeometry(2.9, 1.55, 2.9), new THREE.MeshPhysicalMaterial({ color: '#cfe3ff', transparent: true, opacity: 0.12, roughness: 0.1, metalness: 0, clearcoat: 1 }));
-  wrapFilm.position.y = 0.18 + 0.78; pallet.add(wrapFilm);
-  pallet.position.y = -1.0; pallet.visible = false;
-
-  // globe
-  const globe = new THREE.Group(); journey.add(globe); globe.visible = false;
-  const globeTilt = new THREE.Group(); globe.add(globeTilt);
-  const GR = 1.45;
-  const ll = (lat, lon, r = GR) => { const a = THREE.MathUtils.degToRad(lat), o = THREE.MathUtils.degToRad(lon); return new THREE.Vector3(r * Math.cos(a) * Math.sin(o), r * Math.sin(a), r * Math.cos(a) * Math.cos(o)); };
-  // The globe is a self-lit "planet": a deep-navy sphere with a rim glow and bright land dots, so it looks
-  // identical in light and dark mode. Land comes from Natural Earth (public domain), rasterised once.
-  {
-    const n = 9000, p = new Float32Array(n * 3), col = new Float32Array(n * 3), lonlat = new Float32Array(n * 2);
-    const land = new THREE.Color('#c4d6ff'), sea = new THREE.Color('#1f2d70');
-    for (let i = 0; i < n; i++) {
-      const y = 1 - (i / (n - 1)) * 2, r = Math.sqrt(1 - y * y), th = Math.PI * (3 - Math.sqrt(5)) * i;
-      const x = Math.cos(th) * r, z = Math.sin(th) * r;
-      p[i * 3] = x * GR; p[i * 3 + 1] = y * GR; p[i * 3 + 2] = z * GR;
-      lonlat[i * 2] = Math.atan2(x, z) * 180 / Math.PI; lonlat[i * 2 + 1] = Math.asin(y) * 180 / Math.PI;
-      col[i * 3] = sea.r; col[i * 3 + 1] = sea.g; col[i * 3 + 2] = sea.b;
+    const sheetGeo = new THREE.BufferGeometry();
+    const pos = new Float32Array((N + 1) * 2 * 3), nor = new Float32Array((N + 1) * 2 * 3), uv = new Float32Array((N + 1) * 2 * 2);
+    const idx = [];
+    for (let i = 0; i <= N; i++) for (let j = 0; j < 2; j++) { const k = i * 2 + j; uv[k * 2] = i / N; uv[k * 2 + 1] = j; }
+    for (let i = 0; i < N; i++) { const a = i * 2, b = i * 2 + 1, c = (i + 1) * 2, d = (i + 1) * 2 + 1; idx.push(a, c, b, b, c, d); }
+    sheetGeo.setIndex(idx);
+    sheetGeo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+    sheetGeo.setAttribute('normal', new THREE.BufferAttribute(nor, 3));
+    sheetGeo.setAttribute('uv', new THREE.BufferAttribute(uv, 2));
+    function bendSheet(b) {
+      for (let i = 0; i <= N; i++) {
+        const s = (i / N - 0.5) * JW;
+        let x, z, nx, nz;
+        if (b < 1e-4) { x = s; z = 0; nx = 0; nz = 1; }
+        else { const r = JR / b, ph = s / r; x = r * Math.sin(ph); z = -r * (1 - Math.cos(ph)); nx = Math.sin(ph); nz = Math.cos(ph); }
+        for (let j = 0; j < 2; j++) {
+          const k = (i * 2 + j) * 3;
+          pos[k] = x; pos[k + 1] = (j ? JH / 2 : -JH / 2); pos[k + 2] = z;
+          nor[k] = nx; nor[k + 1] = 0; nor[k + 2] = nz;
+        }
+      }
+      sheetGeo.attributes.position.needsUpdate = true; sheetGeo.attributes.normal.needsUpdate = true;
+      sheetGeo.computeBoundingSphere();
     }
-    const g = new THREE.BufferGeometry();
-    g.setAttribute('position', new THREE.BufferAttribute(p, 3)); g.setAttribute('color', new THREE.BufferAttribute(col, 3));
-    globeTilt.add(new THREE.Points(g, new THREE.PointsMaterial({ size: 0.04, vertexColors: true, transparent: true, opacity: 1, depthWrite: false })));
+    const sheetMat = new THREE.MeshPhysicalMaterial({ map: sheetTex, metalness: 0.65, roughness: 0.26, clearcoat: 1, clearcoatRoughness: 0.1, side: THREE.DoubleSide });
+    sheetMat.userData.envBase = 1.1; envMats.add(sheetMat);
+    const sheet = new THREE.Mesh(sheetGeo, sheetMat);
+    const sheetRig = new THREE.Group(); sheetRig.add(sheet); journey.add(sheetRig);
+    bendSheet(0);
 
-    const planet = new THREE.ShaderMaterial({
-      vertexShader: 'varying vec3 vN; void main(){ vN = normalize(normalMatrix * normal); gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }',
-      fragmentShader: 'varying vec3 vN; void main(){ float f = pow(1.0 - abs(vN.z), 2.2); vec3 c = mix(vec3(0.035,0.06,0.17), vec3(0.14,0.25,0.62), f); c += vec3(0.02,0.03,0.07) * (vN.y*0.5+0.5); gl_FragColor = vec4(c,1.0); }'
-    });
-    globeTilt.add(new THREE.Mesh(new THREE.SphereGeometry(GR * 0.99, 64, 48), planet));
-    const halo = new THREE.ShaderMaterial({
-      transparent: true, depthWrite: false, side: THREE.BackSide,
-      vertexShader: 'varying vec3 vN; void main(){ vN = normalize(normalMatrix * normal); gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }',
-      fragmentShader: 'varying vec3 vN; void main(){ float f = pow(1.0 - abs(vN.z), 2.6); gl_FragColor = vec4(0.36,0.52,1.0, f*0.55); }'
-    });
-    globe.add(new THREE.Mesh(new THREE.SphereGeometry(GR * 1.1, 64, 48), halo));
+    const jMetal = metalMat();
+    const capBottom = new THREE.Mesh(new THREE.CircleGeometry(JR, 64), jMetal); capBottom.rotation.x = Math.PI / 2; capBottom.position.y = -JH / 2;
+    const capTop = lidParts(JR, JH, 'brand', 0, jMetal); capTop.position.y = JH / 2 + 3;
+    sheetRig.add(capBottom, capTop);
 
-    fetch('assets/land-110m.geojson').then((r) => r.json()).then((gj) => {
-      const W = 1440, H = 720, cv = document.createElement('canvas'); cv.width = W; cv.height = H;
-      const cx = cv.getContext('2d', { willReadFrequently: true }); cx.fillStyle = '#fff';
-      const ring = (rg) => { rg.forEach(([lo, la], k) => { const x = (lo + 180) / 360 * W, y = (90 - la) / 180 * H; k ? cx.lineTo(x, y) : cx.moveTo(x, y); }); cx.closePath(); };
-      gj.features.forEach((f) => {
-        const polys = f.geometry.type === 'Polygon' ? [f.geometry.coordinates] : f.geometry.coordinates;
-        polys.forEach((poly) => { cx.beginPath(); poly.forEach(ring); cx.fill('evenodd'); });
-      });
-      const px = cx.getImageData(0, 0, W, H).data;
+    const head = new THREE.Mesh(new THREE.PlaneGeometry(0.06, JH + 0.5), new THREE.MeshBasicMaterial({ color: 0xffb454, transparent: true, opacity: 0.95, blending: THREE.AdditiveBlending, depthWrite: false }));
+    sheetRig.add(head);
+
+    // pallet of mini tins
+    const pallet = new THREE.Group(); journey.add(pallet);
+    const miniR = 0.4, miniH = 0.6;
+    const miniBodyGeo = new THREE.CylinderGeometry(miniR, miniR, miniH, 40, 1, true);
+    const miniTopGeo = new THREE.CircleGeometry(miniR + 0.02, 40);
+    const miniBodyMat = printMat(ART.wrapTexture('brand', 0, miniH / (TAU * miniR)));
+    const miniTopMat = printMat(ART.lidTexture('brand', 0));
+    const minis = [];
+    for (let layer = 0; layer < 2; layer++) for (let ix = 0; ix < 3; ix++) for (let iz = 0; iz < 3; iz++) {
+      const g = new THREE.Group();
+      const b = new THREE.Mesh(miniBodyGeo, miniBodyMat); b.rotation.y = -Math.PI / 2;
+      const t = new THREE.Mesh(miniTopGeo, miniTopMat); t.rotation.x = -Math.PI / 2; t.position.y = miniH / 2 + 0.005;
+      g.add(b, t);
+      g.position.set((ix - 1) * 0.86, 0.18 + miniH / 2 + layer * (miniH + 0.02), (iz - 1) * 0.86);
+      g.userData.order = (layer * 9 + ix * 3 + iz);
+      g.scale.setScalar(0.001);
+      pallet.add(g); minis.push(g);
+    }
+    const wood = new THREE.MeshStandardMaterial({ color: '#b98a54', roughness: 0.85, metalness: 0 });
+    for (let i = -1; i <= 1; i++) { const pl = new THREE.Mesh(new THREE.BoxGeometry(2.8, 0.06, 0.5), wood); pl.position.set(0, 0.03, i * 0.95); pallet.add(pl); }
+    for (let i = -1; i <= 1; i++) { const bl = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.12, 2.8), wood); bl.position.set(i * 1.2, 0.0, 0); pallet.add(bl); }
+    const wrapFilm = new THREE.Mesh(new THREE.BoxGeometry(2.9, 1.55, 2.9), new THREE.MeshPhysicalMaterial({ color: '#cfe3ff', transparent: true, opacity: 0.12, roughness: 0.1, metalness: 0, clearcoat: 1 }));
+    wrapFilm.position.y = 0.18 + 0.78; pallet.add(wrapFilm);
+    pallet.position.y = -1.0; pallet.visible = false;
+
+    // globe
+    const globe = new THREE.Group(); journey.add(globe); globe.visible = false;
+    const globeTilt = new THREE.Group(); globe.add(globeTilt);
+    const GR = 1.45;
+    const ll = (lat, lon, r = GR) => { const a = THREE.MathUtils.degToRad(lat), o = THREE.MathUtils.degToRad(lon); return new THREE.Vector3(r * Math.cos(a) * Math.sin(o), r * Math.sin(a), r * Math.cos(a) * Math.cos(o)); };
+    // The globe is a self-lit "planet": a deep-navy sphere with a rim glow and bright land dots, so it looks
+    // identical in light and dark mode. Land comes from Natural Earth (public domain), rasterised once.
+    {
+      const n = 9000, p = new Float32Array(n * 3), col = new Float32Array(n * 3), lonlat = new Float32Array(n * 2);
+      const land = new THREE.Color('#c4d6ff'), sea = new THREE.Color('#1f2d70');
       for (let i = 0; i < n; i++) {
-        const xx = Math.min(W - 1, Math.max(0, Math.floor((lonlat[i * 2] + 180) / 360 * W))), yy = Math.min(H - 1, Math.max(0, Math.floor((90 - lonlat[i * 2 + 1]) / 180 * H)));
-        if (px[(yy * W + xx) * 4] > 128) { col[i * 3] = land.r; col[i * 3 + 1] = land.g; col[i * 3 + 2] = land.b; }
+        const y = 1 - (i / (n - 1)) * 2, r = Math.sqrt(1 - y * y), th = Math.PI * (3 - Math.sqrt(5)) * i;
+        const x = Math.cos(th) * r, z = Math.sin(th) * r;
+        p[i * 3] = x * GR; p[i * 3 + 1] = y * GR; p[i * 3 + 2] = z * GR;
+        lonlat[i * 2] = Math.atan2(x, z) * 180 / Math.PI; lonlat[i * 2 + 1] = Math.asin(y) * 180 / Math.PI;
+        col[i * 3] = sea.r; col[i * 3 + 1] = sea.g; col[i * 3 + 2] = sea.b;
       }
-      g.attributes.color.needsUpdate = true;
-    }).catch((e) => { console.warn('globe land map unavailable', e); });
-  }
-  // [label, lat, lon, label offset x, y] — unlabeled cities still get an arc
-  const CITIES = [
-    ['Riyadh', 24.71, 46.68, -0.05, -0.24], ['Dubai', 25.2, 55.27, 0.32, -0.18], ['Baghdad', 33.31, 44.37, 0.2, 0.26],
-    ['', 29.38, 47.99, 0, 0], ['', 25.29, 51.53, 0, 0], ['', 40.7, -74.0, 0, 0]
-  ];
-  const home = ll(31.95, 35.93);
-  const arcs = [];
-  const homeDot = new THREE.Mesh(new THREE.SphereGeometry(0.05, 16, 16), new THREE.MeshBasicMaterial({ color: 0xf2a93b })); homeDot.position.copy(home); globeTilt.add(homeDot);
-  const homeLbl = new THREE.Sprite(new THREE.SpriteMaterial({ map: ART.labelSprite('Amman', '#ffd58a'), transparent: true, depthTest: false })); homeLbl.scale.set(0.9, 0.225, 1); homeLbl.position.copy(home).multiplyScalar(1.1).add(new THREE.Vector3(-0.42, -0.04, 0.05)); globeTilt.add(homeLbl);
-  CITIES.forEach(([name, lat, lon, ox, oy]) => {
-    const p1 = ll(lat, lon);
-    const mid = home.clone().add(p1).multiplyScalar(0.5); const d = home.distanceTo(p1);
-    mid.setLength(GR + 0.25 + d * 0.28);
-    const pts = new THREE.QuadraticBezierCurve3(home, mid, p1).getPoints(64);
-    const geo = new THREE.BufferGeometry().setFromPoints(pts);
-    const line = new THREE.Line(geo, new THREE.LineBasicMaterial({ color: 0xffb454, transparent: true, opacity: 0.95 }));
-    geo.setDrawRange(0, 0); globeTilt.add(line); arcs.push(geo);
-    const dot = new THREE.Mesh(new THREE.SphereGeometry(0.035, 12, 12), new THREE.MeshBasicMaterial({ color: 0xffffff })); dot.position.copy(p1); globeTilt.add(dot);
-    if (name) {
-      const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: ART.labelSprite(name), transparent: true, depthTest: false })); sp.scale.set(0.72, 0.18, 1);
-      sp.position.copy(p1).multiplyScalar(1.1).add(new THREE.Vector3(ox, oy, 0.05)); globeTilt.add(sp);
+      const g = new THREE.BufferGeometry();
+      g.setAttribute('position', new THREE.BufferAttribute(p, 3)); g.setAttribute('color', new THREE.BufferAttribute(col, 3));
+      globeTilt.add(new THREE.Points(g, new THREE.PointsMaterial({ size: 0.04, vertexColors: true, transparent: true, opacity: 1, depthWrite: false })));
+
+      const planet = new THREE.ShaderMaterial({
+        vertexShader: 'varying vec3 vN; void main(){ vN = normalize(normalMatrix * normal); gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }',
+        fragmentShader: 'varying vec3 vN; void main(){ float f = pow(1.0 - abs(vN.z), 2.2); vec3 c = mix(vec3(0.035,0.06,0.17), vec3(0.14,0.25,0.62), f); c += vec3(0.02,0.03,0.07) * (vN.y*0.5+0.5); gl_FragColor = vec4(c,1.0); }'
+      });
+      globeTilt.add(new THREE.Mesh(new THREE.SphereGeometry(GR * 0.99, 64, 48), planet));
+      const halo = new THREE.ShaderMaterial({
+        transparent: true, depthWrite: false, side: THREE.BackSide,
+        vertexShader: 'varying vec3 vN; void main(){ vN = normalize(normalMatrix * normal); gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }',
+        fragmentShader: 'varying vec3 vN; void main(){ float f = pow(1.0 - abs(vN.z), 2.6); gl_FragColor = vec4(0.36,0.52,1.0, f*0.55); }'
+      });
+      globe.add(new THREE.Mesh(new THREE.SphereGeometry(GR * 1.1, 64, 48), halo));
+
+      fetch('/assets/data/land-110m.geojson').then((r) => r.json()).then((gj) => {
+        const W = 1440, H = 720, cv = document.createElement('canvas'); cv.width = W; cv.height = H;
+        const cx = cv.getContext('2d', { willReadFrequently: true }); cx.fillStyle = '#fff';
+        const ring = (rg) => { rg.forEach(([lo, la], k) => { const x = (lo + 180) / 360 * W, y = (90 - la) / 180 * H; k ? cx.lineTo(x, y) : cx.moveTo(x, y); }); cx.closePath(); };
+        gj.features.forEach((f) => {
+          const polys = f.geometry.type === 'Polygon' ? [f.geometry.coordinates] : f.geometry.coordinates;
+          polys.forEach((poly) => { cx.beginPath(); poly.forEach(ring); cx.fill('evenodd'); });
+        });
+        const px = cx.getImageData(0, 0, W, H).data;
+        for (let i = 0; i < n; i++) {
+          const xx = Math.min(W - 1, Math.max(0, Math.floor((lonlat[i * 2] + 180) / 360 * W))), yy = Math.min(H - 1, Math.max(0, Math.floor((90 - lonlat[i * 2 + 1]) / 180 * H)));
+          if (px[(yy * W + xx) * 4] > 128) { col[i * 3] = land.r; col[i * 3 + 1] = land.g; col[i * 3 + 2] = land.b; }
+        }
+        g.attributes.color.needsUpdate = true;
+      }).catch((e) => { console.warn('globe land map unavailable', e); });
     }
-  });
-  const GLOBE_Y = -THREE.MathUtils.degToRad(34);
-  globeTilt.rotation.y = GLOBE_Y; globeTilt.rotation.x = 0.35;
+    // [label, lat, lon, label offset x, y] — unlabeled cities still get an arc
+    const CITIES = [
+      ['Riyadh', 24.71, 46.68, -0.05, -0.24], ['Dubai', 25.2, 55.27, 0.32, -0.18], ['Baghdad', 33.31, 44.37, 0.2, 0.26],
+      ['', 29.38, 47.99, 0, 0], ['', 25.29, 51.53, 0, 0], ['', 40.7, -74.0, 0, 0]
+    ];
+    const home = ll(31.95, 35.93);
+    const arcs = [];
+    const homeDot = new THREE.Mesh(new THREE.SphereGeometry(0.05, 16, 16), new THREE.MeshBasicMaterial({ color: 0xf2a93b })); homeDot.position.copy(home); globeTilt.add(homeDot);
+    const homeLbl = new THREE.Sprite(new THREE.SpriteMaterial({ map: ART.labelSprite('Amman', '#ffd58a'), transparent: true, depthTest: false })); homeLbl.scale.set(0.9, 0.225, 1); homeLbl.position.copy(home).multiplyScalar(1.1).add(new THREE.Vector3(-0.42, -0.04, 0.05)); globeTilt.add(homeLbl);
+    CITIES.forEach(([name, lat, lon, ox, oy]) => {
+      const p1 = ll(lat, lon);
+      const mid = home.clone().add(p1).multiplyScalar(0.5); const d = home.distanceTo(p1);
+      mid.setLength(GR + 0.25 + d * 0.28);
+      const pts = new THREE.QuadraticBezierCurve3(home, mid, p1).getPoints(64);
+      const geo = new THREE.BufferGeometry().setFromPoints(pts);
+      const line = new THREE.Line(geo, new THREE.LineBasicMaterial({ color: 0xffb454, transparent: true, opacity: 0.95 }));
+      geo.setDrawRange(0, 0); globeTilt.add(line); arcs.push(geo);
+      const dot = new THREE.Mesh(new THREE.SphereGeometry(0.035, 12, 12), new THREE.MeshBasicMaterial({ color: 0xffffff })); dot.position.copy(p1); globeTilt.add(dot);
+      if (name) {
+        const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: ART.labelSprite(name), transparent: true, depthTest: false })); sp.scale.set(0.72, 0.18, 1);
+        sp.position.copy(p1).multiplyScalar(1.1).add(new THREE.Vector3(ox, oy, 0.05)); globeTilt.add(sp);
+      }
+    });
+    const GLOBE_Y = -THREE.MathUtils.degToRad(34);
+    globeTilt.rotation.y = GLOBE_Y; globeTilt.rotation.x = 0.35;
 
-  const jState = { p: 0 };
-  function setJourney(p) {
-    jState.p = p;
-    const appear = 1;
-    const print = sstep(0.17, 0.36, p);
-    const bend = sstep(0.4, 0.58, p);
-    const lid = sstep(0.58, 0.66, p);
-    const pal = sstep(0.68, 0.86, p);
-    const gl = sstep(0.88, 1.0, p);
+    const jState = { p: 0 };
+    function setJourney(p) {
+      jState.p = p;
+      const appear = 1;
+      const print = sstep(0.17, 0.36, p);
+      const bend = sstep(0.4, 0.58, p);
+      const lid = sstep(0.58, 0.66, p);
+      const pal = sstep(0.68, 0.86, p);
+      const gl = sstep(0.88, 1.0, p);
 
-    if (Math.abs(print - lastPrint) > 0.004) { lastPrint = print; drawSheet(print); }
-    bendSheet(bend);
-    sheetRig.visible = pal < 0.98;
-    sheetRig.rotation.y = bend * (Math.PI / 2) + sstep(0.4, 0.66, p) * TAU;
-    sheetRig.rotation.x = lerp(-0.18, 0.2, bend);
-    sheet.position.z = JR * bend;
-    // caps sit on the can axis (the sheet is shifted by JR*bend, so the axis is the rig origin at bend=1)
-    capBottom.visible = bend > 0.98; capTop.visible = bend > 0.98;
-    capTop.position.y = lerp(JH / 2 + 3, JH / 2, 1 - Math.pow(1 - lid, 3));
-    capTop.position.z = 0; capBottom.position.z = 0;
-    const flatScale = lerp(1, 2.3, bend);
-    sheetRig.scale.setScalar(appear * flatScale * (1 - pal));
-    // printing head
-    head.visible = print > 0.001 && print < 0.999 && bend < 0.01;
-    head.position.set((print - 0.5) * JW, 0, 0.02);
+      if (Math.abs(print - lastPrint) > 0.004) { lastPrint = print; drawSheet(print); }
+      bendSheet(bend);
+      sheetRig.visible = pal < 0.98;
+      sheetRig.rotation.y = bend * (Math.PI / 2) + sstep(0.4, 0.66, p) * TAU;
+      sheetRig.rotation.x = lerp(-0.18, 0.2, bend);
+      sheet.position.z = JR * bend;
+      // caps sit on the can axis (the sheet is shifted by JR*bend, so the axis is the rig origin at bend=1)
+      capBottom.visible = bend > 0.98; capTop.visible = bend > 0.98;
+      capTop.position.y = lerp(JH / 2 + 3, JH / 2, 1 - Math.pow(1 - lid, 3));
+      capTop.position.z = 0; capBottom.position.z = 0;
+      const flatScale = lerp(1, 2.3, bend);
+      sheetRig.scale.setScalar(appear * flatScale * (1 - pal));
+      // printing head
+      head.visible = print > 0.001 && print < 0.999 && bend < 0.01;
+      head.position.set((print - 0.5) * JW, 0, 0.02);
 
-    pallet.visible = pal > 0.001 && gl < 0.999;
-    minis.forEach((m) => { const t = clamp(pal * 20 - m.userData.order * 0.9, 0, 1); m.scale.setScalar(Math.max(0.001, 1 - Math.pow(1 - t, 3))); m.rotation.y = (1 - t) * 3; });
-    wrapFilm.material.opacity = 0.12 * sstep(0.84, 0.88, p);
-    pallet.scale.setScalar(lerp(1.5, 0.001, gl));
-    pallet.position.y = lerp(-1.5, 1.4, gl);
-    pallet.rotation.y = pal * 1.2 + p * 3;
+      pallet.visible = pal > 0.001 && gl < 0.999;
+      minis.forEach((m) => { const t = clamp(pal * 20 - m.userData.order * 0.9, 0, 1); m.scale.setScalar(Math.max(0.001, 1 - Math.pow(1 - t, 3))); m.rotation.y = (1 - t) * 3; });
+      wrapFilm.material.opacity = 0.12 * sstep(0.84, 0.88, p);
+      pallet.scale.setScalar(lerp(1.5, 0.001, gl));
+      pallet.position.y = lerp(-1.5, 1.4, gl);
+      pallet.rotation.y = pal * 1.2 + p * 3;
 
-    globe.visible = gl > 0.001;
-    globe.scale.setScalar(Math.max(0.001, gl * 1.5));
-    arcs.forEach((g, i) => g.setDrawRange(0, Math.floor(65 * clamp((gl - 0.2 - i * 0.07) / 0.5))));
+      globe.visible = gl > 0.001;
+      globe.scale.setScalar(Math.max(0.001, gl * 1.5));
+      arcs.forEach((g, i) => g.setDrawRange(0, Math.floor(65 * clamp((gl - 0.2 - i * 0.07) / 0.5))));
+    }
+
+    const journeyInst = {
+      name: 'journey', root: journey, kind: 'journey',
+      update(dt, now) { if (journey.visible) globeTilt.rotation.y = GLOBE_Y + Math.sin(now / 3000) * 0.08 + ptr.sx * 0.2; },
+      layout(w, h, px2w) { journey.scale.setScalar(Math.max(0.001, Math.min((w * px2w) / (JW + 0.6), (h * px2w) / 3.7))); }
+    };
+    return { journey, pallet, globe, setJourney, inst: journeyInst };
   }
+  const ensureJourney = () => (J || (J = makeJourney()));
 
   /* ------------------------------------------------------------ per-stage rendering */
   // Each .stage owns its own <canvas>. One shared WebGL renderer draws that stage's rig, and the picture is copied into
   // the stage's canvas. Because the picture lives INSIDE the stage element, it scrolls with the page natively and can never
   // drift away from its place, whatever the scroll method, speed or frame rate.
   const OVER = 0.12; // each canvas bleeds 12% past its stage so tilted tins never clip
-  const journeyInst = {
-    name: 'journey', root: journey, kind: 'journey',
-    update(dt, now) { if (journey.visible) globeTilt.rotation.y = GLOBE_Y + Math.sin(now / 3000) * 0.08 + ptr.sx * 0.2; },
-    layout(w, h, px2w) { journey.scale.setScalar(Math.max(0.001, Math.min((w * px2w) / (JW + 0.6), (h * px2w) / 3.7))); }
-  };
   let frameNo = 0, stages = [], bufW = 1, bufH = 1, running = true, last = performance.now(), lastScrollY = window.scrollY, scrollVel = 0;
 
   function refreshStages() {
@@ -459,7 +479,10 @@ export function createScene(canvas) {
     document.querySelectorAll('.stage').forEach((el) => {
       const cv = document.createElement('canvas'); cv.className = 'stage__cv'; cv.setAttribute('aria-hidden', 'true'); el.prepend(cv);
       const name = el.dataset.rig === 'journey' ? 'journey' : (el.dataset.pose || 'hero');
-      const inst = name === 'journey' ? journeyInst : (byName[name] || makeProduct(name));
+      const cfg = {};
+      ['shape', 'theme', 'finish'].forEach((k) => { if (el.dataset[k]) cfg[k] = el.dataset[k]; });
+      if (el.dataset.cw) cfg.cw = +el.dataset.cw;
+      const inst = name === 'journey' ? ensureJourney().inst : (byName[name] || makeProduct(name, cfg));
       stages.push({ el, cv, ctx: cv.getContext('2d'), inst, shown: false });
     });
   }
@@ -481,7 +504,7 @@ export function createScene(canvas) {
     const cw = Math.min(bufW, Math.round(r.width * k)), ch = Math.min(bufH, Math.round(r.height * k));
     const pw = Math.round(cw * pr), ph = Math.round(ch * pr);
     if (st.cv.width !== pw || st.cv.height !== ph) { st.cv.width = pw; st.cv.height = ph; }
-    instances.forEach((i) => { i.root.visible = false; }); journey.visible = false;
+    instances.forEach((i) => { i.root.visible = false; }); if (J) J.journey.visible = false;
     st.inst.root.visible = true;
     const vh = window.innerHeight, p = Math.max(-1, Math.min(1, ((r.top + r.height / 2) - vh / 2) / (vh / 2 + r.height / 2)));
     st.inst.update(dt, now, p, scrollVel);
@@ -491,7 +514,7 @@ export function createScene(canvas) {
     renderer.render(scene, camera);
     st.ctx.clearRect(0, 0, pw, ph);
     st.ctx.drawImage(renderer.domElement, 0, renderer.domElement.height - ph, pw, ph, 0, 0, pw, ph);
-    if (!st.shown) { st.shown = true; st.cv.classList.add('is-on'); }
+    if (!st.shown) { st.shown = true; st.cv.classList.add('is-on'); st.el.classList.add('has-cv'); }
   }
   function frame(dt, now) {
     ptr.sx += (ptr.x - ptr.sx) * 0.06; ptr.sy += (ptr.y - ptr.sy) * 0.06;
@@ -535,17 +558,18 @@ export function createScene(canvas) {
       const m = printMat(ART.lidTexture('brand', 0)); applyFinish(m, f, true);
       const mesh = new THREE.Mesh(geo, m); scene.add(mesh); tmp.push(mesh);
     });
-    const vis = instances.map((i) => i.root.visible), jv = [journey.visible, pallet.visible, globe.visible];
-    instances.forEach((i) => { i.root.visible = true; }); journey.visible = pallet.visible = globe.visible = true;
+    const vis = instances.map((i) => i.root.visible), jv = J ? [J.journey.visible, J.pallet.visible, J.globe.visible] : [];
+    instances.forEach((i) => { i.root.visible = true; }); if (J) J.journey.visible = J.pallet.visible = J.globe.visible = true;
     try { await renderer.compileAsync(scene, camera); } catch (e) { /* fine: compiled lazily instead */ }
-    instances.forEach((i, n) => { i.root.visible = vis[n]; }); [journey.visible, pallet.visible, globe.visible] = jv;
+    instances.forEach((i, n) => { i.root.visible = vis[n]; }); if (J) [J.journey.visible, J.pallet.visible, J.globe.visible] = jv;
     tmp.forEach((m) => { scene.remove(m); m.material.dispose(); envMats.delete(m.material); });
   }
 
   return {
-    refreshStages, pruneStages, setJourney, setTheme, resize, warm, advance, tick,
+    refreshStages, pruneStages, setJourney: (p) => { if (J) J.setJourney(p); }, setTheme, resize, warm, advance, tick,
     instance: (name) => byName[name],
     intro: () => (byName.hero ? byName.hero.intro() : null),
+    hasJourney: () => !!J,
     setPointer: (x, y) => { ptr.x = x; ptr.y = y; },
     spin: (el, dx) => { const s = stages.find((t) => t.el === el); if (s && s.inst.spin) s.inst.spin(dx); },
     debug: () => stages.map((s) => { const r = s.el.getBoundingClientRect(); return { pose: s.inst.name, canvas: s.cv.width + 'x' + s.cv.height, stage: Math.round(r.width) + 'x' + Math.round(r.height), top: Math.round(r.top), shown: s.shown }; })
