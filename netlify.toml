@@ -12,3 +12,20 @@
   for = "/assets/*"
   [headers.values]
     Cache-Control = "public, max-age=86400"
+
+# The engine modules import each other without a version query, so they are always revalidated (a fresh deploy never mixes old and new files).
+[[headers]]
+  for = "/assets/js/engine/*"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+# The old stand-alone creative preview (/prototype/) is superseded by the home pages.
+[[redirects]]
+  from = "/prototype"
+  to = "/en/"
+  status = 301
+
+[[redirects]]
+  from = "/prototype/*"
+  to = "/en/"
+  status = 301

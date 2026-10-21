@@ -222,7 +222,7 @@ html[dir="rtl"] .nav__links a::after { transform-origin: right; }
 .burger[aria-expanded="true"] i:nth-child(1) { transform: translateY(4px) rotate(45deg); } .burger[aria-expanded="true"] i:nth-child(2) { transform: translateY(-4px) rotate(-45deg); }
 .menu { position: fixed; inset: 0; z-index: 45; background: var(--bg); display: none; flex-direction: column; justify-content: center; gap: .4rem; padding: 90px var(--gut) 40px; clip-path: circle(0 at calc(100% - 60px) 40px); visibility: hidden; transition: clip-path .9s var(--ease), visibility 0s linear .9s; overflow-y: auto; }
 html[dir="rtl"] .menu { clip-path: circle(0 at 60px 40px); }
-.menu.is-open { clip-path: circle(160% at 50% 30%); visibility: visible; transition-delay: 0s; }
+.menu.is-open, html[dir="rtl"] .menu.is-open { clip-path: circle(160% at 50% 30%); visibility: visible; transition-delay: 0s; }
 .menu a { font-family: var(--f-display); font-weight: 700; font-size: clamp(2rem, 9vw, 3.4rem); letter-spacing: -.03em; line-height: 1.15; }
 .menu a[aria-current] { color: var(--accent-text); }
 html[lang="ar"] .menu a { letter-spacing: 0; }
@@ -255,6 +255,7 @@ section { position: relative; overflow-x: clip; } /* glows that bleed past the e
 .hero--inner { min-height: min(86svh, 780px); padding: 130px 0 60px; }
 .hero__grid { display: grid; grid-template-columns: 1.1fr .9fr; align-items: center; gap: 2rem; }
 .hero__grid--solo { grid-template-columns: 1fr; }
+.hero--inner:has(.hero__grid--solo) { min-height: 0; padding-bottom: 2rem; }
 .hero__grid--solo .hero__text { max-width: 60rem; }
 .hero__text { position: relative; z-index: 3; }
 .hero__cta { display: flex; flex-wrap: wrap; gap: .8rem; margin-top: 2.2rem; }
@@ -533,7 +534,7 @@ html:not(.js) .nav { border-radius: 28px; flex-wrap: wrap; }
   .bento, .news__grid, .foot__grid { grid-template-columns: 1fr; } .card--wide, .card--xl { grid-column: auto; }
   .brand__word { font-size: .62rem; letter-spacing: .1em; }
   html[lang="ar"] .brand__word { font-size: .66rem; }
-  html[lang="ar"] .brand__sub { display: none; }
+  html[lang="ar"] .nav .brand__sub { display: none; }
   .nav { padding-inline-start: 14px; gap: .5rem; } .brand { gap: .5rem; } .brand__mark { width: 30px; height: 30px; } .nav__tools { gap: .35rem; } .tool, .burger { width: 40px; height: 40px; }
   .tool--lang { width: auto; min-width: 44px; padding-inline: .7rem; }
   .contact__list span { width: 100%; }
