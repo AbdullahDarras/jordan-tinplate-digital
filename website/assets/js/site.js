@@ -15,7 +15,7 @@
   /* ---------- theme (initial value is set by the inline script in <head>) ---------- */
   var themeBtn = doc.getElementById('themeBtn');
   function currentTheme() {
-    return root.getAttribute('data-theme') || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    return root.getAttribute('data-theme') || 'light'; // light is the default; dark only when the visitor picks it
   }
   function applyTheme(next) {
     root.setAttribute('data-theme', next);

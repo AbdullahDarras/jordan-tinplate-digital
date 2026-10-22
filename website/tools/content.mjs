@@ -239,9 +239,9 @@ export const SEASONS = {
   tabs: [
     { id: 'olive', k: t('Autumn', 'الخريف'), h: t('Olive oil', 'زيت الزيتون'), now: true, shape: 'oil', theme: 'olive', finish: 'gloss', to: 'ind-olive',
       desc: t('Olive-oil tins in 1, 4, 8 and 16 L/kg, ready before the pressing season.', 'تنكات زيت الزيتون بسعات 1 و4 و8 و16 لتر/كغ، جاهزة قبل موسم العصر.'), more: t('Olive-oil tins', 'تنكات زيت الزيتون') },
-    { id: 'eid', k: t('Ramadan & Eid', 'رمضان والعيد'), h: t('Sweets, ka’ak & chocolate', 'حلويات وكعك وشوكولاتة'), shape: 'square', theme: 'eid', finish: 'emboss', to: 'ind-sweets',
+    { id: 'eid', k: t('Ramadan & Eid', 'رمضان والعيد'), h: t('Sweets, ka’ak & chocolate', 'حلويات وكعك وشوكولاتة'), shape: 'square', theme: 'halawah', finish: 'emboss', to: 'ind-sweets',
       desc: t('Gift tins for sweets, ka’ak and chocolate: embossed, soft-touch and unmistakably festive.', 'علب هدايا للحلويات والكعك والشوكولاتة: بنقش بارز وملمس ناعم وطابع احتفالي لا يُخطئ.'), more: t('Gift tins', 'علب الهدايا') },
-    { id: 'cheese', k: t('Spring', 'الربيع'), h: t('White cheese', 'الجبنة البيضاء'), shape: 'cheese', theme: 'cheese', finish: 'matte', to: 'ind-cheese',
+    { id: 'cheese', k: t('Spring', 'الربيع'), h: t('White cheese', 'الجبنة البيضاء'), shape: 'cheese', theme: 'halawah', finish: 'matte', to: 'ind-cheese',
       desc: t('Tins for the spring white-cheese season.', 'علب لموسم الجبنة البيضاء في الربيع.'), more: t('White-cheese tins', 'علب الجبنة البيضاء') }
   ]
 };
@@ -408,7 +408,7 @@ export const PAGES = [
       eyebrow: t('Industry · Milk powder & dairy', 'القطاع · حليب البودرة والألبان'),
       h1: t('Milk powder cans for dairy brands', 'علب حليب البودرة لعلامات الألبان'),
       lead: t('Large-format cans for powder and dairy, printed to your artwork and packed for export.', 'علب كبيرة الحجم للبودرة والألبان، مطبوعة وفق تصميمك ومجهّزة للتصدير.'),
-      art: 'can', stage: { shape: 'milk', theme: 'milk', finish: 'gloss', label: t('3D milk powder can: drag to rotate', 'علبة حليب بودرة ثلاثية الأبعاد: اسحب لتدويرها') },
+      art: 'can', stage: { shape: 'milk', theme: 'halawah', finish: 'gloss', label: t('3D milk powder can: drag to rotate', 'علبة حليب بودرة ثلاثية الأبعاد: اسحب لتدويرها') },
       ctas: [quoteCta(), { label: t('All products', 'كل المنتجات'), to: 'products', kind: 'ghost' }]
     },
     sections: [
@@ -444,7 +444,7 @@ export const PAGES = [
       eyebrow: t('Industry · Sweets, ka’ak & chocolate', 'القطاع · الحلويات والكعك والشوكولاتة'),
       h1: t('Gift tins for sweets, ka’ak and chocolate', 'علب هدايا للحلويات والكعك والشوكولاتة'),
       lead: t('Embossed, soft-touch and unmistakably festive: tins that make Ramadan and Eid gifts worth keeping.', 'بنقش بارز وملمس ناعم وطابع احتفالي لا يُخطئ: علب تجعل هدايا رمضان والعيد تستحق الاحتفاظ بها.'),
-      art: 'square', stage: { shape: 'square', theme: 'eid', finish: 'emboss', label: t('3D gift tin: drag to rotate', 'علبة هدايا ثلاثية الأبعاد: اسحب لتدويرها') },
+      art: 'square', stage: { shape: 'square', theme: 'halawah', finish: 'emboss', label: t('3D gift tin: drag to rotate', 'علبة هدايا ثلاثية الأبعاد: اسحب لتدويرها') },
       picker: { kind: 'shape', target: 'hero', initial: 'square', aria: t('Gift-tin shapes', 'أشكال علب الهدايا'), items: SHAPES_SWEETS },
       ctas: [quoteCta(), { label: t('All products', 'كل المنتجات'), to: 'products', kind: 'ghost' }]
     },
@@ -483,7 +483,7 @@ export const PAGES = [
       h1: t('Tinplate tins for white cheese brands', 'علب صفيح لعلامات الجبنة البيضاء'),
       lead: t('Spring is white-cheese season. We print and form tinplate for dairy brands, from artwork and plates to export-ready packs.',
               'الربيع هو موسم الجبنة البيضاء. نطبع الصفيح ونشكّله لعلامات الألبان، من التصميم والألواح حتى العبوة الجاهزة للتصدير.'),
-      art: 'rect', stage: { shape: 'cheese', theme: 'cheese', finish: 'matte', label: t('3D white-cheese tin: drag to rotate', 'علبة جبنة بيضاء ثلاثية الأبعاد: اسحب لتدويرها') },
+      art: 'rect', stage: { shape: 'cheese', theme: 'halawah', finish: 'matte', label: t('3D white-cheese tin: drag to rotate', 'علبة جبنة بيضاء ثلاثية الأبعاد: اسحب لتدويرها') },
       ctas: [quoteCta(), { label: t('All products', 'كل المنتجات'), to: 'products', kind: 'ghost' }]
     },
     sections: [
@@ -512,7 +512,7 @@ export const PAGES = [
       eyebrow: t('Industry · Coffee & tea', 'القطاع · القهوة والشاي'),
       h1: t('Tins for coffee and tea brands', 'علب لعلامات القهوة والشاي'),
       lead: t('Printed tins in round, square and special-mold shapes, including coffee tins that protect aroma.', 'علب مطبوعة بأشكال دائرية ومربعة وبقوالب خاصة، ومنها علب قهوة تحفظ العبير.'),
-      art: 'round', stage: { shape: 'coffee', theme: 'coffee', finish: 'matte', label: t('3D coffee and tea tin: drag to rotate', 'علبة قهوة وشاي ثلاثية الأبعاد: اسحب لتدويرها') },
+      art: 'round', stage: { shape: 'coffee', theme: 'halawah', finish: 'matte', label: t('3D coffee and tea tin: drag to rotate', 'علبة قهوة وشاي ثلاثية الأبعاد: اسحب لتدويرها') },
       ctas: [quoteCta(), { label: t('All products', 'كل المنتجات'), to: 'products', kind: 'ghost' }]
     },
     sections: [
@@ -545,7 +545,7 @@ export const PAGES = [
       eyebrow: t('Industry · Industrial', 'القطاع · الصناعي'),
       h1: t('Industrial cans for paints, chemicals and drums', 'علب صناعية للدهانات والكيماويات والبراميل'),
       lead: t('Beyond food and beverage, we also make cans for industrial products.', 'إلى جانب الأغذية والمشروبات، نصنع أيضاً علباً للمنتجات الصناعية.'),
-      art: 'can', stage: { shape: 'paint', theme: 'industrial', finish: 'matte', label: t('3D industrial paint can: drag to rotate', 'علبة دهان صناعية ثلاثية الأبعاد: اسحب لتدويرها') },
+      art: 'can', stage: { shape: 'paint', theme: 'halawah', finish: 'matte', label: t('3D industrial paint can: drag to rotate', 'علبة دهان صناعية ثلاثية الأبعاد: اسحب لتدويرها') },
       ctas: [quoteCta(), { label: t('All products', 'كل المنتجات'), to: 'products', kind: 'ghost' }]
     },
     sections: [

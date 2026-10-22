@@ -13,17 +13,17 @@ let chromium;
 try { ({ chromium } = require('playwright')); } catch { ({ chromium } = require(path.join(process.env.NODE_PATH || '/opt/node22/lib/node_modules', 'playwright'))); }
 const here = path.dirname(fileURLToPath(import.meta.url));
 const exe = process.env.CHROMIUM_PATH || ['/opt/pw-browsers/chromium-1194/chrome-linux/chrome', '/opt/pw-browsers/chromium/chrome-linux/chrome'].find((p) => fs.existsSync(p));
-const browser = await chromium.launch({ executablePath: exe, args: ['--no-sandbox'] });
+const browser = await chromium.launch({ executablePath: exe, args: ['--no-sandbox', '--use-gl=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'] });
 const [mode, a, b, theme] = process.argv.slice(2);
 
 if (mode === 'og-tin') {
-  // the hero tin of the home page on a transparent background (light lighting, the signature navy-and-gold tin)
+  // the hero tin of the home page on a transparent background (light lighting, the signature Halawah tin)
   const page = await browser.newPage({ viewport: { width: 1200, height: 900 }, deviceScaleFactor: 1 });
   await page.goto(a.replace(/\/$/, '') + '/en/?skip', { waitUntil: 'load' });
   await page.waitForTimeout(3500);
-  await page.addStyleTag({ content: 'html,body{background:transparent!important}body::before,.grain,.cursor,#curtain{display:none!important}.nav,.hero__text,.scrollcue,.marquee,main>section:not(.hero){visibility:hidden!important}.hero{background:transparent!important}' });
+  await page.addStyleTag({ content: 'html,body{background:transparent!important}body::before,.grain,.cursor,#curtain{display:none!important}.nav,.hero__text,.scrollcue,.marquee,main>section:not(.hero){visibility:hidden!important}.hero{background:transparent!important}.stage::before,.stage::after{display:none!important}' });
   const el = await page.$('.hero .stage');
-  await page.evaluate(() => { window.__jt.scene.instance('hero').hold = -0.22; });
+  await page.evaluate(() => { window.__jt.scene.instance('hero').hold = 0; });
   await page.waitForTimeout(1200);
   await el.screenshot({ path: path.join(here, 'og-tin.png'), omitBackground: true });
 } else if (mode === 'og') {

@@ -186,7 +186,6 @@ const KINDS = {
       <div class="plate" data-reveal>
         <h3>${T(F.plate.h, lang)}</h3>
         <p>${T(F.plate.p, lang)}</p>
-        <div class="swatches" role="group" aria-label="${T(F.cwAria, lang)}">${F.cws.map((c, i) => `<button class="sw${i === 0 ? ' is-on' : ''}" type="button" data-pick="cw" data-target="finish" data-id="${c.id || i - 1}" aria-pressed="${i === 0}" style="--a:${c.a};--b:${c.b}" aria-label="${T(c.label, lang)}"></button>`).join('')}</div>
       </div>
     </div>
   </div>
@@ -553,7 +552,7 @@ function jsonLd(lang, page) {
 // ---------------------------------------------------------------- full document
 // Runs before first paint: theme (no flash), the "js" flag, the entrance (home only, once per session, never with ?skip or reduced motion)
 // and the page-transition curtain that was started by the previous page.
-const headScript = (isHome) => `<script>(function(){var d=document.documentElement;d.classList.add('js');try{var t=localStorage.getItem('jt-theme');if(t!=='dark'&&t!=='light')t=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';d.setAttribute('data-theme',t)}catch(e){}try{if(sessionStorage.getItem('jt-arrive')){sessionStorage.removeItem('jt-arrive');d.classList.add('arrive')}}catch(e){}${isHome
+const headScript = (isHome) => `<script>(function(){var d=document.documentElement;d.classList.add('js');try{var t=localStorage.getItem('jt-theme');if(t!=='dark'&&t!=='light')t='light';d.setAttribute('data-theme',t)}catch(e){}try{if(sessionStorage.getItem('jt-arrive')){sessionStorage.removeItem('jt-arrive');d.classList.add('arrive')}}catch(e){}${isHome
   ? `try{if(!/[?&]skip/.test(location.search)&&!sessionStorage.getItem('jt-intro')&&!matchMedia('(prefers-reduced-motion: reduce)').matches)d.classList.add('intro')}catch(e){}`
   : `try{sessionStorage.setItem('jt-intro','1')}catch(e){}`}})()</script>`;
 const THEME_ONLY = `<script>(function(){var d=document.documentElement;try{var t=localStorage.getItem('jt-theme');if(t==='dark'||t==='light')d.setAttribute('data-theme',t)}catch(e){}})()</script>`;
@@ -661,7 +660,7 @@ function chooser() {
 ${THEME_ONLY}
 ${FONTS}
 <link rel="stylesheet" href="/assets/css/site.css?v=${V.css}">
-<script>(function(){try{var l=localStorage.getItem('jt-lang');if(!l){var n=(navigator.language||'en').toLowerCase();l=n.indexOf('ar')===0?'ar':'en'}if(l==='ar'||l==='en')location.replace('/'+l+'/')}catch(e){}})()</script>
+<script>(function(){try{var l=localStorage.getItem('jt-lang')||'en';if(l==='ar'||l==='en')location.replace('/'+l+'/')}catch(e){}})()</script>
 </head>
 <body class="plain">
 <main class="chooser" id="main">

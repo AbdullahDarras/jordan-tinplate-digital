@@ -3,6 +3,7 @@
 import * as THREE from 'three';
 import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
 import * as ART from './art.js';
+import * as HAL from './halawah.js';
 
 const TAU = Math.PI * 2;
 const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
@@ -32,8 +33,6 @@ const PFIN = {
   emboss: { metalness: 0.12, roughness: 0.32, clearcoat: 1, clearcoatRoughness: 0.08, sheen: 0, bumpScale: 10 },
   spot: { metalness: 0.06, roughness: 0.85, clearcoat: 1, clearcoatRoughness: 0.03, sheen: 0, bumpScale: 1.4, spot: true }
 };
-// Photographed artwork of a real tin made at the factory (lid, side band and their motif masks), served next to the site.
-const TIN_IMG = new URL('../../img/tins/', import.meta.url).href;
 const ACCENT = { olive: '#e8bf4f', eid: '#f4cf72', cheese: '#2a68c4', milk: '#2a68c4', coffee: '#e0a64a', industrial: '#ff7a33' };
 
 export function createScene(canvas) {
@@ -102,30 +101,6 @@ export function createScene(canvas) {
     const m = new THREE.MeshPhysicalMaterial({ color, metalness: 0.2, roughness: 0.2, clearcoat: 1, clearcoatRoughness: 0.1 });
     m.userData.envBase = 1.1; envMats.add(m); return m;
   }
-  // photo textures: loaded once, cloned per repeat count (a clone shares the image)
-  const loader = new THREE.TextureLoader(), texCache = {};
-  function photoTex(file, srgb, rep = 1) {
-    const k = file + '|' + rep;
-    if (texCache[k]) return texCache[k];
-    let base = texCache[file];
-    if (!base) { // copies made before the image arrives are refreshed when it does
-      const copies = [];
-      base = texCache[file] = loader.load(TIN_IMG + file, () => copies.forEach((c) => { c.needsUpdate = true; }));
-      base.userData.copies = copies;
-    }
-    const t = rep === 1 ? base : base.clone();
-    if (srgb) t.colorSpace = THREE.SRGBColorSpace;
-    t.anisotropy = 8;
-    if (rep !== 1) { t.wrapS = THREE.RepeatWrapping; t.repeat.set(rep, 1); base.userData.copies.push(t); if (base.image) t.needsUpdate = true; }
-    return (texCache[k] = t);
-  }
-  // the Halawah tin: part = 'lid' | 'side'; rep = how many times the side band repeats around the tin
-  const photoLayers = (part, rep = 1) => ({
-    photo: true,
-    map: photoTex(`halawah-${part}.jpg`, true, rep),
-    relief: photoTex(`halawah-${part}-relief.png`, false, rep),
-    spot: photoTex(`halawah-${part}-spot.png`, false, rep)
-  });
   function printMat(L, side = THREE.FrontSide) {
     if (L && L.photo) {
       const m = new THREE.MeshPhysicalMaterial({ map: L.map, metalness: 0.12, roughness: 0.3, clearcoat: 1, clearcoatRoughness: 0.06, side, bumpMap: L.relief, bumpScale: 0.6 });
@@ -136,6 +111,10 @@ export function createScene(canvas) {
     if (layered) { m.metalnessMap = m.roughnessMap = L.orm; m.userData.layers = L; m.bumpMap = ART.reliefMap(L, 'plain'); }
     m.userData.envBase = 1.1; envMats.add(m); return m;
   }
+  // the artwork of a surface: the Halawah tin's photographed artwork (every tin except the olive-oil tins), or the printed artwork from art.js
+  const layersFor = (kind, theme, cw, aspect = 1, width = 0, reps = 0) => (theme === 'halawah'
+    ? HAL.surface(kind, aspect, reps || Math.max(1, Math.round(width / 1.5)))
+    : ART.layers(kind, theme, cw, aspect));
   function applyFinish(m, name, instant) {
     const P = m.userData.photo;
     const f = (P ? PFIN[name] || PFIN.gloss : FIN[name] || FIN.gloss), L = m.userData.layers;
@@ -147,8 +126,8 @@ export function createScene(canvas) {
     const to = { metalness: f.metalness, roughness: f.roughness, clearcoat: f.clearcoat, clearcoatRoughness: f.clearcoatRoughness, sheen: f.sheen, bumpScale: (L || P) ? f.bumpScale : 0 };
     if (instant) Object.assign(m, to); else gsap.to(m, { ...to, duration: 0.7, ease: 'power2.out' });
   }
-  const accentOf = (theme, cw) => theme === 'brand' ? ART.COLORWAYS[cw].foil[2] : ACCENT[theme];
-  const skirtOf = (theme, cw) => theme === 'brand' ? ART.COLORWAYS[cw].body[0] : ACCENT[theme]; // lid side: lacquer on the premium tin, the theme's metal on the others
+  const accentOf = (theme, cw) => theme === 'halawah' ? HAL.GOLD : theme === 'brand' ? ART.COLORWAYS[cw].foil[2] : ACCENT[theme];
+  const skirtOf = (theme, cw) => theme === 'halawah' ? HAL.RED : theme === 'brand' ? ART.COLORWAYS[cw].body[0] : ACCENT[theme]; // lid side: lacquer on the premium tin, the theme's metal on the others
 
   /* ------------------------------------------------------------ model builders */
   // TRUE PROPORTIONS. The factory's can templates (docs/data/can-sizes.json, millimetres) are used here only as ratios, to shape the models: no
@@ -157,23 +136,24 @@ export function createScene(canvas) {
   // very different tins (a flat tuna can, a tall box, a big oil tin) to a similar size on the stage.
   const MM = 1 / 36.5, OIL_U = 2.75 / 350;
   const SILVER = '#eef2f8';
-  const rimMetalOf = (theme, cw) => (theme === 'brand' ? metalMat(ART.COLORWAYS[cw].foil[2], 0.26) : metalMat(SILVER, 0.2));
+  const rimMetalOf = (theme, cw) => (theme === 'halawah' ? metalMat(HAL.GOLD, 0.24) : theme === 'brand' ? metalMat(ART.COLORWAYS[cw].foil[2], 0.26) : metalMat(SILVER, 0.2));
+  const lacquered = (theme) => theme === 'brand' || theme === 'halawah';
 
   function lidParts(R, H, theme, cw, metal, k = 1) {
     const LR = R + 0.06 * k;
-    const lidSide = theme === 'brand' ? lacquerMat(skirtOf(theme, cw)) : metalMat(skirtOf(theme, cw), 0.28);
-    const lidTop = printMat(ART.layers('lid', theme, cw));
+    const lidSide = lacquered(theme) ? lacquerMat(skirtOf(theme, cw)) : metalMat(skirtOf(theme, cw), 0.28);
+    const lidTop = printMat(layersFor('lid', theme, cw));
     const g = new THREE.Group(); g.position.y = H / 2;
     const skirt = new THREE.Mesh(new THREE.CylinderGeometry(LR, LR, 0.24 * k, 96, 1, true), lidSide); skirt.position.y = 0.04 * k;
     const top = new THREE.Mesh(new THREE.CircleGeometry(LR, 64), lidTop); top.rotation.x = -Math.PI / 2; top.position.y = 0.16 * k;
-    const lip = new THREE.Mesh(new THREE.TorusGeometry(LR, 0.04 * k, 12, 96), theme === 'brand' ? metalMat(ART.COLORWAYS[cw].foil[2], 0.26) : metal); lip.rotation.x = Math.PI / 2; lip.position.y = 0.16 * k;
+    const lip = new THREE.Mesh(new THREE.TorusGeometry(LR, 0.04 * k, 12, 96), theme === 'halawah' ? lacquerMat(HAL.RED) : theme === 'brand' ? metalMat(ART.COLORWAYS[cw].foil[2], 0.26) : metal); lip.rotation.x = Math.PI / 2; lip.position.y = 0.16 * k;
     g.add(skirt, top, lip); g.userData.print = [lidTop];
     return g;
   }
   function buildRound({ R = 1, H = 1.5, theme, cw, k = R }) {
     const group = new THREE.Group(), print = [];
     const metal = rimMetalOf(theme, cw);
-    const bodyMat = printMat(ART.layers('wrap', theme, cw, H / (TAU * R))); print.push(bodyMat);
+    const bodyMat = printMat(layersFor('wrap', theme, cw, H / (TAU * R), TAU * R)); print.push(bodyMat);
     const body = new THREE.Mesh(new THREE.CylinderGeometry(R, R, H, 96, 1, true), bodyMat); body.rotation.y = -Math.PI / 2;
     const rim = new THREE.Mesh(new THREE.TorusGeometry(R, 0.035 * k, 12, 96), metal); rim.rotation.x = Math.PI / 2; rim.position.y = -H / 2;
     const bottom = new THREE.Mesh(new THREE.CircleGeometry(R, 64), metal); bottom.rotation.x = Math.PI / 2; bottom.position.y = -H / 2;
@@ -186,15 +166,15 @@ export function createScene(canvas) {
     const W = w * MM, D = d * MM, Hh = h * MM, LH = lidH * MM, I = ins * MM, BH = Hh - LH, BW = W - 2 * I, BD = D - 2 * I;
     const group = new THREE.Group();
     const metal = rimMetalOf(theme, cw);
-    const front = printMat(ART.layers('face', theme, cw, BH / BW));
-    const side = printMat(ART.layers('face', theme, cw, BH / BD));
+    const front = printMat(layersFor('face', theme, cw, BH / BW, BW));
+    const side = printMat(layersFor('face', theme, cw, BH / BD, BD));
     const body = new THREE.Mesh(new RoundedBoxGeometry(BW, BH, BD, 5, Math.min(0.12, BH * 0.3)), [side, side, metal, metal, front, front]);
     body.position.y = -Hh / 2 + BH / 2;
-    const lidSide = theme === 'brand' ? lacquerMat(skirtOf(theme, cw)) : metalMat(skirtOf(theme, cw), 0.28);
-    const topPrint = printMat(ART.layers('top', theme, cw, D / W));
+    const lidSide = lacquered(theme) ? lacquerMat(skirtOf(theme, cw)) : metalMat(skirtOf(theme, cw), 0.28);
+    const topPrint = printMat(layersFor('top', theme, cw, D / W));
     const lid = new THREE.Mesh(new RoundedBoxGeometry(W, LH, D, 5, Math.min(0.14, LH * 0.35)), [lidSide, lidSide, topPrint, lidSide, lidSide, lidSide]);
     lid.position.y = Hh / 2 - LH / 2;
-    const edge = new THREE.Mesh(new RoundedBoxGeometry(W + 0.012, 0.05, D + 0.012, 3, 0.02), theme === 'brand' ? metalMat(ART.COLORWAYS[cw].foil[2], 0.26) : metalMat(ACCENT[theme] || SILVER, 0.3));
+    const edge = new THREE.Mesh(new RoundedBoxGeometry(W + 0.012, 0.05, D + 0.012, 3, 0.02), theme === 'brand' ? metalMat(ART.COLORWAYS[cw].foil[2], 0.26) : metalMat(accentOf(theme, cw) || SILVER, 0.3));
     edge.position.y = Hh / 2 - LH + 0.025;
     group.add(body, lid, edge);
     return { group, print: [front, side, topPrint], parts: { body, lid, bottom: body }, ext: { h: Hh, w: Math.hypot(W, D) * 0.68 } };
@@ -235,7 +215,6 @@ export function createScene(canvas) {
   // Round or polygonal tin (sides = 6 hexagon, 8 octagon, 96 round) with a lid whose skirt covers the top of the body, and an optional
   // bucket form (tapered body + wire handle). theme 'halawah' dresses it in the photographed Halawah artwork: a red lacquer lid with the printed
   // top, a warm-white side band that repeats around the body and a gold foot; any other theme uses the printed artwork from art.js.
-  const GOLD_RIM = '#d9b45a', HALAWAH_RED = '#9a2a2c';
   const facet = (g) => { const f = g.toNonIndexed(); f.computeVertexNormals(); return f; };
   function edgeRing(R, n, r, mat, phi) { // a rolled rim along a circle or a polygon
     if (n > 24) { const t = new THREE.Mesh(new THREE.TorusGeometry(R, r, 12, 96), mat); t.rotation.x = Math.PI / 2; return t; }
@@ -249,11 +228,11 @@ export function createScene(canvas) {
     const phi = round ? -Math.PI / 2 : -Math.PI / sides;        // a flat face (not a corner) looks at the visitor
     const Rb = R * taper, LR = R + 0.045, bodyTop = H / 2 - skirtH * 0.75, bodyH = bodyTop + H / 2;
     const rep = round ? 8 : sides;                               // side band: one motif group per face on polygons
-    const bodyL = photo ? photoLayers('side', rep) : ART.layers('wrap', theme, cw, bodyH / (TAU * R));
-    const lidL = photo ? photoLayers('lid') : ART.layers('lid', theme, cw);
+    const bodyL = layersFor('wrap', theme, cw, bodyH / (TAU * R), TAU * R, photo ? rep : 0);
+    const lidL = layersFor('lid', theme, cw);
     const bodyMat = printMat(bodyL), topMat = printMat(lidL);
-    const metal = photo ? metalMat(GOLD_RIM, 0.24) : rimMetalOf(theme, cw);
-    const skirtMat = photo ? lacquerMat(HALAWAH_RED) : (theme === 'brand' ? lacquerMat(skirtOf(theme, cw)) : metalMat(skirtOf(theme, cw), 0.28));
+    const metal = rimMetalOf(theme, cw);
+    const skirtMat = lacquered(theme) ? lacquerMat(skirtOf(theme, cw)) : metalMat(skirtOf(theme, cw), 0.28);
     let bg = new THREE.CylinderGeometry(R, Rb, bodyH, sides, 1, true); if (!round) bg = facet(bg);
     const body = new THREE.Mesh(bg, bodyMat); body.rotation.y = phi; body.position.y = -H / 2 + bodyH / 2;
     const bottom = new THREE.Mesh(new THREE.CircleGeometry(Rb, sides, Math.PI / 2 - phi), metal); bottom.rotation.x = Math.PI / 2; bottom.position.y = -H / 2;
@@ -264,7 +243,7 @@ export function createScene(canvas) {
     const skirt = new THREE.Mesh(sg, skirtMat); skirt.rotation.y = phi; skirt.position.y = -skirtH / 2;
     const tg = new THREE.CircleGeometry(LR, sides, phi - Math.PI / 2);
     const top = new THREE.Mesh(tg, topMat); top.rotation.x = -Math.PI / 2;
-    const lip = edgeRing(LR, sides, 0.028, photo ? lacquerMat(HALAWAH_RED) : (theme === 'brand' ? metalMat(ART.COLORWAYS[cw].foil[2], 0.26) : metal), phi);
+    const lip = edgeRing(LR, sides, 0.028, photo ? lacquerMat(HAL.RED) : (theme === 'brand' ? metalMat(ART.COLORWAYS[cw].foil[2], 0.26) : metal), phi);
     lid.add(skirt, top, lip);
     group.add(body, bottom, foot, lid);
     let h = H + 0.03;
@@ -278,15 +257,14 @@ export function createScene(canvas) {
     // low tins lean towards the visitor a little more, so the printed lid reads
     return { group, print: [bodyMat, topMat], parts: { body, bottom, lid }, ext: { h, w: 2 * LR }, lean: H < 0.6 ? 0.36 : 0 };
   }
-  const PHOTO_SHAPES = new Set(['round', 'octagon', 'hexagon']);
   const gift = (o) => (t, c) => buildGiftBox({ ...o, theme: t, cw: c });
   const can = (dia, h) => (t, c) => buildRound({ R: (dia / 2) * MM, H: h * MM, theme: t, cw: c });
   const oil = (w, d, h, pow = 0.5) => (t, c) => { const m = buildOil({ theme: t, cw: c, w, d, h }); m.pow = pow; return m; };
   const SHAPES = {
     // the signature tin: the Halawah round tin (low and wide, red lid, white band), or the tall printed round tin for the brand colourways
     round: (t, c) => (t === 'halawah' ? buildTin({ theme: t, cw: c }) : buildRound({ R: 1, H: 1.5, theme: t, cw: c })),
-    octagon: (t, c) => buildTin({ sides: 8, H: t === 'halawah' ? 0.44 : 0.7, theme: t, cw: c }),
-    hexagon: (t, c) => buildTin({ sides: 6, H: t === 'halawah' ? 0.44 : 0.7, theme: t, cw: c }),
+    octagon: (t, c) => buildTin({ sides: 8, theme: t, cw: c }),
+    hexagon: (t, c) => buildTin({ sides: 6, theme: t, cw: c }),
     bucket: (t, c) => buildTin({ R: 1, H: 1.25, taper: 0.84, skirtH: 0.2, bucket: true, theme: t, cw: c }),
     square: gift({ w: 160, d: 160, h: 42, lidH: 20, ins: 4 }),                  // template: square box, short body (lid 160, body 152)
     rect: gift({ w: 175, d: 105, h: 62, lidH: 24, ins: 4 }),                    // rectangular gift tin (no template: illustrative)
@@ -376,9 +354,9 @@ export function createScene(canvas) {
           if (o.material) (Array.isArray(o.material) ? o.material : [o.material]).forEach((m) => { envMats.delete(m); m.dispose(); });
         });
       }
-      // the photographed Halawah artwork only fits the low tins; every other shape shows the printed royal-blue tin instead
-      const theme = S.theme === 'halawah' && !PHOTO_SHAPES.has(S.shape) ? 'brand' : S.theme;
-      model = SHAPES[S.shape](theme, theme === 'brand' && S.theme === 'halawah' ? 0 : S.cw);
+      // every tin wears the Halawah artwork except the olive-oil tins, which keep their own printed design
+      const theme = S.theme === 'halawah' && S.shape.startsWith('oil') ? 'olive' : S.theme;
+      model = SHAPES[S.shape](theme, S.cw);
       // bring very different tins (flat tuna can, tall box, big oil tin) to a similar size on the stage; pow < 1 keeps some of the size difference (olive-oil sizes)
       const ext = model.ext || { h: 2, w: 2 };
       model.group.scale.multiplyScalar(clamp(Math.pow(2.12 / Math.max(ext.h, ext.w), model.pow || 1), 0.25, 1.8));
@@ -473,10 +451,10 @@ export function createScene(canvas) {
   let J = null;
   function makeJourney() {
     const journey = new THREE.Group(); journey.visible = false; scene.add(journey);
-    const JR = 0.85, JH = 1.3, JW = TAU * JR, N = 160;
+    const JR = 1, JH = 0.34, JW = TAU * JR, N = 160; // the Halawah tin: a long low band rolled into a wide ring
     const aspect = JH / JW;
     const blank = ART.blankSheetCanvas(2048, Math.round(2048 * aspect));
-    const printed = ART.artCanvas('brand', 0, aspect);
+    const hal = HAL.surface('wrap', aspect, 8), printed = hal.canvas;
     const sheetCanvas = document.createElement('canvas'); sheetCanvas.width = blank.width; sheetCanvas.height = blank.height;
     const sheetTex = new THREE.CanvasTexture(sheetCanvas); sheetTex.colorSpace = THREE.SRGBColorSpace; sheetTex.anisotropy = 8;
     let lastPrint = -1;
@@ -492,6 +470,7 @@ export function createScene(canvas) {
       sheetTex.needsUpdate = true;
     }
     drawSheet(0);
+    hal.ready.then(() => { lastPrint = -1; drawSheet(sstep(0.17, 0.36, jState.p)); }); // redraw once the artwork has arrived
 
     const sheetGeo = new THREE.BufferGeometry();
     const pos = new Float32Array((N + 1) * 2 * 3), nor = new Float32Array((N + 1) * 2 * 3), uv = new Float32Array((N + 1) * 2 * 2);
@@ -524,9 +503,9 @@ export function createScene(canvas) {
     const sheetRig = new THREE.Group(); sheetRig.add(sheet); journey.add(sheetRig);
     bendSheet(0);
 
-    const jMetal = metalMat();
+    const jMetal = metalMat(HAL.GOLD, 0.24);
     const capBottom = new THREE.Mesh(new THREE.CircleGeometry(JR, 64), jMetal); capBottom.rotation.x = Math.PI / 2; capBottom.position.y = -JH / 2;
-    const capTop = lidParts(JR, JH, 'brand', 0, jMetal); capTop.position.y = JH / 2 + 3;
+    const capTop = lidParts(JR, JH, 'halawah', 0, jMetal); capTop.position.y = JH / 2 + 3;
     sheetRig.add(capBottom, capTop);
 
     const head = new THREE.Mesh(new THREE.PlaneGeometry(0.06, JH + 0.5), new THREE.MeshBasicMaterial({ color: 0xffb454, transparent: true, opacity: 0.95, blending: THREE.AdditiveBlending, depthWrite: false }));
@@ -534,18 +513,20 @@ export function createScene(canvas) {
 
     // pallet of mini tins
     const pallet = new THREE.Group(); journey.add(pallet);
-    const miniR = 0.4, miniH = 0.6;
+    const miniR = 0.4, miniH = 0.18, LAYERS = 3;
     const miniBodyGeo = new THREE.CylinderGeometry(miniR, miniR, miniH, 40, 1, true);
     const miniTopGeo = new THREE.CircleGeometry(miniR + 0.02, 40);
-    const miniBodyMat = printMat(ART.layers('wrap', 'brand', 0, miniH / (TAU * miniR)));
-    const miniTopMat = printMat(ART.layers('lid', 'brand', 0));
+    const miniBodyMat = printMat(layersFor('wrap', 'halawah', 0, miniH / (TAU * miniR), 0, 3));
+    const miniTopMat = printMat(layersFor('lid', 'halawah', 0));
+    const miniSkirtGeo = new THREE.CylinderGeometry(miniR + 0.02, miniR + 0.02, 0.07, 40, 1, true), miniSkirtMat = lacquerMat(HAL.RED);
     const minis = [];
-    for (let layer = 0; layer < 2; layer++) for (let ix = 0; ix < 3; ix++) for (let iz = 0; iz < 3; iz++) {
+    for (let layer = 0; layer < LAYERS; layer++) for (let ix = 0; ix < 3; ix++) for (let iz = 0; iz < 3; iz++) {
       const g = new THREE.Group();
       const b = new THREE.Mesh(miniBodyGeo, miniBodyMat); b.rotation.y = -Math.PI / 2;
-      const t = new THREE.Mesh(miniTopGeo, miniTopMat); t.rotation.x = -Math.PI / 2; t.position.y = miniH / 2 + 0.005;
-      g.add(b, t);
-      g.position.set((ix - 1) * 0.86, 0.18 + miniH / 2 + layer * (miniH + 0.02), (iz - 1) * 0.86);
+      const t = new THREE.Mesh(miniTopGeo, miniTopMat); t.rotation.x = -Math.PI / 2; t.position.y = miniH / 2 + 0.03;
+      const sk = new THREE.Mesh(miniSkirtGeo, miniSkirtMat); sk.position.y = miniH / 2 - 0.005;
+      g.add(b, t, sk);
+      g.position.set((ix - 1) * 0.86, 0.18 + miniH / 2 + layer * (miniH + 0.06), (iz - 1) * 0.86);
       g.userData.order = (layer * 9 + ix * 3 + iz);
       g.scale.setScalar(0.001);
       pallet.add(g); minis.push(g);
@@ -553,8 +534,8 @@ export function createScene(canvas) {
     const wood = new THREE.MeshStandardMaterial({ color: '#b98a54', roughness: 0.85, metalness: 0 });
     for (let i = -1; i <= 1; i++) { const pl = new THREE.Mesh(new THREE.BoxGeometry(2.8, 0.06, 0.5), wood); pl.position.set(0, 0.03, i * 0.95); pallet.add(pl); }
     for (let i = -1; i <= 1; i++) { const bl = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.12, 2.8), wood); bl.position.set(i * 1.2, 0.0, 0); pallet.add(bl); }
-    const wrapFilm = new THREE.Mesh(new THREE.BoxGeometry(2.9, 1.55, 2.9), new THREE.MeshPhysicalMaterial({ color: ART.PAL.n100, transparent: true, opacity: 0.12, roughness: 0.1, metalness: 0, clearcoat: 1 }));
-    wrapFilm.position.y = 0.18 + 0.78; pallet.add(wrapFilm);
+    const wrapFilm = new THREE.Mesh(new THREE.BoxGeometry(2.9, 0.9, 2.9), new THREE.MeshPhysicalMaterial({ color: ART.PAL.n100, transparent: true, opacity: 0.12, roughness: 0.1, metalness: 0, clearcoat: 1 }));
+    wrapFilm.position.y = 0.18 + 0.45; pallet.add(wrapFilm);
     pallet.position.y = -1.0; pallet.visible = false;
 
     // globe
@@ -652,14 +633,14 @@ export function createScene(canvas) {
       capBottom.visible = bend > 0.98; capTop.visible = bend > 0.98;
       capTop.position.y = lerp(JH / 2 + 3, JH / 2, 1 - Math.pow(1 - lid, 3));
       capTop.position.z = 0; capBottom.position.z = 0;
-      const flatScale = lerp(1, 2.3, bend);
+      const flatScale = lerp(1, 1.9, bend);
       sheetRig.scale.setScalar(appear * flatScale * (1 - pal));
       // printing head
       head.visible = print > 0.001 && print < 0.999 && bend < 0.01;
       head.position.set((print - 0.5) * JW, 0, 0.02);
 
       pallet.visible = pal > 0.001 && gl < 0.999;
-      minis.forEach((m) => { const t = clamp(pal * 20 - m.userData.order * 0.9, 0, 1); m.scale.setScalar(Math.max(0.001, 1 - Math.pow(1 - t, 3))); m.rotation.y = (1 - t) * 3; });
+      minis.forEach((m) => { const t = clamp(pal * 20 - m.userData.order * 0.6, 0, 1); m.scale.setScalar(Math.max(0.001, 1 - Math.pow(1 - t, 3))); m.rotation.y = (1 - t) * 3; });
       wrapFilm.material.opacity = 0.12 * sstep(0.84, 0.88, p);
       pallet.scale.setScalar(lerp(1.5, 0.001, gl));
       pallet.position.y = lerp(-1.5, 1.4, gl);
@@ -775,8 +756,10 @@ export function createScene(canvas) {
   async function warm() {
     const geo = new THREE.PlaneGeometry(0.1, 0.1), tmp = [];
     Object.keys(FIN).forEach((f) => {
-      const m = printMat(ART.layers('lid', 'brand', 0)); applyFinish(m, f, true);
-      const mesh = new THREE.Mesh(geo, m); scene.add(mesh); tmp.push(mesh);
+      [ART.layers('lid', 'olive', 0), HAL.surface('lid')].forEach((L) => {
+        const m = printMat(L); applyFinish(m, f, true);
+        const mesh = new THREE.Mesh(geo, m); scene.add(mesh); tmp.push(mesh);
+      });
     });
     const vis = instances.map((i) => i.root.visible), jv = J ? [J.journey.visible, J.pallet.visible, J.globe.visible] : [];
     instances.forEach((i) => { i.root.visible = true; }); if (J) J.journey.visible = J.pallet.visible = J.globe.visible = true;
