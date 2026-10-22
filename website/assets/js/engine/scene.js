@@ -151,18 +151,33 @@ export function createScene(canvas) {
   const rimMetalOf = (theme, cw) => (theme === 'halawah' ? metalMat(HAL.DESIGNS[DESIGN].rim, 0.24) : theme === 'brand' ? metalMat(ART.COLORWAYS[cw].foil[2], 0.26) : metalMat(SILVER, 0.2));
   const lacquered = (theme) => theme === 'brand' || theme === 'halawah';
 
-  function lidParts(R, H, theme, cw, metal, k = 1) {
-    const LR = R + 0.06 * k;
+  // ---- The factory's construction rules, taken from the JC 3D Studio (AbdullahDarras/jc-order-platform, js/engine/studio3d.js) ----
+  // The lid fits over the body 0.5 mm proud on every side with its top flush with the top of the body; its skirt is
+  // min(69% of the height, 9.9 mm x min(1, width / 70 mm)) deep (getLidSkirtMm); a curled bead (2.5 mm) rolls round the skirt's
+  // lower edge; box corners are rounded at 3.5 mm. Sizes come from the factory catalogue (catalog-data.js) where a tin matches one.
+  const STUDIO = { lidGapMm: 0.5, beadMm: 2.5, cornerMm: 3.5 };
+  const lidSkirtMm = (hMm, wMm) => Math.min(hMm * 0.69, 9.9 * Math.min(1, wMm / 70));
+  const BEAD_R = (STUDIO.beadMm * 0.85 * 1.15) / 2;  // tube radius of the bead, mm
+  function roundRectRing(hw, hd, r, tube, mat) { // a bead along a rounded rectangle (box lids)
+    const sh = new THREE.Shape(), x0 = -hw, x1 = hw, z0 = -hd, z1 = hd;
+    sh.moveTo(x0 + r, z0); sh.lineTo(x1 - r, z0); sh.quadraticCurveTo(x1, z0, x1, z0 + r); sh.lineTo(x1, z1 - r); sh.quadraticCurveTo(x1, z1, x1 - r, z1);
+    sh.lineTo(x0 + r, z1); sh.quadraticCurveTo(x0, z1, x0, z1 - r); sh.lineTo(x0, z0 + r); sh.quadraticCurveTo(x0, z0, x0 + r, z0);
+    const pts = sh.getSpacedPoints(160).map((p) => new THREE.Vector3(p.x, 0, p.y));
+    return new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts, true), 240, tube, 8, true), mat);
+  }
+  function lidParts(R, H, theme, cw, metal, k = 1, u = 36.5) { // u = millimetres per model unit
+    const SK = lidSkirtMm(H * u, 2 * R * u) / u, LR = R + STUDIO.lidGapMm / u;
     const lidSide = lacquered(theme) ? lacquerMat(skirtOf(theme, cw)) : metalMat(skirtOf(theme, cw), 0.28);
     const lidTop = printMat(layersFor('lid', theme, cw));
-    const g = new THREE.Group(); g.position.y = H / 2;
-    const skirt = new THREE.Mesh(new THREE.CylinderGeometry(LR, LR, 0.24 * k, 96, 1, true), lidSide); skirt.position.y = 0.04 * k;
-    const top = new THREE.Mesh(new THREE.CircleGeometry(LR, 64), lidTop); top.rotation.x = -Math.PI / 2; top.position.y = 0.16 * k;
-    const lip = new THREE.Mesh(new THREE.TorusGeometry(LR, 0.04 * k, 12, 96), theme === 'halawah' ? lacquerMat(skirtOf(theme, cw)) : theme === 'brand' ? metalMat(ART.COLORWAYS[cw].foil[2], 0.26) : metal); lip.rotation.x = Math.PI / 2; lip.position.y = 0.16 * k;
-    g.add(skirt, top, lip); g.userData.print = [lidTop];
+    const g = new THREE.Group(); g.position.y = H / 2;                      // the lid's top is flush with the top of the body
+    const skirt = new THREE.Mesh(new THREE.CylinderGeometry(LR, LR, SK, 96, 1, true), lidSide); skirt.position.y = -SK / 2;
+    const top = new THREE.Mesh(new THREE.CircleGeometry(LR, 64), lidTop); top.rotation.x = -Math.PI / 2; top.position.y = 0.002;
+    const bead = new THREE.Mesh(new THREE.TorusGeometry(LR + 0.4 / u, BEAD_R / u, 12, 96), theme === 'halawah' ? lacquerMat(skirtOf(theme, cw)) : theme === 'brand' ? metalMat(ART.COLORWAYS[cw].foil[2], 0.26) : metal);
+    bead.rotation.x = Math.PI / 2; bead.position.y = -SK;
+    g.add(skirt, top, bead); g.userData.print = [lidTop];
     return g;
   }
-  function buildRound({ R = 1, H = 1.5, theme, cw, k = R, seamed = false }) {
+  function buildRound({ R = 1, H = 1.5, theme, cw, k = R, seamed = false, u = 36.5 }) {
     const group = new THREE.Group(), print = [];
     const metal = rimMetalOf(theme, cw);
     const bodyMat = printMat(layersFor('wrap', theme, cw, H / (TAU * R), TAU * R)); print.push(bodyMat);
@@ -176,26 +191,25 @@ export function createScene(canvas) {
       const end = new THREE.Mesh(new THREE.CircleGeometry(R, 64), endMat); end.rotation.x = -Math.PI / 2; end.position.y = -0.03 * k;
       const seam = new THREE.Mesh(new THREE.TorusGeometry(R, 0.045 * k, 12, 96), metal); seam.rotation.x = Math.PI / 2;
       lid.add(end, seam); lid.userData.print = [endMat];
-    } else lid = lidParts(R, H, theme, cw, metal, k);
+    } else lid = lidParts(R, H, theme, cw, metal, k, u);
     group.add(body, rim, bottom, lid); print.push(...lid.userData.print);
-    return { group, print, parts: { body, bottom, lid }, ext: { h: H + (seamed ? 0.05 : 0.2) * k, w: 2 * (R + 0.06 * k) }, lean: H / (2 * R) > 0.9 ? 0.16 : 0.3 };
+    return { group, print, parts: { body, bottom, lid }, ext: { h: H + 0.05 * k, w: 2 * (R + 0.06 * k) }, lean: H / (2 * R) > 0.9 ? 0.16 : 0.3 };
   }
   // Square / rectangular gift box with a lid that overhangs the body a little (sizes in mm, see docs/data/can-sizes.json: lid 160, body 152 ...).
-  function buildGiftBox({ w, d, h, lidH, ins = 3, theme, cw }) {
-    const W = w * MM, D = d * MM, Hh = h * MM, LH = lidH * MM, I = ins * MM, BH = Hh - LH, BW = W - 2 * I, BD = D - 2 * I;
+  function buildGiftBox({ w, d, h, theme, cw }) { // sizes in mm; studio rules (see STUDIO above)
+    const W = w * MM, D = d * MM, Hh = h * MM, LH = lidSkirtMm(h, w) * MM, G = STUDIO.lidGapMm * MM, CR = STUDIO.cornerMm * MM;
     const group = new THREE.Group();
     const metal = rimMetalOf(theme, cw);
-    const front = printMat(layersFor('face', theme, cw, BH / BW, BW));
-    const side = printMat(layersFor('face', theme, cw, BH / BD, BD));
-    const body = new THREE.Mesh(new RoundedBoxGeometry(BW, BH, BD, 5, Math.min(0.12, BH * 0.3)), [side, side, metal, metal, front, front]);
-    body.position.y = -Hh / 2 + BH / 2;
+    const front = printMat(layersFor('face', theme, cw, Hh / W, W));
+    const side = printMat(layersFor('face', theme, cw, Hh / D, D));
+    const body = new THREE.Mesh(new RoundedBoxGeometry(W, Hh - 0.004, D, 4, CR), [side, side, metal, metal, front, front]);
     const lidSide = lacquered(theme) ? lacquerMat(skirtOf(theme, cw)) : metalMat(skirtOf(theme, cw), 0.28);
     const topPrint = printMat(layersFor('top', theme, cw, D / W));
-    const lid = new THREE.Mesh(new RoundedBoxGeometry(W, LH, D, 5, Math.min(0.14, LH * 0.35)), [lidSide, lidSide, topPrint, lidSide, lidSide, lidSide]);
-    lid.position.y = Hh / 2 - LH / 2;
-    const edge = new THREE.Mesh(new RoundedBoxGeometry(W + 0.012, 0.05, D + 0.012, 3, 0.02), theme === 'brand' ? metalMat(ART.COLORWAYS[cw].foil[2], 0.26) : metalMat(accentOf(theme, cw) || SILVER, 0.3));
-    edge.position.y = Hh / 2 - LH + 0.025;
-    group.add(body, lid, edge);
+    const lid = new THREE.Mesh(new RoundedBoxGeometry(W + 2 * G, LH, D + 2 * G, 4, CR + G), [lidSide, lidSide, topPrint, lidSide, lidSide, lidSide]);
+    lid.position.y = Hh / 2 - LH / 2;                                       // flush with the top of the body
+    const bead = roundRectRing(W / 2 + G + 0.4 * MM, D / 2 + G + 0.4 * MM, CR + G, BEAD_R * MM, theme === 'brand' ? metalMat(ART.COLORWAYS[cw].foil[2], 0.26) : metal);
+    bead.position.y = Hh / 2 - LH;
+    group.add(body, lid, bead);
     return { group, print: [front, side, topPrint], parts: { body, lid, bottom: body }, ext: { h: Hh, w: Math.hypot(W, D) * 0.68 }, lean: Hh / Math.max(W, D) < 0.4 ? 0.5 : 0.18 };
   }
   // Olive-oil tin (sizes in mm): printed body, stepped shoulder, flat top, a ribbed screw cap on a spout and a carry handle.
@@ -242,10 +256,11 @@ export function createScene(canvas) {
     for (let i = 0; i < n; i++) path.add(new THREE.LineCurve3(pt(i), pt(i + 1)));
     return new THREE.Mesh(new THREE.TubeGeometry(path, n * 6, r, 8, true), mat);
   }
-  function buildTin({ sides = 96, R = 1, H = 0.44, skirtH = 0.16, taper = 1, bucket = false, vertexFront = false, stretch = 1, lidR = 0, theme, cw }) {
+  function buildTin({ sides = 96, R = 1, H = 0.44, skirtH = 0, taper = 1, bucket = false, vertexFront = false, stretch = 1, lidR = 0, u = 100, theme, cw }) {
+    skirtH = skirtH || lidSkirtMm(H * u, 2 * R * u) / u; // u = millimetres per model unit
     const photo = theme === 'halawah', round = sides > 24, group = new THREE.Group();
     const phi = round ? -Math.PI / 2 : vertexFront ? 0 : -Math.PI / sides;        // a flat face (not a corner) looks at the visitor
-    const Rb = R * taper, LR = lidR ? R * lidR : R + 0.045, bodyTop = H / 2 - skirtH * 0.75, bodyH = bodyTop + H / 2;
+    const Rb = R * taper, LR = lidR ? R * lidR : R + STUDIO.lidGapMm / u, bodyTop = H / 2 - skirtH * 0.75, bodyH = bodyTop + H / 2;
     const rep = round ? 8 : sides;                               // side band: one motif group per face on polygons
     const bodyL = layersFor('wrap', theme, cw, bodyH / (TAU * R), TAU * R, photo ? rep : 0);
     const lidL = layersFor('lid', theme, cw);
@@ -262,8 +277,9 @@ export function createScene(canvas) {
     const skirt = new THREE.Mesh(sg, skirtMat); skirt.rotation.y = phi; skirt.position.y = -skirtH / 2;
     const tg = new THREE.CircleGeometry(LR, sides, phi - Math.PI / 2);
     const top = new THREE.Mesh(tg, topMat); top.rotation.x = -Math.PI / 2;
-    const lip = edgeRing(LR, sides, 0.028, photo ? lacquerMat(skirtOf(theme, cw)) : (theme === 'brand' ? metalMat(ART.COLORWAYS[cw].foil[2], 0.26) : metal), phi);
-    lid.add(skirt, top, lip);
+    const bead = edgeRing(LR + 0.4 / u, sides, BEAD_R / u, photo ? lacquerMat(skirtOf(theme, cw)) : (theme === 'brand' ? metalMat(ART.COLORWAYS[cw].foil[2], 0.26) : metal), phi);
+    bead.position.y = -skirtH;                                    // the curled bead rolls round the skirt's lower edge
+    lid.add(skirt, top, bead);
     group.add(body, bottom, foot, lid);
     let h = H + 0.03;
     if (bucket) { // wire bail on two ears, resting folded back
@@ -282,17 +298,17 @@ export function createScene(canvas) {
   // kind of lid. Nothing is added that the real tin does not have (the bucket has no wire handle; the food and milk cans have seamed ends).
   const OWN_SHAPE = { halawah: 'round', sufyan: 'tuna', najmah: 'octagon', frieds: 'bucket', abed: 'can', maeen: 'milk', laqmi: 'cheese', bab: 'square', jgz: 'rect', suliman: 'tall', levelmax: 'coffee' };
   const REAL = {
-    halawah: (t, c) => buildTin({ H: 0.44, skirtH: 0.16, theme: t, cw: c }),                                  // round, H/D 0.22, slip lid
-    sufyan: (t, c) => buildTin({ H: 0.38, skirtH: 0.15, theme: t, cw: c }),                                   // round, H/D 0.19, slip lid
-    najmah: (t, c) => buildTin({ sides: 8, H: 0.6, skirtH: 0.24, vertexFront: true, stretch: 1.87, theme: t, cw: c }), // octagon, length 1.87 x depth
-    frieds: (t, c) => buildTin({ R: 1, H: 1.62, taper: 0.77, skirtH: 0.22, lidR: 1.2, theme: t, cw: c }),      // bucket, H/D 0.81, bottom 0.77 of top, lid wider than the body
+    halawah: (t, c) => buildTin({ u: 118.8, H: 49 / 118.8, theme: t, cw: c }),                             // catalogue rd-235: Ø237.6 x 49 mm
+    sufyan: (t, c) => buildTin({ u: 134.5, H: 50 / 134.5, theme: t, cw: c }),                              // catalogue rd-265: Ø269 x 50 mm
+    najmah: (t, c) => buildTin({ sides: 8, H: 0.6, u: 80, vertexFront: true, stretch: 1.87, theme: t, cw: c }), // octagon, length 1.87 x depth
+    frieds: (t, c) => buildTin({ R: 1, H: 1.62, taper: 0.77, skirtH: 0.22, lidR: 1.2, u: 90, theme: t, cw: c }),      // bucket, H/D 0.81, bottom 0.77 of top, lid wider than the body
     abed: (t, c) => buildRound({ R: 1, H: 2.5, seamed: true, theme: t, cw: c }),                               // food can, H/D 1.25, peel-off end
     maeen: (t, c) => buildRound({ R: 1, H: 2.28, seamed: true, theme: t, cw: c }),                             // milk powder can, H/D 1.14
-    laqmi: (t, c) => buildRound({ R: 1, H: 2.36, theme: t, cw: c }),                                          // round can with a slip lid, H/D 1.18
-    bab: gift({ w: 160, d: 160, h: 35, lidH: 16, ins: 3 }),                                                    // square box, H/W 0.22
-    jgz: gift({ w: 175, d: 107, h: 33, lidH: 15, ins: 3 }),                                                    // rectangular box, D/W 0.61, H/W 0.19
-    suliman: gift({ w: 70, d: 60, h: 88, lidH: 17, ins: 2 }),                                                  // tall tea tin, D/W 0.85, H/W 1.26
-    levelmax: gift({ w: 110, d: 67, h: 98, lidH: 24, ins: 2.5 })                                               // tea caddy, D/W 0.61, H/W 0.89
+    laqmi: (t, c) => buildRound({ R: 1, H: 2.36, u: 50, theme: t, cw: c }),                                          // round can with a slip lid, H/D 1.18
+    bab: gift({ w: 194.5, d: 194.5, h: 40 }),                                                                  // catalogue sq-20: 194.5 x 194.5 x 40 mm
+    jgz: gift({ w: 236.1, d: 137.7, h: 50 }),                                                                  // catalogue rc-14x24: 236.1 x 137.7 x 50 mm
+    suliman: gift({ w: 70, d: 60, h: 88 }),                                                  // tall tea tin, D/W 0.85, H/W 1.26
+    levelmax: gift({ w: 110, d: 67, h: 98 })                                               // tea caddy, D/W 0.61, H/W 0.89
   };
   const can = (dia, h) => (t, c) => buildRound({ R: (dia / 2) * MM, H: h * MM, theme: t, cw: c });
   const oil = (w, d, h, pow = 0.5) => (t, c) => { const m = buildOil({ theme: t, cw: c, w, d, h }); m.pow = pow; return m; };
@@ -305,8 +321,8 @@ export function createScene(canvas) {
       : buildTin({ sides: 8, theme: t, cw: c })),
     hexagon: (t, c) => buildTin({ sides: 6, theme: t, cw: c }),
     bucket: (t, c) => buildTin({ R: 1, H: 1.25, taper: 0.84, skirtH: 0.2, bucket: true, theme: t, cw: c }),
-    square: gift({ w: 160, d: 160, h: 42, lidH: 20, ins: 4 }),                  // template: square box, short body (lid 160, body 152)
-    rect: gift({ w: 175, d: 105, h: 62, lidH: 24, ins: 4 }),                    // rectangular gift tin (no template: illustrative)
+    square: gift({ w: 160, d: 160, h: 42 }),                  // template: square box, short body (lid 160, body 152)
+    rect: gift({ w: 175, d: 105, h: 62 }),                    // rectangular gift tin (no template: illustrative)
     oval: (t, c) => { const m = buildRound({ R: 1, H: 1.2, theme: t, cw: c }); m.group.scale.set(1.4, 1, 0.8); m.ext = { h: 1.4, w: 2.3 }; return m; },
     // olive oil: 4 L (rectangular, 175 x 115 x 245) and 16 kg (square, 235 x 235 x 350) are exact; the 1 L and 8 L tins are the 4 L family scaled (no template)
     oil: oil(175, 115, 245),
@@ -318,9 +334,9 @@ export function createScene(canvas) {
     cheese: can(99, 119),                                                       // 1 kg cheese / halawa can
     tuna: can(83, 38),                                                          // tuna can
     milk: can(120, 165),                                                        // milk powder: the larger can family (no template: scaled up from the 1 kg can)
-    box70: gift({ w: 70, d: 70, h: 32, lidH: 16, ins: 2.5 }),                   // small square box
-    tall: gift({ w: 70, d: 70, h: 130, lidH: 20, ins: 2.5 }),                   // tall square box
-    coffee: gift({ w: 70, d: 70, h: 130, lidH: 20, ins: 2.5 }),
+    box70: gift({ w: 70, d: 70, h: 32 }),                   // small square box
+    tall: gift({ w: 70, d: 70, h: 130 }),                   // tall square box
+    coffee: gift({ w: 70, d: 70, h: 130 }),
     paint: (t, c) => {
       const m = buildRound({ R: 1.15, H: 1.45, theme: t, cw: c });
       const bail = new THREE.Mesh(new THREE.TorusGeometry(1.1, 0.03, 8, 64, Math.PI), metalMat('#9aa3b1', 0.3));
@@ -551,7 +567,7 @@ export function createScene(canvas) {
 
     const jMetal = metalMat(HAL.GOLD, 0.24);
     const capBottom = new THREE.Mesh(new THREE.CircleGeometry(JR, 64), jMetal); capBottom.rotation.x = Math.PI / 2; capBottom.position.y = -JH / 2;
-    const capTop = lidParts(JR, JH, 'halawah', 0, jMetal); capTop.position.y = JH / 2 + 3;
+    const capTop = lidParts(JR, JH, 'halawah', 0, jMetal, 1, 118.8); // the Halawah tin's scale (rd-235) capTop.position.y = JH / 2 + 3;
     sheetRig.add(capBottom, capTop);
 
     const head = new THREE.Mesh(new THREE.PlaneGeometry(0.06, JH + 0.5), new THREE.MeshBasicMaterial({ color: 0xffb454, transparent: true, opacity: 0.95, blending: THREE.AdditiveBlending, depthWrite: false }));
