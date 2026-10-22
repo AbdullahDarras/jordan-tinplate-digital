@@ -69,14 +69,14 @@ Status: round 5 (2026-10-21). Source of truth: [docs/decisions.md](../docs/decis
 3. The old name **Jordan Canning** is legal/historical only. The final logo artwork itself reads "JORDAN CANNING"; management asked for it to be used as supplied (round 5), so the website uses it as is, but the **text** around it keeps the full official name: accessible name / `alt` "Jordan Tinplate Canning", the footer, the JSON-LD and the page titles.
 4. The website uses the final vector logo (`logo/logo-horizontal.svg`) as its only brand mark; the old temporary mark and the "final logo pending" note are gone. Social templates still use the text wordmark until the profile pictures are cut from the vector files.
 5. Do not redraw, stretch, outline or edit the shapes of the logo. Recolour it only to PANTONE 294 C (`#002F6C`), to white on dark or navy backgrounds, or to gold foil on the 3D tins.
-6. Sample artwork on tins (in the prototype, renders, post visuals) must carry no real client brand.
+6. Sample artwork on tins (in the prototype, renders, post visuals) must carry no real client brand. **Exception (owner's request, 2026-10-22):** the website's 3D signature tin uses the real Halawah tin made at the factory (`website/assets/img/tins/`). Confirm the client is happy to be shown before launch.
 
 1. **يُكتب الاسم الرسمي كاملاً دائماً: Jordan Tinplate Canning.** ولا تُستعمل «Canning» وحدها في أي نص أو وسم أو اسم مستخدم أو شعار، تفادياً للالتباس بشركة أخرى باسم Canning Industries Co.
 2. الاسم العربي الرسمي **«الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية»** (54 حرفاً) يُكتب كاملاً في النصوص العربية. لا يتسع في خانة اسم انستغرام (30) ولا في Intro فيس بوك (101)، فيبقى الاسم الإنجليزي هناك ويُكتب العربي في البايو أو About.
 3. الاسم القديم Jordan Canning للتاريخ والجانب القانوني فقط. نص الشعار النهائي نفسه «JORDAN CANNING»، وقد طلبت الإدارة استخدامه كما وصل (الجولة الخامسة)، فيُستخدم في الموقع كما هو، أما **النصوص** حوله فتحمل الاسم الرسمي كاملاً: الاسم المتاح لقارئ الشاشة والـalt «Jordan Tinplate Canning»، والتذييل، وJSON-LD، وعناوين الصفحات.
 4. يستخدم الموقع الشعار النهائي Vector علامةً وحيدة، وحُذفت العلامة المؤقتة وعبارة «الشعار النهائي بانتظار». تبقى قوالب السوشال بالعلامة النصية إلى أن تُقصّ صور الحسابات من ملفات Vector.
 5. لا يُعاد رسم الشعار ولا يُمدَّد ولا تُحوَّل خطوطه ولا تُعدَّل أشكاله. يُلوَّن فقط بـPANTONE 294 C (`#002F6C`) أو بالأبيض على الخلفيات الداكنة والكحلية أو بالذهب (رقائق) على علب الـ3D.
-6. الرسومات على العلب نماذج توضيحية بلا علامة عميل حقيقية.
+6. الرسومات على العلب نماذج توضيحية بلا علامة عميل حقيقية. **استثناء بطلب المالك (2026-10-22):** علبة الـ3D الرئيسية في الموقع هي علبة «حلاوة» الحقيقية من إنتاج المصنع. يُستحسن تأكيد موافقة العميل على عرضها قبل الإطلاق.
 
 ## 4) Pending / ما زال بانتظار
 

@@ -321,7 +321,8 @@ PENDING_MARKUP = ('data-tbc', 'class="tbc', 'class="badge', 'class="proof', 'rev
 for f in pages:
     src = f.read_text(encoding="utf-8"); n = "/" + str(f.relative_to(ROOT))
     if not SHOW_PENDING:
-        m = PENDING_RX.search(src)
+        # the one "coming soon" the owner asked for: the Trending finish chip (2026-10-22). Anything else stays hidden.
+        m = PENDING_RX.search(re.sub(r'<button class="chip chip--soon"[^>]*>.*?</button>', '', src, flags=re.S))
         if m: err(f"{n}: pending wording is visible while SHOW_PENDING is false: {m.group(0)!r}")
         for mk in PENDING_MARKUP:
             if mk in src: err(f"{n}: placeholder markup {mk!r} while SHOW_PENDING is false")

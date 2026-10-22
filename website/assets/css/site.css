@@ -152,6 +152,9 @@ html[dir="rtl"] .btn svg, html[dir="rtl"] .go svg, html[dir="rtl"] .indrow__go s
 .chip { min-height: 44px; padding: .7em 1.25em; border-radius: 999px; border: 1.5px solid var(--line); font-weight: 600; font-size: .94rem; background: var(--card); backdrop-filter: blur(10px); transition: all .35s var(--ease); }
 .chip:hover { border-color: var(--ink); transform: translateY(-2px); }
 .chip.is-on { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.chip--soon { cursor: default; opacity: .7; border-style: dashed; }
+.chip--soon:hover { transform: none; border-color: var(--line); }
+.chip--soon em { font-style: normal; font-size: .78em; font-weight: 700; color: var(--accent-text); margin-inline-start: .35em; }
 .linkbtn { text-decoration: underline; text-underline-offset: 4px; opacity: .85; min-height: 44px; padding-inline: .4rem; } .linkbtn:hover { opacity: 1; }
 
 /* ================================================================ cursor */

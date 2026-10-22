@@ -87,6 +87,7 @@ export const UI = {
   scroll: t('Scroll', 'مرّر'),
   sectors: t('Sectors we serve', 'القطاعات التي نخدمها'),
   nowLabel: t('In season now', 'الموسم الآن'),
+  soon: t('Coming soon', 'قريباً'),
   letsTalk: t('Let’s talk', 'لنتحدث'),
   allIndustries: t('All industries', 'كل القطاعات'),
   yearsOf: t('years of making metal packaging', 'عاماً في صناعة التغليف المعدني'),
@@ -117,8 +118,11 @@ const FINISH_CARDS = [
   { h: t('Matte', 'مطفي'), p: t('A low-glare surface that gives colours a calmer, deeper look.', 'سطح قليل الانعكاس يمنح الألوان مظهراً أهدأ وأعمق.') },
   { h: t('Soft touch', 'ملمس ناعم'), p: t('A silky coating over the whole pack that invites touch.', 'طلاء حريري على العبوة كلها يدعو إلى لمسها.') },
   { h: t('Rough touch', 'ملمس خشن'), p: t('A textured coating that stimulates the senses and gives the pack a distinctive look.', 'طلاء بملمس خشن يحفّز الحواس ويمنح العبوة طابعاً مميزاً.') },
-  { h: t('Embossing', 'نقش بارز'), p: t('Raised and recessed effects on lid and body that add movement and make the design stand out.', 'تأثيرات بارزة وغائرة على الغطاء والجسم تضيف حركة وتُبرز التصميم.') }
+  { h: t('Embossing', 'نقش بارز'), p: t('Raised and recessed effects on lid and body that add movement and make the design stand out.', 'تأثيرات بارزة وغائرة على الغطاء والجسم تضيف حركة وتُبرز التصميم.') },
+  { h: t('Spot UV', 'سبوت'), p: t('A glossy varnish on chosen parts of the artwork over a matte base, so the design itself catches the light.', 'ورنيش لامع على أجزاء محددة من التصميم فوق خلفية مطفية، فتلمع الرسمة وحدها.') },
+  { h: t('Trending', 'Trending'), p: t('Coming soon.', 'قريباً.'), soon: true }
 ];
+const FIN_BY = { gloss: 0, matte: 1, soft: 2, rough: 3, emboss: 4, spot: 5, trending: 6 };
 
 export const STEPS = [
   { h: t('Design & plates', 'التصميم والألواح'),
@@ -162,10 +166,11 @@ export const FINISH_LAB = {
   lead: t('Pick a finish and watch the metal respond. Every one is available on our lines.', 'اختر تشطيباً وشاهد المعدن يستجيب. كل هذه التشطيبات متوفرة على خطوطنا.'),
   aria: t('3D tin you can restyle', 'علبة ثلاثية الأبعاد يمكنك تغيير تشطيبها'),
   chipsAria: t('Finishes', 'التشطيبات'),
-  items: ['gloss', 'matte', 'soft', 'rough', 'emboss'].map((id, i) => ({ id, label: FINISH_CARDS[i].h, desc: FINISH_CARDS[i].p })),
+  items: ['gloss', 'matte', 'emboss', 'spot', 'trending'].map((id) => { const c = FINISH_CARDS[FIN_BY[id]]; return { id, label: c.h, desc: c.p, soon: !!c.soon }; }),
   plate: { h: t('One plate, many designs.', 'لوح واحد، تصاميم متعددة.'), p: t('Variable printing puts several versions of the same pack on a single printing plate.', 'الطباعة المتغيّرة تضع عدة نسخ من العبوة نفسها على لوح طباعة واحد.') },
   cwAria: t('Colourways', 'ألوان التصميم'),
   cws: [
+    { id: 'h', label: t('Halawah: red & white', 'حلاوة: أحمر وأبيض'), a: '#9a2a2c', b: '#ece8e3' },
     { label: t('Royal blue & gold', 'أزرق ملكي وذهبي'), a: '#0b55c0', b: '#f0c867' }, { label: t('Pearl, navy & gold', 'لؤلؤي وكحلي وذهبي'), a: '#f6ecd2', b: '#0a4496' },
     { label: t('Turquoise & gold', 'فيروزي وذهبي'), a: '#1fbdb4', b: '#f0c867' }, { label: t('Coral & rose-gold', 'مرجاني وذهبي وردي'), a: '#ff7d6e', b: '#f6c4ae' }
   ]
@@ -173,9 +178,12 @@ export const FINISH_LAB = {
 
 const SHAPE_ITEMS = [
   { id: 'round', label: t('Round', 'دائرية'), name: t('Round tin', 'علبة دائرية'), dim: t('Ø 73–265 mm · H 34–210 mm', 'قطر 73–265 مم · ارتفاع 34–210 مم'), note: t('Six standard diameters, in many heights.', 'ستة أقطار قياسية، بارتفاعات متعددة.') },
+  { id: 'octagon', label: t('Octagonal', 'ثمانية'), name: t('Octagonal tin', 'علبة ثمانية الأضلاع'), dim: t('Sizes on request', 'المقاسات عند الطلب'), note: t('An eight-sided gift tin that stands out on the shelf.', 'علبة هدايا بثمانية أضلاع تلفت النظر على الرف.') },
+  { id: 'hexagon', label: t('Hexagonal', 'سداسية'), name: t('Hexagonal tin', 'علبة سداسية الأضلاع'), dim: t('Sizes on request', 'المقاسات عند الطلب'), note: t('A six-sided gift tin for sweets, dates and chocolate.', 'علبة هدايا بستة أضلاع للحلويات والتمور والشوكولاتة.') },
   { id: 'square', label: t('Square', 'مربعة'), name: t('Square tin', 'علبة مربعة'), dim: t('120–240 mm sides · H 40–100 mm', 'ضلع 120–240 مم · ارتفاع 40–100 مم'), note: t('Five standard sizes, from about 100 g to 1 kg.', 'خمسة مقاسات قياسية، من نحو 100 غ إلى 1 كغ.') },
   { id: 'rect', label: t('Rectangular', 'مستطيلة'), name: t('Rectangular tin', 'علبة مستطيلة'), dim: t('Sizes on request', 'المقاسات عند الطلب'), note: t('Made to your specification.', 'تُصنَّع وفق مواصفاتك.') },
   { id: 'oval', label: t('Oval', 'بيضاوية'), name: t('Oval tin', 'علبة بيضاوية'), dim: t('Ø 300 mm · H 40–100 mm', 'قطر 300 مم · ارتفاع 40–100 مم'), note: t('A special-mold shape for presentation packs.', 'شكل بقالب خاص لعلب التقديم.') },
+  { id: 'bucket', label: t('Bucket', 'سطل'), name: t('Tin bucket', 'سطل معدني'), dim: t('Sizes on request', 'المقاسات عند الطلب'), note: t('A bucket with a lid and a wire handle.', 'سطل بغطاء ويد معدنية.') },
   { id: 'oil', label: t('Oil tin', 'تنكة زيت'), name: t('Olive-oil tin', 'تنكة زيت الزيتون'), dim: t('1, 4, 8 and 16 L/kg', '1 و4 و8 و16 لتر/كغ'), note: t('Produced in all four sizes. The 3D view is illustrative.', 'تُنتَج بالأحجام الأربعة كلها. والمجسّم توضيحي.') },
   { id: 'can', label: t('Food can', 'علبة أغذية'), name: t('Food can', 'علبة أغذية'), dim: t('Standard food can', 'علبة معلبات قياسية'), note: t('The everyday can for vegetables, legumes and ready meals.', 'العلبة اليومية للخضار والبقوليات والوجبات الجاهزة.') },
   { id: 'cheese', label: t('Cheese & halawa', 'جبنة وحلاوة'), name: t('Cheese and halawa can', 'علبة جبنة وحلاوة'), dim: t('Wide and sturdy', 'عريضة ومتينة'), note: t('For white cheese, halawa and spreads.', 'للجبنة البيضاء والحلاوة والمعجنات القابلة للدهن.') },
@@ -190,7 +198,7 @@ export const SHAPES_LAB = {
   items: SHAPE_ITEMS,
   fine: t('3D views show our standard tins and boxes in true proportion; the artwork is a sample. Custom sizes are available on request.', 'المجسّمات ثلاثية الأبعاد تعرض علبنا وصناديقنا القياسية بنسبها الحقيقية، والتصميم المعروض نموذج توضيحي. والمقاسات الخاصة متاحة عند الطلب.')
 };
-export const SHAPES_SWEETS = SHAPE_ITEMS.slice(0, 4);
+export const SHAPES_SWEETS = ['round', 'square', 'rect', 'oval'].map((id) => SHAPE_ITEMS.find((x) => x.id === id));
 
 const OIL_SIZES = [1, 4, 8, 16].map((n) => ({
   id: 'oil' + n, label: t(`${n} L/kg`, `${n} لتر/كغ`), name: t('Olive-oil tin', 'تنكة زيت الزيتون'), dim: t(`${n} L/kg`, `${n} لتر/كغ`),
@@ -306,7 +314,7 @@ export const PAGES = [
       lead: t('Custom tinplate packaging for food & beverage brands, from artwork and plates to printed, formed, export-ready tins. One family-led manufacturer in Jordan, doing the whole journey under one roof.',
               'علب معدنية مخصّصة لعلامات الأغذية والمشروبات، من التصميم والألواح إلى علب مطبوعة ومشكَّلة وجاهزة للتصدير. مصنع أردني تقوده عائلة واحدة، ويقدّم الرحلة كاملة تحت سقف واحد.'),
       art: 'hero',
-      stage: { shape: 'round', theme: 'brand', cw: 0, finish: 'gloss' },
+      stage: { shape: 'round', theme: 'halawah', cw: 0, finish: 'gloss' },
       ctas: [quoteCta(), { label: t('See products by industry', 'تصفّح المنتجات حسب القطاع'), to: 'products', kind: 'ghost' }],
       stats: [
         { big: '1998', small: t('Founded in Jordan', 'تأسس في الأردن') },
@@ -340,7 +348,7 @@ export const PAGES = [
       h1: t('Tinplate cans and tins, made to fit what goes inside', 'علب صفيح معدنية تُصنع لتناسب ما بداخلها'),
       lead: t('Start from your industry, or browse the full range by type. Sizes below come from our product tables; custom sizes are available on request.',
               'ابدأ من قطاعك، أو تصفّح المجموعة كاملة حسب النوع. المقاسات أدناه من جداول منتجاتنا، والمقاسات الخاصة متاحة عند الطلب.'),
-      art: 'round', stage: { shape: 'round', theme: 'brand', cw: 0, finish: 'gloss' },
+      art: 'round', stage: { shape: 'round', theme: 'halawah', cw: 0, finish: 'gloss' },
       ctas: [quoteCta(), { label: UI.catalogue, to: 'catalogue', kind: 'ghost' }]
     },
     sections: [
@@ -575,7 +583,7 @@ export const PAGES = [
       h1: t('The whole tinplate journey, under one roof', 'رحلة الصفيح كاملة تحت سقف واحد'),
       lead: t('Fully automatic production lines, in-house design and skilled people: from artwork and plates to formed, palletised, export-ready tins.',
               'خطوط إنتاج أوتوماتيكية بالكامل، وتصميم داخلي، وكوادر ماهرة: من التصميم والألواح إلى علب مشكَّلة ومرتَّبة على باليتات وجاهزة للتصدير.'),
-      art: 'hero', stage: { shape: 'round', theme: 'brand', cw: 0, finish: 'emboss' },
+      art: 'hero', stage: { shape: 'round', theme: 'halawah', cw: 0, finish: 'emboss' },
       ctas: [quoteCta(), { label: t('See products', 'تصفّح المنتجات'), to: 'products', kind: 'ghost' }]
     },
     sections: [
@@ -613,7 +621,7 @@ export const PAGES = [
       eyebrow: t('About us', 'من نحن'),
       h1: t('Metal, made by one family, since 1998.', 'معدن تصنعه عائلة واحدة منذ عام 1998.'),
       lead: t('Founded in 1998 and led today by the third generation of the family.', 'تأسس المصنع عام 1998 ويقوده اليوم الجيل الثالث من العائلة.'),
-      art: 'hero', stage: { shape: 'round', theme: 'brand', cw: 0, finish: 'gloss' },
+      art: 'hero', stage: { shape: 'round', theme: 'halawah', cw: 0, finish: 'gloss' },
       ctas: [quoteCta(), { label: t('Our capabilities', 'قدراتنا'), to: 'capabilities', kind: 'ghost' }],
       stats: [
         { big: '1998', small: t('Founded in Jordan', 'تأسس في الأردن') },
@@ -658,7 +666,7 @@ export const PAGES = [
       lead: PHOTOS.length
         ? t('Videos and photos from the Jordan Tinplate Canning factory.', 'فيديوهات وصور من مصنع الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية.')
         : t('Videos from the Jordan Tinplate Canning factory.', 'فيديوهات من مصنع الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية.'),
-      art: 'round', stage: { shape: 'round', theme: 'brand', cw: 0, finish: 'soft' },
+      art: 'round', stage: { shape: 'round', theme: 'halawah', cw: 0, finish: 'soft' },
       ctas: [quoteCta(), { label: t('About us', 'من نحن'), to: 'about', kind: 'ghost' }]
     },
     sections: [
@@ -678,7 +686,7 @@ export const PAGES = [
       eyebrow: t('News & events', 'الأخبار والفعاليات'),
       h1: t('Out in the world.', 'حاضرون في الأسواق.'),
       lead: t('Interviews and the exhibitions where you can meet us.', 'مقابلات ومعارض يمكنك أن تلتقي بنا فيها.'),
-      art: 'round', stage: { shape: 'round', theme: 'brand', cw: 1, finish: 'gloss' }, ctas: [quoteCta()]
+      art: 'round', stage: { shape: 'round', theme: 'halawah', cw: 0, finish: 'gloss' }, ctas: [quoteCta()]
     },
     sections: [
       { kind: 'news', id: 'news-list' },

@@ -18,8 +18,22 @@ const FIN = {
   matte: { metalness: 0.8, roughness: 1.2, clearcoat: 0, clearcoatRoughness: 0.5, sheen: 0, bumpScale: 1.1, bump: 'plain' },
   soft: { metalness: 0.12, roughness: 2.1, clearcoat: 0, clearcoatRoughness: 0.5, sheen: 0.7, bumpScale: 0.5, bump: 'plain' },
   rough: { metalness: 0.55, roughness: 1.8, clearcoat: 0, clearcoatRoughness: 0.5, sheen: 0, bumpScale: 1.4, bump: 'rough' },
-  emboss: { metalness: 0.85, roughness: 0.5, clearcoat: 0.7, clearcoatRoughness: 0.1, sheen: 0, bumpScale: 2.2, bump: 'emboss' }
+  emboss: { metalness: 0.85, roughness: 0.5, clearcoat: 0.7, clearcoatRoughness: 0.1, sheen: 0, bumpScale: 2.2, bump: 'emboss' },
+  // spot UV: a matte tin with a glossy varnish only on the printed motifs (the clear coat is masked by the artwork)
+  spot: { metalness: 0.8, roughness: 1.25, clearcoat: 1, clearcoatRoughness: 0.04, sheen: 0, bumpScale: 0.8, bump: 'plain', spot: true }
 };
+// The same finishes on a tin printed from a photographed artwork (no foil / lacquer map): plain lacquer values.
+// bump = how far the motifs stand proud (the relief mask), spot = the clear coat only on the motifs.
+const PFIN = {
+  gloss: { metalness: 0.12, roughness: 0.3, clearcoat: 1, clearcoatRoughness: 0.06, sheen: 0, bumpScale: 0.3 },
+  matte: { metalness: 0.06, roughness: 0.82, clearcoat: 0, clearcoatRoughness: 0.5, sheen: 0.15, bumpScale: 0.3 },
+  soft: { metalness: 0.04, roughness: 0.95, clearcoat: 0, clearcoatRoughness: 0.5, sheen: 0.6, bumpScale: 0.4 },
+  rough: { metalness: 0.08, roughness: 0.9, clearcoat: 0, clearcoatRoughness: 0.5, sheen: 0, bumpScale: 1.2 },
+  emboss: { metalness: 0.12, roughness: 0.32, clearcoat: 1, clearcoatRoughness: 0.08, sheen: 0, bumpScale: 10 },
+  spot: { metalness: 0.06, roughness: 0.85, clearcoat: 1, clearcoatRoughness: 0.03, sheen: 0, bumpScale: 1.4, spot: true }
+};
+// Photographed artwork of a real tin made at the factory (lid, side band and their motif masks), served next to the site.
+const TIN_IMG = new URL('../../img/tins/', import.meta.url).href;
 const ACCENT = { olive: '#e8bf4f', eid: '#f4cf72', cheese: '#2a68c4', milk: '#2a68c4', coffee: '#e0a64a', industrial: '#ff7a33' };
 
 export function createScene(canvas) {
@@ -88,17 +102,49 @@ export function createScene(canvas) {
     const m = new THREE.MeshPhysicalMaterial({ color, metalness: 0.2, roughness: 0.2, clearcoat: 1, clearcoatRoughness: 0.1 });
     m.userData.envBase = 1.1; envMats.add(m); return m;
   }
+  // photo textures: loaded once, cloned per repeat count (a clone shares the image)
+  const loader = new THREE.TextureLoader(), texCache = {};
+  function photoTex(file, srgb, rep = 1) {
+    const k = file + '|' + rep;
+    if (texCache[k]) return texCache[k];
+    let base = texCache[file];
+    if (!base) { // copies made before the image arrives are refreshed when it does
+      const copies = [];
+      base = texCache[file] = loader.load(TIN_IMG + file, () => copies.forEach((c) => { c.needsUpdate = true; }));
+      base.userData.copies = copies;
+    }
+    const t = rep === 1 ? base : base.clone();
+    if (srgb) t.colorSpace = THREE.SRGBColorSpace;
+    t.anisotropy = 8;
+    if (rep !== 1) { t.wrapS = THREE.RepeatWrapping; t.repeat.set(rep, 1); base.userData.copies.push(t); if (base.image) t.needsUpdate = true; }
+    return (texCache[k] = t);
+  }
+  // the Halawah tin: part = 'lid' | 'side'; rep = how many times the side band repeats around the tin
+  const photoLayers = (part, rep = 1) => ({
+    photo: true,
+    map: photoTex(`halawah-${part}.jpg`, true, rep),
+    relief: photoTex(`halawah-${part}-relief.png`, false, rep),
+    spot: photoTex(`halawah-${part}-spot.png`, false, rep)
+  });
   function printMat(L, side = THREE.FrontSide) {
+    if (L && L.photo) {
+      const m = new THREE.MeshPhysicalMaterial({ map: L.map, metalness: 0.12, roughness: 0.3, clearcoat: 1, clearcoatRoughness: 0.06, side, bumpMap: L.relief, bumpScale: 0.6 });
+      m.color.setScalar(0.8); m.userData.photo = L; m.userData.envBase = 0.35; envMats.add(m); return m;
+    }
     const layered = !!(L && L.orm);
     const m = new THREE.MeshPhysicalMaterial({ map: layered ? L.map : L, metalness: 0.55, roughness: 0.2, clearcoat: 1, clearcoatRoughness: 0.08, side });
     if (layered) { m.metalnessMap = m.roughnessMap = L.orm; m.userData.layers = L; m.bumpMap = ART.reliefMap(L, 'plain'); }
     m.userData.envBase = 1.1; envMats.add(m); return m;
   }
   function applyFinish(m, name, instant) {
-    const f = FIN[name] || FIN.gloss, L = m.userData.layers;
+    const P = m.userData.photo;
+    const f = (P ? PFIN[name] || PFIN.gloss : FIN[name] || FIN.gloss), L = m.userData.layers;
     m.sheenColor = new THREE.Color('#ffffff'); m.sheenRoughness = 0.35;
     if (L) { m.bumpMap = ART.reliefMap(L, f.bump); m.needsUpdate = true; }
-    const to = { metalness: f.metalness, roughness: f.roughness, clearcoat: f.clearcoat, clearcoatRoughness: f.clearcoatRoughness, sheen: f.sheen, bumpScale: L ? f.bumpScale : 0 };
+    // spot varnish: the clear coat only where the artwork is (the motif mask on a photo tin, the foil / relief on a printed one)
+    const cm = f.spot ? (P ? P.spot : (L ? ART.reliefMap(L, 'plain') : null)) : null;
+    if (m.clearcoatMap !== cm) { m.clearcoatMap = cm; m.needsUpdate = true; }
+    const to = { metalness: f.metalness, roughness: f.roughness, clearcoat: f.clearcoat, clearcoatRoughness: f.clearcoatRoughness, sheen: f.sheen, bumpScale: (L || P) ? f.bumpScale : 0 };
     if (instant) Object.assign(m, to); else gsap.to(m, { ...to, duration: 0.7, ease: 'power2.out' });
   }
   const accentOf = (theme, cw) => theme === 'brand' ? ART.COLORWAYS[cw].foil[2] : ACCENT[theme];
@@ -186,11 +232,62 @@ export function createScene(canvas) {
     group.add(body, shoulder, plate, cap, handle, lug(hx0), lug(hx1));
     return { group, print: [front, side], parts: { body, lid: cap, bottom: body }, ext: { h: Ht + rr * 1.4, w: Math.hypot(W, D) * 0.9 } };
   }
+  // Round or polygonal tin (sides = 6 hexagon, 8 octagon, 96 round) with a lid whose skirt covers the top of the body, and an optional
+  // bucket form (tapered body + wire handle). theme 'halawah' dresses it in the photographed Halawah artwork: a red lacquer lid with the printed
+  // top, a warm-white side band that repeats around the body and a gold foot; any other theme uses the printed artwork from art.js.
+  const GOLD_RIM = '#d9b45a', HALAWAH_RED = '#9a2a2c';
+  const facet = (g) => { const f = g.toNonIndexed(); f.computeVertexNormals(); return f; };
+  function edgeRing(R, n, r, mat, phi) { // a rolled rim along a circle or a polygon
+    if (n > 24) { const t = new THREE.Mesh(new THREE.TorusGeometry(R, r, 12, 96), mat); t.rotation.x = Math.PI / 2; return t; }
+    const path = new THREE.CurvePath();
+    const pt = (i) => { const a = (i / n) * TAU + phi; return new THREE.Vector3(R * Math.sin(a), 0, R * Math.cos(a)); };
+    for (let i = 0; i < n; i++) path.add(new THREE.LineCurve3(pt(i), pt(i + 1)));
+    return new THREE.Mesh(new THREE.TubeGeometry(path, n * 6, r, 8, true), mat);
+  }
+  function buildTin({ sides = 96, R = 1, H = 0.44, skirtH = 0.16, taper = 1, bucket = false, theme, cw }) {
+    const photo = theme === 'halawah', round = sides > 24, group = new THREE.Group();
+    const phi = round ? -Math.PI / 2 : -Math.PI / sides;        // a flat face (not a corner) looks at the visitor
+    const Rb = R * taper, LR = R + 0.045, bodyTop = H / 2 - skirtH * 0.75, bodyH = bodyTop + H / 2;
+    const rep = round ? 8 : sides;                               // side band: one motif group per face on polygons
+    const bodyL = photo ? photoLayers('side', rep) : ART.layers('wrap', theme, cw, bodyH / (TAU * R));
+    const lidL = photo ? photoLayers('lid') : ART.layers('lid', theme, cw);
+    const bodyMat = printMat(bodyL), topMat = printMat(lidL);
+    const metal = photo ? metalMat(GOLD_RIM, 0.24) : rimMetalOf(theme, cw);
+    const skirtMat = photo ? lacquerMat(HALAWAH_RED) : (theme === 'brand' ? lacquerMat(skirtOf(theme, cw)) : metalMat(skirtOf(theme, cw), 0.28));
+    let bg = new THREE.CylinderGeometry(R, Rb, bodyH, sides, 1, true); if (!round) bg = facet(bg);
+    const body = new THREE.Mesh(bg, bodyMat); body.rotation.y = phi; body.position.y = -H / 2 + bodyH / 2;
+    const bottom = new THREE.Mesh(new THREE.CircleGeometry(Rb, sides, Math.PI / 2 - phi), metal); bottom.rotation.x = Math.PI / 2; bottom.position.y = -H / 2;
+    const foot = edgeRing(Rb, sides, 0.03, metal, phi); foot.position.y = -H / 2;
+    // lid: skirt + printed top + rolled lip
+    const lid = new THREE.Group(); lid.position.y = H / 2;
+    let sg = new THREE.CylinderGeometry(LR, LR, skirtH, sides, 1, true); if (!round) sg = facet(sg);
+    const skirt = new THREE.Mesh(sg, skirtMat); skirt.rotation.y = phi; skirt.position.y = -skirtH / 2;
+    const tg = new THREE.CircleGeometry(LR, sides, phi - Math.PI / 2);
+    const top = new THREE.Mesh(tg, topMat); top.rotation.x = -Math.PI / 2;
+    const lip = edgeRing(LR, sides, 0.028, photo ? lacquerMat(HALAWAH_RED) : (theme === 'brand' ? metalMat(ART.COLORWAYS[cw].foil[2], 0.26) : metal), phi);
+    lid.add(skirt, top, lip);
+    group.add(body, bottom, foot, lid);
+    let h = H + 0.03;
+    if (bucket) { // wire bail on two ears, resting folded back
+      const wire = metalMat('#b8c0cc', 0.25);
+      const ear = (s) => { const e = new THREE.Mesh(new THREE.SphereGeometry(0.07, 16, 12), wire); e.scale.set(1, 1.3, 0.5); e.position.set(s * (R + 0.015), H / 2 - skirtH - 0.12, 0); return e; };
+      const bail = new THREE.Mesh(new THREE.TorusGeometry(R + 0.03, 0.022, 8, 64, Math.PI), wire);
+      bail.position.y = H / 2 - skirtH - 0.12; bail.rotation.x = -1.15; // leaning back over the lid
+      group.add(ear(-1), ear(1), bail); h += 0.25;
+    }
+    // low tins lean towards the visitor a little more, so the printed lid reads
+    return { group, print: [bodyMat, topMat], parts: { body, bottom, lid }, ext: { h, w: 2 * LR }, lean: H < 0.6 ? 0.36 : 0 };
+  }
+  const PHOTO_SHAPES = new Set(['round', 'octagon', 'hexagon']);
   const gift = (o) => (t, c) => buildGiftBox({ ...o, theme: t, cw: c });
   const can = (dia, h) => (t, c) => buildRound({ R: (dia / 2) * MM, H: h * MM, theme: t, cw: c });
   const oil = (w, d, h, pow = 0.5) => (t, c) => { const m = buildOil({ theme: t, cw: c, w, d, h }); m.pow = pow; return m; };
   const SHAPES = {
-    round: (t, c) => buildRound({ R: 1, H: 1.5, theme: t, cw: c }),            // the signature round gift tin (no factory template: proportions are a design choice)
+    // the signature tin: the Halawah round tin (low and wide, red lid, white band), or the tall printed round tin for the brand colourways
+    round: (t, c) => (t === 'halawah' ? buildTin({ theme: t, cw: c }) : buildRound({ R: 1, H: 1.5, theme: t, cw: c })),
+    octagon: (t, c) => buildTin({ sides: 8, H: t === 'halawah' ? 0.44 : 0.7, theme: t, cw: c }),
+    hexagon: (t, c) => buildTin({ sides: 6, H: t === 'halawah' ? 0.44 : 0.7, theme: t, cw: c }),
+    bucket: (t, c) => buildTin({ R: 1, H: 1.25, taper: 0.84, skirtH: 0.2, bucket: true, theme: t, cw: c }),
     square: gift({ w: 160, d: 160, h: 42, lidH: 20, ins: 4 }),                  // template: square box, short body (lid 160, body 152)
     rect: gift({ w: 175, d: 105, h: 62, lidH: 24, ins: 4 }),                    // rectangular gift tin (no template: illustrative)
     oval: (t, c) => { const m = buildRound({ R: 1, H: 1.2, theme: t, cw: c }); m.group.scale.set(1.4, 1, 0.8); m.ext = { h: 1.4, w: 2.3 }; return m; },
@@ -225,9 +322,9 @@ export function createScene(canvas) {
     x.fillStyle = g; x.fillRect(0, 0, 128, 128); return new THREE.CanvasTexture(c);
   })();
   const INITIAL = {
-    hero: { shape: 'round', theme: 'brand', cw: 0, finish: 'gloss' },
-    finish: { shape: 'round', theme: 'brand', cw: 0, finish: 'gloss' },
-    shapes: { shape: 'round', theme: 'brand', cw: 0, finish: 'gloss' },
+    hero: { shape: 'round', theme: 'halawah', cw: 0, finish: 'gloss' },
+    finish: { shape: 'round', theme: 'halawah', cw: 0, finish: 'gloss' },
+    shapes: { shape: 'round', theme: 'halawah', cw: 0, finish: 'gloss' },
     seasons: { shape: 'oil', theme: 'olive', cw: 0, finish: 'gloss' }
   };
   const POSES = { hero: { ry: -0.55, rx: 0.2, s: 1.0 }, finish: { ry: 0.35, rx: 0.16, s: 1.05 }, shapes: { ry: -0.45, rx: 0.22, s: 1.0 }, seasons: { ry: 0.5, rx: 0.18, s: 1.05 } };
@@ -279,7 +376,9 @@ export function createScene(canvas) {
           if (o.material) (Array.isArray(o.material) ? o.material : [o.material]).forEach((m) => { envMats.delete(m); m.dispose(); });
         });
       }
-      model = SHAPES[S.shape](S.theme, S.cw);
+      // the photographed Halawah artwork only fits the low tins; every other shape shows the printed royal-blue tin instead
+      const theme = S.theme === 'halawah' && !PHOTO_SHAPES.has(S.shape) ? 'brand' : S.theme;
+      model = SHAPES[S.shape](theme, theme === 'brand' && S.theme === 'halawah' ? 0 : S.cw);
       // bring very different tins (flat tuna can, tall box, big oil tin) to a similar size on the stage; pow < 1 keeps some of the size difference (olive-oil sizes)
       const ext = model.ext || { h: 2, w: 2 };
       model.group.scale.multiplyScalar(clamp(Math.pow(2.12 / Math.max(ext.h, ext.w), model.pow || 1), 0.25, 1.8));
@@ -353,7 +452,7 @@ export function createScene(canvas) {
       // vel: smoothed scroll speed (-1…1). The tin stays put but turns, floats and leans with the scroll.
       update(dt, now, p = 0, vel = 0) {
         idle += dt * 0.28; spinYaw += spinV; spinV *= 0.94;
-        tilt.rotation.x = pose.rx + ptr.sy * 0.18 + p * 0.12 + vel * 0.16;
+        tilt.rotation.x = pose.rx + (model.lean || 0) + ptr.sy * 0.18 + p * 0.12 + vel * 0.16;
         tilt.rotation.y = this.hold !== null ? this.hold : pose.ry + idle + spinYaw + ptr.sx * 0.35 - p * 1.25;
         tilt.rotation.z = vel * 0.06;
         root.position.y = Math.sin(now / 1300 + bob) * 0.045 - p * 0.16 + vel * 0.08;
@@ -491,7 +590,7 @@ export function createScene(canvas) {
       });
       globe.add(new THREE.Mesh(new THREE.SphereGeometry(GR * 1.1, 64, 48), halo));
 
-      fetch('/assets/data/land-110m.geojson').then((r) => r.json()).then((gj) => {
+      fetch(new URL('../../data/land-110m.geojson', import.meta.url)).then((r) => r.json()).then((gj) => {
         const W = 1440, H = 720, cv = document.createElement('canvas'); cv.width = W; cv.height = H;
         const cx = cv.getContext('2d', { willReadFrequently: true }); cx.fillStyle = '#fff';
         const ring = (rg) => { rg.forEach(([lo, la], k) => { const x = (lo + 180) / 360 * W, y = (90 - la) / 180 * H; k ? cx.lineTo(x, y) : cx.moveTo(x, y); }); cx.closePath(); };

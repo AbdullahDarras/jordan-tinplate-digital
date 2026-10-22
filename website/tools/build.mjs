@@ -94,9 +94,11 @@ function stage(lang, { pose, shape = 'round', theme = 'brand', cw = 0, finish = 
 function picker(lang, { kind, target, items, aria, initial, panes = true, cls = '' }) {
   const first = initial || items[0].id;
   const chips = `<div class="chips ${cls}" role="group" aria-label="${T(aria, lang)}" data-reveal>${items.map((it) =>
-    `<button class="chip${it.id === first ? ' is-on' : ''}" type="button" data-pick="${kind}" data-target="${target}" data-id="${it.id}" aria-pressed="${it.id === first}">${T(it.label, lang)}</button>`).join('')}</div>`;
+    it.soon
+      ? `<button class="chip chip--soon" type="button" disabled><span lang="en">${T(it.label, lang)}</span> <em>${T(UI.soon, lang)}</em></button>`
+      : `<button class="chip${it.id === first ? ' is-on' : ''}" type="button" data-pick="${kind}" data-target="${target}" data-id="${it.id}" aria-pressed="${it.id === first}">${T(it.label, lang)}</button>`).join('')}</div>`;
   if (!panes) return chips;
-  const body = items.map((it) => it.desc
+  const body = items.filter((it) => !it.soon).map((it) => it.desc
     ? `<p class="pane${it.id === first ? ' is-on' : ''}" data-pane="${it.id}">${T(it.desc, lang)}</p>`
     : `<div class="pane${it.id === first ? ' is-on' : ''}" data-pane="${it.id}"><div class="spec__k">${T(it.name, lang)}</div><div class="spec__v">${T(it.dim, lang)}</div><p>${T(it.note, lang)}</p></div>`).join('');
   return chips + (items[0].desc ? `<div class="finish__desc" aria-live="polite" data-reveal>${body}</div>` : `<div class="spec" aria-live="polite" data-reveal>${body}</div>`);
@@ -175,7 +177,7 @@ const KINDS = {
     const id = s.id || 'finish', F = FINISH_LAB;
     return `<section class="finish" id="${id}" aria-labelledby="${id}-h">
   <div class="finish__grid wrap">
-    ${stage(lang, { pose: 'finish', label: F.aria })}
+    ${stage(lang, { pose: 'finish', theme: 'halawah', label: F.aria })}
     <div class="finish__text">
       ${eyebrow(s.eyebrow || F.eyebrow, lang)}
       <h2 class="h2" data-split id="${id}-h">${T(s.title || F.title, lang)}</h2>
@@ -184,7 +186,7 @@ const KINDS = {
       <div class="plate" data-reveal>
         <h3>${T(F.plate.h, lang)}</h3>
         <p>${T(F.plate.p, lang)}</p>
-        <div class="swatches" role="group" aria-label="${T(F.cwAria, lang)}">${F.cws.map((c, i) => `<button class="sw${i === 0 ? ' is-on' : ''}" type="button" data-pick="cw" data-target="finish" data-id="${i}" aria-pressed="${i === 0}" style="--a:${c.a};--b:${c.b}" aria-label="${T(c.label, lang)}"></button>`).join('')}</div>
+        <div class="swatches" role="group" aria-label="${T(F.cwAria, lang)}">${F.cws.map((c, i) => `<button class="sw${i === 0 ? ' is-on' : ''}" type="button" data-pick="cw" data-target="finish" data-id="${c.id || i - 1}" aria-pressed="${i === 0}" style="--a:${c.a};--b:${c.b}" aria-label="${T(c.label, lang)}"></button>`).join('')}</div>
       </div>
     </div>
   </div>
@@ -202,7 +204,7 @@ const KINDS = {
       <p class="fine" data-reveal>${T(S.fine, lang)}</p>
       ${(s.after || []).map((b) => renderBlock(b, lang, { hasTitle: true, id })).join('')}
     </div>
-    ${stage(lang, { pose: 'shapes', label: S.aria })}
+    ${stage(lang, { pose: 'shapes', theme: 'halawah', label: S.aria })}
   </div>
 </section>`;
   },

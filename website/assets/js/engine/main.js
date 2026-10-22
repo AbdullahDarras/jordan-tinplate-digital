@@ -168,7 +168,7 @@ function initControls() {
     if (!tin) return;
     if (kind === 'finish') tin.apply({ finish: id });
     else if (kind === 'shape') tin.apply({ shape: id });
-    else if (kind === 'cw') tin.apply({ cw: +id, theme: 'brand' });
+    else if (kind === 'cw') tin.apply(id === 'h' ? { cw: 0, theme: 'halawah' } : { cw: +id, theme: 'brand' });
   }));
   // season tabs: click, or arrow keys / Home / End (roving tabindex)
   const tabs = $$('.tab[data-season]');
