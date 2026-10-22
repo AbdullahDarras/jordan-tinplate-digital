@@ -309,7 +309,7 @@ async function loadScene(onStep) {
 async function boot() {
   const wantsIntro = html.classList.contains('intro') && !!loaderEl(); // home, first view this session, no ?skip, no reduced motion
   loaderOwns = wantsIntro;
-  if (wantsIntro) history.scrollRestoration = 'manual';
+  history.scrollRestoration = 'manual'; // every page opens on its hero, never where the visitor left it
   const ld = initLoader(); window.__jtLoader = ld;
   const prog = { v: 0 };
   const setNum = () => ld.set(prog.v);
@@ -324,7 +324,7 @@ async function boot() {
     if (scene) { scene.setJourney(0); scene.setTheme(html.dataset.mode); }
     releasePage();
     if (scene && scene.pruneStages) scene.pruneStages(); // the loader's stage is gone: drop it from the render list
-    if (wantsIntro) { window.scrollTo(0, 0); if (lenis) lenis.scrollTo(0, { immediate: true }); }
+    if (wantsIntro || !location.hash) { window.scrollTo(0, 0); if (lenis) lenis.scrollTo(0, { immediate: true }); }
     unlockScroll();
     ScrollTrigger.refresh();
     jumpToHash();

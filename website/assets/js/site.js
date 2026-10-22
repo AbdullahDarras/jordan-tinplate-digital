@@ -182,5 +182,8 @@
     });
   }
   window.addEventListener('pageshow', function (e) { if (e.persisted) { root.classList.remove('leaving', 'arrive'); } });
+  // open every page on its hero: no restored scroll position (a link to #section still lands on that section)
+  try { history.scrollRestoration = 'manual'; } catch (e) { /* old browsers */ }
+  window.addEventListener('load', function () { if (!location.hash) window.scrollTo(0, 0); });
   setTimeout(function () { root.classList.remove('arrive'); }, 2500);
 })();

@@ -552,7 +552,7 @@ function jsonLd(lang, page) {
 // ---------------------------------------------------------------- full document
 // Runs before first paint: theme (no flash), the "js" flag, the entrance (home only, once per session, never with ?skip or reduced motion)
 // and the page-transition curtain that was started by the previous page.
-const headScript = (isHome) => `<script>(function(){var d=document.documentElement;d.classList.add('js');try{var t=localStorage.getItem('jt-theme');if(t!=='dark'&&t!=='light')t='light';d.setAttribute('data-mode',t)}catch(e){}try{if(sessionStorage.getItem('jt-arrive')){sessionStorage.removeItem('jt-arrive');d.classList.add('arrive')}}catch(e){}${isHome
+const headScript = (isHome) => `<script>(function(){var d=document.documentElement;d.classList.add('js');try{history.scrollRestoration='manual';if(!location.hash)window.scrollTo(0,0)}catch(e){}try{var t=localStorage.getItem('jt-theme');if(t!=='dark'&&t!=='light')t='light';d.setAttribute('data-mode',t)}catch(e){}try{if(sessionStorage.getItem('jt-arrive')){sessionStorage.removeItem('jt-arrive');d.classList.add('arrive')}}catch(e){}${isHome
   ? `try{if(!/[?&]skip/.test(location.search)&&!sessionStorage.getItem('jt-intro')&&!matchMedia('(prefers-reduced-motion: reduce)').matches)d.classList.add('intro')}catch(e){}`
   : `try{sessionStorage.setItem('jt-intro','1')}catch(e){}`}})()</script>`;
 const THEME_ONLY = `<script>(function(){var d=document.documentElement;try{var t=localStorage.getItem('jt-theme');if(t==='dark'||t==='light')d.setAttribute('data-mode',t)}catch(e){}})()</script>`;
