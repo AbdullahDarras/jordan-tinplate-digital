@@ -29,11 +29,11 @@ const FIN = {
 // The same finishes on a tin printed from a photographed artwork (no foil / lacquer map): plain lacquer values.
 // bump = how far the motifs stand proud (the relief mask), spot = the clear coat only on the motifs.
 const PFIN = {
-  gloss: { metalness: 0.12, roughness: 0.3, clearcoat: 1, clearcoatRoughness: 0.06, sheen: 0, bumpScale: 0.3 },
+  gloss: { metalness: 0.08, roughness: 0.38, clearcoat: 0.6, clearcoatRoughness: 0.12, sheen: 0, bumpScale: 0.3 },
   matte: { metalness: 0.06, roughness: 0.82, clearcoat: 0, clearcoatRoughness: 0.5, sheen: 0.15, bumpScale: 0.3 },
   soft: { metalness: 0.04, roughness: 0.95, clearcoat: 0, clearcoatRoughness: 0.5, sheen: 0.6, bumpScale: 0.4 },
   rough: { metalness: 0.08, roughness: 0.9, clearcoat: 0, clearcoatRoughness: 0.5, sheen: 0, bumpScale: 1.2 },
-  emboss: { metalness: 0.12, roughness: 0.32, clearcoat: 1, clearcoatRoughness: 0.08, sheen: 0, bumpScale: 10 },
+  emboss: { metalness: 0.08, roughness: 0.38, clearcoat: 0.6, clearcoatRoughness: 0.12, sheen: 0, bumpScale: 10 },
   spot: { metalness: 0.06, roughness: 0.85, clearcoat: 1, clearcoatRoughness: 0.03, sheen: 0, bumpScale: 1.4, spot: true }
 };
 const ACCENT = { olive: '#e8bf4f', eid: '#f4cf72', cheese: '#2a68c4', milk: '#2a68c4', coffee: '#e0a64a', industrial: '#ff7a33' };
@@ -47,6 +47,8 @@ export function createScene(canvas) {
   const maxDpr = () => (COARSE || window.innerWidth < 860 ? 1.5 : 2);
   renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, maxDpr()));
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  // real cast shadows: the tin throws a soft shadow onto an invisible floor under it (VSM gives a soft, photographic edge)
+  renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.VSMShadowMap;
   renderer.toneMappingExposure = 1.0;
   const REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -81,8 +83,15 @@ export function createScene(canvas) {
   camera.position.set(0, 0, 12);
   const DIST = 12, HALF_H = DIST * Math.tan(THREE.MathUtils.degToRad(15));
 
-  const key = new THREE.DirectionalLight(0xfff6e8, 0.8); key.position.set(3, 5, 6); scene.add(key);
-  const fill = new THREE.HemisphereLight(0xffffff, 0xffe2b8, 0.2); scene.add(fill);       // lifted ambient: no crushed blacks
+  // Studio lighting for product photography: a high soft key slightly to the left (it casts the shadow), a soft fill from the camera so no
+  // printed face falls into darkness, and a lifted ambient. The printed artwork comes from photographs, so the light stays even and neutral.
+  const key = new THREE.DirectionalLight(0xfff8ee, 1.0); key.position.set(-2.5, 9, 5); scene.add(key);
+  key.castShadow = true;
+  key.shadow.mapSize.set(COARSE ? 512 : 1024, COARSE ? 512 : 1024);
+  Object.assign(key.shadow.camera, { left: -3.4, right: 3.4, top: 3.4, bottom: -3.4, near: 1, far: 30 });
+  key.shadow.radius = 9; key.shadow.blurSamples = 16; key.shadow.bias = -0.0004;
+  const front = new THREE.DirectionalLight(0xffffff, 0.4); front.position.set(0.5, 1.5, 10); scene.add(front);
+  const fill = new THREE.HemisphereLight(0xffffff, 0xffe8c8, 0.45); scene.add(fill);       // lifted ambient: no crushed blacks
   const rimL = new THREE.PointLight(0xbcd6ff, 0, 40); rimL.position.set(-6, 2, 3); scene.add(rimL);   // cool
   const rimR = new THREE.PointLight(0xffb867, 0, 40); rimR.position.set(6, -1, 3); scene.add(rimR);   // gentle warm rim
   // a slow specular sweep: a warm point light drifts across the front of the tin every few seconds and glides over the gold
@@ -107,7 +116,7 @@ export function createScene(canvas) {
   function printMat(L, side = THREE.FrontSide) {
     if (L && L.photo) {
       const m = new THREE.MeshPhysicalMaterial({ map: L.map, metalness: 0.12, roughness: 0.3, clearcoat: 1, clearcoatRoughness: 0.06, side, bumpMap: L.relief, bumpScale: 0.6 });
-      m.color.setScalar(L.metal ? 1 : 0.8); m.userData.photo = L; m.userData.envBase = L.metal ? 1 : 0.35; envMats.add(m); return m;
+      m.color.setScalar(L.metal ? 1 : 0.84); m.userData.photo = L; m.userData.envBase = L.metal ? 1 : 0.7; envMats.add(m); return m;
     }
     const layered = !!(L && L.orm);
     const m = new THREE.MeshPhysicalMaterial({ map: layered ? L.map : L, metalness: 0.55, roughness: 0.2, clearcoat: 1, clearcoatRoughness: 0.08, side });
@@ -169,7 +178,7 @@ export function createScene(canvas) {
       lid.add(end, seam); lid.userData.print = [endMat];
     } else lid = lidParts(R, H, theme, cw, metal, k);
     group.add(body, rim, bottom, lid); print.push(...lid.userData.print);
-    return { group, print, parts: { body, bottom, lid }, ext: { h: H + (seamed ? 0.05 : 0.2) * k, w: 2 * (R + 0.06 * k) } };
+    return { group, print, parts: { body, bottom, lid }, ext: { h: H + (seamed ? 0.05 : 0.2) * k, w: 2 * (R + 0.06 * k) }, lean: H / (2 * R) > 0.9 ? 0.16 : 0.3 };
   }
   // Square / rectangular gift box with a lid that overhangs the body a little (sizes in mm, see docs/data/can-sizes.json: lid 160, body 152 ...).
   function buildGiftBox({ w, d, h, lidH, ins = 3, theme, cw }) {
@@ -187,7 +196,7 @@ export function createScene(canvas) {
     const edge = new THREE.Mesh(new RoundedBoxGeometry(W + 0.012, 0.05, D + 0.012, 3, 0.02), theme === 'brand' ? metalMat(ART.COLORWAYS[cw].foil[2], 0.26) : metalMat(accentOf(theme, cw) || SILVER, 0.3));
     edge.position.y = Hh / 2 - LH + 0.025;
     group.add(body, lid, edge);
-    return { group, print: [front, side, topPrint], parts: { body, lid, bottom: body }, ext: { h: Hh, w: Math.hypot(W, D) * 0.68 } };
+    return { group, print: [front, side, topPrint], parts: { body, lid, bottom: body }, ext: { h: Hh, w: Math.hypot(W, D) * 0.68 }, lean: Hh / Math.max(W, D) < 0.4 ? 0.5 : 0.18 };
   }
   // Olive-oil tin (sizes in mm): printed body, stepped shoulder, flat top, a ribbed screw cap on a spout and a carry handle.
   function buildOil({ theme, cw, w, d, h }) {
@@ -364,8 +373,11 @@ export function createScene(canvas) {
     const root = new THREE.Group(); root.visible = false; scene.add(root);
     const tilt = new THREE.Group(); root.add(tilt);
     const holder = new THREE.Group(); tilt.add(holder);
+    // contact shadow (a soft dark patch right under the tin) + the cast shadow on an invisible floor; both sit on the tin's base and lean with it
     const shadow = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), new THREE.MeshBasicMaterial({ map: shadowTex, transparent: true, depthWrite: false, opacity: 0.5 }));
-    shadow.rotation.x = -Math.PI / 2; root.add(shadow);
+    shadow.rotation.x = -Math.PI / 2; tilt.add(shadow);
+    const floor = new THREE.Mesh(new THREE.PlaneGeometry(14, 14), new THREE.ShadowMaterial({ opacity: 0.22, transparent: true, depthWrite: false }));
+    floor.rotation.x = -Math.PI / 2; floor.receiveShadow = true; tilt.add(floor);
     const ring = new THREE.Mesh(new THREE.RingGeometry(0.98, 1, 96), new THREE.MeshBasicMaterial({ color: 0xf2a93b, transparent: true, opacity: 0, side: THREE.DoubleSide, depthWrite: false }));
     ring.rotation.x = -Math.PI / 2; root.add(ring);
     const sparkles = makeSparkles(); root.add(sparkles.pts);
@@ -404,8 +416,9 @@ export function createScene(canvas) {
       root.scale.copy(keep[0]); root.position.copy(keep[1]); tilt.rotation.copy(keep[2]); holder.scale.copy(keep[3]); holder.rotation.copy(keep[4]);
       box.getSize(modelSize);
       model.group.position.y -= box.getCenter(new THREE.Vector3()).y;
-      shadow.position.y = -modelSize.y / 2 - 0.12;
-      const sw = Math.max(modelSize.x, modelSize.z) * 1.45; shadow.scale.set(sw, sw, 1);
+      model.group.traverse((o) => { if (o.isMesh) o.castShadow = true; });
+      shadow.position.y = -modelSize.y / 2 + 0.004; floor.position.y = -modelSize.y / 2;
+      shadow.scale.set(modelSize.x * 1.25, modelSize.z * 1.25, 1);
     }
     mountModel();
 
@@ -772,7 +785,7 @@ export function createScene(canvas) {
   function setTheme(mode, instant) {
     const dark = mode === 'dark';
     // both themes are bright: the dark page keeps its dark background, but the tin is lit like a product shot (the halo behind it is in site.css)
-    const to = { exposure: dark ? 1.05 : 1.0, env: dark ? 1.0 : 0.95, key: dark ? 0.9 : 0.8, rimL: dark ? 22 : 8, rimR: dark ? 26 : 12, shadow: dark ? 0.3 : 0.45 };
+    const to = { exposure: dark ? 1.05 : 1.0, env: dark ? 1.0 : 0.95, key: dark ? 1.05 : 1.0, rimL: dark ? 22 : 8, rimR: dark ? 26 : 12, shadow: dark ? 0.3 : 0.45 };
     const o = { exposure: renderer.toneMappingExposure, env: env.i, key: key.intensity, rimL: rimL.intensity, rimR: rimR.intensity, shadow: instances.length ? instances[0].shadow.material.opacity : to.shadow };
     const set = () => {
       renderer.toneMappingExposure = o.exposure; env.i = o.env; syncEnv(); key.intensity = o.key; rimL.intensity = o.rimL; rimR.intensity = o.rimR;
