@@ -177,18 +177,18 @@ export const FINISH_LAB = {
 };
 
 const SHAPE_ITEMS = [
-  { id: 'round', label: t('Round', 'دائرية'), name: t('Round tin', 'علبة دائرية'), dim: t('Ø 73–265 mm · H 34–210 mm', 'قطر 73–265 مم · ارتفاع 34–210 مم'), note: t('Six standard diameters, in many heights.', 'ستة أقطار قياسية، بارتفاعات متعددة.') },
+  { id: 'round', label: t('Low round', 'دائرية منخفضة'), name: t('Low round tin', 'علبة دائرية منخفضة'), dim: t('Ø 73–265 mm · H 34–210 mm', 'قطر 73–265 مم · ارتفاع 34–210 مم'), note: t('Six standard diameters, in many heights, with a slip lid.', 'ستة أقطار قياسية بارتفاعات متعددة، بغطاء منزلق.') },
   { id: 'octagon', label: t('Octagonal', 'ثمانية'), name: t('Octagonal tin', 'علبة ثمانية الأضلاع'), dim: t('Sizes on request', 'المقاسات عند الطلب'), note: t('An eight-sided gift tin that stands out on the shelf.', 'علبة هدايا بثمانية أضلاع تلفت النظر على الرف.') },
   { id: 'hexagon', label: t('Hexagonal', 'سداسية'), name: t('Hexagonal tin', 'علبة سداسية الأضلاع'), dim: t('Sizes on request', 'المقاسات عند الطلب'), note: t('A six-sided gift tin for sweets, dates and chocolate.', 'علبة هدايا بستة أضلاع للحلويات والتمور والشوكولاتة.') },
   { id: 'square', label: t('Square', 'مربعة'), name: t('Square tin', 'علبة مربعة'), dim: t('120–240 mm sides · H 40–100 mm', 'ضلع 120–240 مم · ارتفاع 40–100 مم'), note: t('Five standard sizes, from about 100 g to 1 kg.', 'خمسة مقاسات قياسية، من نحو 100 غ إلى 1 كغ.') },
   { id: 'rect', label: t('Rectangular', 'مستطيلة'), name: t('Rectangular tin', 'علبة مستطيلة'), dim: t('Sizes on request', 'المقاسات عند الطلب'), note: t('Made to your specification.', 'تُصنَّع وفق مواصفاتك.') },
   { id: 'oval', label: t('Oval', 'بيضاوية'), name: t('Oval tin', 'علبة بيضاوية'), dim: t('Ø 300 mm · H 40–100 mm', 'قطر 300 مم · ارتفاع 40–100 مم'), note: t('A special-mold shape for presentation packs.', 'شكل بقالب خاص لعلب التقديم.') },
   { id: 'bucket', label: t('Bucket', 'سطل'), name: t('Tin bucket', 'سطل معدني'), dim: t('Sizes on request', 'المقاسات عند الطلب'), note: t('A tapered bucket with a wide press-on lid.', 'سطل مخروطي بغطاء عريض يُضغط على الفوهة.') },
-  { id: 'oil', label: t('Oil tin', 'تنكة زيت'), name: t('Olive-oil tin', 'تنكة زيت الزيتون'), dim: t('1, 4, 8 and 16 L/kg', '1 و4 و8 و16 لتر/كغ'), note: t('Produced in all four sizes. The 3D view is illustrative.', 'تُنتَج بالأحجام الأربعة كلها. والمجسّم توضيحي.') },
-  { id: 'can', label: t('Food can', 'علبة أغذية'), name: t('Food can', 'علبة أغذية'), dim: t('Standard food can', 'علبة معلبات قياسية'), note: t('The everyday can for vegetables, legumes and ready meals.', 'العلبة اليومية للخضار والبقوليات والوجبات الجاهزة.') },
-  { id: 'cheese', label: t('Cheese & halawa', 'جبنة وحلاوة'), name: t('Cheese and halawa can', 'علبة جبنة وحلاوة'), dim: t('Wide and sturdy', 'عريضة ومتينة'), note: t('For white cheese, halawa and spreads.', 'للجبنة البيضاء والحلاوة والمعجنات القابلة للدهن.') },
-  { id: 'tuna', label: t('Tuna can', 'علبة تونة'), name: t('Tuna can', 'علبة تونة'), dim: t('Low and wide', 'منخفضة وعريضة'), note: t('The short, flat can for tuna and fish.', 'العلبة القصيرة المسطحة للتونة والأسماك.') },
-  { id: 'tall', label: t('Tall box', 'علبة عالية'), name: t('Tall square box', 'علبة مربعة عالية'), dim: t('Square and tall', 'مربعة وعالية'), note: t('For coffee, tea and spices.', 'للقهوة والشاي والبهارات.') }
+  { id: 'oil', label: t('Spout tin', 'تنكة بفوهة'), name: t('Tin with a spout and screw cap', 'تنكة بفوهة وغطاء ملولب'), dim: t('1, 4, 8 and 16 L/kg', '1 و4 و8 و16 لتر/كغ'), note: t('Produced in all four sizes. The 3D view is illustrative.', 'تُنتَج بالأحجام الأربعة كلها. والمجسّم توضيحي.') },
+  { id: 'can', label: t('Tall round', 'دائرية طويلة'), name: t('Tall round can with a seamed end', 'علبة دائرية طويلة بطرف مختوم'), dim: t('Easy-open or peel-off end', 'طرف سهل الفتح أو قابل للنزع'), note: t('The end is seamed on, for a fully sealed pack.', 'طرفها مختوم بالدرز، لعبوة محكمة الإغلاق.') },
+  { id: 'cheese', label: t('Round with lid', 'دائرية بغطاء'), name: t('Round can with a slip lid', 'علبة دائرية بغطاء منزلق'), dim: t('Tall, with a lift-off lid', 'طويلة، بغطاء يُرفع ويُعاد'), note: t('Opens and closes again, for contents used a little at a time.', 'تُفتح وتُغلق من جديد، لمحتوى يُستخدم على دفعات.') },
+  { id: 'tuna', label: t('Flat round', 'دائرية مسطحة'), name: t('Flat round tin', 'علبة دائرية مسطحة'), dim: t('Low and wide', 'منخفضة وعريضة'), note: t('A wide, shallow tin with a slip lid.', 'علبة عريضة قليلة الارتفاع بغطاء منزلق.') },
+  { id: 'tall', label: t('Tall square', 'مربعة طويلة'), name: t('Tall square tin', 'علبة مربعة طويلة'), dim: t('Square and tall', 'مربعة وطويلة'), note: t('A tall square tin with a lift-off lid.', 'علبة مربعة طويلة بغطاء يُرفع.') }
 ];
 export const SHAPES_LAB = {
   eyebrow: t('Shapes', 'الأشكال'),
@@ -196,7 +196,7 @@ export const SHAPES_LAB = {
   aria: t('3D tin shapes', 'أشكال العلب بثلاثية الأبعاد'),
   chipsAria: t('Shapes', 'الأشكال'),
   items: SHAPE_ITEMS,
-  fine: t('Each 3D tin is a tin we have made, at its real proportions and with its real lid. Shapes shown in plain tinplate are made to order. Custom sizes are available on request.', 'كل علبة ثلاثية الأبعاد هنا علبة صنعناها فعلاً، بنسبها الحقيقية وغطائها الحقيقي. والأشكال المعروضة بصفيح سادة تُصنَّع حسب الطلب. والمقاسات الخاصة متاحة عند الطلب.')
+  fine: t('Most 3D tins here are tins we have made, at their real proportions and with their real lids; the hexagonal, oval and paint-can views carry sample artwork. Custom sizes are available on request.', 'معظم العلب ثلاثية الأبعاد هنا علب صنعناها فعلاً، بنسبها الحقيقية وغطائها الحقيقي؛ أما العلبة السداسية والبيضاوية وعلبة الدهان فعليها تصميم توضيحي. والمقاسات الخاصة متاحة عند الطلب.')
 };
 export const SHAPES_SWEETS = ['round', 'square', 'rect', 'oval'].map((id) => SHAPE_ITEMS.find((x) => x.id === id));
 

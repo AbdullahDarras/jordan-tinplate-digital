@@ -27,7 +27,9 @@ export const DESIGNS = {
   maeen: { kind: 'can', reps: 3, skirt: '#c9ccd2', rim: SILVER, lid: 'abed' }, // milk powder can (closed end borrowed from abed)
   sufyan: { kind: 'can', reps: 3, skirt: '#2c2a52', rim: GOLD },           // low round sweets tin, navy with a carved door
   laqmi: { kind: 'can', reps: 3, skirt: '#1f6b3a', rim: SILVER },           // round can with a green slip lid (cheese & halawa can)
-  // shapes the factory makes but with no photographed tin yet: shown as plain, unprinted tinplate (no artwork is implied)
+  // shapes with no photographed tin of their own wear a design that suits the shape:
+  oval: { kind: 'can', reps: 3, skirt: '#9a5216', rim: GOLD, lid: ['jgz', 'top'], side: ['jgz', 'side'] }, // the desert landscape fits a wide oval lid
+  paint: { kind: 'can', reps: 1, skirt: '#c4cad3', rim: SILVER },                                          // tinplate paint can, a label of paint swatches
   plain: { kind: 'plain', skirt: '#c4cad3', rim: SILVER }
 };
 
@@ -46,11 +48,11 @@ const file = (key, part, layer) => `${key}-${part}${SUFFIX[layer]}`;
 // the parts a surface draws from, per design and surface kind
 function partsFor(design, kind) {
   const d = DESIGNS[design] || DESIGNS.halawah;
-  const lidKey = d.lid || design;
+  const lidRef = Array.isArray(d.lid) ? d.lid : [d.lid || design, 'lid'], sideRef = d.side || [design, 'side'];
   if (d.kind === 'plain') return { plain: true };
   if (d.kind === 'band') return kind === 'lid' || kind === 'top' ? { flat: [design, 'lid'] } : { band: [design, 'side'] };
   if (d.kind === 'box') return kind === 'lid' || kind === 'top' ? { flat: [design, 'top'] } : { face: [design, 'side'] };
-  /* can, octagon */ return kind === 'lid' || kind === 'top' ? { flat: [lidKey, 'lid'] } : { strip: [design, 'side'] };
+  /* can, octagon */ return kind === 'lid' || kind === 'top' ? { flat: lidRef } : { strip: sideRef };
 }
 
 // draw one layer (0 colour, 1 relief, 2 spot) of a surface

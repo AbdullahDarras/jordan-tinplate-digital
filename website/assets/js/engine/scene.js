@@ -7,7 +7,7 @@ import * as HAL from './halawah.js';
 
 const TAU = Math.PI * 2;
 // Which real tin (assets/img/tins, see halawah.js) dresses which shape. Shapes not listed wear the Halawah design.
-const DESIGN_FOR = { round: 'halawah', square: 'bab', box70: 'bab', rect: 'jgz', octagon: 'najmah', bucket: 'frieds', can: 'abed', milk: 'maeen', tuna: 'sufyan', tall: 'suliman', coffee: 'levelmax', cheese: 'laqmi', hexagon: 'plain', oval: 'plain', paint: 'plain' };
+const DESIGN_FOR = { round: 'halawah', square: 'bab', box70: 'bab', rect: 'jgz', octagon: 'najmah', bucket: 'frieds', can: 'abed', milk: 'maeen', tuna: 'sufyan', tall: 'suliman', coffee: 'levelmax', cheese: 'laqmi', hexagon: 'halawah', oval: 'oval', paint: 'paint' };
 let DESIGN = 'halawah'; // the design of the tin being built (set by mountModel)
 const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
 const sstep = (a, b, x) => { const t = clamp((x - a) / (b - a)); return t * t * (3 - 2 * t); };
@@ -280,6 +280,7 @@ export function createScene(canvas) {
   const gift = (o) => (t, c) => buildGiftBox({ ...o, theme: t, cw: c });
   // Real tins, each at the proportions measured on its photograph (camera focal length from EXIF + the corners of the lid), with its own
   // kind of lid. Nothing is added that the real tin does not have (the bucket has no wire handle; the food and milk cans have seamed ends).
+  const OWN_SHAPE = { halawah: 'round', sufyan: 'tuna', najmah: 'octagon', frieds: 'bucket', abed: 'can', maeen: 'milk', laqmi: 'cheese', bab: 'square', jgz: 'rect', suliman: 'tall', levelmax: 'coffee' };
   const REAL = {
     halawah: (t, c) => buildTin({ H: 0.44, skirtH: 0.16, theme: t, cw: c }),                                  // round, H/D 0.22, slip lid
     sufyan: (t, c) => buildTin({ H: 0.38, skirtH: 0.15, theme: t, cw: c }),                                   // round, H/D 0.19, slip lid
@@ -398,7 +399,7 @@ export function createScene(canvas) {
       // every tin wears the Halawah artwork except the olive-oil tins, which keep their own printed design
       const theme = S.theme === 'halawah' && S.shape.startsWith('oil') ? 'olive' : S.theme;
       DESIGN = theme === 'halawah' ? DESIGN_FOR[S.shape] || 'halawah' : 'halawah';
-      model = (theme === 'halawah' && REAL[DESIGN] ? REAL[DESIGN] : SHAPES[S.shape])(theme, S.cw);
+      model = (theme === 'halawah' && REAL[DESIGN] && OWN_SHAPE[DESIGN] === S.shape ? REAL[DESIGN] : SHAPES[S.shape])(theme, S.cw);
       DESIGN = 'halawah';
       // bring very different tins (flat tuna can, tall box, big oil tin) to a similar size on the stage; pow < 1 keeps some of the size difference (olive-oil sizes)
       const ext = model.ext || { h: 2, w: 2 };
