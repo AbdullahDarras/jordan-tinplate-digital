@@ -319,13 +319,10 @@ const KINDS = {
   // Gallery: videos (facades + a card to the Facebook page).
   videos(lang, s) {
     const id = s.id || 'videos', G = GALLERY;
-    return `<section class="gal" id="${id}" aria-labelledby="${id}-h">
+    // A plain grid: no titles and no YouTube links, each tile plays in place (site.js swaps the poster for the player on click).
+    return `<section class="gal gal--grid" id="${id}" aria-label="${T(G.videosTitle, lang)}">
   <div class="wrap">
-    <header class="sec-head"><h2 class="h2" data-split id="${id}-h">${T(G.videosTitle, lang)}</h2></header>
-    <div class="gal__videos">${VIDEOS.map((v) => `<figure class="vcard" data-reveal>
-      ${facade(lang, v.id, v.label)}
-      <figcaption class="vcard__cap"><b>${T(v.label, lang)}</b>${ytLink(lang, v.id)}</figcaption>
-    </figure>`).join('\n    ')}</div>
+    <ul class="gal__videos" role="list">${VIDEOS.map((v) => `<li class="vtile" data-reveal>${facade(lang, v.id, v.label)}</li>`).join('\n    ')}</ul>
     <div class="fbcard" data-reveal>
       <div><span class="ncard__tag">${T(G.fb.tag, lang)}</span><h3>${T(G.fb.h, lang)}</h3><p>${T(G.fb.p, lang)}</p></div>
       <a class="btn btn--ghost magnetic" href="${SITE.social.Facebook}" target="_blank" rel="noopener noreferrer"><span>${T(G.fb.cta, lang)}</span>${EXT}<span class="vh"> (${T(UI.opensNew, lang)})</span></a>
