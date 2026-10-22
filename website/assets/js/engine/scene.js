@@ -481,7 +481,7 @@ export function createScene(canvas) {
         if (!REDUCED) sparkles.tick(now);
       },
       layout(w, h, px2w) {
-        const sc = Math.max(0.001, (0.9 * Math.min(w, h) * px2w / 2.9) * pose.s); root.scale.setScalar(sc);
+        const sc = Math.max(0.001, (0.9 * Math.min(w, h) * px2w / 2.9) * pose.s * (window.innerWidth < 700 ? Math.min(S.scale || 1, 1.12) : S.scale || 1)); root.scale.setScalar(sc); // phones: a smaller boost, the tin keeps its margins
         sparkles.pts.material.size = 0.24 * sc * (2 * HALF_H / px2w) / (0.268 * bufH); // world size -> point size (see the note in makeSparkles)
       },
       spin(dx) { spinV += dx * 0.004; }
@@ -720,6 +720,7 @@ export function createScene(canvas) {
       const cfg = {};
       ['shape', 'theme', 'finish'].forEach((k) => { if (el.dataset[k]) cfg[k] = el.dataset[k]; });
       if (el.dataset.cw) cfg.cw = +el.dataset.cw;
+      if (el.dataset.scale) cfg.scale = +el.dataset.scale; // a stage can show its tin larger (the home hero)
       const inst = name === 'journey' ? ensureJourney().inst : (byName[name] || makeProduct(name, cfg));
       stages.push({ el, cv, ctx: cv.getContext('2d'), inst, shown: false });
     });

@@ -314,7 +314,7 @@ export const PAGES = [
       lead: t('Custom tinplate packaging for food & beverage brands, from artwork and plates to printed, formed, export-ready tins. One family-led manufacturer in Jordan, doing the whole journey under one roof.',
               'علب معدنية مخصّصة لعلامات الأغذية والمشروبات، من التصميم والألواح إلى علب مطبوعة ومشكَّلة وجاهزة للتصدير. مصنع أردني تقوده عائلة واحدة، ويقدّم الرحلة كاملة تحت سقف واحد.'),
       art: 'hero',
-      stage: { shape: 'round', theme: 'halawah', cw: 0, finish: 'gloss' },
+      stage: { shape: 'round', theme: 'halawah', cw: 0, finish: 'gloss', scale: 1.45 },
       ctas: [quoteCta(), { label: t('See products by industry', 'تصفّح المنتجات حسب القطاع'), to: 'products', kind: 'ghost' }],
       stats: [
         { big: '1998', small: t('Founded in Jordan', 'تأسس في الأردن') },

@@ -82,11 +82,11 @@ const ctaHref = (c, lang) => {
 const eyebrow = (v, lang) => (v ? `<p class="eyebrow"><span class="dot"></span>${T(v, lang)}</p>` : '');
 
 // 3D stage: an empty, sized box. The engine draws the tin into a canvas inside it; the SVG drawing is the fallback.
-function stage(lang, { pose, shape = 'round', theme = 'brand', cw = 0, finish = 'gloss', label, cls = '', rig = 'product' }) {
+function stage(lang, { pose, shape = 'round', theme = 'brand', cw = 0, finish = 'gloss', label, cls = '', rig = 'product', scale = 0 }) {
   const lab = label || UI.dragTin;
   const data = rig === 'journey'
     ? `data-rig="journey" data-pose="hero"`
-    : `data-rig="product" data-pose="${pose}" data-cursor="drag" data-shape="${shape}" data-theme="${theme}" data-cw="${cw}" data-finish="${finish}"`;
+    : `data-rig="product" data-pose="${pose}" data-cursor="drag" data-shape="${shape}" data-theme="${theme}" data-cw="${cw}" data-finish="${finish}"${scale ? ` data-scale="${scale}"` : ''}`;
   return `<div class="stage ${cls}" ${data} role="img" aria-label="${T(lab, lang)}"><div class="stage__fb" aria-hidden="true">${art(rig === 'journey' ? 'hero' : (SHAPE_ART[shape] || 'round'))}</div></div>`;
 }
 
