@@ -1,8 +1,8 @@
 /* Placeholder styles for the items that wait for management. Loaded ONLY when SHOW_PENDING is true in tools/content.mjs
    (see website/PENDING.md). While the flag is false none of this markup exists and this file is not linked. */
 :root { --tbc-bg: #fff1d6; --tbc-ink: #6b3a00; }
-:root[data-theme="dark"] { --tbc-bg: rgba(244, 179, 76, .14); --tbc-ink: #f4b34c; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme]) { --tbc-bg: rgba(244, 179, 76, .14); --tbc-ink: #f4b34c; } }
+:root[data-mode="dark"] { --tbc-bg: rgba(244, 179, 76, .14); --tbc-ink: #f4b34c; }
+@media (prefers-color-scheme: dark) { :root:not([data-mode]) { --tbc-bg: rgba(244, 179, 76, .14); --tbc-ink: #f4b34c; } }
 .specrow--tbc { border-style: dashed; border-inline-start-style: dashed; }
 .badge { display: inline-flex; align-items: center; gap: .45em; padding: .25em .8em; border-radius: 999px; background: var(--tbc-bg); color: var(--tbc-ink); font-size: .78rem; font-weight: 700; line-height: 1.5; border: 1px solid color-mix(in srgb, var(--tbc-ink) 35%, transparent); }
 .badge::before { content: "◇"; }

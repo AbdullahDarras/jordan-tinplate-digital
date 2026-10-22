@@ -15,10 +15,10 @@
   /* ---------- theme (initial value is set by the inline script in <head>) ---------- */
   var themeBtn = doc.getElementById('themeBtn');
   function currentTheme() {
-    return root.getAttribute('data-theme') || 'light'; // light is the default; dark only when the visitor picks it
+    return root.getAttribute('data-mode') || 'light'; // light is the default; dark only when the visitor picks it
   }
   function applyTheme(next) {
-    root.setAttribute('data-theme', next);
+    root.setAttribute('data-mode', next);
     store.set('jt-theme', next);
     if (themeBtn) themeBtn.setAttribute('aria-pressed', next === 'dark' ? 'true' : 'false');
     fire('jt:theme', next);

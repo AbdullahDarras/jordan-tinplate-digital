@@ -372,7 +372,7 @@ def tok(blk, name):
     if not m: return None
     v = m.group(1).strip(); mv = re.match(r"var\((--[\w-]+)\)", v)
     return toks.get(mv.group(1)) if mv else (v if v.startswith("#") else None)
-for label, blk in (("light", block(':root, :root[data-theme="light"]')), ("dark", block(':root[data-theme="dark"]'))):
+for label, blk in (("light", block(':root, :root[data-mode="light"]')), ("dark", block(':root[data-mode="dark"]'))):
     bg, bg2, ink, mute, acc = (tok(blk, k) for k in ("--bg", "--bg2", "--ink", "--mute", "--accent-text"))
     if not all((bg, bg2, ink, mute, acc)): err(f"palette {label}: could not read the tokens"); continue
     for fg, name in ((ink, "ink"), (mute, "mute"), (acc, "accent-text")):

@@ -292,7 +292,7 @@ async function loadScene(onStep) {
     const mod = await import('./scene.js'); onStep(30);
     scene = mod.createScene($('#gl'));
     scene.refreshStages(); // gives every .stage its own canvas and its own tin
-    scene.setTheme(loaderOwns ? 'dark' : html.dataset.theme, true); // the entrance is always shown in the moody dark lighting
+    scene.setTheme(html.dataset.mode, true); // the entrance follows the page: light by default
     window.addEventListener('resize', () => { scene.resize(); });
     gsap.ticker.add(() => scene.tick()); // last in the tick: after scroll and journey updates
     window.__jt = { scene };
@@ -321,7 +321,7 @@ async function boot() {
     if (finished) return; finished = true; clearTimeout(watchdog);
     gsap.killTweensOf(prog);
     loaderOwns = false;
-    if (scene) { scene.setJourney(0); scene.setTheme(html.dataset.theme); }
+    if (scene) { scene.setJourney(0); scene.setTheme(html.dataset.mode); }
     releasePage();
     if (scene && scene.pruneStages) scene.pruneStages(); // the loader's stage is gone: drop it from the render list
     if (wantsIntro) { window.scrollTo(0, 0); if (lenis) lenis.scrollTo(0, { immediate: true }); }
@@ -381,7 +381,7 @@ async function boot() {
     gsap.killTweensOf(prog);
     const tl = entranceTl = gsap.timeline({ onComplete: res });
     tl.to(prog, { v: 100, duration: 2.2, ease: 'power1.inOut', onUpdate: setNum })
-      .add(() => { if (scene) scene.setTheme(html.dataset.theme); })
+      .add(() => { if (scene) scene.setTheme(html.dataset.mode); })
       .to({}, { duration: 0.5 }) // hold on the sealed tin
       .to('.ld__meta, .ld__skip', { opacity: 0, y: 24, duration: 0.35, ease: 'power2.in' })
       .to('.ld__stage', { scale: 3.2, opacity: 0, duration: 0.95, ease: 'power3.in' }, '<')
