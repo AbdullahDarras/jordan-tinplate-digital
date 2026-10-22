@@ -6,6 +6,9 @@ import * as ART from './art.js';
 import * as HAL from './halawah.js';
 
 const TAU = Math.PI * 2;
+// Which real tin (assets/img/tins, see halawah.js) dresses which shape. Shapes not listed wear the Halawah design.
+const DESIGN_FOR = { square: 'bab', box70: 'bab', rect: 'jgz', octagon: 'najmah', bucket: 'frieds', can: 'abed', milk: 'maeen', tuna: 'sufyan', tall: 'suliman', coffee: 'levelmax' };
+let DESIGN = 'halawah'; // the design of the tin being built (set by mountModel)
 const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
 const sstep = (a, b, x) => { const t = clamp((x - a) / (b - a)); return t * t * (3 - 2 * t); };
 const lerp = (a, b, t) => a + (b - a) * t;
@@ -113,7 +116,7 @@ export function createScene(canvas) {
   }
   // the artwork of a surface: the Halawah tin's photographed artwork (every tin except the olive-oil tins), or the printed artwork from art.js
   const layersFor = (kind, theme, cw, aspect = 1, width = 0, reps = 0) => (theme === 'halawah'
-    ? HAL.surface(kind, aspect, reps || Math.max(1, Math.round(width / 1.5)))
+    ? HAL.surface(kind, aspect, reps || Math.max(1, Math.round(width / 1.5)), DESIGN)
     : ART.layers(kind, theme, cw, aspect));
   function applyFinish(m, name, instant) {
     const P = m.userData.photo;
@@ -126,8 +129,8 @@ export function createScene(canvas) {
     const to = { metalness: f.metalness, roughness: f.roughness, clearcoat: f.clearcoat, clearcoatRoughness: f.clearcoatRoughness, sheen: f.sheen, bumpScale: (L || P) ? f.bumpScale : 0 };
     if (instant) Object.assign(m, to); else gsap.to(m, { ...to, duration: 0.7, ease: 'power2.out' });
   }
-  const accentOf = (theme, cw) => theme === 'halawah' ? HAL.GOLD : theme === 'brand' ? ART.COLORWAYS[cw].foil[2] : ACCENT[theme];
-  const skirtOf = (theme, cw) => theme === 'halawah' ? HAL.RED : theme === 'brand' ? ART.COLORWAYS[cw].body[0] : ACCENT[theme]; // lid side: lacquer on the premium tin, the theme's metal on the others
+  const accentOf = (theme, cw) => theme === 'halawah' ? HAL.DESIGNS[DESIGN].rim : theme === 'brand' ? ART.COLORWAYS[cw].foil[2] : ACCENT[theme];
+  const skirtOf = (theme, cw) => theme === 'halawah' ? HAL.DESIGNS[DESIGN].skirt : theme === 'brand' ? ART.COLORWAYS[cw].body[0] : ACCENT[theme]; // lid side: lacquer on the premium tin, the theme's metal on the others
 
   /* ------------------------------------------------------------ model builders */
   // TRUE PROPORTIONS. The factory's can templates (docs/data/can-sizes.json, millimetres) are used here only as ratios, to shape the models: no
@@ -136,7 +139,7 @@ export function createScene(canvas) {
   // very different tins (a flat tuna can, a tall box, a big oil tin) to a similar size on the stage.
   const MM = 1 / 36.5, OIL_U = 2.75 / 350;
   const SILVER = '#eef2f8';
-  const rimMetalOf = (theme, cw) => (theme === 'halawah' ? metalMat(HAL.GOLD, 0.24) : theme === 'brand' ? metalMat(ART.COLORWAYS[cw].foil[2], 0.26) : metalMat(SILVER, 0.2));
+  const rimMetalOf = (theme, cw) => (theme === 'halawah' ? metalMat(HAL.DESIGNS[DESIGN].rim, 0.24) : theme === 'brand' ? metalMat(ART.COLORWAYS[cw].foil[2], 0.26) : metalMat(SILVER, 0.2));
   const lacquered = (theme) => theme === 'brand' || theme === 'halawah';
 
   function lidParts(R, H, theme, cw, metal, k = 1) {
@@ -146,7 +149,7 @@ export function createScene(canvas) {
     const g = new THREE.Group(); g.position.y = H / 2;
     const skirt = new THREE.Mesh(new THREE.CylinderGeometry(LR, LR, 0.24 * k, 96, 1, true), lidSide); skirt.position.y = 0.04 * k;
     const top = new THREE.Mesh(new THREE.CircleGeometry(LR, 64), lidTop); top.rotation.x = -Math.PI / 2; top.position.y = 0.16 * k;
-    const lip = new THREE.Mesh(new THREE.TorusGeometry(LR, 0.04 * k, 12, 96), theme === 'halawah' ? lacquerMat(HAL.RED) : theme === 'brand' ? metalMat(ART.COLORWAYS[cw].foil[2], 0.26) : metal); lip.rotation.x = Math.PI / 2; lip.position.y = 0.16 * k;
+    const lip = new THREE.Mesh(new THREE.TorusGeometry(LR, 0.04 * k, 12, 96), theme === 'halawah' ? lacquerMat(skirtOf(theme, cw)) : theme === 'brand' ? metalMat(ART.COLORWAYS[cw].foil[2], 0.26) : metal); lip.rotation.x = Math.PI / 2; lip.position.y = 0.16 * k;
     g.add(skirt, top, lip); g.userData.print = [lidTop];
     return g;
   }
@@ -223,9 +226,9 @@ export function createScene(canvas) {
     for (let i = 0; i < n; i++) path.add(new THREE.LineCurve3(pt(i), pt(i + 1)));
     return new THREE.Mesh(new THREE.TubeGeometry(path, n * 6, r, 8, true), mat);
   }
-  function buildTin({ sides = 96, R = 1, H = 0.44, skirtH = 0.16, taper = 1, bucket = false, theme, cw }) {
+  function buildTin({ sides = 96, R = 1, H = 0.44, skirtH = 0.16, taper = 1, bucket = false, vertexFront = false, stretch = 1, theme, cw }) {
     const photo = theme === 'halawah', round = sides > 24, group = new THREE.Group();
-    const phi = round ? -Math.PI / 2 : -Math.PI / sides;        // a flat face (not a corner) looks at the visitor
+    const phi = round ? -Math.PI / 2 : vertexFront ? 0 : -Math.PI / sides;        // a flat face (not a corner) looks at the visitor
     const Rb = R * taper, LR = R + 0.045, bodyTop = H / 2 - skirtH * 0.75, bodyH = bodyTop + H / 2;
     const rep = round ? 8 : sides;                               // side band: one motif group per face on polygons
     const bodyL = layersFor('wrap', theme, cw, bodyH / (TAU * R), TAU * R, photo ? rep : 0);
@@ -243,7 +246,7 @@ export function createScene(canvas) {
     const skirt = new THREE.Mesh(sg, skirtMat); skirt.rotation.y = phi; skirt.position.y = -skirtH / 2;
     const tg = new THREE.CircleGeometry(LR, sides, phi - Math.PI / 2);
     const top = new THREE.Mesh(tg, topMat); top.rotation.x = -Math.PI / 2;
-    const lip = edgeRing(LR, sides, 0.028, photo ? lacquerMat(HAL.RED) : (theme === 'brand' ? metalMat(ART.COLORWAYS[cw].foil[2], 0.26) : metal), phi);
+    const lip = edgeRing(LR, sides, 0.028, photo ? lacquerMat(skirtOf(theme, cw)) : (theme === 'brand' ? metalMat(ART.COLORWAYS[cw].foil[2], 0.26) : metal), phi);
     lid.add(skirt, top, lip);
     group.add(body, bottom, foot, lid);
     let h = H + 0.03;
@@ -255,7 +258,8 @@ export function createScene(canvas) {
       group.add(ear(-1), ear(1), bail); h += 0.25;
     }
     // low tins lean towards the visitor a little more, so the printed lid reads
-    return { group, print: [bodyMat, topMat], parts: { body, bottom, lid }, ext: { h, w: 2 * LR }, lean: H < 0.6 ? 0.36 : 0 };
+    if (stretch !== 1) group.scale.x = stretch;   // an elongated tin (the octagonal sweets tin)
+    return { group, print: [bodyMat, topMat], parts: { body, bottom, lid }, ext: { h, w: 2 * LR * stretch }, lean: H < 0.6 ? 0.36 : 0 };
   }
   const gift = (o) => (t, c) => buildGiftBox({ ...o, theme: t, cw: c });
   const can = (dia, h) => (t, c) => buildRound({ R: (dia / 2) * MM, H: h * MM, theme: t, cw: c });
@@ -263,7 +267,10 @@ export function createScene(canvas) {
   const SHAPES = {
     // the signature tin: the Halawah round tin (low and wide, red lid, white band), or the tall printed round tin for the brand colourways
     round: (t, c) => (t === 'halawah' ? buildTin({ theme: t, cw: c }) : buildRound({ R: 1, H: 1.5, theme: t, cw: c })),
-    octagon: (t, c) => buildTin({ sides: 8, theme: t, cw: c }),
+    // the real octagonal tin is elongated with a corner towards the visitor; the generic one is regular, a face forward
+    octagon: (t, c) => (t === 'halawah' && DESIGN === 'najmah'
+      ? buildTin({ sides: 8, H: 0.5, vertexFront: true, stretch: HAL.DESIGNS.najmah.stretch, theme: t, cw: c })
+      : buildTin({ sides: 8, theme: t, cw: c })),
     hexagon: (t, c) => buildTin({ sides: 6, theme: t, cw: c }),
     bucket: (t, c) => buildTin({ R: 1, H: 1.25, taper: 0.84, skirtH: 0.2, bucket: true, theme: t, cw: c }),
     square: gift({ w: 160, d: 160, h: 42, lidH: 20, ins: 4 }),                  // template: square box, short body (lid 160, body 152)
@@ -356,7 +363,9 @@ export function createScene(canvas) {
       }
       // every tin wears the Halawah artwork except the olive-oil tins, which keep their own printed design
       const theme = S.theme === 'halawah' && S.shape.startsWith('oil') ? 'olive' : S.theme;
+      DESIGN = theme === 'halawah' ? DESIGN_FOR[S.shape] || 'halawah' : 'halawah';
       model = SHAPES[S.shape](theme, S.cw);
+      DESIGN = 'halawah';
       // bring very different tins (flat tuna can, tall box, big oil tin) to a similar size on the stage; pow < 1 keeps some of the size difference (olive-oil sizes)
       const ext = model.ext || { h: 2, w: 2 };
       model.group.scale.multiplyScalar(clamp(Math.pow(2.12 / Math.max(ext.h, ext.w), model.pow || 1), 0.25, 1.8));
@@ -450,6 +459,7 @@ export function createScene(canvas) {
   /* ------------------------------------------------------------ journey rig (built only on pages that have a journey stage) */
   let J = null;
   function makeJourney() {
+    DESIGN = 'halawah'; // the entrance always shows the Halawah tin
     const journey = new THREE.Group(); journey.visible = false; scene.add(journey);
     const JR = 1, JH = 0.34, JW = TAU * JR, N = 160; // the Halawah tin: a long low band rolled into a wide ring
     const aspect = JH / JW;

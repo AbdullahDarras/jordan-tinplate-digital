@@ -1,15 +1,32 @@
-// The Halawah artwork (a real round tin made at the factory, photographed) dressed onto ANY surface of ANY tin:
-// a round lid, a box top, a wrap around a can or a flat face of a box. Each surface is three canvases built from the
-// photo files in assets/img/tins/: the colour, the relief (motifs stand proud, for the embossed finish) and the spot
-// mask (the clear coat only on the motifs, for spot UV). The side band (woman, date cup, dallah) repeats across the
-// surface at its own proportion, in staggered rows on tall surfaces, so a tall can never shows a stretched band.
+// Real tins made at the factory, photographed, and dressed onto the 3D models. Each design lives in assets/img/tins/ as
+// <key>-<part>.jpg (colour) plus <key>-<part>-relief.png (motifs stand proud: the embossed finish) and <key>-<part>-spot.png
+// (the clear coat only on the motifs: spot UV). The parts were straightened out of the photographs: a round lid ('lid'),
+// a box top ('top'), and the side ('side': a band unwrapped from a can, or the front face of a box).
+//
+// The Halawah tin is the signature design: its side band repeats at its own proportion on any surface (staggered rows on
+// tall shapes). The other designs belong to one shape each (see DESIGN_FOR in scene.js) and are fitted to it.
 import * as THREE from 'three';
 
 const BASE = new URL('../../img/tins/', import.meta.url).href;
-export const RED = '#9c302e';      // the lid lacquer, sampled from the photo
-export const WHITE = '#e9e5e0';    // the side band background
+export const RED = '#9c302e';      // the Halawah lid lacquer, sampled from the photo
+export const WHITE = '#e9e5e0';    // the Halawah side band background
 export const GOLD = '#d9b45a';
-const BAND = 286 / 1024;           // height / width of one band tile
+export const SILVER = '#d9dde4';
+const BAND = 286 / 1024;           // height / width of one Halawah band tile
+
+// skirt = the lacquer of the lid's side; rim = the rolled edges; reps = how many times a can's side band goes round
+export const DESIGNS = {
+  halawah: { kind: 'band', skirt: RED, rim: GOLD },
+  bab: { kind: 'box', skirt: '#5a2210', rim: GOLD },           // square gift tin, Beirut clock tower
+  jgz: { kind: 'box', skirt: '#9a5216', rim: GOLD },           // rectangular gift tin, desert village
+  suliman: { kind: 'box', skirt: '#cbbb97', rim: GOLD },       // tall square tea tin
+  levelmax: { kind: 'box', skirt: '#24201d', rim: GOLD },      // square tea caddy, black and gold
+  najmah: { kind: 'octagon', skirt: '#1c1d3a', rim: GOLD, stretch: 1.45 }, // elongated octagonal sweets tin
+  frieds: { kind: 'can', reps: 3, skirt: '#3a1638', rim: SILVER },          // bucket
+  abed: { kind: 'can', reps: 3, skirt: '#9a8a74', rim: SILVER },            // food can with a peel-off end
+  maeen: { kind: 'can', reps: 3, skirt: '#c9ccd2', rim: SILVER, lid: 'abed' }, // milk powder can (closed end borrowed from abed)
+  sufyan: { kind: 'can', reps: 3, skirt: '#2c2a52', rim: GOLD }            // low round sweets tin, navy with a carved door
+};
 
 const IMG = {};
 function img(file) {
@@ -20,54 +37,67 @@ function img(file) {
   }
   return IMG[file];
 }
-const FILES = {
-  lid: ['halawah-lid.jpg', 'halawah-lid-relief.png', 'halawah-lid-spot.png'],
-  side: ['halawah-side.jpg', 'halawah-side-relief.png', 'halawah-side-spot.png']
-};
-const GROUND = [[RED, WHITE], ['#000', '#000'], ['#000', '#000']]; // per layer: [lid ground, band ground]
+const SUFFIX = ['.jpg', '-relief.png', '-spot.png'];
+const file = (key, part, layer) => `${key}-${part}${SUFFIX[layer]}`;
+
+// the parts a surface draws from, per design and surface kind
+function partsFor(design, kind) {
+  const d = DESIGNS[design] || DESIGNS.halawah;
+  const lidKey = d.lid || design;
+  if (d.kind === 'band') return kind === 'lid' || kind === 'top' ? { flat: [design, 'lid'] } : { band: [design, 'side'] };
+  if (d.kind === 'box') return kind === 'lid' || kind === 'top' ? { flat: [design, 'top'] } : { face: [design, 'side'] };
+  /* can, octagon */ return kind === 'lid' || kind === 'top' ? { flat: [lidKey, 'lid'] } : { strip: [design, 'side'] };
+}
 
 // draw one layer (0 colour, 1 relief, 2 spot) of a surface
-function paint(ctx, W, H, kind, layer, reps) {
-  const lidI = img(FILES.lid[layer]).i, sideI = img(FILES.side[layer]).i;
-  if (kind === 'lid' || kind === 'top') {
-    ctx.fillStyle = GROUND[layer][0]; ctx.fillRect(0, 0, W, H);
-    const s = Math.min(W, H);
-    if (lidI.naturalWidth) ctx.drawImage(lidI, (W - s) / 2, (H - s) / 2, s, s);
+function paint(ctx, W, H, P, layer, reps, ground) {
+  ctx.fillStyle = layer ? '#000' : ground; ctx.fillRect(0, 0, W, H);
+  if (P.flat) {
+    const i = img(file(...P.flat, layer)).i; if (!i.naturalWidth) return;
+    if (P.flat[1] === 'lid' && P.flat[0] === 'halawah') { const s = Math.min(W, H); ctx.drawImage(i, (W - s) / 2, (H - s) / 2, s, s); }
+    else ctx.drawImage(i, 0, 0, W, H);                         // a straightened top fills its surface
     return;
   }
-  ctx.fillStyle = GROUND[layer][1]; ctx.fillRect(0, 0, W, H);
-  if (!sideI.naturalWidth) return;
+  if (P.face) { const i = img(file(...P.face, layer)).i; if (i.naturalWidth) ctx.drawImage(i, 0, 0, W, H); return; }
+  if (P.strip) { // a can's band, side by side round the can
+    const i = img(file(...P.strip, layer)).i; if (!i.naturalWidth) return;
+    const tw = W / reps; for (let c = 0; c < reps; c++) ctx.drawImage(i, c * tw, 0, tw + 1, H);
+    return;
+  }
+  const i = img(file(...P.band, layer)).i; if (!i.naturalWidth) return; // the Halawah band, at its own proportion
   const tw = W / reps, rows = Math.max(1, Math.round(H / (tw * BAND))), th = H / rows;
   for (let r = 0; r < rows; r++) {
     const off = rows > 1 && r % 2 ? tw / 2 : 0;
-    for (let c = -1; c <= reps; c++) ctx.drawImage(sideI, c * tw + off, r * th, tw, th);
+    for (let c = -1; c <= reps; c++) ctx.drawImage(i, c * tw + off, r * th, tw, th);
   }
 }
 
 const cache = {};
 // kind: 'lid' (round lid), 'top' (box lid), 'wrap' (around a can) or 'face' (a side of a box)
-// aspect: height / width of the surface; reps: how many band tiles across its width
-export function surface(kind, aspect = 1, reps = 1) {
-  const flat = kind === 'lid' || kind === 'top';
-  const a = Math.max(0.02, aspect), n = flat ? 1 : Math.max(1, Math.round(reps));
-  const key = `${flat ? kind : 'band'}|${a.toFixed(3)}|${n}`;
+// aspect: height / width of the surface; reps: band tiles across its width (Halawah) or faces round a polygon
+export function surface(kind, aspect = 1, reps = 1, design = 'halawah') {
+  const d = DESIGNS[design] ? design : 'halawah', D = DESIGNS[d], P = partsFor(d, kind);
+  const flat = !!P.flat;
+  const a = Math.max(0.02, aspect);
+  const n = flat || P.face ? 1 : Math.max(1, Math.round(D.kind === 'can' ? D.reps : reps));
+  const key = `${d}|${kind}|${a.toFixed(3)}|${n}`;
   if (cache[key]) return cache[key];
   let W, H;
-  if (flat) { W = 1024; H = Math.max(64, Math.round(1024 * a)); if (H > 1024) { W = Math.round(1024 / a); H = 1024; } }
+  if (flat || P.face) { W = 1024; H = Math.max(64, Math.round(1024 * a)); if (H > 1024) { W = Math.max(64, Math.round(1024 / a)); H = 1024; } }
   else { W = Math.min(4096, Math.max(1024, n * 512)); H = Math.min(4096, Math.max(96, Math.round(W * a))); }
+  const ground = d === 'halawah' ? (flat ? RED : WHITE) : D.skirt;
   const out = { photo: true };
   const layers = [0, 1, 2].map((layer) => {
     const c = document.createElement('canvas'); c.width = W; c.height = H;
     const t = new THREE.CanvasTexture(c);
     if (layer === 0) t.colorSpace = THREE.SRGBColorSpace;
     t.anisotropy = 8;
-    const draw = () => { paint(c.getContext('2d'), W, H, kind, layer, n); t.needsUpdate = true; };
+    const draw = () => { paint(c.getContext('2d'), W, H, P, layer, n, ground); t.needsUpdate = true; };
     draw();
-    return { c, t, draw, files: [img(FILES.lid[layer]).ready, img(FILES.side[layer]).ready] };
+    const src = P.flat || P.face || P.strip || P.band;
+    return { c, t, draw, ready: img(file(...src, layer)).ready };
   });
   out.map = layers[0].t; out.relief = layers[1].t; out.spot = layers[2].t; out.canvas = layers[0].c;
-  out.ready = Promise.all(layers.map((l) => Promise.all(l.files).then(l.draw)));
+  out.ready = Promise.all(layers.map((l) => l.ready.then(l.draw)));
   return (cache[key] = out);
 }
-// start the downloads early (the loader runs while they arrive)
-export function preload() { Object.values(FILES).flat().forEach(img); }
