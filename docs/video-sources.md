@@ -12,6 +12,7 @@ Status: videos received as links on 2026-10-21 (round 3, `docs/decisions.md` ite
 |---|---|---|---|---|---|
 | **Video A** | YouTube | https://youtu.be/xozO8TLl6T8 | to be confirmed | to be confirmed | Provided by management |
 | **Video B** | YouTube | https://youtu.be/CQW1UaWpC2k | to be confirmed | to be confirmed | Provided by management |
+| **Video C** | YouTube | https://youtu.be/k4PUPiPHXVw | to be confirmed | to be confirmed | Provided by management (2026-10-22); on the website as "Factory video 3" |
 | **FB long videos** | Facebook (the company page) | the company Facebook page (no individual links yet) | to be confirmed | to be confirmed | Management said the page holds long videos. Individual video links are needed |
 
 Earlier decision 11 spoke of 4 to 5 professional videos of the lines and samples. It is not yet known whether A, B and the Facebook videos are those 4 to 5 videos or a subset; the team should say.

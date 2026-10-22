@@ -265,7 +265,8 @@ export const CERTS = {
 // Labels are neutral on purpose (nobody on the build side has watched the videos, so no titles are invented). Replace them with real titles when management gives them.
 export const VIDEOS = [
   { id: 'xozO8TLl6T8', label: t('Factory video 1', 'فيديو المصنع 1') },
-  { id: 'CQW1UaWpC2k', label: t('Factory video 2', 'فيديو المصنع 2') }
+  { id: 'CQW1UaWpC2k', label: t('Factory video 2', 'فيديو المصنع 2') },
+  { id: 'k4PUPiPHXVw', label: t('Factory video 3', 'فيديو المصنع 3') }
 ];
 
 // PHOTOS: empty until management sends photographs. While the list is empty NOTHING is rendered for photos (no section, no placeholder).
