@@ -56,13 +56,14 @@ function partsFor(design, kind) {
 }
 
 // draw one layer (0 colour, 1 relief, 2 spot) of a surface
-function paint(ctx, W, H, P, layer, reps, ground) {
+function paint(ctx, W, H, P, layer, reps, ground, kind) {
   ctx.fillStyle = layer ? '#000' : ground; ctx.fillRect(0, 0, W, H);
   if (P.plain) return;
   if (P.flat) {
     const i = img(file(...P.flat, layer)).i; if (!i.naturalWidth) return;
     if (P.flat[1] === 'lid' && P.flat[0] === 'halawah') { const s = Math.min(W, H); ctx.drawImage(i, (W - s) / 2, (H - s) / 2, s, s); }
-    else ctx.drawImage(i, 0, 0, W, H);                         // a straightened top fills its surface
+    else if (P.flat[1] === 'top' && kind === 'top') { ctx.save(); ctx.translate(W, H); ctx.rotate(Math.PI); ctx.drawImage(i, 0, 0, W, H); ctx.restore(); } // a box lid's top face is mapped back to front: turn the art to read from the front
+    else ctx.drawImage(i, 0, 0, W, H);
     return;
   }
   if (P.face) { const i = img(file(...P.face, layer)).i; if (i.naturalWidth) ctx.drawImage(i, 0, 0, W, H); return; }
@@ -99,7 +100,7 @@ export function surface(kind, aspect = 1, reps = 1, design = 'halawah') {
     const t = new THREE.CanvasTexture(c);
     if (layer === 0) t.colorSpace = THREE.SRGBColorSpace;
     t.anisotropy = 8;
-    const draw = () => { paint(c.getContext('2d'), W, H, P, layer, n, ground); t.needsUpdate = true; };
+    const draw = () => { paint(c.getContext('2d'), W, H, P, layer, n, ground, kind); t.needsUpdate = true; };
     draw();
     const src = P.flat || P.face || P.strip || P.band;
     return { c, t, draw, ready: src ? img(file(...src, layer)).ready : Promise.resolve() };

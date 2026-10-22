@@ -157,7 +157,10 @@ export function createScene(canvas) {
   // lower edge; box corners are rounded at 3.5 mm. Sizes come from the factory catalogue (catalog-data.js) where a tin matches one.
   const STUDIO = { lidGapMm: 0.5, beadMm: 2.5, cornerMm: 3.5 };
   const lidSkirtMm = (hMm, wMm) => Math.min(hMm * 0.69, 9.9 * Math.min(1, wMm / 70));
-  const BEAD_R = (STUDIO.beadMm * 0.85 * 1.15) / 2;  // tube radius of the bead, mm
+  // tube radius of the bead, mm: the studio's 2.5 mm bead drawn with its dark outline (+1.2 px) reads about 3.2 mm across
+  const BEAD_R = 1.6;
+  // the bead is bright silver tinplate (the studio's default finish 'silver', base #CBD5E1)
+  const beadMat = () => metalMat('#dfe5ee', 0.18);
   function roundRectRing(hw, hd, r, tube, mat) { // a bead along a rounded rectangle (box lids)
     const sh = new THREE.Shape(), x0 = -hw, x1 = hw, z0 = -hd, z1 = hd;
     sh.moveTo(x0 + r, z0); sh.lineTo(x1 - r, z0); sh.quadraticCurveTo(x1, z0, x1, z0 + r); sh.lineTo(x1, z1 - r); sh.quadraticCurveTo(x1, z1, x1 - r, z1);
@@ -172,7 +175,7 @@ export function createScene(canvas) {
     const g = new THREE.Group(); g.position.y = H / 2;                      // the lid's top is flush with the top of the body
     const skirt = new THREE.Mesh(new THREE.CylinderGeometry(LR, LR, SK, 96, 1, true), lidSide); skirt.position.y = -SK / 2;
     const top = new THREE.Mesh(new THREE.CircleGeometry(LR, 64), lidTop); top.rotation.x = -Math.PI / 2; top.position.y = 0.002;
-    const bead = new THREE.Mesh(new THREE.TorusGeometry(LR + 0.4 / u, BEAD_R / u, 12, 96), theme === 'halawah' ? lacquerMat(skirtOf(theme, cw)) : theme === 'brand' ? metalMat(ART.COLORWAYS[cw].foil[2], 0.26) : metal);
+    const bead = new THREE.Mesh(new THREE.TorusGeometry(LR + 0.8 / u, BEAD_R / u, 12, 96), beadMat());
     bead.rotation.x = Math.PI / 2; bead.position.y = -SK;
     g.add(skirt, top, bead); g.userData.print = [lidTop];
     return g;
@@ -192,7 +195,8 @@ export function createScene(canvas) {
       const seam = new THREE.Mesh(new THREE.TorusGeometry(R, 0.045 * k, 12, 96), metal); seam.rotation.x = Math.PI / 2;
       lid.add(end, seam); lid.userData.print = [endMat];
     } else lid = lidParts(R, H, theme, cw, metal, k, u);
-    group.add(body, rim, bottom, lid); print.push(...lid.userData.print);
+    group.add(body, bottom, lid); if (seamed) group.add(rim); // only a seamed can shows a seam at its foot
+    print.push(...lid.userData.print);
     return { group, print, parts: { body, bottom, lid }, ext: { h: H + 0.05 * k, w: 2 * (R + 0.06 * k) }, lean: H / (2 * R) > 0.9 ? 0.16 : 0.3 };
   }
   // Square / rectangular gift box with a lid that overhangs the body a little (sizes in mm, see docs/data/can-sizes.json: lid 160, body 152 ...).
@@ -207,7 +211,7 @@ export function createScene(canvas) {
     const topPrint = printMat(layersFor('top', theme, cw, D / W));
     const lid = new THREE.Mesh(new RoundedBoxGeometry(W + 2 * G, LH, D + 2 * G, 4, CR + G), [lidSide, lidSide, topPrint, lidSide, lidSide, lidSide]);
     lid.position.y = Hh / 2 - LH / 2;                                       // flush with the top of the body
-    const bead = roundRectRing(W / 2 + G + 0.4 * MM, D / 2 + G + 0.4 * MM, CR + G, BEAD_R * MM, theme === 'brand' ? metalMat(ART.COLORWAYS[cw].foil[2], 0.26) : metal);
+    const bead = roundRectRing(W / 2 + G + 0.8 * MM, D / 2 + G + 0.8 * MM, CR + G, BEAD_R * MM, beadMat());
     bead.position.y = Hh / 2 - LH;
     group.add(body, lid, bead);
     return { group, print: [front, side, topPrint], parts: { body, lid, bottom: body }, ext: { h: Hh, w: Math.hypot(W, D) * 0.68 }, lean: Hh / Math.max(W, D) < 0.4 ? 0.5 : 0.18 };
@@ -270,17 +274,16 @@ export function createScene(canvas) {
     let bg = new THREE.CylinderGeometry(R, Rb, bodyH, sides, 1, true); if (!round) bg = facet(bg);
     const body = new THREE.Mesh(bg, bodyMat); body.rotation.y = phi; body.position.y = -H / 2 + bodyH / 2;
     const bottom = new THREE.Mesh(new THREE.CircleGeometry(Rb, sides, Math.PI / 2 - phi), metal); bottom.rotation.x = Math.PI / 2; bottom.position.y = -H / 2;
-    const foot = edgeRing(Rb, sides, 0.03, metal, phi); foot.position.y = -H / 2;
     // lid: skirt + printed top + rolled lip
     const lid = new THREE.Group(); lid.position.y = H / 2;
     let sg = new THREE.CylinderGeometry(LR, LR, skirtH, sides, 1, true); if (!round) sg = facet(sg);
     const skirt = new THREE.Mesh(sg, skirtMat); skirt.rotation.y = phi; skirt.position.y = -skirtH / 2;
     const tg = new THREE.CircleGeometry(LR, sides, phi - Math.PI / 2);
     const top = new THREE.Mesh(tg, topMat); top.rotation.x = -Math.PI / 2;
-    const bead = edgeRing(LR + 0.4 / u, sides, BEAD_R / u, photo ? lacquerMat(skirtOf(theme, cw)) : (theme === 'brand' ? metalMat(ART.COLORWAYS[cw].foil[2], 0.26) : metal), phi);
+    const bead = edgeRing(LR + 0.8 / u, sides, BEAD_R / u, beadMat(), phi);
     bead.position.y = -skirtH;                                    // the curled bead rolls round the skirt's lower edge
     lid.add(skirt, top, bead);
-    group.add(body, bottom, foot, lid);
+    group.add(body, bottom, lid); // no ring at the foot: the studio's base flange bead is off
     let h = H + 0.03;
     if (bucket) { // wire bail on two ears, resting folded back
       const wire = metalMat('#b8c0cc', 0.25);
