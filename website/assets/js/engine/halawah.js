@@ -25,7 +25,10 @@ export const DESIGNS = {
   frieds: { kind: 'can', reps: 3, skirt: '#3a1638', rim: SILVER },          // bucket
   abed: { kind: 'can', reps: 3, skirt: '#9a8a74', rim: SILVER },            // food can with a peel-off end
   maeen: { kind: 'can', reps: 3, skirt: '#c9ccd2', rim: SILVER, lid: 'abed' }, // milk powder can (closed end borrowed from abed)
-  sufyan: { kind: 'can', reps: 3, skirt: '#2c2a52', rim: GOLD }            // low round sweets tin, navy with a carved door
+  sufyan: { kind: 'can', reps: 3, skirt: '#2c2a52', rim: GOLD },           // low round sweets tin, navy with a carved door
+  laqmi: { kind: 'can', reps: 3, skirt: '#1f6b3a', rim: SILVER },           // round can with a green slip lid (cheese & halawa can)
+  // shapes the factory makes but with no photographed tin yet: shown as plain, unprinted tinplate (no artwork is implied)
+  plain: { kind: 'plain', skirt: '#c4cad3', rim: SILVER }
 };
 
 const IMG = {};
@@ -44,6 +47,7 @@ const file = (key, part, layer) => `${key}-${part}${SUFFIX[layer]}`;
 function partsFor(design, kind) {
   const d = DESIGNS[design] || DESIGNS.halawah;
   const lidKey = d.lid || design;
+  if (d.kind === 'plain') return { plain: true };
   if (d.kind === 'band') return kind === 'lid' || kind === 'top' ? { flat: [design, 'lid'] } : { band: [design, 'side'] };
   if (d.kind === 'box') return kind === 'lid' || kind === 'top' ? { flat: [design, 'top'] } : { face: [design, 'side'] };
   /* can, octagon */ return kind === 'lid' || kind === 'top' ? { flat: [lidKey, 'lid'] } : { strip: [design, 'side'] };
@@ -52,6 +56,7 @@ function partsFor(design, kind) {
 // draw one layer (0 colour, 1 relief, 2 spot) of a surface
 function paint(ctx, W, H, P, layer, reps, ground) {
   ctx.fillStyle = layer ? '#000' : ground; ctx.fillRect(0, 0, W, H);
+  if (P.plain) return;
   if (P.flat) {
     const i = img(file(...P.flat, layer)).i; if (!i.naturalWidth) return;
     if (P.flat[1] === 'lid' && P.flat[0] === 'halawah') { const s = Math.min(W, H); ctx.drawImage(i, (W - s) / 2, (H - s) / 2, s, s); }
@@ -77,7 +82,7 @@ const cache = {};
 // aspect: height / width of the surface; reps: band tiles across its width (Halawah) or faces round a polygon
 export function surface(kind, aspect = 1, reps = 1, design = 'halawah') {
   const d = DESIGNS[design] ? design : 'halawah', D = DESIGNS[d], P = partsFor(d, kind);
-  const flat = !!P.flat;
+  const flat = !!P.flat || !!P.plain;
   const a = Math.max(0.02, aspect);
   const n = flat || P.face ? 1 : Math.max(1, Math.round(D.kind === 'can' ? D.reps : reps));
   const key = `${d}|${kind}|${a.toFixed(3)}|${n}`;
@@ -86,7 +91,7 @@ export function surface(kind, aspect = 1, reps = 1, design = 'halawah') {
   if (flat || P.face) { W = 1024; H = Math.max(64, Math.round(1024 * a)); if (H > 1024) { W = Math.max(64, Math.round(1024 / a)); H = 1024; } }
   else { W = Math.min(4096, Math.max(1024, n * 512)); H = Math.min(4096, Math.max(96, Math.round(W * a))); }
   const ground = d === 'halawah' ? (flat ? RED : WHITE) : D.skirt;
-  const out = { photo: true };
+  const out = { photo: true, metal: D.kind === 'plain' };
   const layers = [0, 1, 2].map((layer) => {
     const c = document.createElement('canvas'); c.width = W; c.height = H;
     const t = new THREE.CanvasTexture(c);
@@ -95,7 +100,7 @@ export function surface(kind, aspect = 1, reps = 1, design = 'halawah') {
     const draw = () => { paint(c.getContext('2d'), W, H, P, layer, n, ground); t.needsUpdate = true; };
     draw();
     const src = P.flat || P.face || P.strip || P.band;
-    return { c, t, draw, ready: img(file(...src, layer)).ready };
+    return { c, t, draw, ready: src ? img(file(...src, layer)).ready : Promise.resolve() };
   });
   out.map = layers[0].t; out.relief = layers[1].t; out.spot = layers[2].t; out.canvas = layers[0].c;
   out.ready = Promise.all(layers.map((l) => l.ready.then(l.draw)));

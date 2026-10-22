@@ -43,8 +43,16 @@ export const LOGO = { H, V };
 
 // One hidden <svg> per page: <use href="#lg-gear"> and <use href="#lg-word"> (English + Arabic lines, laid out as in the horizontal logo).
 // No fill is set here, so the logo takes the CSS colour (currentColor): Pantone navy in light mode, white in dark mode and on navy sections.
-export const logoSprite = () => `<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs><path id="lg-gear" d="${H.gear}"/><path id="lg-word" d="${H.word}${H.arabic}"/></defs></svg>`;
-export const logoSvg = (cls = 'logo') => `<svg class="${cls}" viewBox="${H.viewBox.join(' ')}" aria-hidden="true" focusable="false"><use class="logo__gear" href="#lg-gear"/><use href="#lg-word"/></svg>`;
+// The gear mark split in two: the toothed ring (it turns in the header's hover animation) and the JC letters inside it (they stay still).
+// A sub-path belongs to the letters when it starts near the centre of the gear (the ring's sub-paths all start on its outer band).
+const GEAR_C = [137, 138];
+const gearParts = (() => {
+  const subs = H.gear.split(/(?=M)/), ring = [], jc = [];
+  subs.forEach((d) => { const m = d.match(/^M\s*(-?[\d.]+)[ ,]+(-?[\d.]+)/); const r = m ? Math.hypot(+m[1] - GEAR_C[0], +m[2] - GEAR_C[1]) : 999; (r < 85 ? jc : ring).push(d); });
+  return { ring: ring.join(''), jc: jc.join('') };
+})();
+export const logoSprite = () => `<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs><path id="lg-gear" d="${H.gear}"/><path id="lg-ring" d="${gearParts.ring}"/><path id="lg-jc" d="${gearParts.jc}"/><path id="lg-word" d="${H.word}${H.arabic}"/></defs></svg>`;
+export const logoSvg = (cls = 'logo') => `<svg class="${cls}" viewBox="${H.viewBox.join(' ')}" aria-hidden="true" focusable="false"><use class="logo__gear" href="#lg-ring"/><use href="#lg-jc"/><use href="#lg-word"/></svg>`;
 // Standalone, fully self-contained version (used by the OG card and the favicon)
 export const logoStandalone = (fill) => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${H.viewBox.join(' ')}" fill="${fill}"><path d="${H.gear}"/><path d="${H.word}${H.arabic}"/></svg>`;
 

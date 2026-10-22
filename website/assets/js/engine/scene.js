@@ -7,7 +7,7 @@ import * as HAL from './halawah.js';
 
 const TAU = Math.PI * 2;
 // Which real tin (assets/img/tins, see halawah.js) dresses which shape. Shapes not listed wear the Halawah design.
-const DESIGN_FOR = { square: 'bab', box70: 'bab', rect: 'jgz', octagon: 'najmah', bucket: 'frieds', can: 'abed', milk: 'maeen', tuna: 'sufyan', tall: 'suliman', coffee: 'levelmax' };
+const DESIGN_FOR = { round: 'halawah', square: 'bab', box70: 'bab', rect: 'jgz', octagon: 'najmah', bucket: 'frieds', can: 'abed', milk: 'maeen', tuna: 'sufyan', tall: 'suliman', coffee: 'levelmax', cheese: 'laqmi', hexagon: 'plain', oval: 'plain', paint: 'plain' };
 let DESIGN = 'halawah'; // the design of the tin being built (set by mountModel)
 const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
 const sstep = (a, b, x) => { const t = clamp((x - a) / (b - a)); return t * t * (3 - 2 * t); };
@@ -107,7 +107,7 @@ export function createScene(canvas) {
   function printMat(L, side = THREE.FrontSide) {
     if (L && L.photo) {
       const m = new THREE.MeshPhysicalMaterial({ map: L.map, metalness: 0.12, roughness: 0.3, clearcoat: 1, clearcoatRoughness: 0.06, side, bumpMap: L.relief, bumpScale: 0.6 });
-      m.color.setScalar(0.8); m.userData.photo = L; m.userData.envBase = 0.35; envMats.add(m); return m;
+      m.color.setScalar(L.metal ? 1 : 0.8); m.userData.photo = L; m.userData.envBase = L.metal ? 1 : 0.35; envMats.add(m); return m;
     }
     const layered = !!(L && L.orm);
     const m = new THREE.MeshPhysicalMaterial({ map: layered ? L.map : L, metalness: 0.55, roughness: 0.2, clearcoat: 1, clearcoatRoughness: 0.08, side });
@@ -126,7 +126,7 @@ export function createScene(canvas) {
     // spot varnish: the clear coat only where the artwork is (the motif mask on a photo tin, the foil / relief on a printed one)
     const cm = f.spot ? (P ? P.spot : (L ? ART.reliefMap(L, 'plain') : null)) : null;
     if (m.clearcoatMap !== cm) { m.clearcoatMap = cm; m.needsUpdate = true; }
-    const to = { metalness: f.metalness, roughness: f.roughness, clearcoat: f.clearcoat, clearcoatRoughness: f.clearcoatRoughness, sheen: f.sheen, bumpScale: (L || P) ? f.bumpScale : 0 };
+    const to = { metalness: P && P.metal ? 0.92 : f.metalness, roughness: P && P.metal ? Math.min(0.6, f.roughness * 0.7) : f.roughness, clearcoat: f.clearcoat, clearcoatRoughness: f.clearcoatRoughness, sheen: f.sheen, bumpScale: (L || P) ? f.bumpScale : 0 };
     if (instant) Object.assign(m, to); else gsap.to(m, { ...to, duration: 0.7, ease: 'power2.out' });
   }
   const accentOf = (theme, cw) => theme === 'halawah' ? HAL.DESIGNS[DESIGN].rim : theme === 'brand' ? ART.COLORWAYS[cw].foil[2] : ACCENT[theme];
@@ -153,16 +153,23 @@ export function createScene(canvas) {
     g.add(skirt, top, lip); g.userData.print = [lidTop];
     return g;
   }
-  function buildRound({ R = 1, H = 1.5, theme, cw, k = R }) {
+  function buildRound({ R = 1, H = 1.5, theme, cw, k = R, seamed = false }) {
     const group = new THREE.Group(), print = [];
     const metal = rimMetalOf(theme, cw);
     const bodyMat = printMat(layersFor('wrap', theme, cw, H / (TAU * R), TAU * R)); print.push(bodyMat);
     const body = new THREE.Mesh(new THREE.CylinderGeometry(R, R, H, 96, 1, true), bodyMat); body.rotation.y = -Math.PI / 2;
     const rim = new THREE.Mesh(new THREE.TorusGeometry(R, 0.035 * k, 12, 96), metal); rim.rotation.x = Math.PI / 2; rim.position.y = -H / 2;
     const bottom = new THREE.Mesh(new THREE.CircleGeometry(R, 64), metal); bottom.rotation.x = Math.PI / 2; bottom.position.y = -H / 2;
-    const lid = lidParts(R, H, theme, cw, metal, k);
+    let lid;
+    if (seamed) { // the real can has its end seamed on (a peel-off end), not a slip lid: a printed end just below a rolled double seam
+      lid = new THREE.Group(); lid.position.y = H / 2;
+      const endMat = printMat(layersFor('lid', theme, cw));
+      const end = new THREE.Mesh(new THREE.CircleGeometry(R, 64), endMat); end.rotation.x = -Math.PI / 2; end.position.y = -0.03 * k;
+      const seam = new THREE.Mesh(new THREE.TorusGeometry(R, 0.045 * k, 12, 96), metal); seam.rotation.x = Math.PI / 2;
+      lid.add(end, seam); lid.userData.print = [endMat];
+    } else lid = lidParts(R, H, theme, cw, metal, k);
     group.add(body, rim, bottom, lid); print.push(...lid.userData.print);
-    return { group, print, parts: { body, bottom, lid }, ext: { h: H + 0.2 * k, w: 2 * (R + 0.06 * k) } };
+    return { group, print, parts: { body, bottom, lid }, ext: { h: H + (seamed ? 0.05 : 0.2) * k, w: 2 * (R + 0.06 * k) } };
   }
   // Square / rectangular gift box with a lid that overhangs the body a little (sizes in mm, see docs/data/can-sizes.json: lid 160, body 152 ...).
   function buildGiftBox({ w, d, h, lidH, ins = 3, theme, cw }) {
@@ -226,10 +233,10 @@ export function createScene(canvas) {
     for (let i = 0; i < n; i++) path.add(new THREE.LineCurve3(pt(i), pt(i + 1)));
     return new THREE.Mesh(new THREE.TubeGeometry(path, n * 6, r, 8, true), mat);
   }
-  function buildTin({ sides = 96, R = 1, H = 0.44, skirtH = 0.16, taper = 1, bucket = false, vertexFront = false, stretch = 1, theme, cw }) {
+  function buildTin({ sides = 96, R = 1, H = 0.44, skirtH = 0.16, taper = 1, bucket = false, vertexFront = false, stretch = 1, lidR = 0, theme, cw }) {
     const photo = theme === 'halawah', round = sides > 24, group = new THREE.Group();
     const phi = round ? -Math.PI / 2 : vertexFront ? 0 : -Math.PI / sides;        // a flat face (not a corner) looks at the visitor
-    const Rb = R * taper, LR = R + 0.045, bodyTop = H / 2 - skirtH * 0.75, bodyH = bodyTop + H / 2;
+    const Rb = R * taper, LR = lidR ? R * lidR : R + 0.045, bodyTop = H / 2 - skirtH * 0.75, bodyH = bodyTop + H / 2;
     const rep = round ? 8 : sides;                               // side band: one motif group per face on polygons
     const bodyL = layersFor('wrap', theme, cw, bodyH / (TAU * R), TAU * R, photo ? rep : 0);
     const lidL = layersFor('lid', theme, cw);
@@ -259,9 +266,24 @@ export function createScene(canvas) {
     }
     // low tins lean towards the visitor a little more, so the printed lid reads
     if (stretch !== 1) group.scale.x = stretch;   // an elongated tin (the octagonal sweets tin)
-    return { group, print: [bodyMat, topMat], parts: { body, bottom, lid }, ext: { h, w: 2 * LR * stretch }, lean: H < 0.6 ? 0.36 : 0 };
+    return { group, print: [bodyMat, topMat], parts: { body, bottom, lid }, ext: { h, w: 2 * LR * stretch }, lean: H <= 0.6 ? 0.36 : 0 };
   }
   const gift = (o) => (t, c) => buildGiftBox({ ...o, theme: t, cw: c });
+  // Real tins, each at the proportions measured on its photograph (camera focal length from EXIF + the corners of the lid), with its own
+  // kind of lid. Nothing is added that the real tin does not have (the bucket has no wire handle; the food and milk cans have seamed ends).
+  const REAL = {
+    halawah: (t, c) => buildTin({ H: 0.44, skirtH: 0.16, theme: t, cw: c }),                                  // round, H/D 0.22, slip lid
+    sufyan: (t, c) => buildTin({ H: 0.38, skirtH: 0.15, theme: t, cw: c }),                                   // round, H/D 0.19, slip lid
+    najmah: (t, c) => buildTin({ sides: 8, H: 0.6, skirtH: 0.24, vertexFront: true, stretch: 1.87, theme: t, cw: c }), // octagon, length 1.87 x depth
+    frieds: (t, c) => buildTin({ R: 1, H: 1.62, taper: 0.77, skirtH: 0.22, lidR: 1.2, theme: t, cw: c }),      // bucket, H/D 0.81, bottom 0.77 of top, lid wider than the body
+    abed: (t, c) => buildRound({ R: 1, H: 2.5, seamed: true, theme: t, cw: c }),                               // food can, H/D 1.25, peel-off end
+    maeen: (t, c) => buildRound({ R: 1, H: 2.28, seamed: true, theme: t, cw: c }),                             // milk powder can, H/D 1.14
+    laqmi: (t, c) => buildRound({ R: 1, H: 2.36, theme: t, cw: c }),                                          // round can with a slip lid, H/D 1.18
+    bab: gift({ w: 160, d: 160, h: 35, lidH: 16, ins: 3 }),                                                    // square box, H/W 0.22
+    jgz: gift({ w: 175, d: 107, h: 33, lidH: 15, ins: 3 }),                                                    // rectangular box, D/W 0.61, H/W 0.19
+    suliman: gift({ w: 70, d: 60, h: 88, lidH: 17, ins: 2 }),                                                  // tall tea tin, D/W 0.85, H/W 1.26
+    levelmax: gift({ w: 110, d: 67, h: 98, lidH: 24, ins: 2.5 })                                               // tea caddy, D/W 0.61, H/W 0.89
+  };
   const can = (dia, h) => (t, c) => buildRound({ R: (dia / 2) * MM, H: h * MM, theme: t, cw: c });
   const oil = (w, d, h, pow = 0.5) => (t, c) => { const m = buildOil({ theme: t, cw: c, w, d, h }); m.pow = pow; return m; };
   const SHAPES = {
@@ -364,7 +386,7 @@ export function createScene(canvas) {
       // every tin wears the Halawah artwork except the olive-oil tins, which keep their own printed design
       const theme = S.theme === 'halawah' && S.shape.startsWith('oil') ? 'olive' : S.theme;
       DESIGN = theme === 'halawah' ? DESIGN_FOR[S.shape] || 'halawah' : 'halawah';
-      model = SHAPES[S.shape](theme, S.cw);
+      model = (theme === 'halawah' && REAL[DESIGN] ? REAL[DESIGN] : SHAPES[S.shape])(theme, S.cw);
       DESIGN = 'halawah';
       // bring very different tins (flat tuna can, tall box, big oil tin) to a similar size on the stage; pow < 1 keeps some of the size difference (olive-oil sizes)
       const ext = model.ext || { h: 2, w: 2 };

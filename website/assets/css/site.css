@@ -482,7 +482,8 @@ html[lang="ar"] .cert figcaption b { letter-spacing: 0; line-height: 1.5; font-w
 }
 .vid__play { position: absolute; inset: 0; display: grid; place-items: center; color: #fff; }
 .vid__gear { position: absolute; inset-inline-end: -6%; bottom: -16%; height: 92%; width: auto; aspect-ratio: 274 / 275.9; fill: #fff; opacity: .09; pointer-events: none; transition: transform 1.2s var(--ease); }
-.vid__play:hover .vid__gear { transform: rotate(40deg); }
+.vid__ring { transform-box: fill-box; transform-origin: 50% 50%; transition: transform 1.2s var(--ease); }
+.vid__play:hover .vid__ring { transform: rotate(40deg); } /* only the ring turns; the JC letters stay still */
 .vid__poster { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 1; transition: opacity .5s; }
 html.js .vid__poster { opacity: 0; } html.js .vid.has-poster .vid__poster { opacity: 1; } html.js .vid.is-fallback .vid__poster { display: none; }
 .vid.has-poster::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0, 19, 45, 0) 45%, rgba(0, 19, 45, .55)); pointer-events: none; }

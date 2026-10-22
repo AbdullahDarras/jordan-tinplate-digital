@@ -141,7 +141,7 @@ function facade(lang, id, label) {
   const name = T(label, lang);
   return `<div class="vid" data-vid="${id}" data-title="${name}">
       <a class="vid__play" href="${YT(id)}" target="_blank" rel="noopener noreferrer" aria-label="${T(UI.playVideo, lang)}: ${name}">
-        <svg class="vid__gear" viewBox="0 0 274 275.9" aria-hidden="true" focusable="false"><use href="#lg-gear"/></svg>
+        <svg class="vid__gear" viewBox="0 0 274 275.9" aria-hidden="true" focusable="false"><use class="vid__ring" href="#lg-ring"/><use href="#lg-jc"/></svg>
         <img class="vid__poster" src="https://i.ytimg.com/vi/${id}/hqdefault.jpg" alt="" width="480" height="360" loading="lazy" decoding="async" referrerpolicy="no-referrer">
         <span class="vid__btn">${PLAY}</span>
       </a>

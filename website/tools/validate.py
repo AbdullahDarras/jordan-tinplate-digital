@@ -337,7 +337,9 @@ if (ROOT / "assets/js/site.js").read_text().count("review") or "body.review" in 
 for f in site_pages:
     src = f.read_text(encoding="utf-8"); n = "/" + str(f.relative_to(ROOT))
     if src.count('id="lg-gear"') != 1 or src.count('id="lg-word"') != 1: err(f"{n}: logo sprite must be defined once")
-    if len(re.findall(r'<svg class="logo"[^>]*>\s*<use class="logo__gear" href="#lg-gear"/>\s*<use href="#lg-word"/>', src)) < 2: err(f"{n}: logo missing from header and footer")
+    if src.count('id="lg-ring"') != 1 or src.count('id="lg-jc"') != 1: err(f"{n}: logo sprite must define the gear ring and the JC letters once")
+    # the header and footer logo: only the gear ring turns on hover; the JC letters and the wordmark stay still
+    if len(re.findall(r'<svg class="logo"[^>]*>\s*<use class="logo__gear" href="#lg-ring"/>\s*<use href="#lg-jc"/>\s*<use href="#lg-word"/>', src)) < 2: err(f"{n}: logo missing from header and footer")
     if 'class="brand__mark"' in src or "brand__word" in src: err(f"{n}: old temporary brand mark still present")
     for m in re.finditer(r'<a class="brand"[^>]*aria-label="([^"]+)"', src):
         if "Jordan Tinplate Canning" not in m.group(1) and NAME_AR not in m.group(1): err(f"{n}: brand link name {m.group(1)!r} lacks the official name")

@@ -183,7 +183,7 @@ const SHAPE_ITEMS = [
   { id: 'square', label: t('Square', 'مربعة'), name: t('Square tin', 'علبة مربعة'), dim: t('120–240 mm sides · H 40–100 mm', 'ضلع 120–240 مم · ارتفاع 40–100 مم'), note: t('Five standard sizes, from about 100 g to 1 kg.', 'خمسة مقاسات قياسية، من نحو 100 غ إلى 1 كغ.') },
   { id: 'rect', label: t('Rectangular', 'مستطيلة'), name: t('Rectangular tin', 'علبة مستطيلة'), dim: t('Sizes on request', 'المقاسات عند الطلب'), note: t('Made to your specification.', 'تُصنَّع وفق مواصفاتك.') },
   { id: 'oval', label: t('Oval', 'بيضاوية'), name: t('Oval tin', 'علبة بيضاوية'), dim: t('Ø 300 mm · H 40–100 mm', 'قطر 300 مم · ارتفاع 40–100 مم'), note: t('A special-mold shape for presentation packs.', 'شكل بقالب خاص لعلب التقديم.') },
-  { id: 'bucket', label: t('Bucket', 'سطل'), name: t('Tin bucket', 'سطل معدني'), dim: t('Sizes on request', 'المقاسات عند الطلب'), note: t('A bucket with a lid and a wire handle.', 'سطل بغطاء ويد معدنية.') },
+  { id: 'bucket', label: t('Bucket', 'سطل'), name: t('Tin bucket', 'سطل معدني'), dim: t('Sizes on request', 'المقاسات عند الطلب'), note: t('A tapered bucket with a wide press-on lid.', 'سطل مخروطي بغطاء عريض يُضغط على الفوهة.') },
   { id: 'oil', label: t('Oil tin', 'تنكة زيت'), name: t('Olive-oil tin', 'تنكة زيت الزيتون'), dim: t('1, 4, 8 and 16 L/kg', '1 و4 و8 و16 لتر/كغ'), note: t('Produced in all four sizes. The 3D view is illustrative.', 'تُنتَج بالأحجام الأربعة كلها. والمجسّم توضيحي.') },
   { id: 'can', label: t('Food can', 'علبة أغذية'), name: t('Food can', 'علبة أغذية'), dim: t('Standard food can', 'علبة معلبات قياسية'), note: t('The everyday can for vegetables, legumes and ready meals.', 'العلبة اليومية للخضار والبقوليات والوجبات الجاهزة.') },
   { id: 'cheese', label: t('Cheese & halawa', 'جبنة وحلاوة'), name: t('Cheese and halawa can', 'علبة جبنة وحلاوة'), dim: t('Wide and sturdy', 'عريضة ومتينة'), note: t('For white cheese, halawa and spreads.', 'للجبنة البيضاء والحلاوة والمعجنات القابلة للدهن.') },
@@ -196,7 +196,7 @@ export const SHAPES_LAB = {
   aria: t('3D tin shapes', 'أشكال العلب بثلاثية الأبعاد'),
   chipsAria: t('Shapes', 'الأشكال'),
   items: SHAPE_ITEMS,
-  fine: t('3D views show our standard tins and boxes in true proportion; the artwork is a sample. Custom sizes are available on request.', 'المجسّمات ثلاثية الأبعاد تعرض علبنا وصناديقنا القياسية بنسبها الحقيقية، والتصميم المعروض نموذج توضيحي. والمقاسات الخاصة متاحة عند الطلب.')
+  fine: t('Each 3D tin is a tin we have made, at its real proportions and with its real lid. Shapes shown in plain tinplate are made to order. Custom sizes are available on request.', 'كل علبة ثلاثية الأبعاد هنا علبة صنعناها فعلاً، بنسبها الحقيقية وغطائها الحقيقي. والأشكال المعروضة بصفيح سادة تُصنَّع حسب الطلب. والمقاسات الخاصة متاحة عند الطلب.')
 };
 export const SHAPES_SWEETS = ['round', 'square', 'rect', 'oval'].map((id) => SHAPE_ITEMS.find((x) => x.id === id));
 
