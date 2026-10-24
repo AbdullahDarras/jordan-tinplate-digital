@@ -4,6 +4,7 @@ import * as THREE from 'three';
 import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
 import * as ART from './art.js';
 import * as HAL from './halawah.js';
+import * as STU from './studio.js';
 
 const TAU = Math.PI * 2;
 // Which real tin (assets/img/tins, see halawah.js) dresses which shape. Shapes not listed wear the Halawah design.
@@ -103,124 +104,135 @@ export function createScene(canvas) {
   const syncEnv = () => envMats.forEach((m) => { m.envMapIntensity = env.i * (m.userData.envBase || 1); });
 
   /* ------------------------------------------------------------ materials */
-  function metalMat(color = '#d5dbe6', rough = 0.22) {
-    const m = new THREE.MeshPhysicalMaterial({ color, metalness: 1, roughness: rough });
-    m.userData.envBase = 1; envMats.add(m); return m;
-  }
-  // L = layers of a printed surface from art.js (map + ORM + relief), or a plain texture for surfaces without them (the journey sheet)
-  // painted metal for the side of a premium lid: lacquer over tinplate (same family as the body print), not bare metal
-  function lacquerMat(color) {
-    const m = new THREE.MeshPhysicalMaterial({ color, metalness: 0.2, roughness: 0.2, clearcoat: 1, clearcoatRoughness: 0.1 });
-    m.userData.envBase = 1.1; envMats.add(m); return m;
-  }
+  // Every tin surface uses the JC 3D Studio's light and tin shine (studio.js): the same look as the order platform, on any page.
+  // metal: bare or lacquered tinplate of one colour (bottoms, wire, the oil tin's shoulder)
+  function metalMat(color = '#e2e8f0') { return STU.surfaceMat(null, color); }
+  function lacquerMat(color) { return STU.surfaceMat(null, color); }
+  // L = layers of a printed surface: a photographed tin (halawah.js: map + relief + spot) or the printed artwork (art.js: map + ORM + relief variants)
   function printMat(L, side = THREE.FrontSide) {
-    if (L && L.photo) {
-      const m = new THREE.MeshPhysicalMaterial({ map: L.map, metalness: 0.12, roughness: 0.3, clearcoat: 1, clearcoatRoughness: 0.06, side, bumpMap: L.relief, bumpScale: 0.6 });
-      m.color.setScalar(L.metal ? 1 : 0.84); m.userData.photo = L; m.userData.envBase = L.metal ? 1 : 0.7; envMats.add(m); return m;
-    }
-    const layered = !!(L && L.orm);
-    const m = new THREE.MeshPhysicalMaterial({ map: layered ? L.map : L, metalness: 0.55, roughness: 0.2, clearcoat: 1, clearcoatRoughness: 0.08, side });
-    if (layered) { m.metalnessMap = m.roughnessMap = L.orm; m.userData.layers = L; m.bumpMap = ART.reliefMap(L, 'plain'); }
-    m.userData.envBase = 1.1; envMats.add(m); return m;
+    const m = STU.surfaceMat(L, L && L.metal ? '#d9dde4' : '#f8fafc', side);
+    if (L && L.photo) m.userData.photo = L; else if (L && L.orm) m.userData.art = L;
+    return m;
   }
   // the artwork of a surface: the Halawah tin's photographed artwork (every tin except the olive-oil tins), or the printed artwork from art.js
   const layersFor = (kind, theme, cw, aspect = 1, width = 0, reps = 0) => (theme === 'halawah'
     ? HAL.surface(kind, aspect, reps || Math.max(1, Math.round(width / 1.5)), DESIGN)
     : ART.layers(kind, theme, cw, aspect));
+  // Finishes, in the studio's terms: its one tin-shine setting (metalShininess, 20 to 100 %; the studio's default is 85 %),
+  // plus the relief of the motifs (embossing) and, for spot UV, full shine only on the motifs over a matte tin.
+  const SFIN = {
+    gloss: { shin: 0.85 }, matte: { shin: 0.2 }, soft: { shin: 0.15 }, rough: { shin: 0.3 }, emboss: { shin: 0.85, bumpK: 2.5 },
+    spot: { shin: 0.2, spotShin: 1, spotGain: 1.7 }
+  };
   function applyFinish(m, name, instant) {
-    const P = m.userData.photo;
-    const f = (P ? PFIN[name] || PFIN.gloss : FIN[name] || FIN.gloss), L = m.userData.layers;
-    m.sheenColor = new THREE.Color('#ffffff'); m.sheenRoughness = 0.35;
-    if (L) { m.bumpMap = ART.reliefMap(L, f.bump); m.needsUpdate = true; }
-    // spot varnish: the clear coat only where the artwork is (the motif mask on a photo tin, the foil / relief on a printed one)
-    const cm = f.spot ? (P ? P.spot : (L ? ART.reliefMap(L, 'plain') : null)) : null;
-    if (m.clearcoatMap !== cm) { m.clearcoatMap = cm; m.needsUpdate = true; }
-    const to = { metalness: P && P.metal ? 0.92 : f.metalness, roughness: P && P.metal ? Math.min(0.6, f.roughness * 0.7) : f.roughness, clearcoat: f.clearcoat, clearcoatRoughness: f.clearcoatRoughness, sheen: f.sheen, bumpScale: (L || P) ? f.bumpScale : 0 };
-    if (instant) Object.assign(m, to); else gsap.to(m, { ...to, duration: 0.7, ease: 'power2.out' });
+    if (!m.userData.studio || !m.uniforms) return;
+    const P = m.userData.photo, A = m.userData.art, f = SFIN[name] || SFIN.gloss;
+    const bumpOf = (P ? (PFIN[name] || PFIN.gloss).bumpScale : A ? (FIN[name] || FIN.gloss).bumpScale : 0) * (f.bumpK || 1); // the studio's soft light needs deeper relief to read
+    if (A) STU.setRelief(m, ART.reliefMap(A, (FIN[name] || FIN.gloss).bump));
+    STU.setSpot(m, f.spotShin ? (P ? P.spot : A ? ART.reliefMap(A, 'plain') : null) : null);
+    const U = m.uniforms, to = [[U.shin, f.shin], [U.spotShin, f.spotShin || f.shin], [U.spotGain, f.spotGain || 1], [U.bump, bumpOf]];
+    to.forEach(([u, v]) => { if (instant) u.value = v; else gsap.to(u, { value: v, duration: 0.7, ease: 'power2.out' }); });
   }
   const accentOf = (theme, cw) => theme === 'halawah' ? HAL.DESIGNS[DESIGN].rim : theme === 'brand' ? ART.COLORWAYS[cw].foil[2] : ACCENT[theme];
-  const skirtOf = (theme, cw) => theme === 'halawah' ? HAL.DESIGNS[DESIGN].skirt : theme === 'brand' ? ART.COLORWAYS[cw].body[0] : ACCENT[theme]; // lid side: lacquer on the premium tin, the theme's metal on the others
+  const skirtOf = (theme, cw) => theme === 'halawah' ? HAL.DESIGNS[DESIGN].skirt : theme === 'brand' ? ART.COLORWAYS[cw].body[0] : ACCENT[theme];
 
   /* ------------------------------------------------------------ model builders */
-  // TRUE PROPORTIONS. The factory's can templates (docs/data/can-sizes.json, millimetres) are used here only as ratios, to shape the models: no
-  // number is ever shown on the site. Round cans: 1 unit = 36.5 mm (a 73 mm can has R = 1); boxes use the same unit; the olive-oil tins use their own
-  // (the 16 kg tin, 350 mm tall, is 2.75 units high). Every model reports ext = { h, w }, its visual height and footprint, so mountModel can bring
-  // very different tins (a flat tuna can, a tall box, a big oil tin) to a similar size on the stage.
+  // TRUE PROPORTIONS, in the factory's millimetres. Each builder takes u = millimetres per model unit; mountModel brings every tin
+  // to a similar size on its stage (ext = visual height and footprint).
+  // Construction (STU.rules, from the JC 3D Studio): the lid is a little wider than the body and sits flush on top of it; its skirt
+  // is min(69 % of the height, 9.9 mm x min(1, width / 70 mm)) deep and shows the outer band of the lid's artwork drawn down over the
+  // edge; a silver curled lip rolls round the skirt's lower edge; box corners are rounded at 3.5 mm; nothing at the foot (the
+  // studio's base bead is off), except on seamed cans, whose double seams are real.
   const MM = 1 / 36.5, OIL_U = 2.75 / 350;
-  const SILVER = '#eef2f8';
-  const rimMetalOf = (theme, cw) => (theme === 'halawah' ? metalMat(HAL.DESIGNS[DESIGN].rim, 0.24) : theme === 'brand' ? metalMat(ART.COLORWAYS[cw].foil[2], 0.26) : metalMat(SILVER, 0.2));
-  const lacquered = (theme) => theme === 'brand' || theme === 'halawah';
+  const BARE = '#e2e6ec';          // the unprinted bottom
+  const printedLid = (theme) => theme === 'brand' || theme === 'halawah';
 
-  // ---- The factory's construction rules, taken from the JC 3D Studio (AbdullahDarras/jc-order-platform, js/engine/studio3d.js) ----
-  // The lid fits over the body 0.5 mm proud on every side with its top flush with the top of the body; its skirt is
-  // min(69% of the height, 9.9 mm x min(1, width / 70 mm)) deep (getLidSkirtMm); a curled bead (2.5 mm) rolls round the skirt's
-  // lower edge; box corners are rounded at 3.5 mm. Sizes come from the factory catalogue (catalog-data.js) where a tin matches one.
-  const STUDIO = { lidGapMm: 0.5, beadMm: 2.5, cornerMm: 3.5 };
-  const lidSkirtMm = (hMm, wMm) => Math.min(hMm * 0.69, 9.9 * Math.min(1, wMm / 70));
-  // tube radius of the bead, mm: the studio's 2.5 mm bead drawn with its dark outline (+1.2 px) reads about 3.2 mm across
-  const BEAD_R = 1.6;
-  // the bead is bright silver tinplate (the studio's default finish 'silver', base #CBD5E1)
-  const beadMat = () => metalMat('#dfe5ee', 0.18);
-  function roundRectRing(hw, hd, r, tube, mat) { // a bead along a rounded rectangle (box lids)
-    const sh = new THREE.Shape(), x0 = -hw, x1 = hw, z0 = -hd, z1 = hd;
-    sh.moveTo(x0 + r, z0); sh.lineTo(x1 - r, z0); sh.quadraticCurveTo(x1, z0, x1, z0 + r); sh.lineTo(x1, z1 - r); sh.quadraticCurveTo(x1, z1, x1 - r, z1);
-    sh.lineTo(x0 + r, z1); sh.quadraticCurveTo(x0, z1, x0, z1 - r); sh.lineTo(x0, z0 + r); sh.quadraticCurveTo(x0, z0, x0 + r, z0);
-    const pts = sh.getSpacedPoints(160).map((p) => new THREE.Vector3(p.x, 0, p.y));
-    return new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts, true), 240, tube, 8, true), mat);
-  }
-  function lidParts(R, H, theme, cw, metal, k = 1, u = 36.5) { // u = millimetres per model unit
-    const SK = lidSkirtMm(H * u, 2 * R * u) / u, LR = R + STUDIO.lidGapMm / u;
-    const lidSide = lacquered(theme) ? lacquerMat(skirtOf(theme, cw)) : metalMat(skirtOf(theme, cw), 0.28);
-    const lidTop = printMat(layersFor('lid', theme, cw));
-    const g = new THREE.Group(); g.position.y = H / 2;                      // the lid's top is flush with the top of the body
-    const skirt = new THREE.Mesh(new THREE.CylinderGeometry(LR, LR, SK, 96, 1, true), lidSide); skirt.position.y = -SK / 2;
-    const top = new THREE.Mesh(new THREE.CircleGeometry(LR, 64), lidTop); top.rotation.x = -Math.PI / 2; top.position.y = 0.002;
-    const bead = new THREE.Mesh(new THREE.TorusGeometry(LR + 0.8 / u, BEAD_R / u, 12, 96), beadMat());
-    bead.rotation.x = Math.PI / 2; bead.position.y = -SK;
-    g.add(skirt, top, bead); g.userData.print = [lidTop];
+  // A lid over an outline: the printed top, the skirt (the top's artwork drawn down over the edge), the curled lip.
+  // outline: the lid's edge (studio.js outline); inner: the printed top's edge; topUv(x, z): the top's texture coordinate;
+  // skirtUv(p, t): the skirt's (t = 0 at its lower edge); k: STU.rules of the tin, in mm; u: mm per unit
+  function lidOn({ outline, inner, topUv, skirtUv, k, u, theme, cw, aspect = 1 }) {
+    const g = new THREE.Group();
+    const L = layersFor('lid', theme, cw, aspect), top = printMat(L);
+    const SK = k.skirt / u;
+    const skirtMat = printedLid(theme) ? top : lacquerMat(skirtOf(theme, cw));
+    g.add(new THREE.Mesh(STU.cap(inner, 0, true, topUv), top));
+    g.add(new THREE.Mesh(STU.wall(outline, -SK, 0, skirtUv), skirtMat));
+    g.add(STU.ring(STU.grow(outline, k.beadOut / u), k.beadR / u, -SK - k.beadDrop / u, STU.beadMat(k.lipW)));
+    g.userData.print = [top];
     return g;
   }
-  function buildRound({ R = 1, H = 1.5, theme, cw, k = R, seamed = false, u = 36.5 }) {
+  // round or polygonal lid of radius R over a body of height H (units); sides > 24 = round; phi = angle of the first corner from +z
+  function roundLid({ R, H, u, theme, cw, sides = 96, phi = 0, lidR = 0, skirtMm = 0, w = 0 }) {
+    const k = STU.rules({ round: true, w: w || 2 * R * u, h: H * u });
+    if (skirtMm) k.skirt = skirtMm;
+    const LR = lidR || R + k.gap / u, discR = LR - k.inset / u, SK = k.skirt / u;
+    const outline = STU.polygon(LR, sides, phi), inner = STU.polygon(discR, sides, phi);
+    const topUv = (x, z) => [0.5 + x / (2 * discR), 0.5 - z / (2 * discR)];
+    // round: exactly the studio's band, radius 0.5 (the artwork's edge) at the lip up to 0.5 - skirt / diameter at the top
+    const strip = SK / (2 * discR);
+    const skirtUv = sides > 24 ? (p, t) => { const r = 0.5 - strip * t; return [0.5 + p.nx * r, 0.5 - p.nz * r]; } : STU.skirtUv(topUv, SK);
+    const g = lidOn({ outline, inner, topUv, skirtUv, k, u, theme, cw });
+    g.position.y = H / 2 + k.lift / u; g.userData.skirt = SK;
+    return g;
+  }
+  // (kept for the entrance: the Halawah lid over a body of radius R and height H)
+  const lidParts = (R, H, theme, cw, metal, kk = 1, u = 36.5) => roundLid({ R, H, u, theme, cw });
+  // a printed round body (open tube), its seam at the back
+  function roundBody(R, Rb, H, theme, cw, sides = 96, phi = -Math.PI / 2, reps = 0) {
+    const L = layersFor('wrap', theme, cw, H / (TAU * R), TAU * R, reps), m = printMat(L);
+    let geo = new THREE.CylinderGeometry(R, Rb, H, sides, 1, true); if (sides <= 24) geo = facet(geo);
+    const body = new THREE.Mesh(geo, m); body.rotation.y = phi;
+    return { body, m };
+  }
+  const facet = (g) => { const f = g.toNonIndexed(); f.computeVertexNormals(); return f; };
+  const disc = (R, y, sides = 96, phi = 0, up = false) => new THREE.Mesh(STU.cap(STU.polygon(R, sides, phi), y, up, () => [0.5, 0.5]), metalMat(BARE));
+
+  function buildRound({ R = 1, H = 1.5, theme, cw, seamed = false, u = 36.5 }) {
     const group = new THREE.Group(), print = [];
-    const metal = rimMetalOf(theme, cw);
-    const bodyMat = printMat(layersFor('wrap', theme, cw, H / (TAU * R), TAU * R)); print.push(bodyMat);
-    const body = new THREE.Mesh(new THREE.CylinderGeometry(R, R, H, 96, 1, true), bodyMat); body.rotation.y = -Math.PI / 2;
-    const rim = new THREE.Mesh(new THREE.TorusGeometry(R, 0.035 * k, 12, 96), metal); rim.rotation.x = Math.PI / 2; rim.position.y = -H / 2;
-    const bottom = new THREE.Mesh(new THREE.CircleGeometry(R, 64), metal); bottom.rotation.x = Math.PI / 2; bottom.position.y = -H / 2;
+    const { body, m } = roundBody(R, R, H, theme, cw); print.push(m);
+    const bottom = disc(R, -H / 2);
     let lid;
-    if (seamed) { // the real can has its end seamed on (a peel-off end), not a slip lid: a printed end just below a rolled double seam
+    if (seamed) { // the real can has its end seamed on (a peel-off end), not a slip lid: a printed end just below a rolled double seam, and one at the foot
+      const k = STU.rules({ round: true, w: 2 * R * u, h: H * u });
       lid = new THREE.Group(); lid.position.y = H / 2;
       const endMat = printMat(layersFor('lid', theme, cw));
-      const end = new THREE.Mesh(new THREE.CircleGeometry(R, 64), endMat); end.rotation.x = -Math.PI / 2; end.position.y = -0.03 * k;
-      const seam = new THREE.Mesh(new THREE.TorusGeometry(R, 0.045 * k, 12, 96), metal); seam.rotation.x = Math.PI / 2;
-      lid.add(end, seam); lid.userData.print = [endMat];
-    } else lid = lidParts(R, H, theme, cw, metal, k, u);
-    group.add(body, bottom, lid); if (seamed) group.add(rim); // only a seamed can shows a seam at its foot
+      const endR = R - k.seamR / u;
+      lid.add(new THREE.Mesh(STU.cap(STU.polygon(endR, 96), -k.seamR / u, true, (x, z) => [0.5 + x / (2 * endR), 0.5 - z / (2 * endR)]), endMat));
+      const seam = () => STU.ring(STU.polygon(R + k.seamOut / u - k.seamR / u, 96), k.seamR / u, 0, STU.beadMat(k.seamW));
+      lid.add(seam()); const foot = seam(); foot.position.y = -H / 2; group.add(foot);
+      lid.userData.print = [endMat];
+    } else lid = roundLid({ R, H, u, theme, cw });
+    group.add(body, bottom, lid);
     print.push(...lid.userData.print);
-    return { group, print, parts: { body, bottom, lid }, ext: { h: H + 0.05 * k, w: 2 * (R + 0.06 * k) }, lean: H / (2 * R) > 0.9 ? 0.16 : 0.3 };
+    return { group, print, parts: { body, bottom, lid }, ext: { h: H + 0.05, w: 2 * (R + 0.06) }, lean: H / (2 * R) > 0.9 ? 0.16 : 0.3 };
   }
-  // Square / rectangular gift box with a lid that overhangs the body a little (sizes in mm, see docs/data/can-sizes.json: lid 160, body 152 ...).
-  function buildGiftBox({ w, d, h, theme, cw }) { // sizes in mm; studio rules (see STUDIO above)
-    const W = w * MM, D = d * MM, Hh = h * MM, LH = lidSkirtMm(h, w) * MM, G = STUDIO.lidGapMm * MM, CR = STUDIO.cornerMm * MM;
+  // Square / rectangular box (sizes in mm): four printed sides that wrap round 3.5 mm corners, and a lid with a printed top.
+  function buildGiftBox({ w, d, h, theme, cw }) {
+    const k = STU.rules({ w, d, h }), u = 1 / MM;
+    const W = w * MM, D = d * MM, Hh = h * MM, CR = k.corner * MM;
     const group = new THREE.Group();
-    const metal = rimMetalOf(theme, cw);
-    const front = printMat(layersFor('face', theme, cw, Hh / W, W));
-    const side = printMat(layersFor('face', theme, cw, Hh / D, D));
-    const body = new THREE.Mesh(new RoundedBoxGeometry(W, Hh - 0.004, D, 4, CR), [side, side, metal, metal, front, front]);
-    const lidSide = lacquered(theme) ? lacquerMat(skirtOf(theme, cw)) : metalMat(skirtOf(theme, cw), 0.28);
-    const topPrint = printMat(layersFor('top', theme, cw, D / W));
-    const lid = new THREE.Mesh(new RoundedBoxGeometry(W + 2 * G, LH, D + 2 * G, 4, CR + G), [lidSide, lidSide, topPrint, lidSide, lidSide, lidSide]);
-    lid.position.y = Hh / 2 - LH / 2;                                       // flush with the top of the body
-    const bead = roundRectRing(W / 2 + G + 0.8 * MM, D / 2 + G + 0.8 * MM, CR + G, BEAD_R * MM, beadMat());
-    bead.position.y = Hh / 2 - LH;
-    group.add(body, lid, bead);
-    return { group, print: [front, side, topPrint], parts: { body, lid, bottom: body }, ext: { h: Hh, w: Math.hypot(W, D) * 0.68 }, lean: Hh / Math.max(W, D) < 0.4 ? 0.5 : 0.18 };
+    const sides = STU.boxSides(W / 2, D / 2, CR);
+    const faceMat = (len) => printMat(layersFor('face', theme, cw, Hh / len, len));
+    const front = faceMat(sides[0].total), side = faceMat(sides[1].total);
+    const body = new THREE.Group();
+    sides.forEach((pts, i) => body.add(new THREE.Mesh(STU.wall(pts, -Hh / 2, Hh / 2, (p, t) => [p.s / pts.total, t]), i % 2 ? side : front)));
+    body.add(new THREE.Mesh(STU.cap(STU.roundRect(W / 2, D / 2, CR), -Hh / 2, false, () => [0.5, 0.5]), metalMat(BARE)));
+    const G = k.gap * MM, LC = k.lidCorner * MM, IN = k.inset * MM;
+    const ox = W / 2 + G - IN, oz = D / 2 + G - IN;
+    const topUv = (x, z) => [(x + ox) / (2 * ox), (oz - z) / (2 * oz)];
+    const lid = lidOn({
+      outline: STU.roundRect(W / 2 + G, D / 2 + G, LC), inner: STU.roundRect(ox, oz, LC - IN), topUv,
+      skirtUv: STU.skirtUv(topUv, k.skirt * MM), k, u, theme, cw, aspect: D / W
+    });
+    lid.position.y = Hh / 2 + k.lift * MM;
+    group.add(body, lid);
+    return { group, print: [front, side, ...lid.userData.print], parts: { body, lid, bottom: body }, ext: { h: Hh, w: Math.hypot(W, D) * 0.68 }, lean: Hh / Math.max(W, D) < 0.4 ? 0.5 : 0.18 };
   }
   // Olive-oil tin (sizes in mm): printed body, stepped shoulder, flat top, a ribbed screw cap on a spout and a carry handle.
   function buildOil({ theme, cw, w, d, h }) {
     const W = w * OIL_U, D = d * OIL_U, Ht = h * OIL_U;
     const group = new THREE.Group();
-    const metal = metalMat(SILVER, 0.22), accent = metalMat(accentOf(theme, cw), 0.3);
+    const metal = metalMat('#e9edf3'), accent = metalMat(accentOf(theme, cw));
     const bh = Ht * 0.94, sl = Ht * 0.034, tp = Ht * 0.026, r = Math.min(W, D) * 0.05;
     const front = printMat(ART.layers('face', theme, cw, bh / W));
     const side = printMat(ART.layers('face', theme, cw, bh / D));
@@ -249,52 +261,31 @@ export function createScene(canvas) {
     group.add(body, shoulder, plate, cap, handle, lug(hx0), lug(hx1));
     return { group, print: [front, side], parts: { body, lid: cap, bottom: body }, ext: { h: Ht + rr * 1.4, w: Math.hypot(W, D) * 0.9 } };
   }
-  // Round or polygonal tin (sides = 6 hexagon, 8 octagon, 96 round) with a lid whose skirt covers the top of the body, and an optional
-  // bucket form (tapered body + wire handle). theme 'halawah' dresses it in the photographed Halawah artwork: a red lacquer lid with the printed
-  // top, a warm-white side band that repeats around the body and a gold foot; any other theme uses the printed artwork from art.js.
-  const facet = (g) => { const f = g.toNonIndexed(); f.computeVertexNormals(); return f; };
-  function edgeRing(R, n, r, mat, phi) { // a rolled rim along a circle or a polygon
-    if (n > 24) { const t = new THREE.Mesh(new THREE.TorusGeometry(R, r, 12, 96), mat); t.rotation.x = Math.PI / 2; return t; }
-    const path = new THREE.CurvePath();
-    const pt = (i) => { const a = (i / n) * TAU + phi; return new THREE.Vector3(R * Math.sin(a), 0, R * Math.cos(a)); };
-    for (let i = 0; i < n; i++) path.add(new THREE.LineCurve3(pt(i), pt(i + 1)));
-    return new THREE.Mesh(new THREE.TubeGeometry(path, n * 6, r, 8, true), mat);
-  }
+  // Round or polygonal tin (sides = 6 hexagon, 8 octagon, 96 round) whose lid skirt covers the top of the body, and an optional
+  // bucket form (tapered body + wire handle). R, H in units of u mm.
   function buildTin({ sides = 96, R = 1, H = 0.44, skirtH = 0, taper = 1, bucket = false, vertexFront = false, stretch = 1, lidR = 0, u = 100, theme, cw }) {
-    skirtH = skirtH || lidSkirtMm(H * u, 2 * R * u) / u; // u = millimetres per model unit
-    const photo = theme === 'halawah', round = sides > 24, group = new THREE.Group();
-    const phi = round ? -Math.PI / 2 : vertexFront ? 0 : -Math.PI / sides;        // a flat face (not a corner) looks at the visitor
-    const Rb = R * taper, LR = lidR ? R * lidR : R + STUDIO.lidGapMm / u, bodyTop = H / 2 - skirtH * 0.75, bodyH = bodyTop + H / 2;
-    const rep = round ? 8 : sides;                               // side band: one motif group per face on polygons
-    const bodyL = layersFor('wrap', theme, cw, bodyH / (TAU * R), TAU * R, photo ? rep : 0);
-    const lidL = layersFor('lid', theme, cw);
-    const bodyMat = printMat(bodyL), topMat = printMat(lidL);
-    const metal = rimMetalOf(theme, cw);
-    const skirtMat = lacquered(theme) ? lacquerMat(skirtOf(theme, cw)) : metalMat(skirtOf(theme, cw), 0.28);
-    let bg = new THREE.CylinderGeometry(R, Rb, bodyH, sides, 1, true); if (!round) bg = facet(bg);
-    const body = new THREE.Mesh(bg, bodyMat); body.rotation.y = phi; body.position.y = -H / 2 + bodyH / 2;
-    const bottom = new THREE.Mesh(new THREE.CircleGeometry(Rb, sides, Math.PI / 2 - phi), metal); bottom.rotation.x = Math.PI / 2; bottom.position.y = -H / 2;
-    // lid: skirt + printed top + rolled lip
-    const lid = new THREE.Group(); lid.position.y = H / 2;
-    let sg = new THREE.CylinderGeometry(LR, LR, skirtH, sides, 1, true); if (!round) sg = facet(sg);
-    const skirt = new THREE.Mesh(sg, skirtMat); skirt.rotation.y = phi; skirt.position.y = -skirtH / 2;
-    const tg = new THREE.CircleGeometry(LR, sides, phi - Math.PI / 2);
-    const top = new THREE.Mesh(tg, topMat); top.rotation.x = -Math.PI / 2;
-    const bead = edgeRing(LR + 0.8 / u, sides, BEAD_R / u, beadMat(), phi);
-    bead.position.y = -skirtH;                                    // the curled bead rolls round the skirt's lower edge
-    lid.add(skirt, top, bead);
-    group.add(body, bottom, lid); // no ring at the foot: the studio's base flange bead is off
+    const round = sides > 24, group = new THREE.Group();
+    const phi = vertexFront ? 0 : Math.PI / sides;           // polygons: a flat face (not a corner) looks at the visitor, unless vertexFront
+    const k = STU.rules({ round: true, w: 2 * R * u, h: H * u });
+    const SK = skirtH || k.skirt / u, Rb = R * taper;
+    const lid = roundLid({ R, H, u, theme, cw, sides, phi: round ? 0 : phi, lidR: lidR ? R * lidR : 0, skirtMm: skirtH ? skirtH * u : 0 });
+    const bodyTop = H / 2 - SK * 0.75, bodyH = bodyTop + H / 2;  // the body runs up under the skirt
+    const { body, m } = roundBody(R, Rb, bodyH, theme, cw, sides, round ? -Math.PI / 2 : phi, theme === 'halawah' ? (round ? 8 : sides) : 0);
+    body.position.y = -H / 2 + bodyH / 2;
+    const bottom = disc(Rb, -H / 2, sides, round ? 0 : phi);
+    group.add(body, bottom, lid);
     let h = H + 0.03;
     if (bucket) { // wire bail on two ears, resting folded back
-      const wire = metalMat('#b8c0cc', 0.25);
-      const ear = (s) => { const e = new THREE.Mesh(new THREE.SphereGeometry(0.07, 16, 12), wire); e.scale.set(1, 1.3, 0.5); e.position.set(s * (R + 0.015), H / 2 - skirtH - 0.12, 0); return e; };
+      const wire = metalMat('#b8c0cc');
+      const ear = (s) => { const e = new THREE.Mesh(new THREE.SphereGeometry(0.07, 16, 12), wire); e.scale.set(1, 1.3, 0.5); e.position.set(s * (R + 0.015), H / 2 - SK - 0.12, 0); return e; };
       const bail = new THREE.Mesh(new THREE.TorusGeometry(R + 0.03, 0.022, 8, 64, Math.PI), wire);
-      bail.position.y = H / 2 - skirtH - 0.12; bail.rotation.x = -1.15; // leaning back over the lid
+      bail.position.y = H / 2 - SK - 0.12; bail.rotation.x = -1.15; // leaning back over the lid
       group.add(ear(-1), ear(1), bail); h += 0.25;
     }
-    // low tins lean towards the visitor a little more, so the printed lid reads
     if (stretch !== 1) group.scale.x = stretch;   // an elongated tin (the octagonal sweets tin)
-    return { group, print: [bodyMat, topMat], parts: { body, bottom, lid }, ext: { h, w: 2 * LR * stretch }, lean: H <= 0.6 ? 0.36 : 0 };
+    const LR = lidR ? R * lidR : R + k.gap / u;
+    // low tins lean towards the visitor a little more, so the printed lid reads
+    return { group, print: [m, ...lid.userData.print], parts: { body, bottom, lid }, ext: { h, w: 2 * LR * stretch }, lean: H <= 0.6 ? 0.36 : 0 };
   }
   const gift = (o) => (t, c) => buildGiftBox({ ...o, theme: t, cw: c });
   // Real tins, each at the proportions measured on its photograph (camera focal length from EXIF + the corners of the lid), with its own
@@ -490,12 +481,14 @@ export function createScene(canvas) {
     const inst = {
       name, root, S, shadow, apply, intro, kind: 'product',
       hold: null, // review / OG captures: a fixed yaw (radians) instead of the idle turn
+      holdX: null, // and a fixed tilt (side-by-side checks against the JC 3D Studio's view)
       // p: where the stage is in the viewport (-1 just left through the top … 0 centred … +1 just entering from below)
       // vel: smoothed scroll speed (-1…1). The tin stays put but turns, floats and leans with the scroll.
       update(dt, now, p = 0, vel = 0) {
         idle += dt * 0.28; spinYaw += spinV; spinV *= 0.94;
-        tilt.rotation.x = pose.rx + (model.lean || 0) + ptr.sy * 0.18 + p * 0.12 + vel * 0.16;
+        tilt.rotation.x = this.holdX !== null ? this.holdX : pose.rx + (model.lean || 0) + ptr.sy * 0.18 + p * 0.12 + vel * 0.16;
         tilt.rotation.y = this.hold !== null ? this.hold : pose.ry + idle + spinYaw + ptr.sx * 0.35 - p * 1.25;
+        if (this.hold !== null && !transitioning) holder.rotation.y = 0; // a fixed yaw is the tin's own, without the spin a shape change adds
         tilt.rotation.z = vel * 0.06;
         root.position.y = Math.sin(now / 1300 + bob) * 0.045 - p * 0.16 + vel * 0.08;
         if (!REDUCED) sparkles.tick(now);
@@ -561,9 +554,7 @@ export function createScene(canvas) {
       sheetGeo.attributes.position.needsUpdate = true; sheetGeo.attributes.normal.needsUpdate = true;
       sheetGeo.computeBoundingSphere();
     }
-    // the printed sheet is lacquer over tinplate like the finished tin (a little metal, a glossy clear coat), so the print keeps the same royal blue
-    const sheetMat = new THREE.MeshPhysicalMaterial({ map: sheetTex, color: '#ffffff', metalness: 0.22, roughness: 0.3, clearcoat: 1, clearcoatRoughness: 0.1, side: THREE.DoubleSide });
-    sheetMat.userData.envBase = 0.85; envMats.add(sheetMat);
+    const sheetMat = STU.surfaceMat({ map: sheetTex }, '#f8fafc', THREE.DoubleSide); // the same studio light as the finished tin
     const sheet = new THREE.Mesh(sheetGeo, sheetMat);
     const sheetRig = new THREE.Group(); sheetRig.add(sheet); journey.add(sheetRig);
     bendSheet(0);
@@ -787,6 +778,8 @@ export function createScene(canvas) {
       glint.position.set(lerp(-7.5, 7.5, u), 1.2 + Math.sin(ph * TAU) * 0.8, 4.5);
       glint.intensity = ph < 0.5 ? GLINT_PEAK * Math.pow(Math.sin(Math.PI * u), 2) : 0;
     }
+    STU.SWEEP.x.value = REDUCED ? -0.35 : lerp(-1.3, 1.3, clamp(((now / 1000) % 8) / 4));
+    STU.SWEEP.amt.value = REDUCED ? 0.5 : glint.intensity / GLINT_PEAK;
     stages.forEach((st) => {
       let d = dt;
       if (COARSE && st.inst.kind === 'product') { st.acc = (st.acc || 0) + dt; if (frameNo & 1) return; d = st.acc; st.acc = 0; }
