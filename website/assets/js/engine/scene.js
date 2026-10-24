@@ -8,7 +8,7 @@ import * as STU from './studio.js';
 
 const TAU = Math.PI * 2;
 // Which real tin (assets/img/tins, see halawah.js) dresses which shape. Shapes not listed wear the Halawah design.
-const DESIGN_FOR = { round: 'halawah', square: 'bab', box70: 'bab', rect: 'jgz', octagon: 'najmah', bucket: 'frieds', can: 'abed', milk: 'maeen', tuna: 'sufyan', tall: 'suliman', coffee: 'levelmax', cheese: 'laqmi', hexagon: 'halawah', oval: 'oval', paint: 'paint' };
+const DESIGN_FOR = { round: 'qaisi', square: 'bab', box70: 'bab', rect: 'jgz', octagon: 'najmah', bucket: 'frieds', can: 'abed', milk: 'maeen', tuna: 'sufyan', tall: 'suliman', coffee: 'levelmax', cheese: 'laqmi', hexagon: 'halawah', oval: 'oval', paint: 'paint' };
 let DESIGN = 'halawah'; // the design of the tin being built (set by mountModel)
 const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
 const sstep = (a, b, x) => { const t = clamp((x - a) / (b - a)); return t * t * (3 - 2 * t); };
@@ -154,10 +154,11 @@ export function createScene(canvas) {
     const g = new THREE.Group();
     const L = layersFor('lid', theme, cw, aspect), top = printMat(L);
     const SK = k.skirt / u;
-    const skirtMat = printedLid(theme) ? top : lacquerMat(skirtOf(theme, cw));
+    const skirtMat = printedLid(theme) && !(theme === 'halawah' && HAL.DESIGNS[DESIGN].plainSkirt) ? top : lacquerMat(skirtOf(theme, cw));
     g.add(new THREE.Mesh(STU.cap(inner, 0, true, topUv), top));
     g.add(new THREE.Mesh(STU.wall(outline, -SK, 0, skirtUv), skirtMat));
-    g.add(STU.ring(STU.grow(outline, k.beadOut / u), k.beadR / u, -SK - k.beadDrop / u, STU.beadMat(k.lipW)));
+    const beadOf = theme === 'halawah' ? HAL.DESIGNS[DESIGN].bead : null;
+    g.add(STU.ring(STU.grow(outline, k.beadOut / u), k.beadR / u, -SK - k.beadDrop / u, STU.beadMat(k.lipW, beadOf || 'silver')));
     g.userData.print = [top];
     return g;
   }
@@ -290,8 +291,9 @@ export function createScene(canvas) {
   const gift = (o) => (t, c) => buildGiftBox({ ...o, theme: t, cw: c });
   // Real tins, each at the proportions measured on its photograph (camera focal length from EXIF + the corners of the lid), with its own
   // kind of lid. Nothing is added that the real tin does not have (the bucket has no wire handle; the food and milk cans have seamed ends).
-  const OWN_SHAPE = { halawah: 'round', sufyan: 'tuna', najmah: 'octagon', frieds: 'bucket', abed: 'can', maeen: 'milk', laqmi: 'cheese', bab: 'square', jgz: 'rect', suliman: 'tall', levelmax: 'coffee' };
+  const OWN_SHAPE = { qaisi: 'round', halawah: 'round', sufyan: 'tuna', najmah: 'octagon', frieds: 'bucket', abed: 'can', maeen: 'milk', laqmi: 'cheese', bab: 'square', jgz: 'rect', suliman: 'tall', levelmax: 'coffee' };
   const REAL = {
+    qaisi: (t, c) => buildTin({ u: 118.8, H: 60 / 118.8, skirtH: 15.7 / 118.8, theme: t, cw: c }), // catalogue rd-235 at 6 cm: Ø237.6 x 60 mm, skirt 15.7 mm (measured on the photo)
     halawah: (t, c) => buildTin({ u: 118.8, H: 49 / 118.8, theme: t, cw: c }),                             // catalogue rd-235: Ø237.6 x 49 mm
     sufyan: (t, c) => buildTin({ u: 134.5, H: 50 / 134.5, theme: t, cw: c }),                              // catalogue rd-265: Ø269 x 50 mm
     najmah: (t, c) => buildTin({ sides: 8, H: 0.6, u: 80, vertexFront: true, stretch: 1.87, theme: t, cw: c }), // octagon, length 1.87 x depth
@@ -507,12 +509,12 @@ export function createScene(canvas) {
   /* ------------------------------------------------------------ journey rig (built only on pages that have a journey stage) */
   let J = null;
   function makeJourney() {
-    DESIGN = 'halawah'; // the entrance always shows the Halawah tin
+    DESIGN = 'qaisi'; // the entrance shows the main tin (Al Qaisi)
     const journey = new THREE.Group(); journey.visible = false; scene.add(journey);
-    const JR = 1, JH = 0.34, JW = TAU * JR, N = 160; // the Halawah tin: a long low band rolled into a wide ring
+    const JR = 1, JH = 60 / 118.8, JW = TAU * JR, N = 160; // the main tin (rd-235, 60 mm): a long low band rolled into a wide ring
     const aspect = JH / JW;
     const blank = ART.blankSheetCanvas(2048, Math.round(2048 * aspect));
-    const hal = HAL.surface('wrap', aspect, 8), printed = hal.canvas;
+    const hal = HAL.surface('wrap', aspect, 2, DESIGN), printed = hal.canvas;
     const sheetCanvas = document.createElement('canvas'); sheetCanvas.width = blank.width; sheetCanvas.height = blank.height;
     const sheetTex = new THREE.CanvasTexture(sheetCanvas); sheetTex.colorSpace = THREE.SRGBColorSpace; sheetTex.anisotropy = 8;
     let lastPrint = -1;
@@ -561,7 +563,7 @@ export function createScene(canvas) {
 
     const jMetal = metalMat(HAL.GOLD, 0.24);
     const capBottom = new THREE.Mesh(new THREE.CircleGeometry(JR, 64), jMetal); capBottom.rotation.x = Math.PI / 2; capBottom.position.y = -JH / 2;
-    const capTop = lidParts(JR, JH, 'halawah', 0, jMetal, 1, 118.8); // the Halawah tin's scale (rd-235) capTop.position.y = JH / 2 + 3;
+    const capTop = roundLid({ R: JR, H: JH, u: 118.8, theme: 'halawah', cw: 0, skirtMm: 15.7 }); // the main tin's scale (rd-235) capTop.position.y = JH / 2 + 3;
     sheetRig.add(capBottom, capTop);
 
     const head = new THREE.Mesh(new THREE.PlaneGeometry(0.06, JH + 0.5), new THREE.MeshBasicMaterial({ color: 0xffb454, transparent: true, opacity: 0.95, blending: THREE.AdditiveBlending, depthWrite: false }));
@@ -574,7 +576,7 @@ export function createScene(canvas) {
     const miniTopGeo = new THREE.CircleGeometry(miniR + 0.02, 40);
     const miniBodyMat = printMat(layersFor('wrap', 'halawah', 0, miniH / (TAU * miniR), 0, 3));
     const miniTopMat = printMat(layersFor('lid', 'halawah', 0));
-    const miniSkirtGeo = new THREE.CylinderGeometry(miniR + 0.02, miniR + 0.02, 0.07, 40, 1, true), miniSkirtMat = lacquerMat(HAL.RED);
+    const miniSkirtGeo = new THREE.CylinderGeometry(miniR + 0.02, miniR + 0.02, 0.07, 40, 1, true), miniSkirtMat = lacquerMat(HAL.DESIGNS[DESIGN].skirt);
     const minis = [];
     for (let layer = 0; layer < LAYERS; layer++) for (let ix = 0; ix < 3; ix++) for (let iz = 0; iz < 3; iz++) {
       const g = new THREE.Group();

@@ -16,6 +16,10 @@ const BAND = 286 / 1024;           // height / width of one Halawah band tile
 
 // skirt = the lacquer of the lid's side; rim = the rolled edges; reps = how many times a can's side band goes round
 export const DESIGNS = {
+  // the main tin: Al Qaisi Roastery's round tin (catalogue rd-235, 60 mm): a stamped gold lid, plain gold skirt, a dark band with gold line art.
+  // tileW: the side photo's own width (px) so the band keeps its resolution; plainSkirt: the real skirt is plain gold, not the lid's art;
+  // bead: the curled lip is the same gold as the skirt (the studio's silver otherwise).
+  qaisi: { kind: 'can', reps: 2, skirt: '#d79242', rim: GOLD, plainSkirt: true, bead: '#d79242', tileW: 3128 },
   halawah: { kind: 'band', skirt: RED, rim: GOLD },
   bab: { kind: 'box', skirt: '#5a2210', rim: GOLD },           // square gift tin, Beirut clock tower
   jgz: { kind: 'box', skirt: '#9a5216', rim: GOLD },           // rectangular gift tin, desert village
@@ -92,7 +96,7 @@ export function surface(kind, aspect = 1, reps = 1, design = 'halawah') {
   if (cache[key]) return cache[key];
   let W, H;
   if (flat || P.face) { W = 1024; H = Math.max(64, Math.round(1024 * a)); if (H > 1024) { W = Math.max(64, Math.round(1024 / a)); H = 1024; } }
-  else { W = Math.min(4096, Math.max(1024, n * 512)); H = Math.min(4096, Math.max(96, Math.round(W * a))); }
+  else { W = Math.min(4096, Math.max(1024, n * (D.tileW || 512))); H = Math.min(4096, Math.max(96, Math.round(W * a))); }
   const ground = d === 'halawah' ? (flat ? RED : WHITE) : D.skirt;
   const out = { photo: true, metal: D.kind === 'plain' };
   const layers = [0, 1, 2].map((layer) => {

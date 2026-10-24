@@ -145,7 +145,9 @@ void main(){
 }`;
 const BEAD_THEMES = { silver: ['#CBD5E1', '#475569'], gold: ['#D97706', '#78350F'] };
 export function beadMat(widthPx, finish = 'silver') {
-  const [b, d] = BEAD_THEMES[finish] || BEAD_THEMES.silver;
+  // a colour instead of a name: the studio's 'custom' finish (its dark edge is the colour at 45 %)
+  const custom = /^#[0-9a-f]{6}$/i.test(finish) ? [finish, '#' + new THREE.Color(finish).multiplyScalar(0.45).getHexString()] : null;
+  const [b, d] = custom || BEAD_THEMES[finish] || BEAD_THEMES.silver;
   const m = new THREE.ShaderMaterial({
     vertexShader: VERT, fragmentShader: BEAD_FRAG, toneMapped: false,
     uniforms: { cBase: { value: srgb(b) }, cDark: { value: srgb(d) }, bw: { value: widthPx }, shin: { value: 0.85 } }
