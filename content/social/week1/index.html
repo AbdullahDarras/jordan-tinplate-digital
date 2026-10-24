@@ -130,6 +130,12 @@ summary { cursor:pointer; color:var(--mute); font-size:14px; }
 .kit figure { margin:0; display:grid; gap:6px; }
 .kit figcaption { font-size:13px; color:var(--mute); }
 
+.review { margin-top:18px; display:grid; gap:10px; }
+.review h3 { margin:0 0 4px; }
+.rv { display:grid; grid-template-columns:auto 1fr; gap:4px 14px; padding:12px 14px; border:1px solid var(--line); border-inline-start:4px solid var(--warn); border-radius:12px; background:var(--bg); }
+.rv .n { font-family:var(--f-lat); font-weight:700; color:var(--accent-text); grid-row:span 2; }
+.rv q { quotes:none; font-weight:500; }
+.rv small { color:var(--mute); font-size:13px; }
 .toast { position:fixed; inset-inline:0; bottom:calc(24px + env(safe-area-inset-bottom,0px)); margin-inline:auto; width:max-content; max-width:90%; background:var(--ink); color:var(--bg); padding:8px 16px; border-radius:99px; font-size:14px; opacity:0; transform:translateY(10px); transition:.2s; pointer-events:none; z-index:30; }
 .toast.on { opacity:1; transform:none; }
 
@@ -173,6 +179,13 @@ summary { cursor:pointer; color:var(--mute); font-size:14px; }
     <h2>قبل الأحد</h2>
     <p class="sub">أربع خطوات قبل أول منشور. علاماتك محفوظة في متصفحك فقط.</p>
     <div class="tasks" id="tasks"></div>
+    <div class="review" id="review">
+      <h3>المراجعة الفنية: 3 جمل بس</h3>
+      <p class="sub">بمنشوري الثلاثاء والأربعاء (#2 و#3) في 3 جمل عن خصائص التنك. بدنا من الجهة الفنية بالمصنع (أو منك إذا بتعرف) لكل جملة وحدة من 3: <b>صح وتنشر</b>، أو <b>تنشر بهالتعديل</b>، أو <b>تنشال</b>.</p>
+      <div class="rv"><span class="n">1</span><q>الضوء من العوامل التي يُنصح بإبعادها عن زيت الزيتون، والعلبة المعدنية معتمة بطبيعتها.</q><small>الشريحة 2 والتغريدة 2 · ما بنقول إشي عن جودة الزيت أو مدة حفظه</small></div>
+      <div class="rv"><span class="n">2</span><q>المعدن لا ينكسر كالزجاج، وهذا مهم عند نقل الكراتين وتحميلها وشحنها.</q><small>الشريحة 3 والتغريدة 3 · مقارنة عامة مع الزجاج</small></div>
+      <div class="rv"><span class="n">3</span><q>العلب المنتظمة الشكل تُرصّ بسهولة على البالتات.</q><small>الشريحة 4 والتغريدة 4 · عن تنكات الزيت</small></div>
+    </div>
     <div class="kit" id="kit"></div>
   </section>
 
@@ -223,7 +236,7 @@ What we do, under one roof:
 - Storage of finished goods, when customers need it
 
 What we make:
-Food cans, milk powder cans, olive-oil tins (in 1, 4, 8 and 16 L/kg), food containers, round, square and rectangular fancy tins, industrial cans and ends. We also make special-edition packs with custom molds and finishes such as soft touch, embossing and matte/gloss.
+Food cans, milk powder cans, olive-oil tins (most popular sizes 1, 4, 8 and 16 L/kg, and any size to order), food containers, round, square and rectangular fancy tins, industrial cans and ends. We also make special-edition packs with custom molds and finishes such as soft touch, embossing and matte/gloss.
 
 If you are building a food or beverage brand and want packaging that protects the product and stands out on the shelf, we would be glad to talk.
 
@@ -246,13 +259,13 @@ Over the next weeks we will share how a flat sheet of tinplate becomes a can, ho
 
 لأصحاب المعاصر والمعبّئين: أي حجم تعبّئون به أكثر هذا الموسم؟
 
-ننتج تنكات الزيت بالأحجام: 1 و4 و8 و16 لتر/كغ.
+أشهر أحجامنا 1 و4 و8 و16 لتر/كغ، ونصنع أي حجم تحتاجه.
 
 اكتبوا حجمكم في الردود.
 
 #زيت_الزيتون` }],
       notes: ['من يسأل عن أحجام أو مواصفات أخرى: «أرسل لنا مواصفاتك على sales@jordantinplate.com».'],
-      alt: 'أربع تنكات زيت بأحجام متدرجة مكتوب تحتها 1 و4 و8 و16 لتر/كغ.' },
+      alt: 'أربع تنكات زيت بأحجام متدرجة مكتوب تحتها 1 و4 و8 و16 لتر/كغ، مع عبارة «ونصنع أي حجم تحتاجه».' },
     { pl: ['ig', 'fb'], tm: '19:00', id: '#2', t: 'كاروسيل «لماذا التنك لزيت الزيتون؟» · 6 شرائح', st: 'warn', stn: 'بانتظار المراجعة الفنية',
       media: { kind: 'strip', files: [1, 2, 3, 4, 5, 6].map((i) => `02-instagram-carousel/slide-${i}.png`) },
       warn: 'الشرائح 2 و3 و4 فيها جمل الضوء والمتانة والتخزين. إن لم تصل موافقة الجهة الفنية قبل الثلاثاء: انشر الشرائح 1 و5 و6 فقط مع النص المختصر.',
@@ -260,7 +273,7 @@ Over the next weeks we will share how a flat sheet of tinplate becomes a can, ho
 
 في هذا الكاروسيل ثلاثة أمور تستحق النظر عند التفكير بالتنك لزيت الزيتون: الضوء، والمتانة، والتخزين، ثم كيف تظهر علامتك على العلبة بالطباعة والتشطيبات.
 
-نحن في الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية نصنع علباً معدنية لعلامات الأغذية والمشروبات منذ عام 1998، من التصميم والطباعة حتى التشكيل والتغليف الجاهز للتصدير. وننتج تنكات الزيت بأحجام 1 و4 و8 و16 لتر/كغ، بطلاء داخلي يطابق أعلى معايير الصحة الخاصة بالأغذية.
+نحن في الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية نصنع علباً معدنية لعلامات الأغذية والمشروبات منذ عام 1998، من التصميم والطباعة حتى التشكيل والتغليف الجاهز للتصدير. وننتج تنكات الزيت بأي حجم تحتاجه، وأشهرها 1 و4 و8 و16 لتر/كغ، بطلاء داخلي يطابق أعلى معايير الصحة الخاصة بالأغذية.
 
 تجهّز لموسمك؟ راسلنا: sales@jordantinplate.com
 احفظ المنشور وشاركه مع من يعبّئ الزيت هذا الموسم.
@@ -271,13 +284,13 @@ Olive harvest and pressing season is here, and with it comes a question that ret
 
 This carousel looks at three things worth considering when choosing tin for olive oil: light, toughness and storage. Then we show how your brand appears on the tin through printing and finishes.
 
-At Jordan Tinplate Canning we have been making metal packaging for food and beverage brands since 1998, from design and printing to forming and export-ready packing. Our olive-oil tins come in 1, 4, 8 and 16 L/kg, with an interior lacquer that meets the highest food-grade hygiene standards.
+At Jordan Tinplate Canning we have been making metal packaging for food and beverage brands since 1998, from design and printing to forming and export-ready packing. We make olive-oil tins in any size you need, the most popular being 1, 4, 8 and 16 L/kg, with an interior lacquer that meets the highest food-grade hygiene standards.
 
 Getting ready for your season? Write to us: sales@jordantinplate.com
 Save this post and share it with someone filling oil this season.` },
         { h: 'النص المختصر (الشرائح 1 و5 و6)', txt: `بدأ موسم قطف الزيتون وعصره، ومعه سؤال يتكرر كل موسم: في أي عبوة نضع الزيت؟
 
-نحن في الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية نصنع علباً معدنية لعلامات الأغذية والمشروبات منذ عام 1998، من التصميم والطباعة حتى التشكيل والتغليف الجاهز للتصدير. وننتج تنكات الزيت بأحجام 1 و4 و8 و16 لتر/كغ، بطلاء داخلي يطابق أعلى معايير الصحة الخاصة بالأغذية.
+نحن في الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية نصنع علباً معدنية لعلامات الأغذية والمشروبات منذ عام 1998، من التصميم والطباعة حتى التشكيل والتغليف الجاهز للتصدير. وننتج تنكات الزيت بأي حجم تحتاجه، وأشهرها 1 و4 و8 و16 لتر/كغ، بطلاء داخلي يطابق أعلى معايير الصحة الخاصة بالأغذية.
 
 تجهّز لموسمك؟ راسلنا: sales@jordantinplate.com
 
@@ -285,7 +298,7 @@ Save this post and share it with someone filling oil this season.` },
 .
 Olive harvest and pressing season is here, and with it comes a question that returns every year: what do we pack the oil in?
 
-At Jordan Tinplate Canning we have been making metal packaging for food and beverage brands since 1998, from design and printing to forming and export-ready packing. Our olive-oil tins come in 1, 4, 8 and 16 L/kg, with an interior lacquer that meets the highest food-grade hygiene standards.
+At Jordan Tinplate Canning we have been making metal packaging for food and beverage brands since 1998, from design and printing to forming and export-ready packing. We make olive-oil tins in any size you need, the most popular being 1, 4, 8 and 16 L/kg, with an interior lacquer that meets the highest food-grade hygiene standards.
 
 Getting ready for your season? Write to us: sales@jordantinplate.com` },
         { h: 'أول تعليق: الوسوم', short: true, txt: '#زيت_الزيتون #موسم_الزيتون #تنكة_زيت #علب_معدنية #صنع_في_الأردن #OliveOil #MetalPackaging #TinplateCans #MadeInJordan #JordanTinplateCanning' }],
@@ -295,7 +308,7 @@ Getting ready for your season? Write to us: sales@jordantinplate.com` },
         'كرتونة تنكات زيت على بالت مع خط شحن وشاحنة',
         'صفوف مرتبة من تنكات الزيت على بالت',
         'علبة معدنية مطبوعة مع أربع عينات للتشطيبات: لمعة ومطّ وملمس ناعم ونقش بارز',
-        'تنكات الزيت بأحجام 1 و4 و8 و16 لتر/كغ مع بيانات التواصل'] }
+        'أشهر أحجام تنكات الزيت 1 و4 و8 و16 لتر/كغ، وعبارة «ونصنع أي حجم تحتاجه»، مع بيانات التواصل'] }
   ]},
   { id: 'wed', n: 'الأربعاء', d: '28/10', posts: [
     { pl: ['x'], tm: '11:00', id: '#3', t: 'سلسلة: 3 أسباب لاختيار التنك لزيت الزيتون', st: 'warn', stn: 'بانتظار المراجعة الفنية',
@@ -316,7 +329,7 @@ Getting ready for your season? Write to us: sales@jordantinplate.com` },
 العلب المنتظمة الشكل تُرصّ بسهولة على البالتات.
 
 وإن احتجت، نخزّن لك منتجك الجاهز عندنا ثم نشحنه إلى أسواقك.`,
-        `ننتج تنكات الزيت بجميع الأحجام: 1 و4 و8 و16 لتر/كغ.
+        `ننتج تنكات الزيت بأي حجم تحتاجه، وأشهر الأحجام 1 و4 و8 و16 لتر/كغ.
 
 والطلاء الداخلي يطابق أعلى معايير الصحة الخاصة بالأغذية.`,
         `وعلامتك؟ نطبع تصميمك على العلبة بتأثيرات مثل اللمعة والمطّ والملمس الناعم والنقش البارز.

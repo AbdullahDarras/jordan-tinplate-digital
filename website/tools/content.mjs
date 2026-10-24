@@ -184,7 +184,7 @@ const SHAPE_ITEMS = [
   { id: 'rect', label: t('Rectangular', 'مستطيلة'), name: t('Rectangular tin', 'علبة مستطيلة'), dim: t('Sizes on request', 'المقاسات عند الطلب'), note: t('Made to your specification.', 'تُصنَّع وفق مواصفاتك.') },
   { id: 'oval', label: t('Oval', 'بيضاوية'), name: t('Oval tin', 'علبة بيضاوية'), dim: t('Ø 300 mm · H 40–100 mm', 'قطر 300 مم · ارتفاع 40–100 مم'), note: t('A special-mold shape for presentation packs.', 'شكل بقالب خاص لعلب التقديم.') },
   { id: 'bucket', label: t('Bucket', 'سطل'), name: t('Tin bucket', 'سطل معدني'), dim: t('Sizes on request', 'المقاسات عند الطلب'), note: t('A tapered bucket with a wide press-on lid.', 'سطل مخروطي بغطاء عريض يُضغط على الفوهة.') },
-  { id: 'oil', label: t('Spout tin', 'تنكة بفوهة'), name: t('Tin with a spout and screw cap', 'تنكة بفوهة وغطاء ملولب'), dim: t('1, 4, 8 and 16 L/kg', '1 و4 و8 و16 لتر/كغ'), note: t('Produced in all four sizes. The 3D view is illustrative.', 'تُنتَج بالأحجام الأربعة كلها. والمجسّم توضيحي.') },
+  { id: 'oil', label: t('Spout tin', 'تنكة بفوهة'), name: t('Tin with a spout and screw cap', 'تنكة بفوهة وغطاء ملولب'), dim: t('1, 4, 8 and 16 L/kg', '1 و4 و8 و16 لتر/كغ'), note: t('Our most popular sizes; any other size is made to order. The 3D view is illustrative.', 'أشهر الأحجام، ونصنع أي حجم آخر حسب الطلب. والمجسّم توضيحي.') },
   { id: 'can', label: t('Tall round', 'دائرية طويلة'), name: t('Tall round can with a seamed end', 'علبة دائرية طويلة بطرف مختوم'), dim: t('Easy-open or peel-off end', 'طرف سهل الفتح أو قابل للنزع'), note: t('The end is seamed on, for a fully sealed pack.', 'طرفها مختوم بالدرز، لعبوة محكمة الإغلاق.') },
   { id: 'cheese', label: t('Round with lid', 'دائرية بغطاء'), name: t('Round can with a slip lid', 'علبة دائرية بغطاء منزلق'), dim: t('Tall, with a lift-off lid', 'طويلة، بغطاء يُرفع ويُعاد'), note: t('Opens and closes again, for contents used a little at a time.', 'تُفتح وتُغلق من جديد، لمحتوى يُستخدم على دفعات.') },
   { id: 'tuna', label: t('Flat round', 'دائرية مسطحة'), name: t('Flat round tin', 'علبة دائرية مسطحة'), dim: t('Low and wide', 'منخفضة وعريضة'), note: t('A wide, shallow tin with a slip lid.', 'علبة عريضة قليلة الارتفاع بغطاء منزلق.') },
@@ -202,7 +202,7 @@ export const SHAPES_SWEETS = ['round', 'square', 'rect', 'oval'].map((id) => SHA
 
 const OIL_SIZES = [1, 4, 8, 16].map((n) => ({
   id: 'oil' + n, label: t(`${n} L/kg`, `${n} لتر/كغ`), name: t('Olive-oil tin', 'تنكة زيت الزيتون'), dim: t(`${n} L/kg`, `${n} لتر/كغ`),
-  note: t('One of the four sizes we make: 1, 4, 8 and 16 L/kg. The 3D view is illustrative.', 'أحد الأحجام الأربعة التي ننتجها: 1 و4 و8 و16 لتر/كغ. والمجسّم توضيحي.')
+  note: t('One of our most popular sizes (1, 4, 8 and 16 L/kg); we make any size you need. The 3D view is illustrative.', 'أحد أشهر أحجامنا (1 و4 و8 و16 لتر/كغ)، ونصنع أي حجم تحتاجه. والمجسّم توضيحي.')
 }));
 
 const TYPE_CARDS = [
@@ -238,7 +238,7 @@ export const SEASONS = {
   aria: t('3D seasonal tin', 'علبة موسمية ثلاثية الأبعاد'), tabsAria: t('Seasons', 'المواسم'),
   tabs: [
     { id: 'olive', k: t('Autumn', 'الخريف'), h: t('Olive oil', 'زيت الزيتون'), now: true, shape: 'oil', theme: 'olive', finish: 'gloss', to: 'ind-olive',
-      desc: t('Olive-oil tins in 1, 4, 8 and 16 L/kg, ready before the pressing season.', 'تنكات زيت الزيتون بسعات 1 و4 و8 و16 لتر/كغ، جاهزة قبل موسم العصر.'), more: t('Olive-oil tins', 'تنكات زيت الزيتون') },
+      desc: t('Olive-oil tins in any size, most popular 1, 4, 8 and 16 L/kg, ready before the pressing season.', 'تنكات زيت الزيتون بأي حجم، وأشهرها 1 و4 و8 و16 لتر/كغ، جاهزة قبل موسم العصر.'), more: t('Olive-oil tins', 'تنكات زيت الزيتون') },
     { id: 'eid', k: t('Ramadan & Eid', 'رمضان والعيد'), h: t('Sweets, ka’ak & chocolate', 'حلويات وكعك وشوكولاتة'), shape: 'square', theme: 'halawah', finish: 'emboss', to: 'ind-sweets',
       desc: t('Gift tins for sweets, ka’ak and chocolate: embossed, soft-touch and unmistakably festive.', 'علب هدايا للحلويات والكعك والشوكولاتة: بنقش بارز وملمس ناعم وطابع احتفالي لا يُخطئ.'), more: t('Gift tins', 'علب الهدايا') },
     { id: 'cheese', k: t('Spring', 'الربيع'), h: t('White cheese', 'الجبنة البيضاء'), shape: 'cheese', theme: 'halawah', finish: 'matte', to: 'ind-cheese',
@@ -363,10 +363,10 @@ export const PAGES = [
   {
     id: 'ind-olive', path: 'products/olive-oil/', navKey: 'products', parent: 'products',
     title: t('Olive Oil Tins 1–16 L/kg | Jordan Tinplate Canning', 'علب زيت الزيتون 1–16 لتر/كغ | الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية'),
-    description: t('Printed tinplate olive oil tins in 1, 4, 8 and 16 L/kg with food-grade interior lacquer, in-house artwork and export-ready packing. Made in Jordan.',
-                   'تنكات زيت الزيتون من الصفيح المطبوع بأحجام 1 و4 و8 و16 لتر/كغ، بطلاء داخلي صالح للأغذية وتصميم داخل المصنع وتغليف جاهز للتصدير. صناعة أردنية.'),
+    description: t('Printed tinplate olive oil tins in any size (most popular 1, 4, 8 and 16 L/kg) with food-grade interior lacquer, in-house artwork and export-ready packing. Made in Jordan.',
+                   'تنكات زيت الزيتون من الصفيح المطبوع بأي حجم (أشهرها 1 و4 و8 و16 لتر/كغ)، بطلاء داخلي صالح للأغذية وتصميم داخل المصنع وتغليف جاهز للتصدير. صناعة أردنية.'),
     crumb: t('Olive oil', 'زيت الزيتون'),
-    tile: { h: t('Olive oil', 'زيت الزيتون'), p: t('Tins in 1, 4, 8 and 16 L/kg for the autumn pressing season.', 'تنكات بأحجام 1 و4 و8 و16 لتر/كغ لموسم العصر في الخريف.') },
+    tile: { h: t('Olive oil', 'زيت الزيتون'), p: t('Tins in any size, most popular 1, 4, 8 and 16 L/kg, for the autumn pressing season.', 'تنكات بأي حجم، وأشهرها 1 و4 و8 و16 لتر/كغ، لموسم العصر في الخريف.') },
     hero: {
       eyebrow: t('Industry · Olive oil', 'القطاع · زيت الزيتون'),
       h1: t('Tinplate tins for olive oil brands', 'علب صفيح لعلامات زيت الزيتون'),
@@ -384,9 +384,9 @@ export const PAGES = [
           { h: t('Food-grade interior lacquer', 'طلاء داخلي صالح للأغذية'), p: t('Interior lacquer that meets the highest food-safety standards.', 'طلاء داخلي مطابق لأعلى معايير الصحة الخاصة بالأغذية.') },
           { h: t('Ready for export', 'جاهزة للتصدير'), p: t('Cartons are palletised for overseas shipping, and we can hold finished stock until you need it.', 'تُرتَّب الكراتين على باليتات للشحن الخارجي، ويمكننا تخزين المنتج الجاهز إلى حين حاجتك إليه.') }
         ] }] },
-      { eyebrow: t('Sizes', 'الأحجام'), title: t('Olive-oil tins in four sizes', 'تنكات زيت الزيتون بأربعة أحجام'),
+      { eyebrow: t('Sizes', 'الأحجام'), title: t('Olive-oil tins in any size', 'تنكات زيت الزيتون بأي حجم'),
         blocks: [{ k: 'specs', rows: [
-          { k: t('Olive-oil tins', 'تنكات زيت الزيتون'), v: t('1, 4, 8 and 16 L/kg', '1 و4 و8 و16 لتر/كغ'), note: t('We produce olive-oil tins in all four sizes. The drawing above is illustrative.', 'ننتج تنكات زيت الزيتون بالأحجام الأربعة كلها. والرسم أعلاه توضيحي.'), art: 'oil' },
+          { k: t('Olive-oil tins', 'تنكات زيت الزيتون'), v: t('Most popular: 1, 4, 8 and 16 L/kg', 'الأشهر: 1 و4 و8 و16 لتر/كغ'), note: t('Any other size is made to order. The drawing above is illustrative.', 'ونصنع أي حجم آخر حسب الطلب. والرسم أعلاه توضيحي.'), art: 'oil' },
           { k: t('Food cans', 'علب الأغذية'), v: t('9 diameters, 52–215 mm · 60 ml – 8 L', 'تسعة أقطار، 52–215 مم · من 60 مل إلى 8 لترات'), note: t('The general food-can range.', 'المجموعة العامة لعلب الأغذية.') },
           { k: t('Round gift tins', 'علب هدايا دائرية'), v: t('Ø 73–265 mm · H 34–210 mm', 'قطر 73–265 مم · ارتفاع 34–210 مم'), note: t('For premium and gift packs.', 'للعبوات الفاخرة وعبوات الهدايا.') }
         ] }] },

@@ -32,7 +32,7 @@ What we do, under one roof:
 - Storage of finished goods, when customers need it
 
 What we make:
-Food cans, milk powder cans, olive-oil tins (in 1, 4, 8 and 16 L/kg), food containers, round, square and rectangular fancy tins, industrial cans and ends. We also make special-edition packs with custom molds and finishes such as soft touch, embossing and matte/gloss.
+Food cans, milk powder cans, olive-oil tins (most popular sizes 1, 4, 8 and 16 L/kg, and any size to order), food containers, round, square and rectangular fancy tins, industrial cans and ends. We also make special-edition packs with custom molds and finishes such as soft touch, embossing and matte/gloss.
 
 If you are building a food or beverage brand and want packaging that protects the product and stands out on the shelf, we would be glad to talk.
 
@@ -61,7 +61,7 @@ Over the next weeks we will share how a flat sheet of tinplate becomes a can, ho
 - التغليف الجاهز للتصدير
 - تخزين المنتج الجاهز عند الحاجة
 
-ماذا نصنع؟ علب أغذية، وعلب حليب بودرة، وتنكات زيت زيتون بأحجام 1 و4 و8 و16 لتر/كغ، وحاويات أغذية، وعلباً فاخرة دائرية ومربعة ومستطيلة، وعلباً صناعية وأغطية، إضافةً إلى عبوات خاصة بقوالب وتشطيبات مميزة مثل الملمس الناعم (Soft Touch) والنقش البارز واللمعة والمطّ.
+ماذا نصنع؟ علب أغذية، وعلب حليب بودرة، وتنكات زيت زيتون بأشهر الأحجام 1 و4 و8 و16 لتر/كغ وبأي حجم حسب الطلب، وحاويات أغذية، وعلباً فاخرة دائرية ومربعة ومستطيلة، وعلباً صناعية وأغطية، إضافةً إلى عبوات خاصة بقوالب وتشطيبات مميزة مثل الملمس الناعم (Soft Touch) والنقش البارز واللمعة والمطّ.
 
 إن كنت تبني علامة أغذية أو مشروبات وتبحث عن عبوة تحمي منتجك وتميّزه على الرف، يسعدنا أن نسمعك.
 sales@jordantinplate.com
@@ -116,7 +116,7 @@ sales@jordantinplate.com
 **Resolved (management decisions, `docs/decisions.md`):**
 - [x] Official brand name **Jordan Tinplate Canning**, written in full; official Arabic name «الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية» (confirmed, round 3)
 - [x] Address: Al-Zmailat – Al-Muwaqqar (not Sahab); about 250 employees
-- [x] Olive-oil tins in 1, 4, 8 and 16 L/kg may be named publicly
+- [x] Olive-oil tins: 1, 4, 8 and 16 L/kg are the most popular sizes; any size is made to order (decision 40)
 - [x] Bio/About approved provisionally; account access with the marketing lead (2FA on)
 
 **Still open:**

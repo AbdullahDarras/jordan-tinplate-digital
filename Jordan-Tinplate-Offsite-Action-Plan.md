@@ -26,7 +26,7 @@
 ### الأسبوع 1 — قرارات الإدارة (لا يمكن البدء قبلها)
 - [x] ✅ **اعتماد الاسم الرسمي للعلامة: Jordan Tinplate Canning** (إنجليزي). يُستخدم في كل مكان وبشكل كامل. "Jordan Canning" يبقى اسماً قانونياً أو قديماً مذكوراً في الـAbout فقط. ✅ **الاسم العربي الرسمي: «الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية»** (معتمد، لم يعد معلّقاً).
 - [x] ✅ **العنوان:** الزميلات – الموقّر، **نهائي كما هو** (الجولة الثالثة). الهاتف +962 6 4051125 والبريد sales@jordantinplate.com موجودان على الموقع. [ ] **ساعات العمل** للملف على Google (إن رغبت الإدارة بإظهارها).
-- [x] ✅ **اعتماد النبذة التعريفية (مبدئياً)** وما يمكن ذكره: سنة التأسيس 1998، الجيل الثالث، نحو 250 موظفاً، تنكات الزيت بأحجام 1 و4 و8 و16 لتر/كغ، والطلاء الداخلي المطابق لأعلى معايير الصحة الخاصة بالأغذية (دون اسم معيار). ✅ **الشهادات (الجولة الرابعة):** يجوز ذكر شهادتين فقط وبالصياغة المعتمدة في `docs/certificates.md`: **FSSC 22000** من Bureau Veritas، واعتماد **JFDA** للعبوات المعدنية وأغطيتها كمواد ملامسة للغذاء (دون تاريخ انتهاء JFDA). [ ] **لا يُذكر:** أي شهادة أو اعتماد آخر (لا ISO 9001، ولا ISO 22000 منفردة، ولا FDA، ولا BRC)، ولا خطاب الضمان، الطاقة الإنتاجية، أسماء العملاء، وأي فرع أو مكتب في السعودية (غير قائم).
+- [x] ✅ **اعتماد النبذة التعريفية (مبدئياً)** وما يمكن ذكره: سنة التأسيس 1998، الجيل الثالث، نحو 250 موظفاً، تنكات الزيت (أشهر الأحجام 1 و4 و8 و16 لتر/كغ، وأي حجم حسب الطلب)، والطلاء الداخلي المطابق لأعلى معايير الصحة الخاصة بالأغذية (دون اسم معيار). ✅ **الشهادات (الجولة الرابعة):** يجوز ذكر شهادتين فقط وبالصياغة المعتمدة في `docs/certificates.md`: **FSSC 22000** من Bureau Veritas، واعتماد **JFDA** للعبوات المعدنية وأغطيتها كمواد ملامسة للغذاء (دون تاريخ انتهاء JFDA). [ ] **لا يُذكر:** أي شهادة أو اعتماد آخر (لا ISO 9001، ولا ISO 22000 منفردة، ولا FDA، ولا BRC)، ولا خطاب الضمان، الطاقة الإنتاجية، أسماء العملاء، وأي فرع أو مكتب في السعودية (غير قائم).
 - [x] ✅ **صلاحيات الحسابات** صارت مع مسؤول التسويق (لينكد إن، فيس بوك، انستغرام، X). [ ] **التنفيذ:** تفعيل المصادقة الثنائية على كل حساب.
 
 ### الأسبوع 1–2 — الأساس
@@ -50,7 +50,7 @@
 
 ## 3) نصوص جاهزة للحسابات (للتأكيد قبل النشر)
 
-> محدَّثة بقرارات الإدارة. **يجوز ذكر شهادتين فقط (الجولة الرابعة):** FSSC 22000 (Bureau Veritas) واعتماد JFDA لمواد ملامسة الغذاء، بالصياغة المعتمدة في `docs/certificates.md`، **دون تاريخ انتهاء JFDA** ودون شعارات FSSC/UKAS/Bureau Veritas (نص فقط حتى يُتحقق من الترخيص). **لا يُذكر هنا:** أي شهادة أخرى (ISO 9001، ISO 22000 منفردة، FDA، BRC)، خطاب الضمان، الطاقة الإنتاجية، أسماء العملاء، أي فرع سعودي. يجوز: 250 موظفاً، أحجام تنكات الزيت (1 و4 و8 و16 لتر/كغ)، العنوان الزميلات – الموقّر. الاسم العربي الرسمي «الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية» (54 حرفاً بالمسافات) يُستعمل في النسخ العربية. اسم المستخدم الموحَّد `@jordantinplate` (14 حرفاً). حدود الحروف أُعيد عدّها بـPython بعد اعتماد الاسم العربي الأطول (الجولة الثالثة): X الاسم ≤50 والبايو ≤160 والمعرّف ≤15، GBP ≤750، انستغرام الاسم ≤30 (يبقى الإنجليزي ويُكتب الاسم العربي في البايو) والبايو ≤150، فيس بوك Intro ≤101 (يبقى الإنجليزي ويُكتب الاسم العربي في About)، لينكد إن Tagline ≤120. اختُصرت الصيغ التي تجاوزت الحد بعد الاسم الجديد (بايو انستغرام وX).
+> محدَّثة بقرارات الإدارة. **يجوز ذكر شهادتين فقط (الجولة الرابعة):** FSSC 22000 (Bureau Veritas) واعتماد JFDA لمواد ملامسة الغذاء، بالصياغة المعتمدة في `docs/certificates.md`، **دون تاريخ انتهاء JFDA** ودون شعارات FSSC/UKAS/Bureau Veritas (نص فقط حتى يُتحقق من الترخيص). **لا يُذكر هنا:** أي شهادة أخرى (ISO 9001، ISO 22000 منفردة، FDA، BRC)، خطاب الضمان، الطاقة الإنتاجية، أسماء العملاء، أي فرع سعودي. يجوز: 250 موظفاً، أحجام تنكات الزيت (الأشهر 1 و4 و8 و16 لتر/كغ، وأي حجم حسب الطلب)، العنوان الزميلات – الموقّر. الاسم العربي الرسمي «الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية» (54 حرفاً بالمسافات) يُستعمل في النسخ العربية. اسم المستخدم الموحَّد `@jordantinplate` (14 حرفاً). حدود الحروف أُعيد عدّها بـPython بعد اعتماد الاسم العربي الأطول (الجولة الثالثة): X الاسم ≤50 والبايو ≤160 والمعرّف ≤15، GBP ≤750، انستغرام الاسم ≤30 (يبقى الإنجليزي ويُكتب الاسم العربي في البايو) والبايو ≤150، فيس بوك Intro ≤101 (يبقى الإنجليزي ويُكتب الاسم العربي في About)، لينكد إن Tagline ≤120. اختُصرت الصيغ التي تجاوزت الحد بعد الاسم الجديد (بايو انستغرام وX).
 
 ### LinkedIn — الاسم والـTagline
 - **Page name:** `Jordan Tinplate Canning`
@@ -64,7 +64,7 @@
 ### LinkedIn — About (EN)
 Jordan Tinplate Canning is a Jordan-based manufacturer of metal packaging, serving food and beverage brands since 1998 from Al-Zmailat – Al-Muwaqqar. A team of about 250 people, run by the third generation of the founding family, handles the whole journey in one place: artwork and design, plate-making (CTP), printing and coating, forming, and export-ready packing — with storage for finished goods when customers need it.
 
-What we make: food cans, milk powder cans, olive-oil tins in 1, 4, 8 and 16 L/kg, food containers, round / square / rectangular fancy cans, industrial cans, ends, and special-edition packs with custom molds and finishes (soft touch, embossing, matte/gloss, and more).
+What we make: food cans, milk powder cans, olive-oil tins (most popular sizes 1, 4, 8 and 16 L/kg, any size to order), food containers, round / square / rectangular fancy cans, industrial cans, ends, and special-edition packs with custom molds and finishes (soft touch, embossing, matte/gloss, and more).
 
 Food safety: our food safety management system is certified to FSSC 22000 by Bureau Veritas (UKAS-accredited), for the coating, printing, cutting, forming, welding and seaming of metal cans for food packaging. Our metal cans and ends are approved by the Jordan Food and Drug Administration (JFDA) as food-contact materials.
 
@@ -74,7 +74,7 @@ Looking for packaging that protects the product and stands out on the shelf? Tal
 
 ### LinkedIn — About (AR، للنسخة العربية أو التعريف)
 الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية متخصصة في التغليف المعدني لعلامات الأغذية والمشروبات منذ عام 1998، في الزميلات – الموقّر. يعمل فيها نحو 250 موظفاً ويديرها اليوم الجيل الثالث من العائلة المؤسِّسة. نقدّم الرحلة كاملة في مكان واحد: التصميم والطباعة والطلاء والتشكيل والتغليف الجاهز للتصدير، مع إمكانية تخزين المنتج الجاهز للعميل.
-منتجاتنا: علب أغذية، علب حليب بودرة، تنكات زيت زيتون بأحجام 1 و4 و8 و16 لتر/كغ، حاويات أغذية، علب فاخرة (دائرية ومربعة ومستطيلة)، علب صناعية، وعلب خاصة بقوالب وتشطيبات مميزة.
+منتجاتنا: علب أغذية، علب حليب بودرة، تنكات زيت زيتون (أشهرها 1 و4 و8 و16 لتر/كغ، وأي حجم حسب الطلب)، حاويات أغذية، علب فاخرة (دائرية ومربعة ومستطيلة)، علب صناعية، وعلب خاصة بقوالب وتشطيبات مميزة.
 سلامة الغذاء: نظام سلامة الغذاء لدينا حاصل على شهادة FSSC 22000 من Bureau Veritas (معتمدة من UKAS) لنطاق الطلاء والطباعة والقص والتشكيل واللحام والإغلاق لعلب معدنية مخصصة لتغليف الأغذية. وعلبنا وأغطيتنا المعدنية معتمدة من المؤسسة العامة للغذاء والدواء (JFDA) كمواد ملامسة للأغذية.
 للتواصل: sales@jordantinplate.com
 
@@ -102,11 +102,11 @@ Looking for packaging that protects the product and stands out on the shelf? Tal
 
 ### Google Business Profile — الوصف (≤750 حرفاً)
 
-**الوصف بالإنجليزية (745 حرفاً، ≤750؛ كان 600 قبل إضافة الشهادتين):**
-Jordan Tinplate Canning is a metal packaging manufacturer in Al-Zmailat – Al-Muwaqqar, Jordan, serving food and beverage brands since 1998 with a team of about 250 people. We design, print, form and pack tinplate cans: food cans, milk powder cans, olive-oil tins (1, 4, 8 and 16 L/kg), food containers, round / square / rectangular gift tins, industrial cans and ends — plus custom molds and finishes such as soft touch and embossing. In-house design and plate-making (CTP), automated production lines, and export-ready palletizing. Our food safety management system is certified to FSSC 22000 by Bureau Veritas (UKAS-accredited); our metal cans and ends are JFDA-approved as food-contact materials. Ask us for a quotation based on your artwork.
+**الوصف بالإنجليزية (735 حرفاً، ≤750؛ كان 600 قبل إضافة الشهادتين):**
+Jordan Tinplate Canning is a metal packaging manufacturer in Al-Zmailat – Al-Muwaqqar, Jordan, serving food and beverage brands since 1998 with a team of about 250 people. We design, print, form and pack tinplate cans: food cans, milk powder cans, olive-oil tins in any size, food containers, round / square / rectangular gift tins, industrial cans and ends — plus custom molds and finishes such as soft touch and embossing. In-house design and plate-making (CTP), automated production lines, and export-ready palletizing. Our food safety management system is certified to FSSC 22000 by Bureau Veritas (UKAS-accredited); our metal cans and ends are JFDA-approved as food-contact materials. Ask us for a quotation based on your artwork.
 
-**الوصف بالعربية (721 حرفاً، ≤750؛ كان 551 قبل إضافة الشهادتين):**
-الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية شركة للتغليف المعدني في الزميلات – الموقّر بالأردن، تخدم علامات الأغذية والمشروبات منذ عام 1998 بفريق من نحو 250 موظفاً. نصمّم علب الصفيح ونطبعها ونشكّلها ونجهّزها للشحن: علب أغذية، وعلب حليب بودرة، وتنكات زيت زيتون بأحجام 1 و4 و8 و16 لتر/كغ، وحاويات أغذية، وعلب هدايا دائرية ومربعة ومستطيلة، وعلب صناعية وأغطية، إضافةً إلى قوالب وتشطيبات خاصة مثل الملمس الناعم والنقش البارز. تصميم وألواح CTP داخل المصنع وتغليف على باليتات جاهز للتصدير. نظام سلامة الغذاء لدينا حاصل على شهادة FSSC 22000 من Bureau Veritas (معتمدة من UKAS)، وعلبنا وأغطيتنا المعدنية معتمدة من المؤسسة العامة للغذاء والدواء (JFDA) كمواد ملامسة للأغذية. تواصل معنا للحصول على عرض سعر بناءً على تصميمك.
+**الوصف بالعربية (742 حرفاً، ≤750؛ كان 551 قبل إضافة الشهادتين):**
+الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية شركة للتغليف المعدني في الزميلات – الموقّر بالأردن، تخدم علامات الأغذية والمشروبات منذ عام 1998 بفريق من نحو 250 موظفاً. نصمّم علب الصفيح ونطبعها ونشكّلها ونجهّزها للشحن: علب أغذية، وعلب حليب بودرة، وتنكات زيت زيتون (أشهرها 1 و4 و8 و16 لتر/كغ، وأي حجم حسب الطلب)، وحاويات أغذية، وعلب هدايا دائرية ومربعة ومستطيلة، وعلب صناعية وأغطية، إضافةً إلى قوالب وتشطيبات خاصة مثل الملمس الناعم والنقش البارز. تصميم وألواح CTP داخل المصنع وتغليف على باليتات جاهز للتصدير. نظام سلامة الغذاء لدينا حاصل على شهادة FSSC 22000 من Bureau Veritas (معتمدة من UKAS)، وعلبنا وأغطيتنا المعدنية معتمدة من المؤسسة العامة للغذاء والدواء (JFDA) كمواد ملامسة للأغذية. تواصل معنا للحصول على عرض سعر بناءً على تصميمك.
 
 > لا تُضف إلى الوصف رقم الشهادة أو تاريخ انتهاء JFDA، ولا شعارات الجهات المانحة. لو ضاق الحد، تبقى جملة FSSC وتُحذف جملة JFDA قبلها.
 

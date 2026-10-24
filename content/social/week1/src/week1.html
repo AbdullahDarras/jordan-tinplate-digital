@@ -1,289 +1,367 @@
 <!doctype html>
 <html lang="ar"><head><meta charset="utf-8"><title>Week 1 designs</title>
 <link rel="stylesheet" href="brand.css">
+<link rel="stylesheet" href="layout.css">
 <style>
-/* helpers for tin placement: left/bottom set the tin's foot centre */
-.t { position: absolute; transform: translateX(-50%); }
-.label { font-family: var(--en); font-weight: 600; color: var(--navy-100); }
-.ar-h { font-weight: 700; line-height: 1.22; letter-spacing: 0; }
-.en-h { font-weight: 700; line-height: 1.04; letter-spacing: -.03em; }
-.ar-b { font-weight: 400; line-height: 1.6; }
-.en-b { font-weight: 400; line-height: 1.4; color: var(--navy-100); }
-.gold { color: var(--gold-2); }
-.amber { color: var(--amber); }
-.card { position: absolute; border-radius: 28px; background: rgba(255, 255, 255, .06); border: 2px solid rgba(255, 255, 255, .14); }
-.chip { position: absolute; display: flex; align-items: center; gap: 18px; }
-.chip .sw { position: relative; width: 128px; height: 128px; border-radius: 50%; overflow: hidden; border: 4px solid rgba(255, 233, 166, .8); box-shadow: 0 14px 30px rgba(0, 8, 28, .5); background: #0848ac; }
-.chip .sw img { position: absolute; width: 340%; left: -120%; top: -23%; max-width: none; }
-.chip b { display: block; font-size: 40px; font-weight: 700; line-height: 1.15; }
-.chip i { display: block; font-style: normal; font-family: var(--en); font-size: 28px; color: var(--navy-100); font-weight: 500; }
-.row { position: absolute; display: flex; align-items: center; gap: 22px; padding: 22px 30px; border-radius: 22px; background: rgba(255, 255, 255, .08); border: 2px solid rgba(255, 255, 255, .16); font-family: var(--en); font-weight: 600; font-size: 38px; direction: ltr; }
-.row svg { width: 40px; height: 40px; flex: none; }
-.pallet { position: absolute; }
-.stage-card { position: absolute; top: 300px; width: 228px; height: 400px; border-radius: 26px; background: rgba(255, 255, 255, .07); border: 2px solid rgba(255, 255, 255, .16); text-align: center; padding-top: 28px; }
-.stage-card .n { font-family: var(--en); font-weight: 800; font-size: 64px; color: transparent; -webkit-text-stroke: 2.5px var(--amber); line-height: 1; }
-.stage-card .ic { height: 120px; display: grid; place-items: center; margin: 14px 0 10px; }
-.stage-card b { display: block; font-size: 34px; font-weight: 700; line-height: 1.25; padding: 0 12px; }
-.stage-card i { display: block; font-style: normal; font-family: var(--en); font-size: 24px; color: var(--navy-100); margin-top: 8px; padding: 0 10px; line-height: 1.2; }
+/* frame-specific pieces; positions live in layout.css (one safe box per frame) */
+.tag { font-size: 28px; }
+.f-x .tag { font-size: 28px; }
+.logo-s { display: block; height: 52px; width: auto; }
+.f-x .logo-s { height: 56px; }
+.ft { margin-top: 40px; }
+.swipe2 { display: flex; align-items: center; gap: 12px; font-family: var(--ar); font-size: 26px; color: var(--navy-100); }
+.chip2 { display: flex; align-items: center; gap: 20px; }
+.chip2 .sw { position: relative; width: 112px; height: 112px; border-radius: 50%; overflow: hidden; flex: none; border: 4px solid rgba(255, 233, 166, .85); box-shadow: 0 14px 28px rgba(0, 8, 28, .45); background: #2a2018; }
+.chip2 .sw img { position: absolute; width: 420%; left: -160%; top: -14%; max-width: none; }
+.chip2 b { display: block; font-size: 36px; font-weight: 700; line-height: 1.15; white-space: nowrap; }
+.chip2 i { display: block; font-style: normal; font-family: var(--en); font-size: 24px; color: var(--navy-100); font-weight: 500; }
+.contact { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; direction: ltr; }
+.contact .c { display: flex; align-items: center; gap: 16px; padding: 18px 24px; border-radius: 20px; background: rgba(255, 255, 255, .08); border: 2px solid rgba(255, 255, 255, .16); font-family: var(--en); font-weight: 600; font-size: 30px; white-space: nowrap; }
+.contact .c.wide { grid-column: 1 / -1; font-size: 34px; }
+.contact svg { width: 36px; height: 36px; flex: none; }
+.sizes { display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: minmax(0, 1fr); }
+.sizes .s { display: grid; grid-template-rows: minmax(0, 1fr) auto; justify-items: center; min-height: 0; }
+.sizes .im { justify-self: stretch; align-self: stretch; display: flex; align-items: flex-end; justify-content: center; min-height: 0; overflow: visible; }
+.sizes img { display: block; max-width: 92%; filter: drop-shadow(0 30px 26px rgba(0, 8, 28, .5)); }
+.sizes b { font-family: var(--en); font-weight: 800; font-size: 44px; line-height: 1; margin-top: 16px; }
+.cards { display: grid; grid-template-columns: repeat(6, 1fr); gap: 24px; direction: rtl; }
+.cards .k { border-radius: 24px; background: rgba(255, 255, 255, .07); border: 2px solid rgba(255, 255, 255, .16); text-align: center; padding: 28px 12px 30px; }
+.cards .n { font-family: var(--en); font-weight: 800; font-size: 60px; color: transparent; -webkit-text-stroke: 2.5px var(--amber); line-height: 1; }
+.cards .ic { height: 116px; display: grid; place-items: center; margin: 18px 0 14px; }
+.cards b { display: block; font-size: 32px; font-weight: 700; line-height: 1.25; }
+.cards i { display: block; font-style: normal; font-family: var(--en); font-size: 22px; color: var(--navy-100); margin-top: 8px; line-height: 1.25; }
+.pallet svg { display: block; width: 100%; height: auto; }
+.carton { border-radius: 10px; background: linear-gradient(180deg, #d9b27a, #b98a4c); border: 3px solid #7a5428; box-shadow: 0 26px 34px rgba(0, 8, 28, .4); position: relative; }
+.carton::after { content: ''; position: absolute; left: 0; right: 0; top: 40%; height: 16%; background: rgba(122, 84, 40, .35); }
 </style></head>
 <body>
+<script>if (location.search.includes('guides')) document.body.classList.add('guides');</script>
 
 <!-- ============================================================ PROFILE KIT -->
 
-<!-- Profile picture, all platforms (1080 x 1080; safe inside the circle crop) -->
+<!-- Profile picture (1080 x 1080). Everything sits inside the central circle the platforms crop to. -->
 <div class="frame" data-name="profile/avatar-1080" style="width:1080px;height:1080px">
   <div class="halo" style="left:140px;top:140px;width:800px;height:800px;opacity:.55"></div>
-  <img class="abs" src="assets/gear-white.svg" style="left:280px;top:276px;width:520px">
+  <img class="abs" src="assets/gear-white.svg" style="left:290px;top:290px;width:500px;z-index:2">
 </div>
 
-<!-- LinkedIn company cover (1128 x 191, exported at 2x = 2256 x 382). The page logo covers the bottom-left corner on desktop. -->
+<!-- LinkedIn company cover (1128 x 191 shown, exported at 2x). The page logo covers the lower-left corner on desktop, so content starts at 560 px; 48 px top and bottom. -->
 <div class="frame" data-name="profile/linkedin-cover-2256x382" style="width:2256px;height:382px;background:linear-gradient(90deg,var(--navy-900) 0%,var(--navy) 45%,var(--navy-500) 100%)">
-  <div class="en abs" style="left:560px;top:92px;font-size:64px;font-weight:700;letter-spacing:-.03em;line-height:1">Metal packaging for food &amp; beverage brands</div>
-  <div class="en abs" style="left:562px;top:182px;font-size:36px;color:var(--navy-100);font-weight:500">Design · Printing · Forming · Export-ready packing</div>
-  <div class="ar abs" style="left:562px;top:248px;font-size:34px;color:var(--amber);font-weight:600;direction:rtl;width:1000px;text-align:left">علب معدنية للأغذية والمشروبات · صُنع في الأردن منذ 1998</div>
-  <img class="t tin" src="assets/tins/levelmax.png" style="left:2090px;bottom:50px;height:270px">
-  <img class="t tin" src="assets/tins/bab.png" style="left:1790px;bottom:60px;height:150px">
-  <img class="t tin" src="assets/tins/qaisi.png" style="left:1950px;bottom:26px;height:200px">
-</div>
-
-<!-- X header (1500 x 500). The profile picture covers the bottom-left; keep content right of 400 px and inside the middle band. -->
-<div class="frame" data-name="profile/x-header-1500x500" style="width:1500px;height:500px">
-  <div class="halo" style="left:980px;top:-40px;width:560px;height:560px"></div>
-  <img class="t tin" src="assets/tins/bab.png" style="left:1040px;bottom:110px;height:170px">
-  <img class="t tin" src="assets/tins/suliman.png" style="left:1380px;bottom:100px;height:300px">
-  <img class="t tin" src="assets/tins/qaisi.png" style="left:1210px;bottom:76px;height:230px">
-  <div class="ar abs" style="right:600px;top:118px;font-size:46px;font-weight:700;width:820px;text-align:right;line-height:1.35">الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية</div>
-  <div class="en abs" style="right:600px;top:258px;font-size:40px;font-weight:700;letter-spacing:-.02em">Jordan Tinplate Canning</div>
-  <div class="en abs" style="right:600px;top:316px;font-size:28px;color:var(--navy-100)">Metal packaging for F&amp;B brands · Since 1998</div>
-</div>
-
-<!-- Facebook cover (1640 x 624 = 2x of 820 x 312). Mobile crops the sides: keep content in the central 1200 px. -->
-<div class="frame" data-name="profile/facebook-cover-1640x624" style="width:1640px;height:624px">
-  <div class="halo" style="left:930px;top:20px;width:620px;height:620px"></div>
-  <div class="ar abs" style="right:760px;top:150px;width:720px;text-align:right">
-    <div style="font-size:54px;font-weight:700;line-height:1.35">علب معدنية لعلامات<br>الأغذية والمشروبات</div>
-    <div style="font-size:30px;color:var(--amber);font-weight:600;margin-top:22px">من التصميم إلى الشحن، تحت سقف واحد · منذ 1998</div>
-    <div class="en" style="font-size:30px;color:var(--navy-100);margin-top:18px;text-align:right">Jordan Tinplate Canning · Made in Jordan</div>
+  <div class="safe ltr row" style="top:48px;bottom:48px;left:560px;right:120px">
+    <div class="col g16">
+      <div class="en" style="font-size:54px;font-weight:700;letter-spacing:-.03em;line-height:1">Metal packaging for food &amp; beverage brands</div>
+      <div class="en muted" style="font-size:34px;font-weight:500">Design · Printing · Forming · Export-ready packing · Since 1998</div>
+      <div class="ar" style="font-size:32px;color:var(--amber);font-weight:600;text-align:left">علب معدنية للأغذية والمشروبات · صُنع في الأردن</div>
+    </div>
+    <div class="vis" style="flex:0 0 440px;height:100%">
+      <div class="comp"><img src="assets/tins/bab.png" style="left:0%;bottom:6%;width:40%"><img src="assets/tins/levelmax.png" style="left:60%;bottom:10%;width:38%"><img src="assets/tins/qaisi.png" style="left:26%;bottom:0%;width:52%"></div>
+    </div>
   </div>
-  <img class="t tin" src="assets/tins/levelmax.png" style="left:1300px;bottom:170px;height:320px">
-  <img class="t tin" src="assets/tins/maeen.png" style="left:1020px;bottom:150px;height:270px">
-  <img class="t tin" src="assets/tins/jgz.png" style="left:1420px;bottom:110px;height:170px">
-  <img class="t tin" src="assets/tins/qaisi.png" style="left:1160px;bottom:90px;height:240px">
 </div>
 
-<!-- ============================================================ POST #1: LinkedIn intro, Sun 25/10 (1080 x 1350) -->
-<div class="frame" data-name="01-linkedin-intro/01-linkedin-1080x1350" style="width:1080px;height:1350px">
-  <div class="abs" style="left:90px;top:92px"><span class="tag en" style="font-size:28px"><span class="dot"></span>Jordan Tinplate Canning</span></div>
-  <div class="en abs en-h" style="left:90px;top:176px;font-size:112px;width:900px">Made in Jordan<br><span class="gold">since 1998</span></div>
-  <div class="en abs" style="left:92px;top:430px;font-size:40px;color:var(--navy-100);font-weight:500">Metal packaging for food &amp; beverage brands</div>
-  <div class="ar abs" style="left:90px;top:500px;width:900px;text-align:left;font-size:46px;font-weight:700;color:#fff;direction:rtl">صُنع في الأردن منذ 1998</div>
-  <div class="ar abs" style="left:90px;top:566px;width:900px;text-align:left;font-size:32px;color:var(--navy-200);direction:rtl">تغليف معدني لعلامات الأغذية والمشروبات</div>
-  <div class="halo" style="left:140px;top:560px;width:800px;height:640px"></div>
-  <div class="floor" style="left:120px;top:1060px;width:840px;height:90px"></div>
-  <img class="t tin" src="assets/tins/suliman.png" style="left:300px;bottom:330px;height:290px">
-  <img class="t tin" src="assets/tins/levelmax.png" style="left:770px;bottom:330px;height:330px">
-  <img class="t tin" src="assets/tins/maeen.png" style="left:170px;bottom:240px;height:290px">
-  <img class="t tin" src="assets/tins/qaisi.png" style="left:520px;bottom:236px;height:300px">
-  <img class="t tin" src="assets/tins/bab.png" style="left:860px;bottom:236px;height:190px">
-  <div class="foot" style="padding:0 90px 70px">
-    <img class="logo" src="assets/logo-h-white.svg" style="height:78px">
-    <span class="url" style="font-size:32px">jordantinplate.com</span>
+<!-- X header (1500 x 500). The profile picture covers the lower-left corner (to about 420 px); some screens crop the top and bottom, so content stays in the middle band. -->
+<div class="frame" data-name="profile/x-header-1500x500" style="width:1500px;height:500px">
+  <div class="safe rtl row" style="top:80px;bottom:80px;left:460px;right:104px">
+    <div class="col g16" style="flex:1 1 0;min-width:0">
+      <div class="h1" style="font-size:42px;line-height:1.35">الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية</div>
+      <div class="en" style="font-size:36px;font-weight:700;letter-spacing:-.02em;text-align:right">Jordan Tinplate Canning</div>
+      <div class="en muted" style="font-size:26px;text-align:right">Metal packaging for F&amp;B brands · Since 1998</div>
+    </div>
+    <div class="vis" style="flex:0 0 360px;height:100%">
+      <div class="glow"></div>
+      <div class="comp"><img src="assets/tins/suliman.png" style="left:44%;bottom:14%;width:52%"><img src="assets/tins/qaisi.png" style="left:4%;bottom:0%;width:70%"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Facebook cover (820 x 312 shown, exported at 2x). Phones crop the sides: content stays inside the central 1240 px. -->
+<div class="frame" data-name="profile/facebook-cover-1640x624" style="width:1640px;height:624px">
+  <div class="safe rtl row" style="top:72px;bottom:72px;left:200px;right:200px">
+    <div class="col g16" style="max-width:640px">
+      <div class="h1" style="font-size:52px;line-height:1.3">علب معدنية لعلامات الأغذية والمشروبات</div>
+      <div class="ar" style="font-size:30px;color:var(--amber);font-weight:600">من التصميم إلى الشحن، تحت سقف واحد</div>
+      <div class="en muted" style="font-size:28px;text-align:right">Jordan Tinplate Canning · Made in Jordan</div>
+    </div>
+    <div class="vis" style="flex:0 0 520px;height:100%">
+      <div class="glow"></div>
+      <div class="comp"><img src="assets/tins/maeen.png" style="left:0%;bottom:8%;width:34%"><img src="assets/tins/levelmax.png" style="left:54%;bottom:18%;width:44%"><img src="assets/tins/qaisi.png" style="left:18%;bottom:0%;width:62%"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ POST #1: LinkedIn intro, Sun 25/10 (1080 x 1350, English first) -->
+<div class="frame f-post" data-name="01-linkedin-intro/01-linkedin-1080x1350" style="width:1080px;height:1350px">
+  <div class="safe ltr">
+    <div class="row"><span class="tag en"><span class="dot"></span>Jordan Tinplate Canning</span></div>
+    <div class="col g16 mt40">
+      <h1 class="h1 en" style="font-size:100px">Made in Jordan<br><span class="gold">since 1998</span></h1>
+      <p class="bodyen" style="font-size:36px;font-weight:500">Metal packaging for food &amp; beverage brands</p>
+      <div class="goldrule mt16"></div>
+      <div class="ar" style="font-size:40px;font-weight:700;text-align:left">صُنع في الأردن منذ 1998</div>
+      <div class="ar muted" style="font-size:28px;text-align:left;margin-top:-8px">تغليف معدني لعلامات الأغذية والمشروبات</div>
+    </div>
+    <div class="vis mt40">
+      <div class="glow"></div><div class="floor2"></div>
+      <div class="comp"><img src="assets/tins/suliman.png" style="left:12%;bottom:30%;width:28%"><img src="assets/tins/levelmax.png" style="left:58%;bottom:30%;width:34%"><img src="assets/tins/maeen.png" style="left:0%;bottom:2%;width:26%"><img src="assets/tins/bab.png" style="left:66%;bottom:4%;width:34%"><img src="assets/tins/qaisi.png" style="left:25%;bottom:0%;width:50%"></div>
+    </div>
+    <div class="row ft"><img class="logo-s" src="assets/logo-h-white.svg"><span class="url" style="font-size:30px">jordantinplate.com</span></div>
   </div>
 </div>
 
 <!-- ============================================================ POST #2: Instagram carousel, Tue 27/10 (6 x 1080 x 1350) -->
 
 <!-- Slide 1: cover -->
-<div class="frame olive" data-name="02-instagram-carousel/slide-1" style="width:1080px;height:1350px">
-  <div class="abs" style="right:90px;top:96px"><span class="tag ar" style="font-size:32px"><span class="dot"></span>موسم الزيتون <span class="en" style="font-weight:500;opacity:.85">Olive season ·</span></span></div>
-  <div class="ar abs ar-h" style="right:90px;top:190px;font-size:96px;width:900px;text-align:right">لماذا التنك<br>لزيت الزيتون؟</div>
-  <div class="en abs en-h" style="right:92px;top:440px;font-size:56px;color:var(--gold-2)">Why tin for olive oil?</div>
-  <div class="halo" style="left:190px;top:560px;width:700px;height:640px;opacity:.9"></div>
-  <div class="floor" style="left:250px;top:1112px;width:580px;height:80px"></div>
-  <img class="t tin" src="assets/tins/oil4.png" style="left:540px;bottom:204px;height:560px">
-  <img class="abs" src="assets/olive-branch.svg" style="left:120px;top:940px;width:560px;transform:rotate(-8deg)">
-  <img class="abs" src="assets/olive-branch.svg" style="left:560px;top:640px;width:420px;transform:scaleX(-1) rotate(-14deg);opacity:.95">
-  <div class="ar abs" style="right:90px;bottom:118px;font-size:36px;width:640px;text-align:right;line-height:1.5">بدأ الموسم، والعبوة جزء من قصة الزيت</div>
-  <div class="en abs" style="right:92px;bottom:72px;font-size:28px;color:var(--navy-100)">The season has started, and the container is part of the oil's story</div>
-  <div class="swipe abs" style="left:90px;bottom:78px;font-size:30px"><svg width="54" height="24" viewBox="0 0 54 24"><path d="M52 12H4M14 2L4 12l10 10" fill="none" stroke="#f4b34c" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+<div class="frame f-post olive" data-name="02-instagram-carousel/slide-1" style="width:1080px;height:1350px">
+  <div class="safe rtl">
+    <div class="row"><span class="tag ar"><span class="dot"></span>موسم الزيتون <span class="en" style="font-weight:500;opacity:.85">Olive season ·</span></span><span class="counter" style="font-size:28px">01 / 06</span></div>
+    <div class="col g16 mt40">
+      <h1 class="h1" style="font-size:96px">لماذا التنك<br>لزيت الزيتون؟</h1>
+      <p class="h2en" style="font-size:52px">Why tin for olive oil?</p>
+    </div>
+    <div class="vis mt40">
+      <div class="glow"></div><div class="floor2" style="left:24%;right:24%"></div>
+      <img src="assets/tins/oil4.png" style="height:96%;filter:drop-shadow(0 34px 30px rgba(0,8,28,.5))">
+      <img src="assets/olive-branch.svg" style="position:absolute;z-index:2;width:46%;left:12%;bottom:2%;transform:rotate(-8deg)">
+      <img src="assets/olive-branch.svg" style="position:absolute;z-index:0;width:36%;right:14%;top:6%;transform:scaleX(-1) rotate(-14deg)">
+    </div>
+    <div class="col g8 mt40">
+      <p class="bodyar" style="font-size:34px">بدأ الموسم، والعبوة جزء من قصة الزيت</p>
+      <p class="bodyen" style="font-size:24px">The season has started, and the container is part of the oil's story</p>
+    </div>
+    <div class="row ft"><img class="logo-s" src="assets/logo-h-white.svg"><span class="swipe2">اسحب <svg width="48" height="22" viewBox="0 0 54 24"><path d="M52 12H4M14 2L4 12l10 10" fill="none" stroke="#f4b34c" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+  </div>
 </div>
 
 <!-- Slide 2: light -->
-<div class="frame olive" data-name="02-instagram-carousel/slide-2" style="width:1080px;height:1350px">
-  <div class="num abs" style="left:80px;top:70px;font-size:200px">01</div>
-  <svg class="abs" style="left:0;top:0" width="1080" height="1350" viewBox="0 0 1080 1350">
-    <defs><linearGradient id="ray" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff3c4" stop-opacity=".0"/><stop offset=".35" stop-color="#fff3c4" stop-opacity=".55"/><stop offset="1" stop-color="#ffe9a6" stop-opacity=".9"/></linearGradient></defs>
-    <g fill="url(#ray)">
-      <polygon points="-40,470 0,430 536,830 522,858"/>
-      <polygon points="-40,610 -10,570 530,915 518,944"/>
-      <polygon points="-40,330 0,296 540,770 526,796"/>
-      <polygon points="-40,750 -20,714 528,1000 518,1030"/>
-    </g>
-    <g fill="#ffe9a6"><circle cx="529" cy="844" r="9"/><circle cx="524" cy="930" r="9"/><circle cx="533" cy="783" r="9"/><circle cx="523" cy="1015" r="9"/></g>
-  </svg>
-  <div class="floor" style="left:430px;top:1200px;width:500px;height:66px"></div>
-  <img class="t tin" src="assets/tins/oil4.png" style="left:680px;bottom:120px;height:480px">
-  <div class="ar abs ar-h" style="right:90px;top:120px;font-size:72px;width:640px;text-align:right">المعدن لا يترك<br>للضوء منفذاً</div>
-  <div class="en abs en-h" style="right:92px;top:320px;font-size:44px;color:var(--gold-2)">Metal gives light no way in</div>
-  <div class="ar abs ar-b" style="right:90px;top:400px;font-size:36px;width:640px;text-align:right">الضوء من العوامل التي يُنصح بإبعادها عن زيت الزيتون، والعلبة المعدنية معتمة بطبيعتها.</div>
-  <div class="en abs en-b" style="right:92px;top:590px;font-size:27px;width:640px;text-align:right">Light is one of the things olive oil is usually kept away from, and a metal tin is opaque by nature.</div>
+<div class="frame f-post olive" data-name="02-instagram-carousel/slide-2" style="width:1080px;height:1350px">
+  <div class="safe rtl">
+    <div class="row"><span class="tag ar"><span class="dot"></span>لماذا التنك لزيت الزيتون؟</span><span class="counter" style="font-size:28px">02 / 06</span></div>
+    <div class="col g16 mt40">
+      <h1 class="h1" style="font-size:72px">المعدن لا يترك<br>للضوء منفذاً</h1>
+      <p class="h2en" style="font-size:40px">Metal gives light no way in</p>
+      <p class="bodyar mt16" style="font-size:32px">الضوء من العوامل التي يُنصح بإبعادها عن زيت الزيتون، والعلبة المعدنية معتمة بطبيعتها.</p>
+      <p class="bodyen" style="font-size:24px">Light is one of the things olive oil is usually kept away from, and a metal tin is opaque by nature.</p>
+    </div>
+    <div class="vis mt40">
+      <div class="floor2" style="left:30%;right:30%"></div>
+      <svg style="position:absolute;inset:0;width:100%;height:100%;z-index:0" viewBox="0 0 888 520" preserveAspectRatio="none">
+        <defs><linearGradient id="ray" x1="1" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff3c4" stop-opacity="0"/><stop offset=".4" stop-color="#fff3c4" stop-opacity=".55"/><stop offset="1" stop-color="#ffe9a6" stop-opacity=".95"/></linearGradient></defs>
+        <g fill="url(#ray)">
+          <polygon points="888,0 888,40 588,250 578,228"/>
+          <polygon points="888,90 888,130 590,320 582,298"/>
+          <polygon points="888,180 888,220 592,390 586,368"/>
+          <polygon points="888,270 888,306 594,450 588,430"/>
+        </g>
+        <g fill="#ffe9a6"><circle cx="583" cy="240" r="7"/><circle cx="586" cy="310" r="7"/><circle cx="589" cy="380" r="7"/><circle cx="591" cy="441" r="7"/></g>
+      </svg>
+      <img src="assets/tins/oil4.png" style="height:96%;position:relative;z-index:1;filter:drop-shadow(0 34px 30px rgba(0,8,28,.5))">
+    </div>
+    <div class="row ft"><img class="logo-s" src="assets/logo-h-white.svg"><span class="swipe2">اسحب <svg width="48" height="22" viewBox="0 0 54 24"><path d="M52 12H4M14 2L4 12l10 10" fill="none" stroke="#f4b34c" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+  </div>
 </div>
 
 <!-- Slide 3: toughness -->
-<div class="frame olive" data-name="02-instagram-carousel/slide-3" style="width:1080px;height:1350px">
-  <div class="num abs" style="left:80px;top:70px;font-size:200px">02</div>
-  <div class="ar abs ar-h" style="right:90px;top:120px;font-size:72px;width:640px;text-align:right">علبة تتحمّل<br>التداول والنقل</div>
-  <div class="en abs en-h" style="right:92px;top:320px;font-size:44px;color:var(--gold-2)">A container built for handling and transport</div>
-  <div class="ar abs ar-b" style="right:90px;top:400px;font-size:36px;width:640px;text-align:right">المعدن لا ينكسر كالزجاج، وهذا مهم عند نقل الكراتين وتحميلها وشحنها.</div>
-  <div class="en abs en-b" style="right:92px;top:520px;font-size:27px;width:640px;text-align:right">Metal does not shatter like glass, which matters when cartons are moved, loaded and shipped.</div>
-  <!-- route line + truck -->
-  <svg class="abs" style="left:0;top:0" width="1080" height="1350" viewBox="0 0 1080 1350">
-    <path d="M610 1170 C 760 1170, 820 1070, 980 1050" fill="none" stroke="#f4b34c" stroke-width="5" stroke-dasharray="4 18" stroke-linecap="round"/>
-    <g transform="translate(860 970)" fill="none" stroke="#e9eef6" stroke-width="5" stroke-linejoin="round" stroke-linecap="round">
-      <rect x="0" y="0" width="120" height="70" rx="8"/><path d="M120 22h38l28 28v20h-66z"/><circle cx="34" cy="80" r="14" fill="#002F6C"/><circle cx="150" cy="80" r="14" fill="#002F6C"/>
-    </g>
-  </svg>
-  <!-- pallet with a carton of tins -->
-  <svg class="abs" style="left:90px;top:1150px" width="560" height="110" viewBox="0 0 560 110">
-    <g fill="#c99a5b" stroke="#7a5428" stroke-width="3"><rect x="0" y="0" width="560" height="26" rx="4"/><rect x="20" y="26" width="70" height="44"/><rect x="245" y="26" width="70" height="44"/><rect x="470" y="26" width="70" height="44"/><rect x="0" y="70" width="560" height="22" rx="4"/></g>
-  </svg>
-  <div class="abs" style="left:110px;top:850px;width:520px;height:300px;border-radius:10px;background:linear-gradient(180deg,#d9b27a,#b98a4c);border:3px solid #7a5428;box-shadow:0 30px 40px rgba(0,8,28,.45)">
-    <div class="abs" style="left:0;right:0;top:120px;height:44px;background:rgba(122,84,40,.35)"></div>
+<div class="frame f-post olive" data-name="02-instagram-carousel/slide-3" style="width:1080px;height:1350px">
+  <div class="safe rtl">
+    <div class="row"><span class="tag ar"><span class="dot"></span>لماذا التنك لزيت الزيتون؟</span><span class="counter" style="font-size:28px">03 / 06</span></div>
+    <div class="col g16 mt40">
+      <h1 class="h1" style="font-size:72px">علبة تتحمّل التداول والنقل</h1>
+      <p class="h2en" style="font-size:40px">A container built for handling and transport</p>
+      <p class="bodyar mt16" style="font-size:32px">المعدن لا ينكسر كالزجاج، وهذا مهم عند نقل الكراتين وتحميلها وشحنها.</p>
+      <p class="bodyen" style="font-size:24px">Metal does not shatter like glass, which matters when cartons are moved, loaded and shipped.</p>
+    </div>
+    <div class="vis mt40" style="justify-content:space-between;align-items:flex-end">
+      <!-- route and truck (right in RTL reading) -->
+      <svg style="width:34%;height:auto;align-self:center" viewBox="0 0 300 220">
+        <path d="M300 200 C 220 200, 170 120, 60 110" fill="none" stroke="#f4b34c" stroke-width="5" stroke-dasharray="4 16" stroke-linecap="round"/>
+        <g transform="translate(20 30)" fill="none" stroke="#e9eef6" stroke-width="5" stroke-linejoin="round" stroke-linecap="round"><path d="M186 0H66v70h120z"/><path d="M66 22H28L0 50v20h66z"/><circle cx="152" cy="80" r="14" fill="#002F6C"/><circle cx="36" cy="80" r="14" fill="#002F6C"/></g>
+      </svg>
+      <!-- carton of tins on a pallet -->
+      <div class="col" style="width:58%;height:100%;justify-content:flex-end">
+        <div class="tins" style="height:30%;--ov:-14px;justify-content:center"><img src="assets/tins/oil4.png" style="height:100%"><img src="assets/tins/oil4.png" style="height:100%"><img src="assets/tins/oil4.png" style="height:100%"></div>
+        <div class="carton" style="height:40%;margin:0 4%"></div>
+        <div class="pallet"><svg viewBox="0 0 560 92"><g fill="#c99a5b" stroke="#7a5428" stroke-width="3"><rect x="2" y="2" width="556" height="24" rx="4"/><rect x="20" y="26" width="70" height="40"/><rect x="245" y="26" width="70" height="40"/><rect x="470" y="26" width="70" height="40"/><rect x="2" y="66" width="556" height="22" rx="4"/></g></svg></div>
+      </div>
+    </div>
+    <div class="row ft"><img class="logo-s" src="assets/logo-h-white.svg"><span class="swipe2">اسحب <svg width="48" height="22" viewBox="0 0 54 24"><path d="M52 12H4M14 2L4 12l10 10" fill="none" stroke="#f4b34c" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
   </div>
-  <img class="t tin" src="assets/tins/oil4.png" style="left:220px;bottom:490px;height:230px">
-  <img class="t tin" src="assets/tins/oil4.png" style="left:370px;bottom:490px;height:230px">
-  <img class="t tin" src="assets/tins/oil4.png" style="left:520px;bottom:490px;height:230px">
 </div>
 
 <!-- Slide 4: storage -->
-<div class="frame olive" data-name="02-instagram-carousel/slide-4" style="width:1080px;height:1350px">
-  <div class="num abs" style="left:80px;top:70px;font-size:200px">03</div>
-  <div class="ar abs ar-h" style="right:90px;top:120px;font-size:72px;width:640px;text-align:right">سهلة الترتيب<br>والتخزين</div>
-  <div class="en abs en-h" style="right:92px;top:320px;font-size:44px;color:var(--gold-2)">Easy to arrange and store</div>
-  <div class="ar abs ar-b" style="right:90px;top:400px;font-size:34px;width:900px;text-align:right">العلب المنتظمة الشكل تُرصّ بسهولة على البالتات. وإن احتجت، نخزّن منتجك الجاهز عندنا ثم نشحنه إلى أسواقك.</div>
-  <div class="en abs en-b" style="right:92px;top:520px;font-size:26px;width:900px;text-align:right">Regularly shaped tins stack neatly on pallets. And if you need it, we can hold your finished stock and ship it on to your markets.</div>
-  <!-- shelf line -->
-  <div class="abs" style="left:60px;right:60px;top:690px;height:4px;background:rgba(216,224,236,.25)"></div>
-  <div class="abs" style="left:60px;right:60px;top:1146px;height:4px;background:rgba(216,224,236,.25)"></div>
-  <!-- stack: two layers of 4 tins on a pallet -->
-  <img class="t tin" src="assets/tins/oil4.png" style="left:300px;bottom:440px;height:250px">
-  <img class="t tin" src="assets/tins/oil4.png" style="left:460px;bottom:440px;height:250px">
-  <img class="t tin" src="assets/tins/oil4.png" style="left:620px;bottom:440px;height:250px">
-  <img class="t tin" src="assets/tins/oil4.png" style="left:780px;bottom:440px;height:250px">
-  <img class="t tin" src="assets/tins/oil4.png" style="left:300px;bottom:220px;height:250px">
-  <img class="t tin" src="assets/tins/oil4.png" style="left:460px;bottom:220px;height:250px">
-  <img class="t tin" src="assets/tins/oil4.png" style="left:620px;bottom:220px;height:250px">
-  <img class="t tin" src="assets/tins/oil4.png" style="left:780px;bottom:220px;height:250px">
-  <svg class="abs" style="left:200px;top:1128px" width="680" height="96" viewBox="0 0 680 96">
-    <g fill="#c99a5b" stroke="#7a5428" stroke-width="3"><rect x="0" y="0" width="680" height="24" rx="4"/><rect x="24" y="24" width="80" height="40"/><rect x="300" y="24" width="80" height="40"/><rect x="576" y="24" width="80" height="40"/><rect x="0" y="64" width="680" height="22" rx="4"/></g>
-  </svg>
-  <div class="abs" style="left:90px;top:1246px"><span class="tag ar" style="font-size:28px"><span class="dot"></span>تخزين وشحن <span class="en" style="font-weight:500;opacity:.85">Storage and shipping ·</span></span></div>
+<div class="frame f-post olive" data-name="02-instagram-carousel/slide-4" style="width:1080px;height:1350px">
+  <div class="safe rtl">
+    <div class="row"><span class="tag ar"><span class="dot"></span>لماذا التنك لزيت الزيتون؟</span><span class="counter" style="font-size:28px">04 / 06</span></div>
+    <div class="col g16 mt40">
+      <h1 class="h1" style="font-size:72px">سهلة الترتيب والتخزين</h1>
+      <p class="h2en" style="font-size:40px">Easy to arrange and store</p>
+      <p class="bodyar mt16" style="font-size:32px">العلب المنتظمة الشكل تُرصّ بسهولة على البالتات. وإن احتجت، نخزّن منتجك الجاهز عندنا ثم نشحنه إلى أسواقك.</p>
+      <p class="bodyen" style="font-size:24px">Regularly shaped tins stack neatly on pallets. And if you need it, we can hold your finished stock and ship it on to your markets.</p>
+      <span class="tag ar mt16" style="align-self:flex-start;font-size:26px"><span class="dot"></span>تخزين وشحن <span class="en" style="font-weight:500;opacity:.85">Storage and shipping ·</span></span>
+    </div>
+    <div class="vis mt40">
+      <div class="col" style="width:78%;height:100%;justify-content:flex-end">
+        <div class="tins" style="height:42%;--ov:-10px"><img src="assets/tins/oil4.png" style="height:100%"><img src="assets/tins/oil4.png" style="height:100%"><img src="assets/tins/oil4.png" style="height:100%"><img src="assets/tins/oil4.png" style="height:100%"></div>
+        <div class="tins" style="height:42%;--ov:-10px;margin-top:-2%"><img src="assets/tins/oil4.png" style="height:100%"><img src="assets/tins/oil4.png" style="height:100%"><img src="assets/tins/oil4.png" style="height:100%"><img src="assets/tins/oil4.png" style="height:100%"></div>
+        <div class="pallet"><svg viewBox="0 0 680 86"><g fill="#c99a5b" stroke="#7a5428" stroke-width="3"><rect x="2" y="2" width="676" height="22" rx="4"/><rect x="24" y="24" width="80" height="38"/><rect x="300" y="24" width="80" height="38"/><rect x="576" y="24" width="80" height="38"/><rect x="2" y="62" width="676" height="22" rx="4"/></g></svg></div>
+      </div>
+    </div>
+    <div class="row ft"><img class="logo-s" src="assets/logo-h-white.svg"><span class="swipe2">اسحب <svg width="48" height="22" viewBox="0 0 54 24"><path d="M52 12H4M14 2L4 12l10 10" fill="none" stroke="#f4b34c" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+  </div>
 </div>
 
 <!-- Slide 5: your brand on it -->
-<div class="frame" data-name="02-instagram-carousel/slide-5" style="width:1080px;height:1350px">
-  <div class="num abs" style="left:80px;top:70px;font-size:200px">04</div>
-  <div class="ar abs ar-h" style="right:90px;top:120px;font-size:72px;width:640px;text-align:right">وعلامتك<br>على كل علبة</div>
-  <div class="en abs en-h" style="right:92px;top:320px;font-size:44px;color:var(--gold-2)">And your brand on every tin</div>
-  <div class="ar abs ar-b" style="right:90px;top:400px;font-size:34px;width:900px;text-align:right">تصميم وألواح طباعة عندنا، وطباعة وطلاء بتأثيرات: لمعة، مطّ، ملمس ناعم (Soft Touch)، ونقش بارز.</div>
-  <div class="en abs en-b" style="right:92px;top:520px;font-size:26px;width:900px;text-align:right">Design and plate-making in-house, then printing and coating with effects: gloss, matte, soft touch and embossing.</div>
-  <div class="halo" style="left:60px;top:640px;width:620px;height:620px"></div>
-  <div class="floor" style="left:100px;top:1160px;width:520px;height:80px"></div>
-  <img class="t tin" src="assets/tins/qaisi.png" style="left:360px;bottom:200px;height:330px">
-  <div class="chip ar" style="right:90px;top:680px"><span><b>لمعة</b><i>Gloss</i></span><span class="sw"><img src="assets/tins/fin-gloss.png"></span></div>
-  <div class="chip ar" style="right:90px;top:840px"><span><b>مطّ</b><i>Matte</i></span><span class="sw"><img src="assets/tins/fin-matte.png"></span></div>
-  <div class="chip ar" style="right:90px;top:1000px"><span><b>ملمس ناعم</b><i>Soft touch</i></span><span class="sw"><img src="assets/tins/fin-soft.png"></span></div>
-  <div class="chip ar" style="right:90px;top:1160px"><span><b>نقش بارز</b><i>Embossing</i></span><span class="sw"><img src="assets/tins/fin-emboss.png"></span></div>
+<div class="frame f-post" data-name="02-instagram-carousel/slide-5" style="width:1080px;height:1350px">
+  <div class="safe rtl">
+    <div class="row"><span class="tag ar"><span class="dot"></span>لماذا التنك لزيت الزيتون؟</span><span class="counter" style="font-size:28px">05 / 06</span></div>
+    <div class="col g16 mt40">
+      <h1 class="h1" style="font-size:72px">وعلامتك على كل علبة</h1>
+      <p class="h2en" style="font-size:40px">And your brand on every tin</p>
+      <p class="bodyar mt16" style="font-size:32px">تصميم وألواح طباعة عندنا، وطباعة وطلاء بتأثيرات: لمعة، مطّ، ملمس ناعم (Soft Touch)، ونقش بارز.</p>
+      <p class="bodyen" style="font-size:24px">Design and plate-making in-house, then printing and coating with effects: gloss, matte, soft touch and embossing.</p>
+    </div>
+    <div class="vis mt40" style="justify-content:space-between;align-items:center">
+      <div style="display:grid;grid-template-columns:auto auto;gap:32px 40px">
+        <div class="chip2"><span class="sw"><img src="assets/tins/fin-gloss.png"></span><span><b>لمعة</b><i>Gloss</i></span></div>
+        <div class="chip2"><span class="sw"><img src="assets/tins/fin-matte.png"></span><span><b>مطّ</b><i>Matte</i></span></div>
+        <div class="chip2"><span class="sw"><img src="assets/tins/fin-soft.png"></span><span><b>ملمس ناعم</b><i>Soft touch</i></span></div>
+        <div class="chip2"><span class="sw"><img src="assets/tins/fin-emboss.png"></span><span><b>نقش بارز</b><i>Embossing</i></span></div>
+      </div>
+      <div style="position:relative;width:44%;height:100%;display:flex;align-items:center;justify-content:center">
+        <div class="glow" style="inset:0"></div>
+        <img src="assets/tins/qaisi.png" style="width:100%;position:relative;filter:drop-shadow(0 34px 30px rgba(0,8,28,.5))">
+      </div>
+    </div>
+    <div class="row ft"><img class="logo-s" src="assets/logo-h-white.svg"><span class="swipe2">اسحب <svg width="48" height="22" viewBox="0 0 54 24"><path d="M52 12H4M14 2L4 12l10 10" fill="none" stroke="#f4b34c" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+  </div>
 </div>
 
 <!-- Slide 6: CTA -->
-<div class="frame olive" data-name="02-instagram-carousel/slide-6" style="width:1080px;height:1350px">
-  <img class="abs" src="assets/logo-h-white.svg" style="right:90px;top:80px;height:70px">
-  <div class="ar abs ar-h" style="right:90px;top:200px;font-size:70px;width:900px;text-align:right;white-space:nowrap">جاهز لموسمك؟ <span class="amber">تحدّث معنا</span></div>
-  <div class="en abs en-h" style="right:92px;top:310px;font-size:44px;color:var(--gold-2)">Ready for your season? Talk to us</div>
-  <!-- four sizes, drawn to their real height ratio (154 / 245 / 309 / 350 mm) -->
-  <div class="floor" style="left:110px;top:840px;width:860px;height:60px"></div>
-  <img class="t tin" src="assets/tins/oil1.png" style="left:220px;bottom:478px;height:176px">
-  <img class="t tin" src="assets/tins/oil4.png" style="left:420px;bottom:478px;height:280px">
-  <img class="t tin" src="assets/tins/oil8.png" style="left:640px;bottom:478px;height:353px">
-  <img class="t tin" src="assets/tins/oil16.png" style="left:880px;bottom:478px;height:400px">
-  <div class="en abs" style="left:170px;top:892px;width:100px;text-align:center;font-size:44px;font-weight:800">1</div>
-  <div class="en abs" style="left:370px;top:892px;width:100px;text-align:center;font-size:44px;font-weight:800">4</div>
-  <div class="en abs" style="left:590px;top:892px;width:100px;text-align:center;font-size:44px;font-weight:800">8</div>
-  <div class="en abs" style="left:830px;top:892px;width:100px;text-align:center;font-size:44px;font-weight:800">16</div>
-  <div class="ar abs center" style="top:956px;font-size:30px;color:var(--navy-100)">لتر/كغ · L/kg</div>
-  <div class="ar abs center" style="top:1010px;font-size:32px;font-weight:600;padding:0 90px">بطلاء داخلي يطابق أعلى معايير الصحة الخاصة بالأغذية</div>
-  <div class="en abs center" style="top:1062px;font-size:25px;color:var(--navy-100)">Interior lacquer that meets the highest food-grade hygiene standards</div>
-  <div class="row" style="left:90px;top:1130px"><svg viewBox="0 0 24 24" fill="none" stroke="#f4b34c" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>sales@jordantinplate.com</div>
-  <div class="row" style="left:90px;top:1236px;font-size:32px;padding:16px 26px"><svg viewBox="0 0 24 24" fill="none" stroke="#f4b34c" stroke-width="2"><path d="M5 3h4l2 5-3 2a12 12 0 006 6l2-3 5 2v4a2 2 0 01-2 2A17 17 0 013 5a2 2 0 012-2z"/></svg>+962 6 4051125</div>
-  <div class="row" style="left:520px;top:1236px;font-size:32px;padding:16px 26px"><svg viewBox="0 0 24 24" fill="none" stroke="#f4b34c" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 010 18M12 3a14 14 0 000 18"/></svg>jordantinplate.com</div>
-  <div class="ar abs" style="left:90px;top:96px;font-size:26px;color:var(--amber);font-weight:600">احفظ المنشور · <span class="en">Save this post</span></div>
+<div class="frame f-post olive" data-name="02-instagram-carousel/slide-6" style="width:1080px;height:1350px">
+  <div class="safe rtl">
+    <div class="row"><span class="tag ar"><span class="dot"></span>احفظ المنشور <span class="en" style="font-weight:500;opacity:.85">Save this post ·</span></span><span class="counter" style="font-size:28px">06 / 06</span></div>
+    <div class="col g16 mt40">
+      <h1 class="h1" style="font-size:72px">جاهز لموسمك؟<br><span class="amber">تحدّث معنا</span></h1>
+      <p class="h2en" style="font-size:40px">Ready for your season? Talk to us</p>
+    </div>
+    <div class="vis mt40" style="flex-direction:column;align-items:stretch">
+      <div class="sizes grow">
+        <div class="s"><div class="im"><img src="assets/tins/oil1.png" style="height:44%"></div><b>1</b></div>
+        <div class="s"><div class="im"><img src="assets/tins/oil4.png" style="height:70%"></div><b>4</b></div>
+        <div class="s"><div class="im"><img src="assets/tins/oil8.png" style="height:88%"></div><b>8</b></div>
+        <div class="s"><div class="im"><img src="assets/tins/oil16.png" style="height:100%"></div><b>16</b></div>
+      </div>
+      <div class="col g8 mt24" style="text-align:center">
+        <p class="bodyar" style="font-size:32px;font-weight:700">أشهر الأحجام (لتر/كغ) · <span class="amber">ونصنع أي حجم تحتاجه</span></p>
+        <p class="bodyen" style="font-size:24px">Most popular sizes in L/kg, and we make any size you need</p>
+        <p class="bodyar muted" style="font-size:26px">بطلاء داخلي يطابق أعلى معايير الصحة الخاصة بالأغذية</p>
+      </div>
+    </div>
+    <div class="contact mt40">
+      <div class="c wide"><svg viewBox="0 0 24 24" fill="none" stroke="#f4b34c" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>sales@jordantinplate.com</div>
+      <div class="c"><svg viewBox="0 0 24 24" fill="none" stroke="#f4b34c" stroke-width="2"><path d="M5 3h4l2 5-3 2a12 12 0 006 6l2-3 5 2v4a2 2 0 01-2 2A17 17 0 013 5a2 2 0 012-2z"/></svg>+962 6 4051125</div>
+      <div class="c"><svg viewBox="0 0 24 24" fill="none" stroke="#f4b34c" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 010 18M12 3a14 14 0 000 18"/></svg>jordantinplate.com</div>
+    </div>
+    <div class="row ft"><img class="logo-s" src="assets/logo-h-white.svg"><span class="url" style="font-size:26px">@jordantinplate</span></div>
+  </div>
 </div>
 
 <!-- ============================================================ POST #3: X thread image, Wed 28/10 (1600 x 900) -->
-<div class="frame olive" data-name="03-x-thread/post-1-1600x900" style="width:1600px;height:900px">
-  <div class="abs" style="right:110px;top:110px"><span class="tag ar" style="font-size:32px"><span class="dot"></span>3 أسباب <span class="en" style="font-weight:500;opacity:.85">3 reasons ·</span></span></div>
-  <div class="ar abs ar-h" style="right:110px;top:210px;font-size:100px;width:900px;text-align:right">لماذا التنك<br>لزيت الزيتون؟</div>
-  <div class="en abs en-h" style="right:112px;top:470px;font-size:58px;color:var(--gold-2)">Why tin for olive oil?</div>
-  <img class="abs" src="assets/logo-h-white.svg" style="right:110px;bottom:90px;height:64px">
-  <div class="halo" style="left:60px;top:60px;width:640px;height:780px"></div>
-  <div class="floor" style="left:120px;top:770px;width:520px;height:70px"></div>
-  <img class="t tin" src="assets/tins/oil4.png" style="left:380px;bottom:100px;height:600px">
-  <img class="abs" src="assets/olive-branch.svg" style="left:60px;top:600px;width:520px;transform:rotate(-6deg)">
+<div class="frame f-x olive" data-name="03-x-thread/post-1-1600x900" style="width:1600px;height:900px">
+  <div class="safe rtl row g56" style="align-items:stretch">
+    <div class="col" style="flex:1 1 0;justify-content:space-between">
+      <div class="col g24">
+        <div class="row" style="justify-content:flex-start"><span class="tag ar"><span class="dot"></span>3 أسباب <span class="en" style="font-weight:500;opacity:.85">3 reasons ·</span></span></div>
+        <h1 class="h1" style="font-size:96px">لماذا التنك<br>لزيت الزيتون؟</h1>
+        <p class="h2en" style="font-size:54px">Why tin for olive oil?</p>
+      </div>
+      <div class="row" style="justify-content:flex-start"><img class="logo-s" src="assets/logo-h-white.svg"></div>
+    </div>
+    <div class="vis" style="flex:0 0 560px">
+      <div class="glow"></div><div class="floor2" style="left:16%;right:16%"></div>
+      <img src="assets/tins/oil4.png" style="height:86%;filter:drop-shadow(0 34px 30px rgba(0,8,28,.5))">
+      <img src="assets/olive-branch.svg" style="position:absolute;z-index:2;width:70%;left:2%;bottom:6%;transform:rotate(-8deg)">
+    </div>
+  </div>
 </div>
 
 <!-- ============================================================ X-E01: pinned intro, Sun 25/10 (1600 x 900) -->
-<div class="frame" data-name="x-extra/X-E01-intro-1600x900" style="width:1600px;height:900px">
-  <div class="ar abs ar-h" style="right:110px;top:150px;font-size:120px">منذ <span class="gold en" style="font-weight:800">1998</span></div>
-  <div class="en abs en-h" style="right:112px;top:320px;font-size:60px;color:var(--gold-2)">Since 1998</div>
-  <div class="ar abs" style="right:110px;top:420px;font-size:38px;width:640px;text-align:right;line-height:1.5;color:var(--navy-100)">علب معدنية للأغذية والمشروبات، صُنعت في الأردن</div>
-  <img class="abs" src="assets/logo-h-white.svg" style="right:110px;bottom:100px;height:70px">
-  <div class="halo" style="left:40px;top:120px;width:760px;height:700px"></div>
-  <div class="floor" style="left:80px;top:740px;width:700px;height:80px"></div>
-  <img class="t tin" src="assets/tins/bab.png" style="left:200px;bottom:170px;height:230px">
-  <img class="t tin" src="assets/tins/jgz.png" style="left:680px;bottom:170px;height:230px">
-  <img class="t tin" src="assets/tins/qaisi.png" style="left:440px;bottom:110px;height:360px">
+<div class="frame f-x" data-name="x-extra/X-E01-intro-1600x900" style="width:1600px;height:900px">
+  <div class="safe rtl row g56" style="align-items:stretch">
+    <div class="col" style="flex:1 1 0;justify-content:space-between">
+      <div class="col g24">
+        <h1 class="h1" style="font-size:120px">منذ <span class="gold en" style="font-weight:800">1998</span></h1>
+        <p class="h2en" style="font-size:56px">Since 1998</p>
+        <p class="bodyar muted" style="font-size:36px">علب معدنية للأغذية والمشروبات، صُنعت في الأردن</p>
+      </div>
+      <div class="row" style="justify-content:flex-start"><img class="logo-s" src="assets/logo-h-white.svg"></div>
+    </div>
+    <div class="vis" style="flex:0 0 700px">
+      <div class="glow"></div><div class="floor2"></div>
+      <div class="comp"><img src="assets/tins/jgz.png" style="left:0%;bottom:26%;width:46%"><img src="assets/tins/bab.png" style="left:56%;bottom:26%;width:44%"><img src="assets/tins/qaisi.png" style="left:12%;bottom:4%;width:76%"></div>
+    </div>
+  </div>
 </div>
 
 <!-- ============================================================ X-E02: sizes question, Tue 27/10 (1600 x 900) -->
-<div class="frame olive" data-name="x-extra/X-E02-sizes-1600x900" style="width:1600px;height:900px">
-  <div class="abs" style="right:110px;top:90px"><span class="tag ar" style="font-size:30px"><span class="dot"></span>موسم الزيتون <span class="en" style="font-weight:500;opacity:.85">Olive season ·</span></span></div>
-  <div class="ar abs ar-h" style="right:110px;top:176px;font-size:72px">أي حجم تعبّئ هذا الموسم؟</div>
-  <div class="en abs" style="right:112px;top:282px;font-size:38px;color:var(--gold-2);font-weight:600">Which size are you filling this season?</div>
-  <div class="floor" style="left:180px;top:752px;width:1240px;height:70px"></div>
-  <img class="t tin" src="assets/tins/oil1.png" style="left:350px;bottom:120px;height:194px">
-  <img class="t tin" src="assets/tins/oil4.png" style="left:640px;bottom:120px;height:308px">
-  <img class="t tin" src="assets/tins/oil8.png" style="left:950px;bottom:120px;height:388px">
-  <img class="t tin" src="assets/tins/oil16.png" style="left:1280px;bottom:120px;height:440px">
-  <div class="en abs" style="left:300px;top:796px;width:100px;text-align:center;font-size:44px;font-weight:800">1</div>
-  <div class="en abs" style="left:590px;top:796px;width:100px;text-align:center;font-size:44px;font-weight:800">4</div>
-  <div class="en abs" style="left:900px;top:796px;width:100px;text-align:center;font-size:44px;font-weight:800">8</div>
-  <div class="en abs" style="left:1230px;top:796px;width:100px;text-align:center;font-size:44px;font-weight:800">16</div>
-  <div class="ar abs" style="left:110px;top:806px;font-size:28px;color:var(--navy-100)">لتر/كغ · <span class="en">L/kg</span></div>
+<div class="frame f-x olive" data-name="x-extra/X-E02-sizes-1600x900" style="width:1600px;height:900px">
+  <div class="safe rtl">
+    <div class="row" style="align-items:flex-start">
+      <div class="col g16">
+        <span class="tag ar" style="align-self:flex-start"><span class="dot"></span>موسم الزيتون <span class="en" style="font-weight:500;opacity:.85">Olive season ·</span></span>
+        <h1 class="h1" style="font-size:72px">أي حجم تعبّئ هذا الموسم؟</h1>
+        <p class="h2en" style="font-size:38px">Which size are you filling this season?</p>
+      </div>
+      <img class="logo-s" src="assets/logo-h-white.svg">
+    </div>
+    <div class="vis mt40" style="flex-direction:column;align-items:stretch">
+      <div class="sizes grow" style="padding:0 6%">
+        <div class="s"><div class="im"><img src="assets/tins/oil1.png" style="height:44%"></div><b>1</b></div>
+        <div class="s"><div class="im"><img src="assets/tins/oil4.png" style="height:70%"></div><b>4</b></div>
+        <div class="s"><div class="im"><img src="assets/tins/oil8.png" style="height:88%"></div><b>8</b></div>
+        <div class="s"><div class="im"><img src="assets/tins/oil16.png" style="height:100%"></div><b>16</b></div>
+      </div>
+    </div>
+    <div class="row mt56" style="justify-content:center;gap:32px;line-height:1.2">
+      <p class="bodyar" style="font-size:32px;font-weight:700;line-height:1.2">أشهر الأحجام (لتر/كغ) · <span class="amber">ونصنع أي حجم تحتاجه</span></p>
+      <p class="bodyen" style="font-size:24px;font-weight:500">Most popular sizes in L/kg · any size to order</p>
+    </div>
+  </div>
 </div>
 
 <!-- ============================================================ X-E03 fallback still: six stages (1600 x 900). Use only if no real clip is cut in time. -->
-<div class="frame" data-name="x-extra/X-E03-six-stages-still-1600x900" style="width:1600px;height:900px">
-  <div class="ar abs ar-h center" style="top:90px;font-size:64px">من صفيحة مسطحة إلى علبة جاهزة</div>
-  <div class="en abs center" style="top:186px;font-size:34px;color:var(--gold-2);font-weight:600">From a flat sheet to a finished can · six stages under one roof</div>
-  <div class="stage-card ar" style="right:76px"><div class="n">01</div><div class="ic"><svg width="110" height="110" viewBox="0 0 24 24" fill="none" stroke="#e9eef6" stroke-width="1.4"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8M12 17v4M7 13l3-3 2 2 4-4"/></svg></div><b>التصميم</b><i>Design</i></div>
-  <div class="stage-card ar" style="right:322px"><div class="n">02</div><div class="ic"><svg width="110" height="110" viewBox="0 0 24 24" fill="none" stroke="#e9eef6" stroke-width="1.4"><rect x="4" y="3" width="16" height="18" rx="1.5"/><path d="M4 12h16" stroke="#f4b34c" stroke-width="2"/></svg></div><b>ألواح الطباعة CTP</b><i>Plates (CTP)</i></div>
-  <div class="stage-card ar" style="right:568px"><div class="n">03</div><div class="ic"><svg width="110" height="110" viewBox="0 0 24 24" fill="none" stroke="#e9eef6" stroke-width="1.4"><circle cx="7" cy="8" r="3"/><circle cx="17" cy="8" r="3"/><path d="M3 16h18v4H3z"/><path d="M7 11v5M17 11v5"/></svg></div><b>الطباعة والطلاء</b><i>Print, coat, finish</i></div>
-  <div class="stage-card ar" style="right:814px"><div class="n">04</div><div class="ic"><svg width="110" height="110" viewBox="0 0 24 24" fill="none" stroke="#e9eef6" stroke-width="1.4"><ellipse cx="12" cy="6" rx="7" ry="2.5"/><path d="M5 6v11c0 1.4 3.1 2.5 7 2.5s7-1.1 7-2.5V6"/></svg></div><b>القص والتشكيل</b><i>Cut and form</i></div>
-  <div class="stage-card ar" style="right:1060px"><div class="n">05</div><div class="ic"><svg width="110" height="110" viewBox="0 0 24 24" fill="none" stroke="#e9eef6" stroke-width="1.4"><rect x="4" y="5" width="7" height="6"/><rect x="13" y="5" width="7" height="6"/><rect x="4" y="12" width="7" height="6"/><rect x="13" y="12" width="7" height="6"/><path d="M2 20h20"/></svg></div><b>التغليف على البالتات</b><i>Pack and palletise</i></div>
-  <div class="stage-card ar" style="right:1306px;width:218px"><div class="n">06</div><div class="ic"><svg width="110" height="110" viewBox="0 0 24 24" fill="none" stroke="#e9eef6" stroke-width="1.4"><rect x="1" y="7" width="13" height="9" rx="1"/><path d="M14 10h4l3 3v3h-7z"/><circle cx="5" cy="18" r="2"/><circle cx="17" cy="18" r="2"/></svg></div><b>التخزين والشحن</b><i>Store and ship</i></div>
-  <img class="abs" src="assets/logo-h-white.svg" style="left:50%;transform:translateX(-50%);bottom:56px;height:60px">
+<div class="frame f-x" data-name="x-extra/X-E03-six-stages-still-1600x900" style="width:1600px;height:900px">
+  <div class="safe rtl" style="justify-content:space-between">
+    <div class="col g16" style="text-align:center">
+      <h1 class="h1" style="font-size:64px">من صفيحة مسطحة إلى علبة جاهزة</h1>
+      <p class="h2en" style="font-size:32px">From a flat sheet to a finished can · six stages under one roof</p>
+    </div>
+    <div class="cards">
+      <div class="k"><div class="n">01</div><div class="ic"><svg width="104" height="104" viewBox="0 0 24 24" fill="none" stroke="#e9eef6" stroke-width="1.4"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8M12 17v4M7 13l3-3 2 2 4-4"/></svg></div><b>التصميم</b><i>Design</i></div>
+      <div class="k"><div class="n">02</div><div class="ic"><svg width="104" height="104" viewBox="0 0 24 24" fill="none" stroke="#e9eef6" stroke-width="1.4"><rect x="4" y="3" width="16" height="18" rx="1.5"/><path d="M4 12h16" stroke="#f4b34c" stroke-width="2"/></svg></div><b>ألواح الطباعة</b><i>Plates (CTP)</i></div>
+      <div class="k"><div class="n">03</div><div class="ic"><svg width="104" height="104" viewBox="0 0 24 24" fill="none" stroke="#e9eef6" stroke-width="1.4"><circle cx="7" cy="8" r="3"/><circle cx="17" cy="8" r="3"/><path d="M3 16h18v4H3z"/><path d="M7 11v5M17 11v5"/></svg></div><b>الطباعة والطلاء</b><i>Print, coat, finish</i></div>
+      <div class="k"><div class="n">04</div><div class="ic"><svg width="104" height="104" viewBox="0 0 24 24" fill="none" stroke="#e9eef6" stroke-width="1.4"><ellipse cx="12" cy="6" rx="7" ry="2.5"/><path d="M5 6v11c0 1.4 3.1 2.5 7 2.5s7-1.1 7-2.5V6"/></svg></div><b>القص والتشكيل</b><i>Cut and form</i></div>
+      <div class="k"><div class="n">05</div><div class="ic"><svg width="104" height="104" viewBox="0 0 24 24" fill="none" stroke="#e9eef6" stroke-width="1.4"><rect x="4" y="5" width="7" height="6"/><rect x="13" y="5" width="7" height="6"/><rect x="4" y="12" width="7" height="6"/><rect x="13" y="12" width="7" height="6"/><path d="M2 20h20"/></svg></div><b>التغليف</b><i>Pack and palletise</i></div>
+      <div class="k"><div class="n">06</div><div class="ic"><svg width="104" height="104" viewBox="0 0 24 24" fill="none" stroke="#e9eef6" stroke-width="1.4"><rect x="1" y="7" width="13" height="9" rx="1"/><path d="M14 10h4l3 3v3h-7z"/><circle cx="5" cy="18" r="2"/><circle cx="17" cy="18" r="2"/></svg></div><b>التخزين والشحن</b><i>Store and ship</i></div>
+    </div>
+    <div class="row" style="justify-content:center"><img class="logo-s" src="assets/logo-h-white.svg"></div>
+  </div>
 </div>
 
-<!-- ============================================================ POST #4: reel cover (1080 x 1920; grid crop 1080 x 1350 centred) -->
-<div class="frame" data-name="04-instagram-reel/cover-1080x1920" style="width:1080px;height:1920px">
-  <div class="ar abs ar-h center" style="top:420px;font-size:84px">من صفيحة مسطحة<br>إلى علبة جاهزة</div>
-  <div class="en abs center" style="top:640px;font-size:44px;color:var(--gold-2);font-weight:600">From a flat sheet to a finished can</div>
-  <div class="halo" style="left:140px;top:700px;width:800px;height:800px"></div>
-  <div class="num abs center" style="top:700px;font-size:560px;-webkit-text-stroke:5px rgba(244,179,76,.8)">6</div>
-  <div class="floor" style="left:220px;top:1420px;width:640px;height:90px"></div>
-  <img class="t tin" src="assets/tins/qaisi.png" style="left:540px;bottom:470px;height:420px">
-  <div class="ar abs center" style="top:1520px;font-size:64px;font-weight:700">6 مراحل <span class="en" style="font-weight:600;color:var(--navy-100);font-size:48px">6 stages ·</span></div>
+<!-- ============================================================ POST #4: reel cover (1080 x 1920; the profile grid shows the central 1080 x 1350) -->
+<div class="frame f-reel" data-name="04-instagram-reel/cover-1080x1920" style="width:1080px;height:1920px">
+  <div class="safe rtl" style="top:300px;bottom:330px">
+    <div class="col g16" style="text-align:center">
+      <h1 class="h1" style="font-size:84px">من صفيحة مسطحة<br>إلى علبة جاهزة</h1>
+      <p class="h2en" style="font-size:44px">From a flat sheet to a finished can</p>
+    </div>
+    <div class="vis mt40">
+      <div class="glow"></div>
+      <div class="num" style="position:absolute;inset:0;display:grid;place-items:start center;font-size:560px;line-height:.9;-webkit-text-stroke:5px rgba(244,179,76,.8);z-index:0">6</div>
+      <div class="floor2" style="left:14%;right:14%"></div>
+      <img src="assets/tins/qaisi.png" style="width:72%;position:relative;z-index:1;filter:drop-shadow(0 34px 30px rgba(0,8,28,.5))">
+    </div>
+    <div class="ar mt40" style="text-align:center;font-size:64px;font-weight:700">6 مراحل <span class="en" style="font-weight:600;color:var(--navy-100);font-size:46px">6 stages ·</span></div>
+  </div>
 </div>
 
 </body></html>

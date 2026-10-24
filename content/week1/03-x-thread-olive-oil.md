@@ -51,7 +51,7 @@ Every post is under the X limit of 280 characters (re-checked with a script afte
 
 **5/6** (sizes + interior lacquer, confirmed)
 ```
-ننتج تنكات الزيت بجميع الأحجام: 1 و4 و8 و16 لتر/كغ.
+ننتج تنكات الزيت بأي حجم تحتاجه، وأشهر الأحجام 1 و4 و8 و16 لتر/كغ.
 
 والطلاء الداخلي يطابق أعلى معايير الصحة الخاصة بالأغذية.
 ```
@@ -96,7 +96,7 @@ And if you need it, we can hold your finished stock and ship it on to your marke
 ```
 **5/6**
 ```
-We make olive-oil tins in all sizes: 1, 4, 8 and 16 L/kg.
+We make olive-oil tins in any size you need; the most popular are 1, 4, 8 and 16 L/kg.
 
 The interior lacquer meets the highest food-grade hygiene standards.
 ```
@@ -137,7 +137,7 @@ sales@jordantinplate.com
 ## 7) Needs confirmation (checklist)
 
 **Resolved (management decisions, `docs/decisions.md`):**
-- [x] The company **produces olive-oil tins** in 1, 4, 8 and 16 L/kg; sizes may be named (post 5/6)
+- [x] The company **produces olive-oil tins**: 1, 4, 8 and 16 L/kg are the most popular sizes and any size is made to order (decision 40; post 5/6)
 - [x] **Interior lacquer** meets the highest food-grade hygiene standards: say it only in this generic form, never name a standard or number
 - [x] Brand name **Jordan Tinplate Canning** in full; official Arabic name «الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية» (confirmed, round 3). Account access is with the marketing lead (2FA on)
 

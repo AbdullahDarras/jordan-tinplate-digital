@@ -69,7 +69,7 @@ Conventions: copy is final-draft Arabic (X first), counted with Python (`len` af
 
 لأصحاب المعاصر والمعبّئين: أي حجم تعبّئون به أكثر هذا الموسم؟
 
-ننتج تنكات الزيت بالأحجام: 1 و4 و8 و16 لتر/كغ.
+أشهر أحجامنا 1 و4 و8 و16 لتر/كغ، ونصنع أي حجم تحتاجه.
 
 اكتبوا حجمكم في الردود.
 
@@ -78,7 +78,7 @@ Conventions: copy is final-draft Arabic (X first), counted with Python (`len` af
 
 **Visual need:** Designed image, 1600x900: four tin silhouettes in increasing size labelled 1 / 4 / 8 / 16 (L/kg), tag "موسم الزيتون". Illustrative drawing, not a client design. Same visual family as the IG carousel of the day.
 
-**Alt text (AR):** أربع تنكات بأحجام متدرجة مكتوب تحتها 1 و4 و8 و16 لتر/كغ.
+**Alt text (AR):** أربع تنكات بأحجام متدرجة مكتوب تحتها 1 و4 و8 و16 لتر/كغ، مع عبارة «ونصنع أي حجم تحتاجه».
 
 **Engagement mechanic:** Open question; ask for the size in one word. Do not turn it into a poll (the poll is #7 on 4/11).
 
@@ -86,7 +86,7 @@ Conventions: copy is final-draft Arabic (X first), counted with Python (`len` af
 
 **Needs confirmation:**
 
-- [ ] Sizes 1, 4, 8, 16 L/kg are confirmed (decision 7); nothing else is said about the tins: no capacity, no light, toughness, shelf-life or oil-quality wording.
+- [x] Sizes: 1, 4, 8 and 16 L/kg are the most popular and any size is made to order (decisions 7 and 40); nothing else is said about the tins: no capacity, no light, toughness, shelf-life or oil-quality wording.
 - [ ] If asked in replies about other sizes or specs: answer only "Please email sales@jordantinplate.com with your specification".
 
 ---

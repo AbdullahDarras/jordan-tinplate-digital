@@ -33,7 +33,7 @@ Each post file contains: metadata, final copy (Arabic and English), the visual s
 | About 250 employees | Stated in post #1 |
 | No Saudi branch exists | No Saudi reference in any copy. The Saudi Food Manufacturing 2025 item is participation/interview only (not part of Week 1) |
 | Certificates received (round 4): FSSC 22000 (Bureau Veritas) and JFDA food-contact approval may be named; nothing else | Kept out of posts 1 to 4 on purpose (introduction, olive-oil and process posts); announced in their own posts in week 2 onward (`content/week2-bonus/`). No certificate or logo on screen |
-| Olive-oil tins produced in 1, 4, 8 and 16 L/kg | Stated in #1, #2 (slide 6, caption), #3 (post 5/6) |
+| Olive-oil tins: 1, 4, 8 and 16 L/kg are the most popular sizes; any size is made to order (decision 40) | Stated in #1, #2 (slide 6, caption), #3 (post 5/6) |
 | Interior lacquer meets the highest food-grade hygiene standards | Stated in this generic form only, in #2 and #3. No standard named |
 | A technical body exists | Reviews the light, toughness and stacking sentences; no reviewer name is needed |
 | 4–5 professional videos exist; two YouTube links and long Facebook videos received (round 3) | Source material for reel #4 and Instagram posts, replacing the "quick shoot". Clips still to be selected ([docs/video-sources.md](../../docs/video-sources.md)) |

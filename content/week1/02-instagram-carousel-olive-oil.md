@@ -65,7 +65,7 @@
 | | Arabic | English |
 |---|---|---|
 | **Headline** | جاهز لموسمك؟ تحدّث معنا | Ready for your season? Talk to us |
-| **Body** | تنكات الزيت بأحجام 1 و4 و8 و16 لتر/كغ، بطلاء داخلي يطابق أعلى معايير الصحة الخاصة بالأغذية. | Olive-oil tins in 1, 4, 8 and 16 L/kg, with an interior lacquer that meets the highest food-grade hygiene standards. |
+| **Body** | أشهر الأحجام 1 و4 و8 و16 لتر/كغ، ونصنع أي حجم تحتاجه، بطلاء داخلي يطابق أعلى معايير الصحة الخاصة بالأغذية. | Most popular sizes 1, 4, 8 and 16 L/kg, and we make any size you need, with an interior lacquer that meets the highest food-grade hygiene standards. |
 | **Contact** | sales@jordantinplate.com · +962 6 4051125 · jordantinplate.com | same |
 | **Sign-off** | الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية · علب معدنية للأغذية والمشروبات · منذ 1998 | Jordan Tinplate Canning · Metal packaging for food & beverage brands · Since 1998 |
 
@@ -82,7 +82,7 @@
 
 في هذا الكاروسيل ثلاثة أمور تستحق النظر عند التفكير بالتنك لزيت الزيتون: الضوء، والمتانة، والتخزين [تحقق]، ثم كيف تظهر علامتك على العلبة بالطباعة والتشطيبات.
 
-نحن في الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية نصنع علباً معدنية لعلامات الأغذية والمشروبات منذ عام 1998، من التصميم والطباعة حتى التشكيل والتغليف الجاهز للتصدير. وننتج تنكات الزيت بأحجام 1 و4 و8 و16 لتر/كغ، بطلاء داخلي يطابق أعلى معايير الصحة الخاصة بالأغذية.
+نحن في الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية نصنع علباً معدنية لعلامات الأغذية والمشروبات منذ عام 1998، من التصميم والطباعة حتى التشكيل والتغليف الجاهز للتصدير. وننتج تنكات الزيت بأي حجم تحتاجه، وأشهرها 1 و4 و8 و16 لتر/كغ، بطلاء داخلي يطابق أعلى معايير الصحة الخاصة بالأغذية.
 
 تجهّز لموسمك؟ راسلنا: sales@jordantinplate.com
 احفظ المنشور وشاركه مع من يعبّئ الزيت هذا الموسم.
@@ -93,7 +93,7 @@ Olive harvest and pressing season is here, and with it comes a question that ret
 
 This carousel looks at three things worth considering when choosing tin for olive oil: light, toughness and storage [TBC]. Then we show how your brand appears on the tin through printing and finishes.
 
-At Jordan Tinplate Canning we have been making metal packaging for food and beverage brands since 1998, from design and printing to forming and export-ready packing. Our olive-oil tins come in 1, 4, 8 and 16 L/kg, with an interior lacquer that meets the highest food-grade hygiene standards.
+At Jordan Tinplate Canning we have been making metal packaging for food and beverage brands since 1998, from design and printing to forming and export-ready packing. We make olive-oil tins in any size you need, the most popular being 1, 4, 8 and 16 L/kg, with an interior lacquer that meets the highest food-grade hygiene standards.
 
 Getting ready for your season? Write to us: sales@jordantinplate.com
 Save this post and share it with someone filling oil this season.
@@ -126,7 +126,7 @@ Save this post and share it with someone filling oil this season.
 ## 6) Needs confirmation (checklist)
 
 **Resolved (management decisions, `docs/decisions.md`):**
-- [x] The company **produces olive-oil tins** in 1, 4, 8 and 16 L/kg; sizes may be named publicly (slide 6, caption)
+- [x] The company **produces olive-oil tins**: 1, 4, 8 and 16 L/kg are the most popular sizes and any size is made to order (decision 40; slide 6, caption)
 - [x] **Interior lacquer** meets the highest food-grade hygiene standards: use this generic wording only; name no standard or number. Do not link it to FSSC 22000 or JFDA (they cover the food safety system and the cans and ends as food-contact materials, not the lacquer)
 - [x] Brand name **Jordan Tinplate Canning**, written in full; official Arabic name «الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية» (confirmed, round 3)
 

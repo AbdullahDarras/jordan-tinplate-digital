@@ -1,0 +1,56 @@
+/* Layout system for the social frames.
+   Every frame holds ONE .safe box inset by the format's safe margins; everything (text, tins, footer) lives inside it,
+   so nothing can drift into the edges or under the platform UI. Blocks stack in a column with gaps on an 8 px rhythm.
+   Add ?guides to the page URL (or class "guides" on <body>) to see the safe box and the visual zones. */
+
+/* safe margins per format */
+.f-post { --mt: 96px; --mb: 96px; --ms: 96px; }          /* 1080 x 1350: Instagram, LinkedIn, Facebook feed */
+.f-x    { --mt: 88px; --mb: 88px; --ms: 104px; }         /* 1600 x 900: X / LinkedIn landscape */
+.f-reel { --mt: 260px; --mb: 400px; --ms: 96px; }        /* 1080 x 1920: Reels UI (top bar, caption, buttons) */
+
+.safe { position: absolute; top: var(--mt); bottom: var(--mb); left: var(--ms); right: var(--ms); display: flex; flex-direction: column; z-index: 2; }
+.safe.rtl { direction: rtl; }
+.safe.ltr { direction: ltr; }
+
+.row { display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+.col { display: flex; flex-direction: column; }
+.grow { flex: 1 1 0px; min-height: 0; }
+.g8 { gap: 8px; } .g16 { gap: 16px; } .g24 { gap: 24px; } .g32 { gap: 32px; } .g40 { gap: 40px; } .g56 { gap: 56px; }
+.mt16 { margin-top: 16px; } .mt24 { margin-top: 24px; } .mt32 { margin-top: 32px; } .mt40 { margin-top: 40px; } .mt56 { margin-top: 56px; }
+
+/* the visual zone: tins stand on a shared floor line at its bottom, centred */
+.vis { position: relative; flex: 1 1 0px; min-height: 0; display: flex; align-items: flex-end; justify-content: center; }
+.vis .floor2 { position: absolute; left: 6%; right: 6%; bottom: -3%; height: 12%; border-radius: 50%; background: radial-gradient(closest-side, rgba(0, 6, 22, .55), transparent); z-index: 0; }
+.vis .glow { position: absolute; inset: 0 10%; border-radius: 50%; background: radial-gradient(closest-side, rgba(255, 233, 166, .26), rgba(255, 233, 166, 0)); z-index: 0; }
+.vis > img, .vis > .tins { position: relative; z-index: 1; }
+.tins { display: flex; align-items: flex-end; justify-content: center; height: 100%; }
+.tins img { display: block; flex: none; filter: drop-shadow(0 34px 30px rgba(0, 8, 28, .5)) drop-shadow(0 6px 8px rgba(0, 8, 28, .3)); }
+.tins img + img { margin-inline-start: var(--ov, -40px); }   /* slight overlap between neighbours */
+
+/* type scale */
+.h1 { font-family: var(--ar); font-weight: 700; line-height: 1.18; margin: 0; }
+.h1.en { font-family: var(--en); line-height: 1.02; letter-spacing: -.03em; }
+.h2en { font-family: var(--en); font-weight: 700; letter-spacing: -.02em; line-height: 1.1; color: var(--gold-2); margin: 0; }
+.bodyar { font-family: var(--ar); line-height: 1.6; margin: 0; }
+.bodyen { font-family: var(--en); line-height: 1.45; color: var(--navy-100); margin: 0; }
+.muted { color: var(--navy-200); }
+.counter { font-family: var(--en); font-weight: 700; color: var(--amber); letter-spacing: .04em; direction: ltr; }
+.url { font-family: var(--en); font-weight: 600; color: var(--navy-100); letter-spacing: .02em; direction: ltr; }
+.goldrule { width: 96px; height: 4px; border-radius: 2px; background: linear-gradient(90deg, var(--gold-3), var(--gold-2)); }
+
+/* guides (QA only) */
+.guides .safe { outline: 3px dashed #ff3b6b; outline-offset: 0; }
+.guides .vis { outline: 2px dotted #33e0ff; }
+.guides .safe > * { box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .25); }
+
+/* English lines inside an Arabic (RTL) frame keep their own direction but align with the Arabic edge */
+.h2en, .bodyen { direction: ltr; unicode-bidi: isolate; }
+.safe.rtl .h2en, .safe.rtl .bodyen { text-align: right; }
+.safe.rtl [style*="text-align:center"] .h2en, .safe.rtl [style*="text-align:center"] .bodyen { text-align: center; }
+.vis img { max-height: 100%; }
+.safe.row { flex-direction: row; }
+/* a composed group of tins: each tin placed by left / bottom / width in % of the visual zone, so the group always fits it */
+.comp { position: absolute; inset: 0; z-index: 1; }
+.comp img { position: absolute; display: block; height: auto; max-height: none; filter: drop-shadow(0 34px 30px rgba(0, 8, 28, .5)) drop-shadow(0 6px 8px rgba(0, 8, 28, .3)); }
+.sizes img { max-width: 100%; }
+.safe > *:not(.vis):not(.grow) { flex: none; }

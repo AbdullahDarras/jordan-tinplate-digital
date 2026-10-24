@@ -62,7 +62,7 @@ What we do, under one roof:
 - Storage of finished goods, when customers need it
 
 What we make:
-Food cans, milk powder cans, olive-oil tins (in 1, 4, 8 and 16 L/kg), food containers, round, square and rectangular fancy tins, industrial cans and ends. We also make special-edition packs with custom molds and finishes such as soft touch, embossing and matte/gloss.
+Food cans, milk powder cans, olive-oil tins (most popular sizes 1, 4, 8 and 16 L/kg, and any size to order), food containers, round, square and rectangular fancy tins, industrial cans and ends. We also make special-edition packs with custom molds and finishes such as soft touch, embossing and matte/gloss.
 
 If you are building a food or beverage brand and want packaging that protects the product and stands out on the shelf, we would be glad to talk.
 
@@ -93,14 +93,14 @@ Image: `media/x-extra/X-E02-sizes-1600x900.png`
 
 لأصحاب المعاصر والمعبّئين: أي حجم تعبّئون به أكثر هذا الموسم؟
 
-ننتج تنكات الزيت بالأحجام: 1 و4 و8 و16 لتر/كغ.
+أشهر أحجامنا 1 و4 و8 و16 لتر/كغ، ونصنع أي حجم تحتاجه.
 
 اكتبوا حجمكم في الردود.
 
 #زيت_الزيتون
 ```
 
-Alt text: أربع تنكات زيت بأحجام متدرجة مكتوب تحتها 1 و4 و8 و16 لتر/كغ.
+Alt text: أربع تنكات زيت بأحجام متدرجة مكتوب تحتها 1 و4 و8 و16 لتر/كغ، مع عبارة «ونصنع أي حجم تحتاجه».
 
 Reply to questions about other sizes or specs: «أرسل لنا مواصفاتك على sales@jordantinplate.com».
 
@@ -120,7 +120,7 @@ Files: `media/02-instagram-carousel/slide-1.png` … `slide-6.png`
 
 في هذا الكاروسيل ثلاثة أمور تستحق النظر عند التفكير بالتنك لزيت الزيتون: الضوء، والمتانة، والتخزين، ثم كيف تظهر علامتك على العلبة بالطباعة والتشطيبات.
 
-نحن في الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية نصنع علباً معدنية لعلامات الأغذية والمشروبات منذ عام 1998، من التصميم والطباعة حتى التشكيل والتغليف الجاهز للتصدير. وننتج تنكات الزيت بأحجام 1 و4 و8 و16 لتر/كغ، بطلاء داخلي يطابق أعلى معايير الصحة الخاصة بالأغذية.
+نحن في الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية نصنع علباً معدنية لعلامات الأغذية والمشروبات منذ عام 1998، من التصميم والطباعة حتى التشكيل والتغليف الجاهز للتصدير. وننتج تنكات الزيت بأي حجم تحتاجه، وأشهرها 1 و4 و8 و16 لتر/كغ، بطلاء داخلي يطابق أعلى معايير الصحة الخاصة بالأغذية.
 
 تجهّز لموسمك؟ راسلنا: sales@jordantinplate.com
 احفظ المنشور وشاركه مع من يعبّئ الزيت هذا الموسم.
@@ -131,7 +131,7 @@ Olive harvest and pressing season is here, and with it comes a question that ret
 
 This carousel looks at three things worth considering when choosing tin for olive oil: light, toughness and storage. Then we show how your brand appears on the tin through printing and finishes.
 
-At Jordan Tinplate Canning we have been making metal packaging for food and beverage brands since 1998, from design and printing to forming and export-ready packing. Our olive-oil tins come in 1, 4, 8 and 16 L/kg, with an interior lacquer that meets the highest food-grade hygiene standards.
+At Jordan Tinplate Canning we have been making metal packaging for food and beverage brands since 1998, from design and printing to forming and export-ready packing. We make olive-oil tins in any size you need, the most popular being 1, 4, 8 and 16 L/kg, with an interior lacquer that meets the highest food-grade hygiene standards.
 
 Getting ready for your season? Write to us: sales@jordantinplate.com
 Save this post and share it with someone filling oil this season.
@@ -142,7 +142,7 @@ Save this post and share it with someone filling oil this season.
 ```
 بدأ موسم قطف الزيتون وعصره، ومعه سؤال يتكرر كل موسم: في أي عبوة نضع الزيت؟
 
-نحن في الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية نصنع علباً معدنية لعلامات الأغذية والمشروبات منذ عام 1998، من التصميم والطباعة حتى التشكيل والتغليف الجاهز للتصدير. وننتج تنكات الزيت بأحجام 1 و4 و8 و16 لتر/كغ، بطلاء داخلي يطابق أعلى معايير الصحة الخاصة بالأغذية.
+نحن في الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية نصنع علباً معدنية لعلامات الأغذية والمشروبات منذ عام 1998، من التصميم والطباعة حتى التشكيل والتغليف الجاهز للتصدير. وننتج تنكات الزيت بأي حجم تحتاجه، وأشهرها 1 و4 و8 و16 لتر/كغ، بطلاء داخلي يطابق أعلى معايير الصحة الخاصة بالأغذية.
 
 تجهّز لموسمك؟ راسلنا: sales@jordantinplate.com
 
@@ -150,7 +150,7 @@ Save this post and share it with someone filling oil this season.
 .
 Olive harvest and pressing season is here, and with it comes a question that returns every year: what do we pack the oil in?
 
-At Jordan Tinplate Canning we have been making metal packaging for food and beverage brands since 1998, from design and printing to forming and export-ready packing. Our olive-oil tins come in 1, 4, 8 and 16 L/kg, with an interior lacquer that meets the highest food-grade hygiene standards.
+At Jordan Tinplate Canning we have been making metal packaging for food and beverage brands since 1998, from design and printing to forming and export-ready packing. We make olive-oil tins in any size you need, the most popular being 1, 4, 8 and 16 L/kg, with an interior lacquer that meets the highest food-grade hygiene standards.
 
 Getting ready for your season? Write to us: sales@jordantinplate.com
 ```
@@ -170,7 +170,7 @@ Getting ready for your season? Write to us: sales@jordantinplate.com
 | 3 | كرتونة تنكات زيت على بالت مع خط شحن وشاحنة / A carton of oil tins on a pallet with a shipping route and a truck |
 | 4 | صفوف مرتبة من تنكات الزيت على بالت / Neat rows of oil tins stacked on a pallet |
 | 5 | علبة معدنية مطبوعة مع أربع عينات للتشطيبات: لمعة ومطّ وملمس ناعم ونقش بارز / A printed metal tin with four finish swatches |
-| 6 | تنكات الزيت بأحجام 1 و4 و8 و16 لتر/كغ مع بيانات التواصل / Olive-oil tins in 1, 4, 8 and 16 L/kg with contact details |
+| 6 | أشهر أحجام تنكات الزيت 1 و4 و8 و16 لتر/كغ، وعبارة «ونصنع أي حجم تحتاجه»، مع بيانات التواصل / The most popular olive-oil tin sizes, 1, 4, 8 and 16 L/kg, "any size you need", and contact details |
 
 ---
 
@@ -203,7 +203,7 @@ Image on post 1 only: `media/03-x-thread/post-1-1600x900.png`. Post each part as
 وإن احتجت، نخزّن لك منتجك الجاهز عندنا ثم نشحنه إلى أسواقك.
 ```
 ```
-ننتج تنكات الزيت بجميع الأحجام: 1 و4 و8 و16 لتر/كغ.
+ننتج تنكات الزيت بأي حجم تحتاجه، وأشهر الأحجام 1 و4 و8 و16 لتر/كغ.
 
 والطلاء الداخلي يطابق أعلى معايير الصحة الخاصة بالأغذية.
 ```

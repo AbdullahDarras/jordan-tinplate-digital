@@ -25,7 +25,7 @@ body { display: flex; flex-wrap: wrap; gap: 40px; padding: 40px; align-items: fl
   radial-gradient(70% 60% at 50% 42%, var(--navy-500) 0%, var(--navy) 55%, var(--navy-900) 100%); }
 
 /* fine grain + soft vignette so flat navy does not band */
-.frame::after { content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 50;
+.frame::after { content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 1;
   background: radial-gradient(120% 90% at 50% 40%, transparent 60%, rgba(0, 10, 30, .35) 100%); }
 .frame.light::after { background: none; }
 
