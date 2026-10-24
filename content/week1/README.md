@@ -1,7 +1,7 @@
 # Week 1 content pack: 25 to 29 October 2026
 # حزمة محتوى الأسبوع الأول: 25 إلى 29 تشرين الأول 2026
 
-Ready-to-design copy for posts #1 to #4 of the [Month-1 content plan](../../Jordan-Tinplate-Month1-Content-Plan.md). Theme of the week: **we introduce ourselves and open the olive-oil season**. All files are drafts updated with management's approved decisions ([docs/decisions.md](../../docs/decisions.md), 2026-10-21, round 3) and still pending final sign-off.
+**Ready to post:** [content/social/week1/READY-TO-POST.md](../social/week1/READY-TO-POST.md) has the schedule, paste-ready copy (markers removed) and alt text; the finished images and the reel are in [content/social/week1/media/](../social/week1/media/). Below: the original copy for posts #1 to #4 of the [Month-1 content plan](../../Jordan-Tinplate-Month1-Content-Plan.md). Theme of the week: **we introduce ourselves and open the olive-oil season**. All files are drafts updated with management's approved decisions ([docs/decisions.md](../../docs/decisions.md), 2026-10-21, round 3) and still pending final sign-off.
 
 مسودات جاهزة للتصميم للمنشورات الأربعة الأولى من خطة الشهر الأول، محدَّثة بقرارات الإدارة المعتمدة. موضوع الأسبوع: نعرّف بـJordan Tinplate Canning ونفتح موسم زيت الزيتون. الاسم العربي الرسمي المعتمد: «الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية». والاسم الإنجليزي Jordan Tinplate Canning.
 
@@ -9,17 +9,17 @@ Ready-to-design copy for posts #1 to #4 of the [Month-1 content plan](../../Jord
 
 | # | Date | Platform | Pillar | File | Copy | Design | Blocked by |
 |---|---|---|---|---|---|---|---|
-| 1 | Sun 25/10 | LinkedIn (EN + Arabic summary) | 5: Made in Jordan | [01-linkedin-intro.md](01-linkedin-intro.md) | Ready for review | Not started (1 image, 4:5) | Final text sign-off; LinkedIn page updated first |
-| 2 | Tue 27/10 | Instagram carousel, 6 slides (AR then EN caption) | 1: Metal packaging for F&B | [02-instagram-carousel-olive-oil.md](02-instagram-carousel-olive-oil.md) | Ready for review | Can start on slides 1, 5, 6 | **Technical review** (existing technical body) of slides 2 to 4 (light, toughness, stacking). Sizes and interior lacquer on slide 6 are confirmed |
-| 3 | Wed 28/10 | X thread, 6 posts (mainly Arabic) | 4: Knowledge and expertise | [03-x-thread-olive-oil.md](03-x-thread-olive-oil.md) | Ready for review | 1 image (16:9) | **Technical review** of posts 2 to 4 (same as #2). Post 5/6 (sizes, lacquer) is confirmed |
-| 4 | Thu 29/10 | Instagram reel, 30 s (AR text + small EN) | 2: From sheet to can | [04-instagram-reel-sheet-to-can.md](04-instagram-reel-sheet-to-can.md) | Ready for review | Needs motion design + edit with clips selected from the received videos (links) | Wording check; clip selection from the received videos ([docs/video-sources.md](../../docs/video-sources.md)) |
+| 1 | Sun 25/10 | LinkedIn (EN + Arabic summary) | 5: Made in Jordan | [01-linkedin-intro.md](01-linkedin-intro.md) | Ready for review | **Done** (`content/social/week1/media/01-linkedin-intro/`) | Final text sign-off; LinkedIn page updated first |
+| 2 | Tue 27/10 | Instagram carousel, 6 slides (AR then EN caption) | 1: Metal packaging for F&B | [02-instagram-carousel-olive-oil.md](02-instagram-carousel-olive-oil.md) | Ready for review | **Done**, 6 slides (`content/social/week1/media/02-instagram-carousel/`); short version = slides 1, 5, 6 | **Technical review** (existing technical body) of slides 2 to 4 (light, toughness, stacking). Sizes and interior lacquer on slide 6 are confirmed |
+| 3 | Wed 28/10 | X thread, 6 posts (mainly Arabic) | 4: Knowledge and expertise | [03-x-thread-olive-oil.md](03-x-thread-olive-oil.md) | Ready for review | **Done** (`content/social/week1/media/03-x-thread/`) | **Technical review** of posts 2 to 4 (same as #2). Post 5/6 (sizes, lacquer) is confirmed |
+| 4 | Thu 29/10 | Instagram reel, 30 s (AR text + small EN) | 2: From sheet to can | [04-instagram-reel-sheet-to-can.md](04-instagram-reel-sheet-to-can.md) | Ready for review | **Done**: 30 s motion-graphic reel + cover (`content/social/week1/media/04-instagram-reel/`); real clips can replace stages 3 to 5 when the video files arrive | Wording check; clip selection from the received videos ([docs/video-sources.md](../../docs/video-sources.md)) |
 
 Each post file contains: metadata, final copy (Arabic and English), the visual script (slide-by-slide or scene-by-scene), hashtags, CTA, alt text and a "needs confirmation" checklist. Posts #2 and #3 also have a fallback version if the technical review of light, toughness and stacking is late.
 
 ## Suggested order of work
 
 1. Confirm the final text with the approver (name, address and facts are decided). Posts #1 and #4 can then go to final.
-2. Design the shared template first (colours, fonts, temporary wordmark "Jordan Tinplate Canning"), used by all four posts.
+2. ~~Design the shared template~~ Done: `content/social/week1/src/brand.css` (Pantone 294 C navy, site fonts, final vector logo, the website's 3D tins).
 3. Send the light, toughness and stacking sentences (slides 2 to 4 of #2, posts 2 to 4 of #3) to the technical reviewer on the same day, since they share the same three statements. The sizes and interior-lacquer lines need no review.
 4. Collect the 4–5 professional videos; pick stills for #1 and #2 and footage for the reel (#4).
 5. Design #1 and #4 now; design #2 slides 1, 5, 6 now; the rest after the review.
@@ -37,12 +37,12 @@ Each post file contains: metadata, final copy (Arabic and English), the visual s
 | Interior lacquer meets the highest food-grade hygiene standards | Stated in this generic form only, in #2 and #3. No standard named |
 | A technical body exists | Reviews the light, toughness and stacking sentences; no reviewer name is needed |
 | 4–5 professional videos exist; two YouTube links and long Facebook videos received (round 3) | Source material for reel #4 and Instagram posts, replacing the "quick shoot". Clips still to be selected ([docs/video-sources.md](../../docs/video-sources.md)) |
-| Brand colour PANTONE 294 C (about `#002F6C` on screen); final vector logo pending (round 3) | Template uses the colour and the temporary wordmark; the preliminary raster logo ("JORDAN CANNING") is not used. See [brand/README.md](../../brand/README.md) |
+| Brand colour PANTONE 294 C (about `#002F6C` on screen); final vector logo received (round 5, decision 36) | Designs use the colour and the final vector logo as supplied (white on navy); the full official name stays in all text. See [brand/README.md](../../brand/README.md) |
 | Account access with the marketing lead, 2FA on | Marketing lead publishes and answers replies |
 
 ## Still needed from management (بانتظار الإدارة)
 
-1. The **final logo (vector / high-resolution)**: only a preliminary raster of the old logo has arrived, and its wordmark "JORDAN CANNING" conflicts with the official name (the template uses a temporary wordmark). The Pantone colour (294 C) and the official Arabic name are no longer pending.
+1. ~~Final logo~~ Received as vector (round 5) and used in the designs and profile pictures. Still open: print formats (PDF/EPS) and whether the artwork keeps reading "JORDAN CANNING".
 2. **Certificates**: received (resolved). Open: name on the FSSC certificate (old name «Jordan Canning Industry»), logo licensing, and the unknown jordancanning.com contact on the warranty letter (`docs/decisions.md`, round 4).
 3. **Videos received (links), clips to be selected**: confirm titles and lengths and mark the clips to cut ([docs/video-sources.md](../../docs/video-sources.md)).
 4. Production **capacity** and **client names** (after launch). The address is final as it is.

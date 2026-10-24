@@ -1,0 +1,59 @@
+/* Social template system for Jordan Tinplate Canning.
+   Colours and fonts follow the website (brand/README.md): PANTONE 294 C = #002F6C on screen, amber accent, champagne gold for premium touches.
+   Every .frame is one exported image; tools/render.mjs screenshots each frame at its own size. */
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Readex+Pro:wght@300..700&display=block');
+
+:root {
+  --navy: #002F6C; --navy-500: #274f83; --navy-400: #53739d; --navy-200: #b5c4d7; --navy-100: #d8e0ec; --navy-50: #e9eef6;
+  --navy-900: #00193b; --navy-950: #00132d;
+  --amber: #f4b34c; --amber-deep: #d98b14;
+  --gold-1: #fffbe8; --gold-2: #ffe9a6; --gold-3: #ecc25a; --gold-4: #b4852c;
+  --olive: #5aa548; --olive-deep: #1d6b35; --olive-glow: #a9d36b;
+  --paper: #f5f8fd;
+  --ar: 'Readex Pro', 'Noto Sans Arabic', sans-serif;
+  --en: 'Bricolage Grotesque', 'DM Sans', sans-serif;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; background: #888; }
+body { display: flex; flex-wrap: wrap; gap: 40px; padding: 40px; align-items: flex-start; }
+
+.frame { position: relative; overflow: hidden; flex: none; color: #fff; font-family: var(--ar);
+  background: radial-gradient(70% 60% at 50% 42%, var(--navy-500) 0%, var(--navy) 55%, var(--navy-900) 100%); }
+.frame.light { color: var(--navy-950); background: radial-gradient(80% 70% at 50% 40%, #ffffff 0%, var(--paper) 55%, var(--navy-100) 100%); }
+.frame.olive { background:
+  radial-gradient(45% 38% at 50% 62%, rgba(169, 211, 107, .30) 0%, rgba(90, 165, 72, 0) 70%),
+  radial-gradient(70% 60% at 50% 42%, var(--navy-500) 0%, var(--navy) 55%, var(--navy-900) 100%); }
+
+/* fine grain + soft vignette so flat navy does not band */
+.frame::after { content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 50;
+  background: radial-gradient(120% 90% at 50% 40%, transparent 60%, rgba(0, 10, 30, .35) 100%); }
+.frame.light::after { background: none; }
+
+.ar { font-family: var(--ar); direction: rtl; }
+.en { font-family: var(--en); direction: ltr; unicode-bidi: isolate; letter-spacing: -.01em; }
+.abs { position: absolute; }
+.center { left: 0; right: 0; text-align: center; }
+
+/* tag pill */
+.tag { display: inline-flex; align-items: center; gap: .5em; padding: .42em 1.05em .5em; border-radius: 999px; font-weight: 600;
+  background: rgba(244, 179, 76, .14); color: var(--amber); border: 2px solid rgba(244, 179, 76, .55); }
+.light .tag { color: #865000; background: rgba(217, 139, 20, .12); border-color: rgba(217, 139, 20, .5); }
+.tag .dot { width: .5em; height: .5em; border-radius: 50%; background: currentColor; }
+
+/* gold hairline */
+.rule { height: 3px; background: linear-gradient(90deg, transparent, var(--gold-3), transparent); }
+
+/* tin images */
+.tin { position: absolute; filter: drop-shadow(0 40px 38px rgba(0, 8, 28, .55)) drop-shadow(0 8px 10px rgba(0, 8, 28, .35)); }
+.light .tin { filter: drop-shadow(0 34px 30px rgba(0, 25, 59, .28)) drop-shadow(0 6px 8px rgba(0, 25, 59, .2)); }
+.floor { position: absolute; border-radius: 50%; background: radial-gradient(closest-side, rgba(0, 6, 22, .55), transparent); }
+.halo { position: absolute; border-radius: 50%; background: radial-gradient(closest-side, rgba(255, 233, 166, .32), rgba(255, 233, 166, 0)); }
+
+/* footer bar */
+.foot { position: absolute; left: 0; right: 0; bottom: 0; display: flex; align-items: center; justify-content: space-between; }
+.foot .logo { display: block; }
+.foot .url { font-family: var(--en); font-weight: 600; letter-spacing: .02em; color: var(--navy-100); }
+.light .foot .url { color: var(--navy); }
+
+.num { font-family: var(--en); font-weight: 800; line-height: 1; color: transparent; -webkit-text-stroke: 3px rgba(244, 179, 76, .85); }
+.swipe { font-family: var(--en); font-weight: 600; color: var(--navy-100); display: flex; align-items: center; gap: 12px; }
