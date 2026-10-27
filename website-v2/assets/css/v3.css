@@ -50,6 +50,19 @@ img { max-width: 100%; height: auto; display: block; }
 .pill--icon svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; }
 .pill--solid { background: var(--accent); color: var(--on-accent); border-color: transparent; }
 @media (max-width: 520px) { .pill--solid { display: none; } }
+/* the site navigation (home and inner pages); a full-screen menu on smaller screens */
+.top__nav ul { list-style: none; margin: 0; padding: 4px; display: flex; gap: 2px; border-radius: 999px; background: var(--card); border: 1px solid var(--line); backdrop-filter: blur(10px); }
+.top__nav a { display: block; padding: 8px 14px; border-radius: 999px; color: var(--ink); text-decoration: none; font: 500 14px var(--f-body); transition: background .25s, color .25s; }
+.top__nav a:hover { background: color-mix(in srgb, var(--ink) 8%, transparent); }
+.top__nav a[aria-current="page"] { background: var(--navy); color: #fff; }
+:root[data-mode="dark"] .top__nav a[aria-current="page"] { background: var(--navy-100); color: var(--navy-950); }
+.menu-btn { display: none; }
+.menu { position: fixed; inset: 0; z-index: 19; background: var(--bg); padding: 110px max(var(--pad), env(safe-area-inset-right, 0px)) 40px max(var(--pad), env(safe-area-inset-left, 0px)); overflow: auto; }
+.menu ul { list-style: none; margin: 0; padding: 0; }
+.menu a { display: flex; align-items: baseline; gap: 16px; padding: 14px 0; border-bottom: 1px solid var(--line); color: var(--ink); text-decoration: none; font: 800 clamp(30px, 7vw, 48px)/1.1 var(--f-head); letter-spacing: -.02em; }
+html[lang="ar"] .menu a { letter-spacing: 0; font-weight: 700; }
+.menu .num { font-size: 14px; color: var(--accent-text); font-weight: 600; }
+@media (max-width: 1180px) { .top__nav { display: none; } .menu-btn { display: inline-flex; } }
 
 /* ---------------------------------------------------------------- shared type */
 .kick { margin: 0 0 14px; font: 600 13px var(--f-body); letter-spacing: .14em; text-transform: uppercase; color: var(--accent-text); }

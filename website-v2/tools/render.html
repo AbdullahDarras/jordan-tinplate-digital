@@ -1,0 +1,12 @@
+<!doctype html>
+<!-- tools/renders.mjs opens this page to render one tin on a transparent background (the card pictures in assets/img/renders) -->
+<html><head><meta charset="utf-8"><style>html,body{margin:0;background:transparent}canvas{width:800px;height:640px;display:block}</style>
+<script type="importmap">{"imports":{"three":"../assets/vendor/three/three.module.min.js","three/addons/":"../assets/vendor/three/addons/"}}</script></head>
+<body><canvas id="c"></canvas>
+<script type="module">
+import { createLab } from '../assets/js/engine/stage.js';
+const key = new URLSearchParams(location.search).get('tin') || 'qaisi';
+const lab = createLab(document.getElementById('c'), { tin: key, transparent: true, still: true });
+lab.setTheme('light');
+lab.ready.then(() => setTimeout(() => { document.body.dataset.ready = '1'; }, 1500));
+</script></body></html>

@@ -1,0 +1,73 @@
+// Website v2, inner pages: theme, language memory, menu, smooth scroll, the 3D stages (hero, labs, journey), video facades.
+// All the text is already in the HTML; everything here is an enhancement.
+const d = document.documentElement, $ = (s, r = document) => r.querySelector(s), $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const store = { set(k, v) { try { localStorage.setItem(k, v); } catch (e) { /* private mode */ } } };
+const lang = d.lang === 'ar' ? 'ar' : 'en';
+const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+// language and theme
+$('#langLink')?.addEventListener('click', (e) => store.set('jt2-lang', e.currentTarget.dataset.lang));
+const stages = [];
+$('#modeBtn')?.addEventListener('click', () => {
+  const m = d.dataset.mode === 'dark' ? 'light' : 'dark'; d.dataset.mode = m; store.set('jt2-mode', m);
+  stages.forEach((s) => s.setTheme(m)); heroTitle();
+});
+
+// menu (phones)
+const menu = $('#menu'), mb = $('#menuBtn');
+mb?.addEventListener('click', () => { const open = mb.getAttribute('aria-expanded') !== 'true'; mb.setAttribute('aria-expanded', String(open)); menu.hidden = !open; d.classList.toggle('menu-open', open); });
+addEventListener('keydown', (e) => { if (e.key === 'Escape' && mb?.getAttribute('aria-expanded') === 'true') mb.click(); });
+
+// smooth scroll, header state, reveals
+let lenis = null;
+if (window.Lenis && !REDUCED) { lenis = new window.Lenis({ lerp: 0.09, wheelMultiplier: 0.85 }); const raf = (t) => { lenis.raf(t); requestAnimationFrame(raf); }; requestAnimationFrame(raf); }
+const top = $('#top'), hero = $('.phero');
+const onScroll = () => { top.classList.toggle('solid', scrollY > (hero ? hero.offsetHeight - 80 : 40)); };
+addEventListener('scroll', onScroll, { passive: true }); onScroll();
+const rv = $$('.sec__head, .card, .tile, .spec, .prose, .facts > div, .certs figure, .vid, .vcard, .reach > *, .lab__text > *, .story > div');
+rv.forEach((el) => el.classList.add('rv'));
+const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { rootMargin: '0px 0px -8% 0px' });
+rv.forEach((el, i) => { el.style.setProperty('--d', (i % 4) * 70 + 'ms'); io.observe(el); });
+
+// video facades: the YouTube player (no-cookie) loads only on click
+$$('.vid').forEach((v) => v.querySelector('.vid__play').addEventListener('click', (e) => {
+  e.preventDefault();
+  const f = document.createElement('iframe');
+  f.src = `https://www.youtube-nocookie.com/embed/${v.dataset.vid}?autoplay=1&rel=0`; f.title = v.dataset.title;
+  f.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen'; f.allowFullscreen = true;
+  v.replaceChildren(f); v.classList.add('playing');
+}));
+
+// ---------------------------------------------------------------- 3D
+let heroStage = null;
+function heroTitle() {
+  if (!heroStage) return;
+  const text = $('#h1').textContent.trim(), font = lang === 'ar' ? '700 100px "Readex Pro"' : '800 100px "Bricolage Grotesque"';
+  (document.fonts ? document.fonts.load(font, text) : Promise.resolve()).catch(() => {}).then(() => heroStage.title(text, lang, d.dataset.mode));
+}
+function wire(stage) { stage.setTheme(d.dataset.mode); stages.push(stage); return stage; }
+import('./engine/stage.js').then((S) => {
+  const hc = $('canvas[data-stage="hero"]');
+  if (hc) { heroStage = wire(S.createHero(hc, { tins: hc.dataset.tins.split(',') })); heroTitle(); heroStage.ready.then(() => d.classList.add('gl-ready')); }
+  // the labs start when they come near the screen
+  const lazy = (el, start) => { const o = new IntersectionObserver(([e]) => { if (e.isIntersecting) { o.disconnect(); start(); } }, { rootMargin: '400px' }); o.observe(el); };
+  $$('canvas[data-stage="lab"]').forEach((c) => lazy(c, () => {
+    const lab = wire(S.createLab(c, { tin: c.dataset.tin })), sec = c.closest('.lab');
+    $$('.chip[data-fin]', sec).forEach((b) => b.addEventListener('click', () => {
+      $$('.chip[data-fin]', sec).forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+      $('.lab__desc', sec).textContent = b.dataset.desc; lab.setFinish(b.dataset.fin);
+    }));
+    $$('.chip[data-tin]', sec).forEach((b) => b.addEventListener('click', () => {
+      $$('.chip[data-tin]', sec).forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+      $$('.pane', sec).forEach((p) => p.classList.toggle('on', p.id === b.getAttribute('aria-controls'))); lab.setTin(b.dataset.tin);
+    }));
+  }));
+  const jc = $('canvas[data-stage="journey"]');
+  if (jc) lazy(jc, () => {
+    const J = wire(S.createJourney(jc)), sec = jc.closest('.jfilm'), steps = $$('.flow__step', sec), dots = $$('.flow__rail b', sec), rail = $('.flow__rail', sec);
+    J.label(lang);
+    const show = (s) => { steps.forEach((el, i) => el.classList.toggle('on', i === s)); dots.forEach((b, i) => b.classList.toggle('done', i <= s)); rail.style.setProperty('--f', s / 4); };
+    J.onChange((st) => show(st.step)); show(0);
+    (function tick() { const r = sec.getBoundingClientRect(); J.progress = Math.min(1, Math.max(0, -r.top / Math.max(1, r.height - innerHeight))); requestAnimationFrame(tick); })();
+  });
+}).catch((e) => { console.warn('3D unavailable', e); d.classList.add('no-gl'); });

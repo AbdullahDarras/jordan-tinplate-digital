@@ -1,6 +1,7 @@
 // Website v2 (round 2): the page around the 3D film. Language, theme, smooth scroll, the chapter overlays, the finish lab.
 import { createFilm, CHAPTERS } from './engine/film.js';
 import { TINS } from './engine/tins.js';
+import { NAV_AR } from './nav-ar.js';
 
 const d = document.documentElement, $ = (s) => document.querySelector(s), $$ = (s) => [...document.querySelectorAll(s)];
 const store = { get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }, set(k, v) { try { localStorage.setItem(k, v); } catch (e) { /* private mode */ } } };
@@ -46,6 +47,7 @@ const FIN = {
   en: { gloss: 'Special gloss, alone or combined with matte, for bright, lively visuals on the metal.', matte: 'A low-glare surface that gives colours a calmer, deeper look.', emboss: 'Raised and recessed effects on lid and body that add movement and make the design stand out.', spot: 'A glossy varnish on chosen parts of the artwork over a matte base, so the design itself catches the light.' },
   ar: { gloss: 'لمعة خاصة، منفردة أو مع التشطيب المطفي، لمظهر مشرق وحيّ على المعدن.', matte: 'سطح قليل الانعكاس يمنح الألوان مظهراً أهدأ وأعمق.', emboss: 'تأثيرات بارزة وغائرة على الغطاء والجسم تضيف حركة وتُبرز التصميم.', spot: 'ورنيش لامع على أجزاء محددة من التصميم فوق خلفية مطفية، فتلمع الرسمة وحدها.' }
 };
+Object.assign(AR, NAV_AR);
 const EN = {};
 $$('[data-i18n]').forEach((el) => { EN[el.dataset.i18n] = el.innerHTML; });
 $$('[data-i18n-aria]').forEach((el) => { EN['aria:' + el.dataset.i18nAria] = el.getAttribute('aria-label'); });
@@ -57,12 +59,17 @@ function applyLang(l) {
   $$('[data-i18n]').forEach((el) => { const k = el.dataset.i18n; el.innerHTML = l === 'ar' ? AR[k] ?? EN[k] : EN[k]; });
   $$('[data-i18n-aria]').forEach((el) => { const k = el.dataset.i18nAria; el.setAttribute('aria-label', l === 'ar' ? AR[k] ?? EN['aria:' + k] : EN['aria:' + k]); });
   $$('[data-i18n-alt]').forEach((el) => { const k = el.dataset.i18nAlt; el.alt = l === 'ar' ? AR[k] ?? EN['alt:' + k] : EN['alt:' + k]; });
+  $$('a[data-path]').forEach((a) => { a.href = `${l}/${a.dataset.path}`; });
   const lb = $('#langBtn'); lb.lang = l === 'ar' ? 'en' : 'ar'; lb.setAttribute('aria-label', l === 'ar' ? 'Switch to English' : 'التبديل إلى العربية');
   document.title = l === 'ar' ? 'الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية | نطبع. ونعلّب.' : 'Jordan Tinplate Canning | We print. We can.';
   $('#finDesc').textContent = FIN[l][finish];
   caption(ringIdx);
   title();
 }
+// menu (smaller screens)
+const menu = $('#menu'), mb = $('#menuBtn');
+mb.addEventListener('click', () => { const open = mb.getAttribute('aria-expanded') !== 'true'; mb.setAttribute('aria-expanded', String(open)); menu.hidden = !open; d.classList.toggle('menu-open', open); });
+addEventListener('keydown', (e) => { if (e.key === 'Escape' && mb.getAttribute('aria-expanded') === 'true') mb.click(); });
 $('#langBtn').addEventListener('click', () => { const l = lang() === 'ar' ? 'en' : 'ar'; store.set('jt2-lang', l); applyLang(l); });
 $('#modeBtn').addEventListener('click', () => { const m = d.dataset.mode === 'dark' ? 'light' : 'dark'; d.dataset.mode = m; store.set('jt2-mode', m); film && film.setTheme(m); title(); });
 

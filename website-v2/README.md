@@ -59,6 +59,28 @@ The owner found the closing print-sheet layout weak and asked for something more
   five dots. The film is longer (1700svh, 1500svh on a phone) so the chapter has room: `CHAPTERS[5]` is 0.75 to 1.
 - The journey moves its own camera (`journey.shotAt`), mirrored in Arabic so the tin stays clear of the card.
 
+## Round 7 (2026-10-27): the inner pages
+All twelve inner pages, in English and Arabic, in the same style as the home film. Built by `node tools/build.mjs`, which reads
+the approved copy from `website/tools/content.mjs` (the one source for both sites; hidden "to be confirmed" items stay hidden) and
+writes `en/<path>/index.html` and `ar/<path>/index.html` with relative links.
+- **3D hero** on every page: the page title is drawn as a wall in the studio and the page's own tins stand in front of it
+  (Products: Al Abed can, Al Qaisi, Level Max; Olive oil: a plain tinplate 16 kg oil tin at the old site's exact size,
+  illustrative; Milk powder: Maeen and Al Abed; Sweets: the desert rectangle, Bab Sharqi, the square tin; White cheese: Laqmi;
+  Coffee & tea: Level Max and the tall square tin; Industrial: an illustrative paint can; Capabilities, Contact: Al Qaisi;
+  About: the navy round tin; Gallery, News: the square and rectangular gift tins). Drag to turn, the light follows the pointer.
+  Pages with an illustrative tin say so under the intro.
+- **Finish lab** and **shapes lab** (Products, Capabilities): one 3D tin; the finish chips change its material, the shape chips
+  switch to a real tin of that shape (8 shapes; the shapes we have no real tin for are left out).
+- **Capabilities** carries the sheet-to-shelf journey, pinned and scrubbed by the scroll, exactly as chapter 6 of the home film.
+- Cards, industry tiles and spec rows use renders of the same 3D tins (`assets/img/renders`, made by `tools/renders.mjs`
+  and `tools/crop_renders.py`); cards without a real tin get a tinplate panel with the gear mark.
+- The same header on every page, home included: navigation (a full-screen menu on smaller screens), language, theme, quote.
+  The language choice is remembered between the home page and the inner pages. Footer with the site map.
+- Code: `assets/js/engine/room.js` (the shared studio: backdrop, soft-boxes, lights, floor, tone curve) and
+  `assets/js/engine/journey.js` were split out of `film.js` so the home film and the pages share them;
+  `assets/js/engine/stage.js` (hero, lab, journey stages, each rendering only while on screen); `assets/js/page.js`;
+  `assets/css/pages.css`.
+
 ## Engine
 - `assets/js/engine/tins.js`: the tins. Geometry follows the order platform's studio rules (`studio.js`: lid gap and lift, skirt,
   curled lip, 3.5 mm corners) at each tin's real millimetres; artwork from `halawah.js` (the straightened photos). Materials are

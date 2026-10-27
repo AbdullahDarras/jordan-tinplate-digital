@@ -25,7 +25,10 @@ export const TINS = {
   abed: { kind: 'can', D: 73, H: 91, fmt: ['Food can, peel-off end', 'علبة أغذية بطرف قابل للنزع'] },
   maeen: { kind: 'can', D: 73, H: 83, fmt: ['Milk powder can', 'علبة حليب بودرة'] },
   suliman: { kind: 'box', w: 70, d: 60, h: 88, fmt: ['Tall square tin', 'علبة مربعة طويلة'] },
-  levelmax: { kind: 'box', w: 110, d: 67, h: 98, fmt: ['Tea caddy', 'علبة شاي'] }
+  levelmax: { kind: 'box', w: 110, d: 67, h: 98, fmt: ['Tea caddy', 'علبة شاي'] },
+  // illustrative shapes for the inner pages (plain tinplate or sample artwork, no client design)
+  oil: { kind: 'oil', w: 235, d: 235, h: 350, fmt: ['Olive-oil tin, 16 kg', 'تنكة زيت زيتون 16 كغ'], illus: true },   // the old site's exact 16 kg tin
+  paint: { kind: 'can', D: 110, H: 120, bail: true, fmt: ['Paint can', 'علبة دهان'], illus: true }
 };
 
 // ---------------------------------------------------------------- materials
@@ -153,9 +156,32 @@ function box(key, T) {
   const g = new THREE.Group(); g.add(body, L);
   return { group: g, lid: L, body, print: [front, side, ...L.userData.print], size: { h: H, w: W + 2 * G, d: D + 2 * G } };
 }
+// the olive-oil tin: plain tinplate, a square body with seamed rims, a raised top panel, a spout with a screw cap and a wire handle
+function oilTin(key, T) {
+  const k = STU.rules({ w: T.w, d: T.d, h: T.h });
+  const W = T.w * U, D = T.d * U, H = T.h * U, CR = 9 * U, sr = k.seamR * U * 1.4;
+  const tin = new THREE.MeshPhysicalMaterial({ color: '#e6eaf0', metalness: 0.78, roughness: 0.2, clearcoat: 0.5, clearcoatRoughness: 0.1 }), dark = metal('#aab2bf', 0.3); // bright tinplate: part metal, part lacquer, so it never reads grey
+  const g = new THREE.Group();
+  const out = STU.roundRect(W / 2, D / 2, CR);
+  g.add(new THREE.Mesh(STU.wall(out, 0, H, () => [0.5, 0.5]), tin));
+  // two shallow ribs round the body, as on the real tins
+  [0.3, 0.7].forEach((f) => g.add(STU.ring(STU.grow(out, 0.001), sr * 0.35, H * f, tin)));
+  g.add(STU.ring(out, sr, H, tin), STU.ring(out, sr, sr * 0.6, tin));
+  const top = new THREE.Mesh(STU.cap(STU.roundRect(W / 2 - sr, D / 2 - sr, CR), H - sr * 0.6, true, () => [0.5, 0.5]), tin); g.add(top);
+  g.add(new THREE.Mesh(STU.cap(STU.roundRect(W / 2, D / 2, CR), 0.001, false, () => [0.5, 0.5]), dark));
+  // spout and cap near one corner
+  const sx = W * 0.27, sz = D * 0.27, y0 = H - sr * 0.6;
+  const neck = new THREE.Mesh(new THREE.CylinderGeometry(0.17, 0.2, 0.12, 40), tin); neck.position.set(sx, y0 + 0.06, sz); g.add(neck);
+  const capM = new THREE.MeshPhysicalMaterial({ color: '#d98b14', roughness: 0.35, clearcoat: 0.8 }); // the amber of the brand on the cap only
+  const cp = new THREE.Mesh(new THREE.CylinderGeometry(0.19, 0.19, 0.16, 40), capM); cp.position.set(sx, y0 + 0.2, sz); g.add(cp);
+  // wire handle across the top
+  const hdl = new THREE.Mesh(new THREE.TorusGeometry(W * 0.22, 0.012, 8, 48, Math.PI), dark); hdl.position.set(-W * 0.05, y0 + 0.02, -D * 0.05); hdl.rotation.y = Math.PI / 4; g.add(hdl);
+  return { group: g, lid: top, body: g.children[0], print: [], size: { h: H + 0.3, w: W, d: D } };
+}
 export function make(key) {
   const T = TINS[key];
-  const m = T.kind === 'box' ? box(key, T) : T.kind === 'can' ? seamedCan(key, T) : roundTin(key, T);
+  const m = T.kind === 'box' ? box(key, T) : T.kind === 'oil' ? oilTin(key, T) : T.kind === 'can' ? seamedCan(key, T) : roundTin(key, T);
+  if (T.bail) { const R = (T.D / 2) * U, b = new THREE.Mesh(new THREE.TorusGeometry(R * 0.98, 0.012, 8, 64, Math.PI), metal('#9aa3b1', 0.3)); b.position.y = T.H * U * 0.72; b.rotation.set(-1.15, 0.4, 0, 'YXZ'); m.group.add(b); }
   m.key = key; m.T = T;
   m.group.traverse((o) => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = false; } });
   m.ready = Promise.all(m.print.map((p) => p.userData.L.ready));
