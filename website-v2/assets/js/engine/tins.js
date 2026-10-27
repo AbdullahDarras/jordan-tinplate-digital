@@ -51,9 +51,9 @@ function metalMap(L) {
 }
 // the finishes a tin can wear
 export const FINISHES = {
-  gloss: { roughness: 0.22, clearcoat: 1, clearcoatRoughness: 0.04, bump: 1, sheen: 0 },
+  gloss: { roughness: 0.2, clearcoat: 0.45, clearcoatRoughness: 0.06, bump: 1, sheen: 0 },
   matte: { roughness: 0.62, clearcoat: 0, clearcoatRoughness: 0.6, bump: 1, sheen: 0.35 },
-  emboss: { roughness: 0.24, clearcoat: 0.9, clearcoatRoughness: 0.06, bump: 4.5, sheen: 0 },
+  emboss: { roughness: 0.22, clearcoat: 0.4, clearcoatRoughness: 0.08, bump: 4.5, sheen: 0 },
   spot: { roughness: 0.66, clearcoat: 1, clearcoatRoughness: 0.02, bump: 1.4, sheen: 0.3, spot: true }
 };
 export function printMat(L, base = 1) {

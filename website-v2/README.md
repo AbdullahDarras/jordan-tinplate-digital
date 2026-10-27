@@ -3,26 +3,28 @@
 A complete redesign proposed to the owner on 2026-10-27. It lives next to the current site (`website/`, which Netlify still
 publishes) until the owner approves the direction; then the inner pages are rebuilt in it and it replaces `website/`.
 
-## Idea
-The tins are the show. One fixed WebGL studio sits behind the page and the page is laid over it like a run of print sheets
-(registration marks, crop marks, the colour control strip printers run along a sheet). Default: English, light mode.
-
-| Section | What happens |
-|---|---|
-| Hero | The main tin (Al Qaisi, catalogue round 235 at 6 cm) under a light the visitor moves with the pointer; "We print." sits behind the tin, "We can." in foil in front. |
-| How a tin is printed (`#anatomy`, scroll-scrubbed) | A printed lid builds itself up: tinplate, base coat, then the cyan, magenta, yellow and black plates, separated from the real lid photo in the browser, land one by one and multiply into the full picture (like ink), then varnish, then the relief rises. |
-| Finish Lab (`#lab`) | The main tin again; drag to move the light; gloss, matte, embossing, spot UV (Trending: coming soon). |
-| Our tins (`#collection`, scroll-scrubbed) | Twelve real tins from the factory photos on one shelf, at true relative size; the caption gives the format and, where the tin matches the catalogue, its size. |
-| Process, sectors, story, certifications, contact | Approved copy from `website/tools/content.mjs`. |
+## Round 2 (2026-10-27, after the owner's review)
+The owner rejected round 1: it broke the identity (CMYK colours, gold foil type, condensed type) and it still had the old site's
+shape (text on one side, a tin in a box on the other, section after section). Round 2:
+- **Identity, strictly** (`brand/README.md`): only PANTONE 294 C `#002F6C` and its tints and shades, amber only on buttons and
+  highlights, champagne gold only on the tins. Bricolage Grotesque 700-800 for Latin headings, DM Sans for Latin text, Readex Pro
+  for Arabic. The four separations in the print chapter are drawn in brand navy, not in CMYK colours.
+- **The site is a 3D film**, not a page with 3D boxes: one full-screen canvas, the scroll is the film's time, the camera travels a
+  fixed shot list and the text comes and goes over it. Chapters (rail on the side): 01 the tin (hero), 02 the relief (macro on the
+  stamped lid, depth of field, a raking light), 03 the print (a lid built up layer by layer), 04 our tins (the factory's tins rise
+  round the main tin and turn), 05 finishes (drag to turn the tin), 06 the sheet (top view of every tin). Then a plain page:
+  sectors, story and certifications, contact (brand navy band), footer.
+- **Better 3D**: the studio backdrop is drawn in the WebGL scene (brand navy scale), physical materials, bloom on the glints and
+  depth of field (three.js post-processing, vendored from 0.160.1), and the main tin's lid re-cut at 2048 px from the original
+  6720 px photo so the macro shot stays sharp.
 
 ## Engine
 - `assets/js/engine/tins.js`: the tins. Geometry follows the order platform's studio rules (`studio.js`: lid gap and lift, skirt,
   curled lip, 3.5 mm corners) at each tin's real millimetres; artwork from `halawah.js` (the straightened photos). Materials are
   three.js physical materials: a metalness map is taken from each photo (gold lacquer and bare tin are metal, ink and base coat
   are not), clear varnish on top, the relief map for embossing, the spot map for spot UV.
-- `assets/js/engine/stage.js`: one renderer, one canvas. Every act follows a `.slot[data-act]` element in the layout, so CSS
-  decides where and how big the tins are. A studio environment (soft-boxes) gives the reflections; a key light casts the shadow;
-  the pointer moves a small light for the glint on gold and relief.
+- `assets/js/engine/film.js`: the film. `SHOTS` (camera positions) and `CHAPTERS` (where each holds on the time line); every object
+  poses itself from the same time value. `assets/js/app.js`: language, theme, smooth scroll, the overlays and the finish lab.
 - `studio.js` and `halawah.js` are copies of the files in `website/assets/js/engine/` (keep them in step until v2 replaces v1).
 
 ## Preview
