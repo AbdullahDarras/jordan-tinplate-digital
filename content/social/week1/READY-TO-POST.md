@@ -5,6 +5,10 @@ Everything needed to publish week 1: the final images and video in [`media/`](me
 
 كل ما يلزم لنشر الأسبوع الأول: الصور والفيديو النهائية في `media/`، والنصوص أدناه جاهزة للنسخ واللصق بلا علامات `[تحقق]` ولا ملاحظات.
 
+## Hashtags, updated 27/10 / الهاشتاقات
+
+Hashtags were refreshed on 27/10 for this week's trends: `#موسم_الزيتون` leads the olive-oil posts, `#HowItsMade` joins the reel, `#FoodManufacturing` replaces `#FoodAndBeverage` on LinkedIn, and Instagram posts carry 5 hashtags at most (the platform limit since late 2025). The reasons for each tag, with platform previews, are in [`posts.html`](posts.html).
+
 ## Before Sunday / قبل الأحد
 
 - [ ] **Approval** of this file and the designs by the marketing lead (and management where the post files say so).
@@ -73,7 +77,7 @@ Over the next weeks we will share how a flat sheet of tinplate becomes a can, ho
 
 الملخص بالعربية: الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية متخصصة في التغليف المعدني لعلامات الأغذية والمشروبات منذ عام 1998، في الزميلات – الموقّر، يعمل فيها نحو 250 موظفاً ويديرها اليوم الجيل الثالث من العائلة المؤسِّسة. نقدّم الرحلة كاملة في مكان واحد، من التصميم وألواح الطباعة (CTP) إلى الطباعة والطلاء والتشكيل والتغليف الجاهز للتصدير، مع إمكانية تخزين المنتج الجاهز. للتواصل: sales@jordantinplate.com
 
-#MetalPackaging #FoodAndBeverage #MadeInJordan #JordanTinplateCanning #تغليف_معدني
+#MetalPackaging #PackagingDesign #FoodManufacturing #MadeInJordan #JordanTinplateCanning
 ```
 
 First comment (optional): `Phone: +962 6 4051125`
@@ -97,7 +101,7 @@ Image: `media/x-extra/X-E02-sizes-1600x900.png`
 
 اكتبوا حجمكم في الردود.
 
-#زيت_الزيتون
+#موسم_الزيتون #زيت_الزيتون
 ```
 
 Alt text: أربع تنكات زيت بأحجام متدرجة مكتوب تحتها 1 و4 و8 و16 لتر/كغ، مع عبارة «ونصنع أي حجم تحتاجه».
@@ -155,10 +159,10 @@ At Jordan Tinplate Canning we have been making metal packaging for food and beve
 Getting ready for your season? Write to us: sales@jordantinplate.com
 ```
 
-**First comment (hashtags):**
+**Hashtags (at the end of the caption; Instagram accepts 5 at most, comments included):**
 
 ```
-#زيت_الزيتون #موسم_الزيتون #تنكة_زيت #علب_معدنية #صنع_في_الأردن #OliveOil #MetalPackaging #TinplateCans #MadeInJordan #JordanTinplateCanning
+#موسم_الزيتون #زيت_الزيتون #OliveOilSeason #MetalPackaging #JordanTinplateCanning
 ```
 
 **Alt text per slide:**
@@ -213,7 +217,7 @@ Image on post 1 only: `media/03-x-thread/post-1-1600x900.png`. Post each part as
 نحن الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية: علب معدنية للأغذية والمشروبات منذ 1998.
 للتواصل: sales@jordantinplate.com
 
-#زيت_الزيتون #JordanTinplateCanning
+#موسم_الزيتون #JordanTinplateCanning
 ```
 
 **Short version (if the review is late):** post 1, then the sizes post, then the brand post, then this question:
@@ -264,10 +268,10 @@ At Jordan Tinplate Canning we have been making metal packaging for food and beve
 Which stage interests you most? Tell us in the comments, or write to us: sales@jordantinplate.com
 ```
 
-First comment (hashtags):
+Hashtags (at the end of the caption; Instagram accepts 5 at most, comments included):
 
 ```
-#تغليف_معدني #علب_معدنية #صنع_في_الأردن #طباعة_على_الصفيح #علب_تنك #MetalPackaging #TinplateCans #MadeInJordan #PackagingDesign #JordanTinplateCanning
+#HowItsMade #MetalPackaging #PackagingDesign #صنع_في_الأردن #JordanTinplateCanning
 ```
 
 Alt text: فيديو موشن مدته 30 ثانية يُظهر رحلة صفيحة معدنية من التصميم وألواح الطباعة إلى الطباعة والتشكيل والتغليف على البالتات ثم التخزين والشحن، وتنتهي بعلبة جاهزة وبيانات التواصل.
@@ -287,7 +291,7 @@ With a real clip:
 
 الريل الكامل على إنستغرام اليوم.
 
-#JordanTinplateCanning
+#صنع_في_الأردن #JordanTinplateCanning
 ```
 
 With the still (fallback):
@@ -299,7 +303,7 @@ With the still (fallback):
 
 الريل الكامل على إنستغرام اليوم.
 
-#JordanTinplateCanning
+#صنع_في_الأردن #JordanTinplateCanning
 ```
 
 Alt text (still): ست بطاقات مرقّمة لمراحل صناعة العلبة: التصميم، ألواح الطباعة، الطباعة والطلاء، القص والتشكيل، التغليف على البالتات، التخزين والشحن.
