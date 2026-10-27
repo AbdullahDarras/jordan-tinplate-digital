@@ -74,12 +74,12 @@ html[dir="rtl"] .btn svg { transform: scaleX(-1); }
 .ov.on { opacity: 1; transform: none; }
 .ov.on .chips, .ov.on .btn { pointer-events: auto; }
 
-.ov--hero { inset: 0; padding: 92px max(var(--pad), env(safe-area-inset-right, 0px)) 40px max(var(--pad), env(safe-area-inset-left, 0px)); display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 360px); grid-template-rows: auto 1fr auto; column-gap: 40px; }
-.ov--hero .kick { grid-column: 1; grid-row: 1; }
-.ov--hero .ov__foot { grid-column: 2; grid-row: 1; display: grid; gap: 18px; justify-items: start; }
-.ov--hero .ov__foot .lead { font-size: 15px; }
-.ov--hero .mega { grid-column: 1 / -1; grid-row: 3; }
-.cue { position: absolute; inset-inline-start: max(var(--pad), 16px); top: 130px; display: flex; align-items: center; gap: 10px; margin: 0; font-size: 13px; color: var(--mute); max-width: 26ch; }
+.ov--hero { inset: 0; display: flex; flex-direction: column; justify-content: flex-end; padding: 92px max(var(--pad), env(safe-area-inset-right, 0px)) 34px max(var(--pad), env(safe-area-inset-left, 0px)); }
+html:not(.no-gl) .ov--hero .mega { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; } /* shown in 3D */
+.hero__bar { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; align-items: end; gap: 18px 48px; padding-top: 20px; border-top: 1px solid var(--line); }
+.hero__intro .kick { margin-bottom: 8px; }
+.hero__intro .lead { font-size: 15px; max-width: 54ch; }
+.cue { display: flex; align-items: center; gap: 10px; margin: 0; font-size: 13px; color: var(--mute); max-width: 24ch; }
 .cue__line { width: 34px; height: 1px; background: var(--accent); flex: none; }
 
 .ov--side { top: 50%; inset-inline-start: max(var(--pad), env(safe-area-inset-left, 0px)); width: min(440px, 40vw); transform: translateY(calc(-50% + 18px)); padding: 28px; border-radius: 22px; background: var(--card); backdrop-filter: blur(14px); box-shadow: 0 1px 0 var(--line) inset, 0 30px 60px -40px rgba(0, 19, 45, .45); }
@@ -132,10 +132,9 @@ html[dir="rtl"] .rail button b { transform: translateX(-6px); }
   .film { height: 1100svh; }
   .rail { display: none; }
   .cue { display: none; }
+  .hero__bar { grid-template-columns: minmax(0, 1fr); gap: 14px; }
+  .hero__intro .lead { display: none; }
   .ov--hero { padding-top: 84px; padding-bottom: 28px; }
-  .ov--hero { grid-template-columns: minmax(0, 1fr); }
-  .ov--hero .ov__foot { grid-column: 1; grid-row: 2; align-self: end; margin-bottom: 14px; }
-  .ov--hero .lead { display: none; }
   .ov--side { inset-inline: 16px; top: auto; bottom: 18px; width: auto; transform: translateY(18px); padding: 18px; }
   .ov--side.on { transform: none; }
   .ov--side .lead { font-size: 15px; }

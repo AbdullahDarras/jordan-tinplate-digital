@@ -25,14 +25,14 @@ const V = (x, y, z) => new THREE.Vector3(x, y, z);
 export const CHAPTERS = [[0, 0.1], [0.17, 0.26], [0.33, 0.5], [0.56, 0.72], [0.78, 0.86], [0.93, 1]];
 const AX = 9; // where the layer rig stands (to the side of the main tin)
 const SHOTS = [
-  { pos: V(0, 1.6, 4.7), tgt: V(0, -0.14, 0), fov: 30 },          // hero
+  { pos: V(0, 1.05, 5.4), tgt: V(0, 0.5, 0), fov: 30 },           // hero: the tin in front of the title wall
   { pos: V(0.42, 1.12, 1.18), tgt: V(0.08, 0.6, -0.08), fov: 30 }, // macro on the lid
   { pos: V(AX - 1.15, 3.3, 5.0), tgt: V(AX - 1.0, 0.25, 0), fov: 30 }, // layers: the rig to the right of the text
   { pos: V(0, 3.4, 10.6), tgt: V(0, 1.4, 2.2), fov: 30 },          // ring
   { pos: V(-2.7, 1.5, 4.2), tgt: V(0, 0.28, 0), fov: 30 },         // lab
   { pos: V(0, 19, 2.2), tgt: V(0, 0, 1.1), fov: 32 }               // top view (the sheet sits above the step bar)
 ];
-const RING_KEYS = ['bab', 'najmah', 'frieds', 'jgz', 'laqmi', 'sufyan', 'suliman', 'abed', 'levelmax', 'maeen', 'halawah'];
+const RING_KEYS = ['sharqi', 'bab', 'najmah', 'frieds', 'jgz', 'laqmi', 'sufyan', 'suliman', 'abed', 'levelmax', 'maeen'];
 
 // Tone mapping that keeps colour. The stock filmic curve squeezes each channel on its own, so bright gold drifts to white and
 // printed colour goes pale. This curve shapes the brightness of the brightest channel and scales the colour by the same factor,
@@ -109,18 +109,41 @@ export function createFilm(canvas) {
   const contact = (w) => { const m = new THREE.Mesh(new THREE.PlaneGeometry(w * 1.45, w * 1.45), new THREE.MeshBasicMaterial({ map: soft, transparent: true, depthWrite: false })); m.rotation.x = -Math.PI / 2; m.position.y = 0.002; return m; };
 
   const ready = [];
+  // ---------------------------------------------------------------- the hero's title, set as a wall behind the tin
+  // The headline is drawn into the 3D studio itself, so the tin stands in front of the words (the page keeps it as real text too).
+  const TW = 5.1, TH = TW * 1600 / 4096;
+  const typeCanvas = document.createElement('canvas'); typeCanvas.width = 4096; typeCanvas.height = 1600;
+  const typeTex = new THREE.CanvasTexture(typeCanvas); typeTex.colorSpace = THREE.SRGBColorSpace; typeTex.anisotropy = 8;
+  const typeMat = new THREE.MeshBasicMaterial({ map: typeTex, transparent: true, depthWrite: false, toneMapped: false });
+  const typeWall = new THREE.Mesh(new THREE.PlaneGeometry(TW, TH), typeMat);
+  typeWall.position.set(0, 1.22, -2.6); typeWall.lookAt(SHOTS[0].pos.x, 1.22, SHOTS[0].pos.z); typeWall.renderOrder = -1; scene.add(typeWall);
+  function drawType(lines, lang, mode) {
+    const x = typeCanvas.getContext('2d'); x.clearRect(0, 0, 4096, 1600);
+    const face = lang === 'ar' ? '700 {s}px "Readex Pro", sans-serif' : '800 {s}px "Bricolage Grotesque", sans-serif';
+    let size = 760; x.font = face.replace('{s}', size);
+    const widest = Math.max(...lines.map((l) => x.measureText(l).width));
+    size = Math.floor(size * Math.min(1, 3980 / widest)); x.font = face.replace('{s}', size);
+    x.textAlign = 'center'; x.textBaseline = 'alphabetic'; x.direction = lang === 'ar' ? 'rtl' : 'ltr';
+    if ('letterSpacing' in x) x.letterSpacing = lang === 'ar' ? '0px' : Math.round(-size * 0.035) + 'px';
+    const cols = mode === 'dark' ? ['#e9eef6', '#879ebc'] : ['#00132d', '#002F6C'];
+    if (lang === 'ar') { size = Math.floor(size * 0.86); x.font = face.replace('{s}', size); } // Arabic letters stand taller: a little smaller, a little higher
+    const lh = size * (lang === 'ar' ? 1.02 : 0.9), y0 = 800 - lh / 2 + size * (lang === 'ar' ? 0.18 : 0.36);
+    lines.forEach((l, i) => { x.fillStyle = cols[i]; x.fillText(l, 2048, y0 + i * lh); });
+    typeTex.needsUpdate = true;
+  }
+
   // ---------------------------------------------------------------- the main tin
   const main = TIN.make('qaisi'); ready.push(main.ready);
   main.print.forEach((m) => TIN.setFinish(m, 'gloss'));
   const mainSpin = new THREE.Group(); mainSpin.add(main.group); scene.add(mainSpin);
   scene.add(contact(main.size.w));
 
-  // ---------------------------------------------------------------- the layer rig (a full-colour lid, so the separations show)
+  // ---------------------------------------------------------------- the layer rig (the painted Bab Sharqi lid: a full-colour print, so the separations show)
   const LR = 1.15;
   const layers = (() => {
     const g = new THREE.Group(); g.position.set(AX, 0, 0); scene.add(g);
     const disc = new THREE.CircleGeometry(LR, 160); disc.rotateX(-Math.PI / 2);
-    const L = HAL.surface('lid', 1, 1, 'halawah'); ready.push(L.ready);
+    const L = HAL.surface('lid', 1, 1, 'sharqi'); ready.push(L.ready);
     const N = 768, plates = [0, 1, 2, 3].map(() => { const c = document.createElement('canvas'); c.width = c.height = N; const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 8; return { c, t }; });
     L.ready.then(() => { // RGB -> C, M, Y, K coverage; each plate drawn in the brand navy
       const s = document.createElement('canvas'); s.width = s.height = N; const sx = s.getContext('2d', { willReadFrequently: true }); sx.drawImage(L.canvas, 0, 0, N, N);
@@ -216,6 +239,10 @@ export function createFilm(canvas) {
     camera.lookAt(tmpT);
     if (state.chapter !== S.i) { state.chapter = S.i; listeners.forEach((f) => f(state)); }
 
+    // the title wall: only in the hero; on a narrow screen it shrinks to stay inside the frame
+    const wallOn = 1 - seg(T, CHAPTERS[0][1] - 0.01, CHAPTERS[0][1] + 0.05);
+    typeWall.visible = wallOn > 0.001; typeMat.opacity = wallOn;
+    { const dW = camera.position.distanceTo(typeWall.position), vis = 2 * dW * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) * camera.aspect; typeWall.scale.setScalar(Math.min(1, (vis * 0.94) / TW)); }
     // the main tin: turning slowly; the visitor turns it in the lab
     const idle = REDUCED ? 0 : t * 0.16;
     mainSpin.rotation.y = -0.55 + idle * (S.i === 1 ? 0.3 : 1) + dragYaw;
@@ -284,6 +311,7 @@ export function createFilm(canvas) {
     onChange(f) { listeners.push(f); },
     state,
     ringKeys: RING_KEYS,
+    setTitle: drawType,
     setFinish(name) { lab = name; main.print.forEach((m) => TIN.setFinish(m, name, window.gsap)); },
     setTheme(mode) {
       theme = mode; backdrop(mode);

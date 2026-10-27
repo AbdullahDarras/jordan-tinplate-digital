@@ -31,6 +31,14 @@ from 0.60 in its texture to 0.17 on screen. Three causes, three changes:
 Plus a light grade on the colour layers (`halawah.js`, `GRADE`; the main tin has its own) to give back the depth the
 straightening took out of the photos.
 
+## Round 4 (2026-10-27)
+- **Hero**: the headline is a wall of type inside the 3D studio, behind the tin (`film.js`, `drawType`), so the tin stands in front
+  of "We print. We can." (Arabic: «نطبع. ونعلّب.»); the page keeps it as the real `h1`. One clean bar at the bottom: intro, scroll
+  hint, quote button.
+- **The print chapter** uses the round Bab Sharqi tin (painted coffee scene, photo `2I9A8959`, `sharqi-*` in `assets/img/tins/`)
+  instead of the red Halawah lid, which the owner asked to drop; it also replaces Halawah on the shelf. Its lid is cut from the
+  photo by fitting the painted disc's ellipse; body and skirt are the tin's plain cream lacquer with a gold lip.
+
 ## Engine
 - `assets/js/engine/tins.js`: the tins. Geometry follows the order platform's studio rules (`studio.js`: lid gap and lift, skirt,
   curled lip, 3.5 mm corners) at each tin's real millimetres; artwork from `halawah.js` (the straightened photos). Materials are

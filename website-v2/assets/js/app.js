@@ -56,15 +56,23 @@ function applyLang(l) {
   document.title = l === 'ar' ? 'الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية | نطبع. ونعلّب.' : 'Jordan Tinplate Canning | We print. We can.';
   $('#finDesc').textContent = FIN[l][finish];
   caption(ringIdx);
+  title();
 }
 $('#langBtn').addEventListener('click', () => { const l = lang() === 'ar' ? 'en' : 'ar'; store.set('jt2-lang', l); applyLang(l); });
-$('#modeBtn').addEventListener('click', () => { const m = d.dataset.mode === 'dark' ? 'light' : 'dark'; d.dataset.mode = m; store.set('jt2-mode', m); film && film.setTheme(m); });
+$('#modeBtn').addEventListener('click', () => { const m = d.dataset.mode === 'dark' ? 'light' : 'dark'; d.dataset.mode = m; store.set('jt2-mode', m); film && film.setTheme(m); title(); });
 
 // ---------------------------------------------------------------- the film
 let film = null;
 try { film = createFilm($('#gl')); film.setTheme(d.dataset.mode); }
 catch (e) { console.warn('3D unavailable', e); d.classList.add('no-gl'); }
 const filmEl = $('#film');
+// the hero's headline, drawn into the 3D studio once its font has loaded (and again on a language or theme change)
+function title() {
+  if (!film) return;
+  const l = lang(), lines = l === 'ar' ? [AR['h.l1'], AR['h.l2']] : [EN['h.l1'], EN['h.l2']];
+  const font = l === 'ar' ? '700 100px "Readex Pro"' : '800 100px "Bricolage Grotesque"';
+  (document.fonts ? document.fonts.load(font, lines.join(' ')) : Promise.resolve()).catch(() => {}).then(() => film.setTitle(lines, l, d.dataset.mode));
+}
 const progress = () => { const r = filmEl.getBoundingClientRect(); return Math.min(1, Math.max(0, -r.top / Math.max(1, r.height - innerHeight))); };
 
 // loader
@@ -114,4 +122,4 @@ $$('.chip[data-fin]').forEach((b) => b.addEventListener('click', () => {
   $('#finDesc').textContent = FIN[lang()][finish]; film && film.setFinish(finish);
 }));
 
-if (lang() === 'ar') applyLang('ar'); else caption(0);
+if (lang() === 'ar') applyLang('ar'); else { caption(0); title(); }

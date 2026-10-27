@@ -15,6 +15,7 @@ const TAU = Math.PI * 2;
 export const TINS = {
   qaisi: { kind: 'round', D: 237.6, H: 60, skirt: 15.7, fmt: ['Round 235', 'دائري 235'], dims: 'Ø 237.6 × 60 mm' },
   halawah: { kind: 'round', D: 237.6, H: 49, fmt: ['Round 235', 'دائري 235'], dims: 'Ø 237.6 × 49 mm' },
+  sharqi: { kind: 'round', D: 215, H: 55, skirt: 12, fmt: ['Round gift tin', 'علبة هدايا دائرية'] },
   sufyan: { kind: 'round', D: 269, H: 50, fmt: ['Round 265', 'دائري 265'], dims: 'Ø 269 × 50 mm' },
   bab: { kind: 'box', w: 194.5, d: 194.5, h: 40, fmt: ['Square 20', 'مربع 20'], dims: '194.5 × 194.5 × 40 mm' },
   jgz: { kind: 'box', w: 236.1, d: 137.7, h: 50, fmt: ['Rectangle 14 × 24', 'مستطيل 14 × 24'], dims: '236.1 × 137.7 × 50 mm' },
