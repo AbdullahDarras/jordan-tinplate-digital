@@ -39,6 +39,14 @@ straightening took out of the photos.
   instead of the red Halawah lid, which the owner asked to drop; it also replaces Halawah on the shelf. Its lid is cut from the
   photo by fitting the painted disc's ellipse; body and skirt are the tin's plain cream lacquer with a gold lip.
 
+## Round 5 (2026-10-27)
+- **The closing shot** (06, "From sheet to shelf") was a loose scatter of tins. Now every tin, lid up and brought to the same width,
+  sits in a tidy grid on a sheet of bare tinplate with the printer's marks in brand navy (crop marks at each repeat, registration
+  marks at the edges): 4 x 3 on wide screens, 3 x 4 on tall ones. The camera works out its height from the screen so the whole
+  sheet fits above the title and the step bar (`topShot`, `layout`).
+- **Arabic**: the side shots (relief, print, finishes) are mirrored in right-to-left reading, so the tin or the lid stays on the
+  side away from the text card (before, the card covered the lid in the print chapter).
+
 ## Engine
 - `assets/js/engine/tins.js`: the tins. Geometry follows the order platform's studio rules (`studio.js`: lid gap and lift, skirt,
   curled lip, 3.5 mm corners) at each tin's real millimetres; artwork from `halawah.js` (the straightened photos). Materials are
