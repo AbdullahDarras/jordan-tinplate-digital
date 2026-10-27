@@ -47,7 +47,7 @@ const RENDERS = new Set(fs.existsSync(path.join(ROOT, 'assets/img/renders')) ? f
 
 // ---------------------------------------------------------------- links
 const ctx = { lang: 'en', page: null, pre: '' };
-const pageHref = (id, lang = ctx.lang) => (id === 'home' ? `${ctx.pre}index.html${lang === 'ar' ? '?lang=ar' : ''}` : `${ctx.pre}${lang}/${byId[id].path}`);
+const pageHref = (id, lang = ctx.lang) => (id === 'home' ? `${ctx.pre}index.html${lang === 'ar' ? '?lang=ar' : ''}` : `${ctx.pre}${lang}/${byId[id].path}index.html`); // explicit index.html: works on any static host, folders or not
 const EXT = '<svg class="ext" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>';
 const ARROW = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
 function link(to, label, cls = 'go') {
@@ -326,7 +326,7 @@ for (const page of PAGES) {
 // the home page's header gets the same navigation (between markers in index.html; app.js switches the links' language)
 {
   ctx.pre = ''; ctx.lang = 'en';
-  const items = NAV.map((x) => ({ key: x.key, path: byId[x.page].path, en: x.label.en, ar: x.label.ar }));
+  const items = NAV.map((x) => ({ key: x.key, path: byId[x.page].path + 'index.html', en: x.label.en, ar: x.label.ar }));
   const nav = `<!--nav--><nav class="top__nav" aria-label="Primary" data-i18n-aria="primaryNav"><ul>${items.map((x) => `<li><a href="en/${x.path}" data-path="${x.path}" data-i18n="nav.${x.key}">${esc(x.en)}</a></li>`).join('')}</ul></nav><!--/nav-->`;
   const btn = `<!--menubtn--><button class="pill pill--icon menu-btn" id="menuBtn" type="button" aria-expanded="false" aria-controls="menu" aria-label="Menu" data-i18n-aria="menu"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h16M4 16h16"/></svg></button><!--/menubtn-->`;
   const menu = `<!--menu--><div class="menu" id="menu" hidden><nav aria-label="Main menu" data-i18n-aria="menu"><ul>${items.map((x, i) => `<li><a href="en/${x.path}" data-path="${x.path}"><span class="num">${pad2(i + 1)}</span><span data-i18n="nav.${x.key}">${esc(x.en)}</span></a></li>`).join('')}</ul></nav></div><!--/menu-->`;
