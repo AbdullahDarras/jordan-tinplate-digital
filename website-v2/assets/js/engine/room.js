@@ -1,13 +1,22 @@
 // The studio every 3D view on the site shares: the brand's navy backdrop, the dark soft-box studio the metal reflects, the lights,
 // the shadow floor and the soft contact shadows, plus the colour-keeping tone curve. Used by the home film and the inner pages.
 import * as THREE from 'three';
+import { LuminosityHighPassShader } from 'three/addons/shaders/LuminosityHighPassShader.js';
+
+// The bloom blurs the bright pixels over a chain of smaller images: one invalid pixel (NaN) anywhere would spread into black
+// blocks. Its input is cleaned first (NaN and negative values become black). x != x is true only for NaN.
+if (!LuminosityHighPassShader.fragmentShader.includes('clean(')) {
+  LuminosityHighPassShader.fragmentShader = LuminosityHighPassShader.fragmentShader
+    .replace('void main() {', 'vec4 clean( vec4 c ) { return vec4( c.r != c.r ? 0.0 : max( c.r, 0.0 ), c.g != c.g ? 0.0 : max( c.g, 0.0 ), c.b != c.b ? 0.0 : max( c.b, 0.0 ), c.a != c.a ? 1.0 : c.a ); }\n\t\tvoid main() {')
+    .replace('vec4 texel = texture2D( tDiffuse, vUv );', 'vec4 texel = clean( texture2D( tDiffuse, vUv ) );');
+}
 
 // Tone mapping that keeps colour. The stock filmic curve squeezes each channel on its own, so bright gold drifts to white and
 // printed colour goes pale. This curve shapes the brightness of the brightest channel and scales the colour by the same factor,
 // so hue and saturation survive; only the very hottest glints roll off towards white, as they do on camera.
 const HUE_KEEPING_TONE = `
 vec3 ACESFilmicToneMapping( vec3 color ) {
-  color *= toneMappingExposure;
+  color = max( color * toneMappingExposure, vec3( 0.0 ) ); // never negative (nor NaN on most GPUs) before the curve
   float m = max( max( color.r, color.g ), color.b );
   float t = ( m * ( 2.51 * m + 0.03 ) ) / ( m * ( 2.43 * m + 0.59 ) + 0.14 );
   vec3 c = color * ( t / max( m, 1e-5 ) );

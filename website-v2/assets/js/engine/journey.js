@@ -162,15 +162,16 @@ export function makeJourney({ scene, ready, contact, ptr, COARSE = false, REDUCE
     const tilt = new THREE.Group(); globe.add(tilt);
     const GR = 1.25;
     const ll = (lat, lon, r = GR) => { const a = THREE.MathUtils.degToRad(lat), o = THREE.MathUtils.degToRad(lon); return V(r * Math.cos(a) * Math.sin(o), r * Math.sin(a), r * Math.cos(a) * Math.cos(o)); };
+    // pow() of a value a hair below zero is NaN on some GPUs, and the bloom pass spreads a NaN into black blocks: every base is clamped
     const lit = (body) => `varying vec3 vN; void main(){ ${body}
 #include <tonemapping_fragment>
 #include <colorspace_fragment>
 }`;
     const vN = 'varying vec3 vN; void main(){ vN = normalize(normalMatrix * normal); gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }';
     tilt.add(new THREE.Mesh(new THREE.SphereGeometry(GR * 0.985, 72, 48), new THREE.ShaderMaterial({ vertexShader: vN,
-      fragmentShader: lit('float f = pow(1.0 - abs(vN.z), 2.4); vec3 c = mix(vec3(0.0, 0.028, 0.155), vec3(0.06, 0.2, 0.42), f) + vec3(0.0, 0.01, 0.03) * (vN.y * 0.5 + 0.5); gl_FragColor = vec4(c, 1.0);') })));
+      fragmentShader: lit('float f = pow(clamp(1.0 - abs(vN.z), 0.0, 1.0), 2.4); vec3 c = mix(vec3(0.0, 0.028, 0.155), vec3(0.06, 0.2, 0.42), f) + vec3(0.0, 0.01, 0.03) * (vN.y * 0.5 + 0.5); gl_FragColor = vec4(c, 1.0);') })));
     const halo = new THREE.Mesh(new THREE.SphereGeometry(GR * 1.1, 64, 48), new THREE.ShaderMaterial({ vertexShader: vN, transparent: true, depthWrite: false, side: THREE.BackSide,
-      fragmentShader: lit('float f = pow(1.0 - abs(vN.z), 3.0); gl_FragColor = vec4(vec3(0.0, 0.1, 0.3), f * 0.4);') }));
+      fragmentShader: lit('float f = pow(clamp(1.0 - abs(vN.z), 0.0, 1.0), 3.0); gl_FragColor = vec4(vec3(0.0, 0.1, 0.3), f * 0.4);') }));
     globe.add(halo);
     const DOTS = COARSE ? 6000 : 11000, dp = new Float32Array(DOTS * 3), dc = new Float32Array(DOTS * 3), lonlat = new Float32Array(DOTS * 2);
     const sea = new THREE.Color('#274f83').multiplyScalar(0.55), landC = new THREE.Color('#e3c06c');
