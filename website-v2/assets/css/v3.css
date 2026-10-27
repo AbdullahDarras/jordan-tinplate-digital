@@ -203,3 +203,9 @@ html[lang="ar"] .cta__h { letter-spacing: 0; line-height: 1.2; font-weight: 700;
 .foot__c { flex-basis: 100%; margin: 6px 0 0; font-size: 13px; color: var(--navy-300); }
 
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; animation: none !important; } }
+
+/* ---------------------------------------------------------------- Arabic display type
+   Arabic letters reach far above and below the Latin x-height (ط ل ك, the shadda, the dots), so the tight Latin line heights
+   make big Arabic lines touch. Every large heading gets real air in Arabic; letter-spacing stays 0 (it breaks the joins). */
+html[lang="ar"] :is(.mega, .big, .cta__h, .sectors b, .menu a, .tile b, .pane .pane__k, .vcard b, .reach__order b, .flow__step h3, .card h3, .facts dt, .ov--ring .cap b, .spec dt) { line-height: 1.45; letter-spacing: 0; }
+html[lang="ar"] :is(.mega, .cta__h) { line-height: 1.38; }

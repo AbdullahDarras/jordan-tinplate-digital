@@ -11,6 +11,7 @@ import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 import * as TIN from './tins.js';
 import { makeRoom } from './room.js';
 import { makeJourney } from './journey.js';
+import { arabicBlock } from './type.js';
 
 const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
 const lerp = (a, b, t) => a + (b - a) * t;
@@ -126,10 +127,11 @@ export function createHero(canvas, { tins = ['qaisi'] } = {}) {
       const ideal = wd(words) / n; const lines = []; let cur = [];
       words.forEach((w) => { if (cur.length && wd([...cur, w]) > ideal * 1.08 && lines.length < n - 1) { lines.push(cur); cur = []; } cur.push(w); });
       lines.push(cur);
-      const widest = Math.max(...lines.map(wd)), lh = lang === 'ar' ? 1.12 : 0.95;
+      const widest = Math.max(...lines.map(wd)), lh = lang === 'ar' ? 1.5 : 0.95; // Arabic lines need far more height (see type.js)
       const size = Math.min(400 * 3900 / widest, 1480 / (lines.length * lh));
       if (!best || size > best.size * 1.05) best = { lines: lines.map((l) => l.join(' ')), size, lh };
     }
+    if (lang === 'ar') { arabicBlock(x, best.lines, best.lines.map((_, i) => (mode === 'dark' ? ['#e9eef6', '#879ebc'] : ['#00132d', '#002F6C'])[i === best.lines.length - 1 && i > 0 ? 1 : 0]), { maxH: 1240, maxSize: 520 }); tt.needsUpdate = true; return; }
     const size = Math.floor(Math.min(best.size, lang === 'ar' ? 500 : 680)); x.font = face.replace('{s}', size);
     if ('letterSpacing' in x) x.letterSpacing = lang === 'ar' ? '0px' : Math.round(-size * 0.035) + 'px';
     x.textAlign = 'center'; x.textBaseline = 'alphabetic'; x.direction = lang === 'ar' ? 'rtl' : 'ltr';

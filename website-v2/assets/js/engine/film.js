@@ -17,6 +17,7 @@ import * as TIN from './tins.js';
 import * as HAL from './halawah.js';
 import { makeRoom } from './room.js';
 import { makeJourney } from './journey.js';
+import { arabicBlock } from './type.js';
 
 const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
 const sm = (t) => t * t * (3 - 2 * t);
@@ -61,6 +62,7 @@ export function createFilm(canvas) {
   typeWall.position.set(0, 1.22, -2.6); typeWall.lookAt(SHOTS[0].pos.x, 1.22, SHOTS[0].pos.z); typeWall.renderOrder = -1; scene.add(typeWall);
   function drawType(lines, lang, mode) {
     const x = typeCanvas.getContext('2d'); x.clearRect(0, 0, 4096, 1600);
+    if (lang === 'ar') { arabicBlock(x, lines, mode === 'dark' ? ['#e9eef6', '#879ebc'] : ['#00132d', '#002F6C'], { maxH: 1180, maxSize: 600 }); typeTex.needsUpdate = true; return; }
     const face = lang === 'ar' ? '700 {s}px "Readex Pro", sans-serif' : '800 {s}px "Bricolage Grotesque", sans-serif';
     let size = 760; x.font = face.replace('{s}', size);
     const widest = Math.max(...lines.map((l) => x.measureText(l).width));
@@ -68,7 +70,6 @@ export function createFilm(canvas) {
     x.textAlign = 'center'; x.textBaseline = 'alphabetic'; x.direction = lang === 'ar' ? 'rtl' : 'ltr';
     if ('letterSpacing' in x) x.letterSpacing = lang === 'ar' ? '0px' : Math.round(-size * 0.035) + 'px';
     const cols = mode === 'dark' ? ['#e9eef6', '#879ebc'] : ['#00132d', '#002F6C'];
-    if (lang === 'ar') { size = Math.floor(size * 0.86); x.font = face.replace('{s}', size); } // Arabic letters stand taller: a little smaller, a little higher
     const lh = size * (lang === 'ar' ? 1.02 : 0.9), y0 = 800 - lh / 2 + size * (lang === 'ar' ? 0.18 : 0.36);
     lines.forEach((l, i) => { x.fillStyle = cols[i]; x.fillText(l, 2048, y0 + i * lh); });
     typeTex.needsUpdate = true;
