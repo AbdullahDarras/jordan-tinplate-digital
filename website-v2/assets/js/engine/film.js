@@ -5,7 +5,8 @@
 //   2  layers    a printed lid builds up layer by layer: tinplate, base coat, the four separations (drawn in brand navy), varnish
 //   3  ring      the factory's other tins rise around the main tin; scrolling turns the ring
 //   4  lab       back on the main tin: finishes, drag to turn it
-//   5  sheet     the camera rises to a top view: every tin, lids up, laid out like a printed sheet
+//   5  journey   from sheet to shelf: a printed sheet of the main tin's body blanks, cut and rolled into the tin, packed on a
+//                pallet, shipped from Amman
 import * as THREE from 'three';
 import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
 import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
@@ -22,7 +23,7 @@ const lerp = (a, b, t) => a + (b - a) * t;
 const V = (x, y, z) => new THREE.Vector3(x, y, z);
 
 // chapter windows on the film's time line (start, end); the camera moves between them
-export const CHAPTERS = [[0, 0.1], [0.17, 0.26], [0.33, 0.5], [0.56, 0.72], [0.78, 0.86], [0.92, 1]];
+export const CHAPTERS = [[0, 0.08], [0.14, 0.21], [0.27, 0.41], [0.46, 0.59], [0.64, 0.7], [0.75, 1]];
 const AX = 9; // where the layer rig stands (to the side of the main tin)
 const SHOTS = [
   { pos: V(0, 1.05, 5.4), tgt: V(0, 0.5, 0), fov: 30 },           // hero: the tin in front of the title wall
@@ -30,7 +31,7 @@ const SHOTS = [
   { pos: V(AX - 1.15, 3.3, 5.0), tgt: V(AX - 1.0, 0.25, 0), fov: 30 }, // layers: the rig to the right of the text
   { pos: V(0, 3.4, 10.6), tgt: V(0, 1.4, 2.2), fov: 30 },          // ring
   { pos: V(-2.7, 1.5, 4.2), tgt: V(-0.55, 0.28, 0), fov: 30 },      // lab: the tin to the side away from the card
-  { pos: V(0, 19, 2.2), tgt: V(0, 0, 1.1), fov: 32 }               // top view (the sheet sits above the step bar)
+  null                                                             // from sheet to shelf: the journey rig moves its own camera
 ];
 const RING_KEYS = ['sharqi', 'bab', 'najmah', 'frieds', 'jgz', 'laqmi', 'sufyan', 'suliman', 'abed', 'levelmax', 'maeen'];
 
@@ -54,6 +55,7 @@ export function createFilm(canvas) {
   const COARSE = matchMedia('(pointer: coarse)').matches || innerWidth < 760;
   const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: 'high-performance' });
+  renderer.localClippingEnabled = true; // the press reveals the print on the sheet
   renderer.setPixelRatio(Math.min(devicePixelRatio || 1, COARSE ? 1.5 : 2));
   renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.0;
   renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
@@ -171,49 +173,302 @@ export function createFilm(canvas) {
     return { g, steel, coat, inks, final, fm, varnish, edge };
   })();
 
-  // ---------------------------------------------------------------- the other tins: a ring round the main tin, then a sheet seen from above
+  // ---------------------------------------------------------------- the other tins: a ring round the main tin
   const RING_R = 4.8;
   const ring = RING_KEYS.map((k, i) => {
     const m = TIN.make(k); ready.push(m.ready); m.print.forEach((p) => TIN.setFinish(p, 'gloss'));
     const holder = new THREE.Group(); holder.add(m.group); holder.add(contact(Math.max(m.size.w, m.size.d))); holder.scale.setScalar(0.001); scene.add(holder);
     return { key: k, m, holder, i };
   });
-  // the closing shot: every tin, lid up, laid out on a sheet of tinplate like the repeats on a print sheet. 4 x 3 on a wide screen,
-  // 3 x 4 on a tall one; each tin brought to the same width so the sheet reads as one tidy layout (the ring shows true sizes).
-  const SHEET_KEYS = ['qaisi', 'sharqi', 'bab', 'najmah', 'jgz', 'sufyan', 'laqmi', 'frieds', 'levelmax', 'suliman', 'abed', 'maeen'];
-  const CELL = 2.7, TIN_W = 2.1, MARGIN = 0.9;
-  const sizeOf = { qaisi: main.size, ...Object.fromEntries(ring.map((r) => [r.key, r.m.size])) };
-  const grid = { cols: 0, rows: 0, W: 0, D: 0, pos: {} };
-  function layout(aspect) {
-    const cols = aspect < 0.95 ? 3 : 4; if (cols === grid.cols) return;
-    const rows = Math.ceil(SHEET_KEYS.length / cols);
-    Object.assign(grid, { cols, rows, W: cols * CELL + 2 * MARGIN, D: rows * CELL + 2 * MARGIN });
-    SHEET_KEYS.forEach((k, n) => { grid.pos[k] = V((n % cols - (cols - 1) / 2) * CELL, 0, (Math.floor(n / cols) - (rows - 1) / 2) * CELL); });
-    drawSheet();
-  }
-  // the sheet: bare tinplate, with the printer's marks in brand navy (crop marks at every repeat, registration marks at the edges)
-  const sheetCanvas = document.createElement('canvas');
-  const sheetTex = new THREE.CanvasTexture(sheetCanvas); sheetTex.colorSpace = THREE.SRGBColorSpace; sheetTex.anisotropy = 8;
-  const sheetMat = new THREE.MeshPhysicalMaterial({ map: sheetTex, metalness: 0.55, roughness: 0.34, transparent: true });
-  const sheet = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), sheetMat); sheet.rotation.x = -Math.PI / 2; sheet.position.y = 0.004; sheet.receiveShadow = true; scene.add(sheet);
-  function drawSheet() {
-    const k = 160, w = Math.round(grid.W * k), h = Math.round(grid.D * k); sheetCanvas.width = w; sheetCanvas.height = h;
-    const x = sheetCanvas.getContext('2d');
-    const g = x.createLinearGradient(0, 0, w, h); g.addColorStop(0, '#e6eaf0'); g.addColorStop(0.5, '#f3f5f8'); g.addColorStop(1, '#dde2ea');
-    x.fillStyle = g; x.fillRect(0, 0, w, h);
-    x.strokeStyle = '#002F6C'; x.lineWidth = 3; x.globalAlpha = 0.55;
-    const m = MARGIN * k, c = CELL * k, L = 0.18 * k, gap = 0.06 * k;
-    for (let i = 0; i <= grid.cols; i++) for (let j = 0; j <= grid.rows; j++) { // crop marks at each corner of each repeat
-      const px = m + i * c, py = m + j * c;
-      x.beginPath(); x.moveTo(px - L, py); x.lineTo(px - gap, py); x.moveTo(px + gap, py); x.lineTo(px + L, py);
-      x.moveTo(px, py - L); x.lineTo(px, py - gap); x.moveTo(px, py + gap); x.lineTo(px, py + L); x.stroke();
+  // ---------------------------------------------------------------- from sheet to shelf: the main tin's own story, at its real size
+  // A printed tinplate sheet carrying five body blanks of the Al Qaisi tin: the prepress marks are drawn, the press runs across it,
+  // the middle blank is cut out, rolled into the body and closed with its lid; the tin then joins a wrapped pallet of its twins,
+  // and the pallet leaves for the globe with routes out of Amman. Everything poses itself from the chapter's own time (0 … 1).
+  const JX = -13, J0 = V(JX, 0, 0), JV = V(JX, 0.6, 0);
+  // three.js copies userData through JSON when cloning, and our userData holds the artwork's textures: clone without it
+  const lean = (o, f) => { const kept = []; const strip = (x) => { kept.push([x, x.userData]); x.userData = {}; }; if (o.isMaterial) strip(o); else o.traverse(strip); const c = f(o); kept.forEach(([x, u]) => { x.userData = u; }); return c; };
+  const journey = (() => {
+    const U = 0.01, TQ = TIN.TINS.qaisi, R = (TQ.D / 2) * U, H = TQ.H * U, SK = TQ.skirt * U;
+    const JH = H - SK * 0.75, JW = Math.PI * 2 * R;          // the body blank: as tall as the body, as long as its circumference
+    const ROWS = 5, GAP = 0.13, MX = 0.34, MY = 0.3;          // five blanks on the sheet, with room for the press marks
+    const SW = JW + 2 * MX, SH = ROWS * JH + (ROWS - 1) * GAP + 2 * MY;
+    const rowY = (r) => (r - (ROWS - 1) / 2) * (JH + GAP);    // centre of row r on the sheet
+    const PLATE_S = 0.66, PLATE_Y = 1.3, TILT = 0.34;
+
+    // the bare sheet and its prepress marks (brand navy), drawn as the chapter opens
+    const BW = 4096, BH = Math.round((BW * SH) / SW), k = BW / SW;
+    const bc = document.createElement('canvas'); bc.width = BW; bc.height = BH;
+    const bt = new THREE.CanvasTexture(bc); bt.colorSpace = THREE.SRGBColorSpace; bt.anisotropy = 8;
+    const grain = (() => { // the brushed grain of tinplate, drawn once
+      const c = document.createElement('canvas'); c.width = BW; c.height = BH; const x = c.getContext('2d');
+      const g = x.createLinearGradient(0, 0, BW, BH);
+      g.addColorStop(0, '#aab3c0'); g.addColorStop(0.28, '#eef1f5'); g.addColorStop(0.5, '#b9c1cc'); g.addColorStop(0.74, '#f2f4f7'); g.addColorStop(1, '#a3acb9');
+      x.fillStyle = g; x.fillRect(0, 0, BW, BH);
+      for (let y = 0; y < BH; y += 2) { x.globalAlpha = 0.035 + Math.random() * 0.05; x.fillStyle = Math.random() < 0.5 ? '#53739d' : '#ffffff'; x.fillRect(0, y, BW, 1); }
+      return c;
+    })();
+    let lastGuides = -1;
+    function drawBlank(gd) {
+      if (Math.abs(gd - lastGuides) < 0.01 && !(gd === 1 && lastGuides !== 1)) return; lastGuides = gd;
+      const x = bc.getContext('2d'); x.globalAlpha = 1; x.drawImage(grain, 0, 0);
+      const px = (u) => (u + SW / 2) * k, py = (v) => (SH / 2 - v) * k;   // sheet units -> canvas
+      const ease = (a, b) => sm(clamp((gd - a) / (b - a)));
+      x.strokeStyle = '#002F6C'; x.fillStyle = '#002F6C'; x.lineCap = 'round';
+      // 1. trim lines around each blank (dashed), drawn left to right
+      x.lineWidth = 11; x.setLineDash([40, 22]); x.globalAlpha = 0.85;
+      for (let r = 0; r < ROWS; r++) {
+        const e = ease(0.05 + r * 0.06, 0.4 + r * 0.06); if (e <= 0) continue;
+        const y0 = py(rowY(r) + JH / 2), y1 = py(rowY(r) - JH / 2), x0 = px(-JW / 2), x1 = px(-JW / 2 + JW * e);
+        x.beginPath(); x.moveTo(x0, y0); x.lineTo(x1, y0); x.moveTo(x0, y1); x.lineTo(x1, y1); x.stroke();
+        if (e > 0.98) { x.beginPath(); x.moveTo(x0, y0); x.lineTo(x0, y1); x.moveTo(x1, y0); x.lineTo(x1, y1); x.stroke(); }
+      }
+      x.setLineDash([]);
+      // 2. crop marks at the corners, registration targets at the edges, a colour bar along the gripper edge
+      const e2 = ease(0.45, 0.75);
+      if (e2 > 0) {
+        x.globalAlpha = e2; x.lineWidth = 11;
+        const L = 0.2 * k, G = 0.06 * k;
+        [[-1, 1], [1, 1], [-1, -1], [1, -1]].forEach(([sx, sy]) => {
+          const cx = px((sx * JW) / 2), cy = py(sy * (rowY(ROWS - 1) + JH / 2));
+          x.beginPath(); x.moveTo(cx + sx * G, cy); x.lineTo(cx + sx * (G + L), cy); x.moveTo(cx, cy - sy * G); x.lineTo(cx, cy - sy * (G + L)); x.stroke();
+        });
+        const reg = (u, v) => { const cx = px(u), cy = py(v), r = 0.085 * k; x.beginPath(); x.arc(cx, cy, r * 0.6, 0, Math.PI * 2); x.moveTo(cx - r, cy); x.lineTo(cx + r, cy); x.moveTo(cx, cy - r); x.lineTo(cx, cy + r); x.stroke(); };
+        reg(0, SH / 2 - MY / 2); reg(0, -SH / 2 + MY / 2); reg(-SW / 2 + MX / 2, 0); reg(SW / 2 - MX / 2, 0);
+      }
+      const e3 = ease(0.7, 1);
+      if (e3 > 0) { // the colour bar: the brand's navy scale and the amber, the patches a press operator reads
+        const tints = ['#002F6C', '#274f83', '#53739d', '#879ebc', '#b5c4d7', '#d98b14', '#f4b34c', '#00132d'];
+        const n = 28, w = (JW * 0.62) / n, y = py(-SH / 2 + MY * 0.58), h = MY * 0.36 * k;
+        for (let i = 0; i < n * e3; i++) { x.globalAlpha = 0.9; x.fillStyle = tints[i % tints.length]; x.fillRect(px(-JW * 0.31 + i * w), y, w * k - 3, h); }
+      }
+      x.globalAlpha = 1; bt.needsUpdate = true;
     }
-    x.globalAlpha = 0.8; x.lineWidth = 4;
-    const reg = (cx, cy) => { const r = 0.16 * k; x.beginPath(); x.arc(cx, cy, r * 0.55, 0, Math.PI * 2); x.moveTo(cx - r, cy); x.lineTo(cx + r, cy); x.moveTo(cx, cy - r); x.lineTo(cx, cy + r); x.stroke(); };
-    reg(w / 2, m / 2); reg(w / 2, h - m / 2); reg(m / 2, h / 2); reg(w - m / 2, h / 2);
-    sheetTex.needsUpdate = true;
-    sheet.scale.set(grid.W, grid.D, 1);
-  }
+    drawBlank(0);
+
+    // the printed artwork: the same photo-true surface the finished tin wears; the press reveals it with a clipping plane
+    const L = HAL.surface('wrap', JH / JW, 8, 'qaisi'); ready.push(L.ready);
+    const cut = new THREE.Plane(V(-1, 0, 0), -1e4);
+    const ink = TIN.printMat(L, 0.6); TIN.setFinish(ink, 'gloss');
+    Object.assign(ink, { clippingPlanes: [cut], polygonOffset: true, polygonOffsetFactor: -2, polygonOffsetUnits: -2 });
+    const inkRest = lean(ink, (o) => o.clone()); Object.assign(inkRest, { clippingPlanes: [cut], transparent: true });
+    const tinplate = (opts) => new THREE.MeshPhysicalMaterial({ color: '#ffffff', metalness: 0.45, roughness: 0.3, clearcoat: 0.5, clearcoatRoughness: 0.2, ...opts });
+    // the bare sheet: bright like polished tinplate (its own light), with the studio's soft-boxes running over it
+    const sheetLook = { color: new THREE.Color(0.5, 0.5, 0.5), emissiveMap: bt, emissive: new THREE.Color(0.5, 0.5, 0.5), metalness: 0.85, roughness: 0.17 };
+
+    const plate = new THREE.Group(); plate.position.set(JX, PLATE_Y, 0); plate.rotation.x = -TILT; plate.scale.setScalar(PLATE_S); scene.add(plate);
+    const blankMat = tinplate({ map: bt, side: THREE.DoubleSide, transparent: true, ...sheetLook });
+    const blank = new THREE.Mesh(new THREE.PlaneGeometry(SW, SH), blankMat); blank.castShadow = true; plate.add(blank);
+    const edge = new THREE.Mesh(new THREE.BoxGeometry(SW, SH, 0.02), tinplate({ color: '#c9d0da', transparent: true })); edge.position.z = -0.011; plate.add(edge);
+    const rest = [];
+    const stripGeo = new THREE.PlaneGeometry(JW, JH);
+    for (let r = 0; r < ROWS; r++) {
+      if (r === (ROWS - 1) / 2) continue;
+      const m = new THREE.Mesh(stripGeo, inkRest); m.position.set(0, rowY(r), 0.004); m.userData.r = r; plate.add(m); rest.push(m);
+    }
+    // the press: a bar of light running across the sheet as the print appears behind it
+    const headMat = new THREE.MeshBasicMaterial({ color: new THREE.Color('#f4b34c').multiplyScalar(2.2), toneMapped: false, transparent: true });
+    const head = new THREE.Mesh(new THREE.BoxGeometry(0.035, SH + 0.24, 0.035), headMat); head.position.z = 0.06; plate.add(head);
+    const glowTex = (() => { const c = document.createElement('canvas'); c.width = 64; c.height = 4; const x = c.getContext('2d'); const g = x.createLinearGradient(0, 0, 64, 0); g.addColorStop(0, 'rgba(244,179,76,0)'); g.addColorStop(0.5, 'rgba(244,179,76,.55)'); g.addColorStop(1, 'rgba(244,179,76,0)'); x.fillStyle = g; x.fillRect(0, 0, 64, 4); const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t; })();
+    const glow = new THREE.Mesh(new THREE.PlaneGeometry(0.9, SH + 0.1), new THREE.MeshBasicMaterial({ map: glowTex, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, toneMapped: false }));
+    glow.position.z = 0.03; plate.add(glow);
+
+    // the middle blank: cut out of the sheet, rolled into the body (the geometry bends from flat to a cylinder)
+    const N = 200, geo = new THREE.BufferGeometry();
+    const pos = new Float32Array((N + 1) * 6), nor = new Float32Array((N + 1) * 6), uv = new Float32Array((N + 1) * 4), idx = [];
+    for (let i = 0; i <= N; i++) for (let j = 0; j < 2; j++) { const q = i * 2 + j; uv[q * 2] = i / N; uv[q * 2 + 1] = j; }
+    for (let i = 0; i < N; i++) { const a = i * 2; idx.push(a, a + 2, a + 1, a + 1, a + 2, a + 3); }
+    geo.setIndex(idx); geo.setAttribute('position', new THREE.BufferAttribute(pos, 3)); geo.setAttribute('normal', new THREE.BufferAttribute(nor, 3)); geo.setAttribute('uv', new THREE.BufferAttribute(uv, 2));
+    let lastBend = -1;
+    function bend(b) {
+      if (Math.abs(b - lastBend) < 1e-4) return; lastBend = b;
+      for (let i = 0; i <= N; i++) {
+        const s = (i / N - 0.5) * JW; let x = s, z = 0, nx = 0, nz = 1;
+        if (b > 1e-4) { const r = R / b, ph = s / r; x = r * Math.sin(ph); z = -r * (1 - Math.cos(ph)) + R * b; nx = Math.sin(ph); nz = Math.cos(ph); }
+        for (let j = 0; j < 2; j++) { const q = (i * 2 + j) * 3; pos[q] = x; pos[q + 1] = j ? JH : 0; pos[q + 2] = z; nor[q] = nx; nor[q + 1] = 0; nor[q + 2] = nz; }
+      }
+      geo.attributes.position.needsUpdate = true; geo.attributes.normal.needsUpdate = true; geo.computeBoundingSphere();
+    }
+    bend(0);
+    const hero = new THREE.Group(); scene.add(hero);
+    const heroInk = new THREE.Mesh(geo, ink); heroInk.castShadow = true;
+    const heroBack = new THREE.Mesh(geo, tinplate({ color: '#e3e7ed', metalness: 0.8, roughness: 0.22, side: THREE.DoubleSide })); heroBack.castShadow = true;
+    const tin = TIN.make('qaisi'); ready.push(tin.ready); tin.print.forEach((m) => TIN.setFinish(m, 'gloss'));
+    const proto = lean(tin.group, (o) => o.clone());     // the finished tin, for the pallet
+    tin.body.visible = false;                             // the rolled blank is the body
+    const lidY = tin.lid.position.y;
+    hero.add(heroBack, heroInk, tin.group);
+    const startPose = new THREE.Object3D(); startPose.position.set(0, -JH / 2, 0.006); plate.add(startPose);
+
+    // the pallet: 3 x 3 tins a layer, four layers, a wooden pallet, stretch film
+    const PS = 0.42, PITCH = 2.46, STEP = H + 0.04, LAY = 4;
+    const pallet = new THREE.Group(); pallet.position.copy(J0); pallet.scale.setScalar(PS); scene.add(pallet);
+    const woodTex = (() => { const c = document.createElement('canvas'); c.width = 256; c.height = 64; const x = c.getContext('2d'); x.fillStyle = '#c29a66'; x.fillRect(0, 0, 256, 64); for (let i = 0; i < 70; i++) { x.globalAlpha = 0.08 + Math.random() * 0.12; x.fillStyle = Math.random() < 0.5 ? '#8a6238' : '#e2c49a'; x.fillRect(0, Math.random() * 64, 256, 1 + Math.random() * 2); } const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t; })();
+    const wood = new THREE.MeshStandardMaterial({ map: woodTex, roughness: 0.85 });
+    const base = new THREE.Group(); pallet.add(base);
+    const PW = 3 * PITCH + 0.1, BOARD = 0.09, BLOCK = 0.42;
+    const bx = (w, h, d, x, y, z) => { const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), wood); m.position.set(x, y, z); m.castShadow = true; m.receiveShadow = true; base.add(m); };
+    for (let i = 0; i < 3; i++) bx(PW, BOARD, 0.7, 0, BOARD / 2, (i - 1) * (PW / 2 - 0.35));            // bottom boards
+    for (let i = 0; i < 3; i++) for (let j = 0; j < 3; j++) bx(0.8, BLOCK, 0.8, (i - 1) * (PW / 2 - 0.4), BOARD + BLOCK / 2, (j - 1) * (PW / 2 - 0.4)); // blocks
+    for (let i = 0; i < 7; i++) bx(PW, BOARD, 0.86, 0, BOARD * 1.5 + BLOCK, (i - 3) * ((PW - 0.86) / 6)); // top deck
+    const BASE = 2 * BOARD + BLOCK;
+    const tins = [], slotOf = (ix, iz, l) => V((ix - 1) * PITCH, BASE + l * STEP + 0.03, (iz - 1) * PITCH);
+    const HERO_SLOT = slotOf(1, 2, LAY - 1);
+    for (let l = 0; l < LAY; l++) {
+      for (let iz = 0; iz < 3; iz++) for (let ix = 0; ix < 3; ix++) {
+        if (l === LAY - 1 && ix === 1 && iz === 2) continue;   // the hero's place
+        const g = lean(proto, (o) => o.clone()); g.position.copy(slotOf(ix, iz, l)); g.rotation.y = -0.55 + (ix * 7 + iz * 3) * 0.37; g.userData.k = tins.length; g.userData.p = g.position.clone();
+        pallet.add(g); tins.push(g);
+      }
+    }
+    const filmMat = new THREE.MeshPhysicalMaterial({ color: '#e9eef6', roughness: 0.08, metalness: 0, clearcoat: 1, transparent: true, opacity: 0, depthWrite: false, side: THREE.DoubleSide });
+    const wrapH = LAY * STEP + 0.05, wrap = new THREE.Mesh(new THREE.BoxGeometry(PW + 0.08, wrapH, PW + 0.08), filmMat); wrap.position.y = BASE + wrapH / 2; wrap.renderOrder = 3; pallet.add(wrap);
+    const pc = contact(PW * 0.95); pallet.add(pc);
+
+    // the globe: a navy planet with the land in dots of champagne gold, and routes from Amman in amber
+    const globe = new THREE.Group(); globe.position.set(JX, 1.75, 0); scene.add(globe);
+    const tilt = new THREE.Group(); globe.add(tilt);
+    const GR = 1.25;
+    const ll = (lat, lon, r = GR) => { const a = THREE.MathUtils.degToRad(lat), o = THREE.MathUtils.degToRad(lon); return V(r * Math.cos(a) * Math.sin(o), r * Math.sin(a), r * Math.cos(a) * Math.cos(o)); };
+    const lit = (body) => `varying vec3 vN; void main(){ ${body}
+#include <tonemapping_fragment>
+#include <colorspace_fragment>
+}`;
+    const vN = 'varying vec3 vN; void main(){ vN = normalize(normalMatrix * normal); gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }';
+    tilt.add(new THREE.Mesh(new THREE.SphereGeometry(GR * 0.985, 72, 48), new THREE.ShaderMaterial({ vertexShader: vN,
+      fragmentShader: lit('float f = pow(1.0 - abs(vN.z), 2.4); vec3 c = mix(vec3(0.0, 0.028, 0.155), vec3(0.06, 0.2, 0.42), f) + vec3(0.0, 0.01, 0.03) * (vN.y * 0.5 + 0.5); gl_FragColor = vec4(c, 1.0);') })));
+    const halo = new THREE.Mesh(new THREE.SphereGeometry(GR * 1.1, 64, 48), new THREE.ShaderMaterial({ vertexShader: vN, transparent: true, depthWrite: false, side: THREE.BackSide,
+      fragmentShader: lit('float f = pow(1.0 - abs(vN.z), 3.0); gl_FragColor = vec4(vec3(0.0, 0.1, 0.3), f * 0.4);') }));
+    globe.add(halo);
+    const DOTS = COARSE ? 6000 : 11000, dp = new Float32Array(DOTS * 3), dc = new Float32Array(DOTS * 3), lonlat = new Float32Array(DOTS * 2);
+    const sea = new THREE.Color('#274f83').multiplyScalar(0.55), landC = new THREE.Color('#e3c06c');
+    for (let i = 0; i < DOTS; i++) {
+      const y = 1 - (i / (DOTS - 1)) * 2, r = Math.sqrt(1 - y * y), th = Math.PI * (3 - Math.sqrt(5)) * i, x = Math.cos(th) * r, z = Math.sin(th) * r;
+      dp.set([x * GR, y * GR, z * GR], i * 3); lonlat[i * 2] = (Math.atan2(x, z) * 180) / Math.PI; lonlat[i * 2 + 1] = (Math.asin(y) * 180) / Math.PI;
+      dc.set([sea.r, sea.g, sea.b], i * 3);
+    }
+    const dg = new THREE.BufferGeometry(); dg.setAttribute('position', new THREE.BufferAttribute(dp, 3)); dg.setAttribute('color', new THREE.BufferAttribute(dc, 3));
+    const dots = new THREE.Points(dg, new THREE.PointsMaterial({ size: 0.03, vertexColors: true, transparent: true, depthWrite: false, toneMapped: false })); tilt.add(dots);
+    fetch(new URL('../../data/land-110m.geojson', import.meta.url)).then((r) => r.json()).then((gj) => {
+      const W = 1440, Hh = 720, cv = document.createElement('canvas'); cv.width = W; cv.height = Hh;
+      const cx = cv.getContext('2d', { willReadFrequently: true }); cx.fillStyle = '#fff';
+      const ringP = (rg) => { rg.forEach(([lo, la], q) => { const x = ((lo + 180) / 360) * W, y = ((90 - la) / 180) * Hh; q ? cx.lineTo(x, y) : cx.moveTo(x, y); }); cx.closePath(); };
+      gj.features.forEach((f) => { (f.geometry.type === 'Polygon' ? [f.geometry.coordinates] : f.geometry.coordinates).forEach((poly) => { cx.beginPath(); poly.forEach(ringP); cx.fill('evenodd'); }); });
+      const px = cx.getImageData(0, 0, W, Hh).data;
+      for (let i = 0; i < DOTS; i++) {
+        const xx = Math.min(W - 1, Math.max(0, Math.floor(((lonlat[i * 2] + 180) / 360) * W))), yy = Math.min(Hh - 1, Math.max(0, Math.floor(((90 - lonlat[i * 2 + 1]) / 180) * Hh)));
+        if (px[(yy * W + xx) * 4] > 128) dc.set([landC.r, landC.g, landC.b], i * 3);
+      }
+      dg.attributes.color.needsUpdate = true;
+    }).catch((e) => console.warn('globe land map unavailable', e));
+    const home = ll(31.95, 35.93);
+    const amber = new THREE.MeshBasicMaterial({ color: new THREE.Color('#f4b34c').multiplyScalar(1.6), toneMapped: false });
+    const homeDot = new THREE.Mesh(new THREE.SphereGeometry(0.045, 20, 20), amber); homeDot.position.copy(home); tilt.add(homeDot);
+    const pulse = new THREE.Mesh(new THREE.RingGeometry(0.06, 0.075, 48), new THREE.MeshBasicMaterial({ color: '#f4b34c', transparent: true, toneMapped: false, side: THREE.DoubleSide, depthWrite: false }));
+    pulse.position.copy(home).multiplyScalar(1.002); pulse.lookAt(home.clone().multiplyScalar(2)); tilt.add(pulse);
+    // routes: the region the factory serves (no city names: only the home city is labelled)
+    const DEST = [[24.71, 46.68], [25.2, 55.27], [33.31, 44.37], [29.38, 47.99], [25.29, 51.53], [23.59, 58.41], [33.89, 35.5], [30.04, 31.24]];
+    const arcs = DEST.map(([la, lo]) => {
+      const p1 = ll(la, lo), mid = home.clone().add(p1).multiplyScalar(0.5); mid.setLength(GR + 0.1 + home.distanceTo(p1) * 0.5);
+      const tg = new THREE.TubeGeometry(new THREE.QuadraticBezierCurve3(home, mid, p1), 64, 0.011, 6, false);
+      const line = new THREE.Mesh(tg, amber); tg.setDrawRange(0, 0); tilt.add(line);
+      const end = new THREE.Mesh(new THREE.SphereGeometry(0.026, 12, 12), new THREE.MeshBasicMaterial({ color: '#ffffff', toneMapped: false })); end.position.copy(p1); end.visible = false; tilt.add(end);
+      return { tg, end, n: tg.index.count };
+    });
+    const lblC = document.createElement('canvas'); lblC.width = 512; lblC.height = 160;
+    const lblT = new THREE.CanvasTexture(lblC); lblT.colorSpace = THREE.SRGBColorSpace;
+    const lbl = new THREE.Sprite(new THREE.SpriteMaterial({ map: lblT, transparent: true, depthTest: false, toneMapped: false })); lbl.scale.set(0.78, 0.244, 1); lbl.renderOrder = 5;
+    lbl.position.copy(home).multiplyScalar(1.08).add(V(-0.4, 0.06, 0.1)); tilt.add(lbl);
+    function label(lang) {
+      const x = lblC.getContext('2d'); x.clearRect(0, 0, 512, 160);
+      const t = lang === 'ar' ? 'عمّان' : 'Amman';
+      x.font = lang === 'ar' ? '600 64px "Readex Pro", sans-serif' : '700 60px "Bricolage Grotesque", sans-serif';
+      const w = x.measureText(t).width + 64;
+      x.fillStyle = 'rgba(0,19,45,.82)'; x.beginPath(); x.roundRect(256 - w / 2, 30, w, 100, 50); x.fill();
+      x.strokeStyle = 'rgba(244,179,76,.9)'; x.lineWidth = 3; x.stroke();
+      x.fillStyle = '#f4b34c'; x.textAlign = 'center'; x.textBaseline = 'middle'; x.direction = lang === 'ar' ? 'rtl' : 'ltr'; x.fillText(t, 256, 82);
+      lblT.needsUpdate = true;
+    }
+    label('en');
+    const GY = -THREE.MathUtils.degToRad(36); tilt.rotation.set(0.42, GY, 0);
+
+    // ------------------------------------------------------------ the chapter's time line
+    // 0 design & plates · 0.14 print · 0.34 cut & form · 0.56 pack · 0.8 ship
+    const STEPS = [0, 0.14, 0.34, 0.56, 0.8];
+    const sp = V(0, 0, 0), sq = new THREE.Quaternion(), ss = V(0, 0, 0), q1 = new THREE.Quaternion(), spinQ = new THREE.Quaternion(), Y = V(0, 1, 0);
+    const lin = (p, a, b) => clamp((p - a) / (b - a));
+    function pose(p, t) {
+      const vis = p > 0 || T > CHAPTERS[4][1];   // built only once the camera heads this way
+      const gd = seg(p, 0.0, 0.13), pr = lin(p, 0.15, 0.31);
+      const cutA = seg(p, 0.35, 0.41), up = seg(p, 0.37, 0.45), bn = seg(p, 0.43, 0.52), lid = seg(p, 0.51, 0.555);
+      const rise = seg(p, 0.57, 0.63), land = seg(p, 0.72, 0.78), wrapF = seg(p, 0.76, 0.8);
+      const gl = seg(p, 0.81, 0.9), leave = seg(p, 0.8, 0.88);
+      // the sheet
+      drawBlank(gd);
+      plate.visible = vis && cutA < 0.999;
+      const handX = (u) => plate.position.x + u * PLATE_S;   // sheet x -> world x (the sheet is not turned about y)
+      cut.constant = pr >= 1 ? 1e4 : handX(-JW / 2 + JW * pr);
+      head.visible = glow.visible = pr > 0 && pr < 1; head.position.x = glow.position.x = -JW / 2 + JW * pr;
+      headMat.opacity = Math.min(1, pr * 20, (1 - pr) * 20);
+      blankMat.opacity = edge.material.opacity = 1 - cutA; inkRest.opacity = 1 - cutA;
+      rest.forEach((m) => { const dir = Math.sign(m.userData.r - (ROWS - 1) / 2); m.position.y = rowY(m.userData.r) + dir * cutA * 0.6; m.position.z = 0.004 - cutA * 0.3; });
+      blank.position.z = -cutA * 0.4; edge.position.z = -0.011 - cutA * 0.4;
+      plate.rotation.y = (REDUCED ? 0 : Math.sin(t * 0.25) * 0.035) + ptr.sx * 0.04;
+      // the hero blank: from its place on the sheet to the floor, rolled, closed, lifted, landed on the pallet
+      plate.updateMatrixWorld(true); startPose.matrixWorld.decompose(sp, sq, ss);
+      bend(bn);
+      heroBack.visible = cutA > 0.001;
+      hero.visible = vis && gl < 0.999;
+      tin.group.visible = bn > 0.97;
+      tin.lid.visible = lid > 0.001; tin.lid.position.y = lidY + (1 - lid) * (1 - lid) * 2.4;
+      const spin = seg(p, 0.42, 0.58) * Math.PI * 2 + (REDUCED ? 0 : t * 0.12 * seg(p, 0.55, 0.62));
+      spinQ.setFromAxisAngle(Y, spin);
+      const flat = V(J0.x, J0.y, J0.z), hover = V(JX, 2.35, 0.2), slot = HERO_SLOT.clone().multiplyScalar(PS).add(pallet.position);
+      const P = sp.clone().lerp(flat, up).lerp(hover, rise).lerp(slot, land);
+      hero.position.copy(P);
+      q1.identity(); hero.quaternion.copy(sq).slerp(q1, up).multiply(spinQ);
+      hero.scale.setScalar(lerp(lerp(ss.x, 1, bn), PS, rise));
+      // the pallet: the tins arrive in order, then the film; then it leaves for the globe
+      const build = lin(p, 0.58, 0.73);
+      pallet.visible = vis && p > 0.56 && gl < 0.999;
+      tins.forEach((g) => { const a = clamp(build * (tins.length + 6) - g.userData.k, 0, 6) / 6, e = 1 - (1 - a) * (1 - a); g.visible = a > 0; g.position.y = g.userData.p.y + (1 - e) * 2.2; g.scale.setScalar(Math.max(0.001, e)); });
+      
+      filmMat.opacity = 0.09 * wrapF;
+      const ps = PS * (1 - leave * 0.85);
+      pallet.scale.setScalar(Math.max(0.001, ps)); pallet.position.set(JX, leave * 1.4, 0);
+      if (leave > 0) hero.position.copy(HERO_SLOT.clone().multiplyScalar(ps).add(pallet.position)), hero.scale.setScalar(Math.max(0.001, ps));
+      // the globe
+      globe.visible = vis && gl > 0.001; globe.scale.setScalar(Math.max(0.001, sm(gl)));
+      tilt.rotation.y = GY + (REDUCED ? 0 : Math.sin(t * 0.3) * 0.06) + ptr.sx * 0.15 + (1 - gl) * 0.8;
+      arcs.forEach((a, i) => { const e = clamp((p - 0.86 - i * 0.012) / 0.1); a.tg.setDrawRange(0, Math.floor((a.n * e) / 6) * 6); a.end.visible = e > 0.98; });
+      pulse.scale.setScalar(1 + ((t * 0.8) % 1) * 2.2); pulse.material.opacity = 1 - ((t * 0.8) % 1);
+      lbl.material.opacity = seg(p, 0.86, 0.92);
+      let s = 0; STEPS.forEach((v, i) => { if (p >= v) s = i; });
+      return s;
+    }
+    // the camera inside the chapter: wide on the sheet, close on the tin, high on the pallet, level on the globe
+    const KEYS = [
+      [0, { pos: V(-1.25, 3.4, 12.8), tgt: V(-1.2, 1.1, 0) }],
+      [0.36, { pos: V(-1.25, 3.4, 12.8), tgt: V(-1.2, 1.1, 0) }],
+      [0.44, { pos: V(-1.25, 2.6, 8.4), tgt: V(-1.1, 0.5, 0) }],
+      [0.53, { pos: V(-1.3, 2.35, 6.7), tgt: V(-1.2, 0.36, 0) }],
+      [0.565, { pos: V(-1.3, 2.35, 6.7), tgt: V(-1.2, 0.36, 0) }],
+      [0.64, { pos: V(-1.6, 4.3, 9.8), tgt: V(-1.4, 0.95, 0) }],
+      [0.8, { pos: V(-1.6, 4.3, 9.8), tgt: V(-1.4, 0.95, 0) }],
+      [0.88, { pos: V(-1.3, 2.2, 9.4), tgt: V(-1.2, 1.75, 0) }],
+      [1, { pos: V(-1.3, 2.2, 9.4), tgt: V(-1.2, 1.75, 0) }]
+    ];
+    const out = { pos: V(0, 0, 0), tgt: V(0, 0, 0), fov: 30 };
+    function shotAt(p, mirror, portrait) {
+      let i = 0; while (i < KEYS.length - 2 && p > KEYS[i + 1][0]) i++;
+      const [pa, A] = KEYS[i], [pb, B] = KEYS[i + 1], e = sm(clamp((p - pa) / Math.max(1e-6, pb - pa)));
+      out.pos.lerpVectors(A.pos, B.pos, e); out.tgt.lerpVectors(A.tgt, B.tgt, e);
+      if (portrait) { const dx = out.tgt.x; out.pos.x -= dx; out.tgt.x -= dx; out.tgt.y -= 0.55; out.pos.y -= 0.3; } // the card sits below: the subject centred, a little higher
+      if (mirror) { out.pos.x = -out.pos.x; out.tgt.x = -out.tgt.x; }
+      out.pos.x += JX; out.tgt.x += JX;
+      return out;
+    }
+    return { pose, shotAt, label, plate };
+  })();
 
   // ---------------------------------------------------------------- post: bloom on the glints, depth of field in the macro shot
   let composer = null, bokeh = null, bloom = null;
@@ -244,21 +499,12 @@ export function createFilm(canvas) {
   // ---------------------------------------------------------------- the film
   let T = 0, theme = 'light', lab = 'gloss';
   const listeners = [];
-  const state = { chapter: 0, layer: 0, ring: 0 };
-  // the closing top view is worked out from the screen's shape: the whole sheet fits, above the title and the step bar
-  const TOP = { pos: V(0, 20, 0), tgt: V(0, 0, 0), fov: 32 };
-  function topShot() {
-    layout(camera.aspect);
-    const tv = Math.tan(THREE.MathUtils.degToRad(TOP.fov / 2)), th = tv * camera.aspect;
-    const H = Math.max((grid.W * (camera.aspect > 1 ? 1.32 : 1.06)) / (2 * th), grid.D / (2 * tv * 0.56));
-    const dz = 2 * H * tv * 0.11;                       // the sheet sits a little above the middle of the screen
-    TOP.tgt.set(0, 0, dz); TOP.pos.set(0, H, dz + 0.02 * H);
-    return TOP;
-  }
+  const state = { chapter: 0, layer: 0, ring: 0, step: 0 };
   // the text cards sit on the reading side; in Arabic the side shots are mirrored so the subject stays clear of the card
   const MIRROR_AT = { 1: 0, 2: AX, 4: 0 };
-  const mirrored = SHOTS.map((sh, i) => (i in MIRROR_AT ? { pos: V(2 * MIRROR_AT[i] - sh.pos.x, sh.pos.y, sh.pos.z), tgt: V(2 * MIRROR_AT[i] - sh.tgt.x, sh.tgt.y, sh.tgt.z), fov: sh.fov } : sh));
-  const shot = (i) => (i === 5 ? topShot() : document.documentElement.dir === 'rtl' ? mirrored[i] : SHOTS[i]);
+  const mirrored = SHOTS.map((sh, i) => (sh && i in MIRROR_AT ? { pos: V(2 * MIRROR_AT[i] - sh.pos.x, sh.pos.y, sh.pos.z), tgt: V(2 * MIRROR_AT[i] - sh.tgt.x, sh.tgt.y, sh.tgt.z), fov: sh.fov } : sh));
+  const rtl = () => document.documentElement.dir === 'rtl';
+  const shot = (i) => (i === 5 ? journey.shotAt(local(5), rtl(), camera.aspect < 0.9) : rtl() ? mirrored[i] : SHOTS[i]);
   const shotAt = (t) => { // the camera between shots: hold inside a chapter, travel between chapters
     let i = 0; while (i < CHAPTERS.length - 1 && t > CHAPTERS[i][1]) i++;
     const [a] = CHAPTERS[i];
@@ -276,10 +522,10 @@ export function createFilm(canvas) {
     const S = shotAt(T);
     tmpP.lerpVectors(S.A.pos, S.B.pos, S.k); tmpT.lerpVectors(S.A.tgt, S.B.tgt, S.k);
     // a gentle drift with the pointer, more in the wide shots
-    const drift = S.i === 1 ? 0.04 : S.i === 5 ? 0.06 : 0.18;
+    const drift = S.i === 1 ? 0.04 : S.i === 5 ? 0.1 : 0.18;
     tmpP.x += ptr.sx * drift; tmpP.y -= ptr.sy * drift * 0.5;
     // tall screens: step back so the subject keeps its width
-    const backOf = (i) => (i === 5 ? 1 : Math.max(1, 0.95 / camera.aspect));   // the top view fits itself
+    const backOf = (i) => Math.max(1, (i === 5 ? 1.0 : 0.95) / camera.aspect);
     const back = lerp(backOf(S.ia), backOf(S.ib), S.k);
     camera.position.copy(tmpT).addScaledVector(tmpP.clone().sub(tmpT), back);
     camera.lookAt(tmpT);
@@ -309,30 +555,26 @@ export function createFilm(canvas) {
       let L = 0; for (let i = 0; i < 7; i++) if (pl > 0.02 + i * 0.12 + 0.01) L = i;
       L = pl > 0.86 ? 7 : L; if (L !== state.layer) { state.layer = L; listeners.forEach((f) => f(state)); }
     }
-    // the ring and the sheet
-    const rise = seg(T, CHAPTERS[2][1] + 0.01, CHAPTERS[3][0]);          // the tins come up out of the floor
-    const toGrid = seg(T, CHAPTERS[4][1] + 0.01, CHAPTERS[5][0]);        // and lay themselves out for the top view
-    const hideForLab = seg(T, CHAPTERS[3][1], CHAPTERS[3][1] + 0.03) * (1 - seg(T, CHAPTERS[4][1], CHAPTERS[4][1] + 0.03));
+    // the ring: the tins come up out of the floor, and go once the lab begins
+    const rise = seg(T, CHAPTERS[2][1] + 0.01, CHAPTERS[3][0]);
+    const gone = seg(T, CHAPTERS[3][1], CHAPTERS[3][1] + 0.03);
     const pr = local(3), turn = pr * (RING_KEYS.length - 1);
     const front = Math.round(turn);
     if (front !== state.ring) { state.ring = front; listeners.forEach((f) => f(state)); }
     ring.forEach((r, i) => {
       const a = ((i - turn) / RING_KEYS.length) * Math.PI * 2;
-      const ringPos = V(Math.sin(a) * RING_R, 0, Math.cos(a) * RING_R);
-      r.holder.position.lerpVectors(ringPos, grid.pos[r.key], toGrid);
-      const s = Math.max(0.001, sm(clamp(rise * 1.6 - i * 0.05)) * (1 - hideForLab * 0.999));
-      const same = TIN_W / Math.max(sizeOf[r.key].w, sizeOf[r.key].d);
-      r.holder.scale.setScalar(s * lerp(1, same, toGrid));
-      r.m.group.rotation.y = lerp(a + (REDUCED ? 0 : t * 0.2) - 0.4, 0, toGrid);
+      r.holder.position.set(Math.sin(a) * RING_R, 0, Math.cos(a) * RING_R);
+      const s = sm(clamp(rise * 1.6 - i * 0.05)) * (1 - gone);
+      r.holder.visible = s > 0.002; r.holder.scale.setScalar(Math.max(0.001, s));
+      r.m.group.rotation.y = a + (REDUCED ? 0 : t * 0.2) - 0.4;
     });
-    mainSpin.position.lerpVectors(V(0, 0, 0), grid.pos.qaisi, toGrid);
-    mainSpin.scale.setScalar(lerp(1, TIN_W / Math.max(main.size.w, main.size.d), toGrid));
-    if (toGrid > 0) mainSpin.rotation.y = lerp(mainSpin.rotation.y, 0, toGrid);
-    sheet.visible = toGrid > 0.01; sheetMat.opacity = toGrid;
+    // from sheet to shelf
+    const pj = local(5), step = journey.pose(pj, t);
+    if (step !== state.step) { state.step = step; listeners.forEach((f) => f(state)); }
 
     // lights: the shadow follows the subject; the visitor's light comes from where the pointer is, seen from the camera
-    const subj = S.i === 2 ? layers.g.position : S.i === 5 ? V(0, 0, 0) : S.i === 3 ? V(0, 0, 2) : mainSpin.position;
-    const span = S.i === 5 ? 7.5 : S.i === 3 ? 6.5 : 2.4;
+    const subj = S.i === 2 ? layers.g.position : S.i === 5 ? JV : S.i === 3 ? V(0, 0, 2) : mainSpin.position;
+    const span = S.i === 5 ? 4.6 : S.i === 3 ? 6.5 : 2.4;
     key.position.set(subj.x - 3, 9, subj.z + 6); key.target.position.copy(subj);
     Object.assign(key.shadow.camera, { left: -span, right: span, top: span, bottom: -span, near: 1, far: 30 }); key.shadow.camera.updateProjectionMatrix();
     const right = V(1, 0, 0).applyQuaternion(camera.quaternion), up = V(0, 1, 0).applyQuaternion(camera.quaternion), fwd = V(0, 0, -1).applyQuaternion(camera.quaternion);
@@ -345,6 +587,11 @@ export function createFilm(canvas) {
     const inMacro = S.ia === 1 && S.ib === 1 ? 1 : S.ib === 1 ? S.k : S.ia === 1 ? 1 - S.k : 0;
     rake.intensity = 12 * inMacro;
     rake.position.set(lerp(-1.6, 1.6, pm), 0.95, lerp(0.6, -0.4, pm)); rake.target.position.set(0, 0.6, 0);
+    if (S.i === 5) { // the fresh print catches a light running across the sheet
+      const g = seg(pj, 0.27, 0.37), on = Math.sin(Math.PI * clamp((pj - 0.26) / 0.12));
+      rake.intensity = 9 * Math.max(0, on); rake.distance = 9; rake.angle = 0.3;
+      rake.position.set(JX + lerp(-4.2, 4.2, g), 3.4, 1.4); rake.target.position.set(JX + lerp(-2.6, 2.6, g), 1.3, 0);
+    } else { rake.distance = 8; rake.angle = 0.5; }
     if (bokeh) {
       const f = inMacro;
       bokeh.enabled = f > 0.02;
@@ -354,7 +601,6 @@ export function createFilm(canvas) {
     fillL.position.copy(camera.position).add(V(0, 2, 0));
     if (composer) composer.render(); else renderer.render(scene, camera);
   }
-  layout(camera.aspect);
   (function loop(now) { frame(now); requestAnimationFrame(loop); })(performance.now());
 
   return {
@@ -363,12 +609,11 @@ export function createFilm(canvas) {
     onChange(f) { listeners.push(f); },
     state,
     ringKeys: RING_KEYS,
-    setTitle: drawType,
+    setTitle(lines, lang, mode) { drawType(lines, lang, mode); journey.label(lang); },
     setFinish(name) { lab = name; main.print.forEach((m) => TIN.setFinish(m, name, window.gsap)); },
     setTheme(mode) {
       theme = mode; backdrop(mode);
       floor.material.opacity = mode === 'dark' ? 0.32 : 0.18;
-      sheetMat.color.setScalar(mode === 'dark' ? 0.55 : 1); // the bare sheet does not glare on the dark page
       renderer.toneMappingExposure = mode === 'dark' ? 1.1 : 1.0;
     }
   };

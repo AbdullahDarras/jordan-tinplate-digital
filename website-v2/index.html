@@ -50,7 +50,7 @@ d.setAttribute('data-mode',m);if(l==='ar'){d.lang='ar';d.dir='rtl'}d.classList.a
         <button type="button" data-go="2"><span class="num">03</span><b data-i18n="c2">The print</b></button>
         <button type="button" data-go="3"><span class="num">04</span><b data-i18n="c3">Our tins</b></button>
         <button type="button" data-go="4"><span class="num">05</span><b data-i18n="c4">Finishes</b></button>
-        <button type="button" data-go="5"><span class="num">06</span><b data-i18n="c5">The sheet</b></button>
+        <button type="button" data-go="5"><span class="num">06</span><b data-i18n="c5">Sheet to shelf</b></button>
       </nav>
 
       <!-- 01 the tin -->
@@ -108,17 +108,18 @@ d.setAttribute('data-mode',m);if(l==='ar'){d.lang='ar';d.dir='rtl'}d.classList.a
         <p class="lead" id="finDesc" aria-live="polite">Special gloss, alone or combined with matte, for bright, lively visuals on the metal.</p>
         <p class="fine" data-i18n="l.drag">Drag the tin to turn it.</p>
       </div>
-      <!-- 06 the sheet -->
-      <div class="ov ov--sheet" data-ch="5">
+      <!-- 06 from sheet to shelf -->
+      <div class="ov ov--side ov--flow" data-ch="5">
         <p class="kick" data-i18n="s.kick">One roof, one partner</p>
         <h2 class="big" data-i18n="s.title">From sheet to shelf.</h2>
-        <ol class="flow">
-          <li><span class="num">01</span><b data-i18n="s.1">Design &amp; plates</b></li>
-          <li><span class="num">02</span><b data-i18n="s.2">Print, coat &amp; finish</b></li>
-          <li><span class="num">03</span><b data-i18n="s.3">Cut &amp; form</b></li>
-          <li><span class="num">04</span><b data-i18n="s.4">Pack &amp; palletise</b></li>
-          <li><span class="num">05</span><b data-i18n="s.5">Store &amp; ship</b></li>
-        </ol>
+        <div class="flow" id="flow" aria-live="polite">
+          <article class="flow__step on" data-s="0"><span class="flow__n" dir="ltr">01</span><h3 data-i18n="s.1">Design &amp; plates</h3><p data-i18n="s.1s">In-house designers prepare your artwork, and CTP (Computer-to-Plate) makes every printing plate precise.</p></article>
+          <article class="flow__step" data-s="1"><span class="flow__n" dir="ltr">02</span><h3 data-i18n="s.2">Print, coat &amp; finish</h3><p data-i18n="s.2s">High-end inks and coatings, plus effects: gloss, matte, soft touch, rough touch and embossing.</p></article>
+          <article class="flow__step" data-s="2"><span class="flow__n" dir="ltr">03</span><h3 data-i18n="s.3">Cut &amp; form</h3><p data-i18n="s.3s">Sheets are cut on exact lines and formed into your shape: round, square, rectangular or custom.</p></article>
+          <article class="flow__step" data-s="3"><span class="flow__n" dir="ltr">04</span><h3 data-i18n="s.4">Pack &amp; palletise</h3><p data-i18n="s.4s">Cartons are palletised with methods tailored to each client and suited to overseas shipping.</p></article>
+          <article class="flow__step" data-s="4"><span class="flow__n" dir="ltr">05</span><h3 data-i18n="s.5">Store &amp; ship</h3><p data-i18n="s.5s">We can hold finished stock for you, freeing your own storage, then ship it to your markets.</p></article>
+        </div>
+        <div class="flow__rail" aria-hidden="true"><i id="flowFill"></i><b></b><b></b><b></b><b></b><b></b></div>
       </div>
       <div class="meter" aria-hidden="true"><i id="meter"></i></div>
     </div>

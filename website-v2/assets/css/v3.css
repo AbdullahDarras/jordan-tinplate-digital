@@ -67,7 +67,7 @@ html[lang="ar"] .big { letter-spacing: 0; line-height: 1.25; font-weight: 700; f
 html[dir="rtl"] .btn svg { transform: scaleX(-1); }
 
 /* ---------------------------------------------------------------- the film */
-.film { position: relative; height: 1300svh; }
+.film { position: relative; height: 1700svh; }
 .film__stage { position: sticky; top: 0; height: 100svh; overflow: hidden; }
 #gl { position: absolute; inset: 0; width: 100%; height: 100%; display: block; touch-action: pan-y; }
 .ov { position: absolute; z-index: 2; opacity: 0; transform: translateY(18px); transition: opacity .6s var(--ease), transform .6s var(--ease); pointer-events: none; }
@@ -109,13 +109,19 @@ html:not(.no-gl) .ov--hero .mega { position: absolute; width: 1px; height: 1px; 
 .chip small { font-size: 11px; color: var(--accent-text); margin-inline-start: 4px; }
 #finDesc { min-height: 3.2em; }
 
-.ov--sheet { inset-inline: 0; bottom: 0; padding: 0 max(var(--pad), env(safe-area-inset-right, 0px)) 44px max(var(--pad), env(safe-area-inset-left, 0px)); }
-.ov--sheet > .kick, .ov--sheet > .big { display: inline-block; }
-.ov--sheet .big { display: block; }
-.flow { list-style: none; margin: 0; padding: 18px 22px; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 14px; background: var(--card); border-radius: 18px; backdrop-filter: blur(12px); }
-.flow li { display: grid; gap: 4px; min-width: 0; }
-.flow .num { color: var(--accent-text); font-weight: 600; font-size: 14px; }
-.flow b { font-weight: 600; font-size: 16px; }
+/* from sheet to shelf: the previous site's step design (outlined numeral, one step at a time, a rail of five) in the side card */
+.flow { display: grid; margin-top: 6px; }
+.flow__step { grid-area: 1 / 1; opacity: 0; transform: translateY(16px); transition: opacity .5s var(--ease), transform .7s var(--ease); }
+.flow__step.on { opacity: 1; transform: none; }
+.flow__n { display: block; font: 800 clamp(56px, 6vw, 92px)/.9 "Bricolage Grotesque", sans-serif; letter-spacing: -.04em; color: transparent; -webkit-text-stroke: 1.5px var(--accent-text); margin-bottom: 10px; text-align: start; }
+.flow__step h3 { margin: 0 0 6px; font: 700 clamp(21px, 1.7vw, 27px)/1.2 var(--f-head); letter-spacing: -.015em; color: var(--ink); }
+html[lang="ar"] .flow__step h3 { letter-spacing: 0; line-height: 1.45; }
+.flow__step p { margin: 0; color: var(--mute); font-size: 15.5px; }
+.flow__rail { position: relative; height: 2px; margin-top: 22px; background: var(--line); display: flex; justify-content: space-between; align-items: center; }
+.flow__rail i { position: absolute; inset: 0; background: var(--accent); transform: scaleX(var(--f, 0)); transform-origin: left; transition: transform .5s var(--ease); }
+html[dir="rtl"] .flow__rail i { transform-origin: right; }
+.flow__rail b { position: relative; width: 11px; height: 11px; border-radius: 50%; background: var(--bg); border: 2px solid var(--line); transition: background .4s, border-color .4s; }
+.flow__rail b.done { background: var(--accent); border-color: var(--accent); }
 
 .rail { position: absolute; z-index: 3; inset-inline-end: max(var(--pad), env(safe-area-inset-right, 0px)); top: 50%; transform: translateY(-50%); display: grid; gap: 4px; }
 .rail button { display: flex; align-items: center; justify-content: flex-end; gap: 10px; background: none; border: 0; padding: 6px 0; color: var(--mute); font: 500 13px var(--f-body); cursor: pointer; }
@@ -129,7 +135,7 @@ html[dir="rtl"] .rail button b { transform: translateX(-6px); }
 .meter i { position: absolute; inset-block: 0; inset-inline-start: 0; width: calc(var(--p, 0) * 100%); background: var(--accent); }
 
 @media (max-width: 820px) {
-  .film { height: 1100svh; }
+  .film { height: 1500svh; }
   .rail { display: none; }
   .cue { display: none; }
   .hero__bar { grid-template-columns: minmax(0, 1fr); gap: 14px; }
@@ -140,8 +146,12 @@ html[dir="rtl"] .rail button b { transform: translateX(-6px); }
   .ov--side .lead { font-size: 15px; }
   .steps li { display: none; }
   .steps li.on { display: grid; }
-  .flow { grid-template-columns: minmax(0, 1fr); gap: 6px; padding: 14px 16px; }
-  .flow li { grid-template-columns: 30px 1fr; }
+  .ov--flow .big { font-size: 26px; margin-bottom: 8px; }
+  .ov--flow .kick { margin-bottom: 6px; }
+  .flow__n { font-size: 44px; margin-bottom: 4px; }
+  .flow__step h3 { font-size: 19px; }
+  .flow__step p { font-size: 14px; }
+  .flow__rail { margin-top: 14px; }
 }
 
 /* ---------------------------------------------------------------- after the film */

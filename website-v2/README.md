@@ -47,6 +47,18 @@ straightening took out of the photos.
 - **Arabic**: the side shots (relief, print, finishes) are mirrored in right-to-left reading, so the tin or the lid stays on the
   side away from the text card (before, the card covered the lid in the print chapter).
 
+## Round 6 (2026-10-27): from sheet to shelf
+The owner found the closing print-sheet layout weak and asked for something more luxurious, built on the previous site's design.
+- Chapter 6 is now the previous site's entrance journey, rebuilt in the new rendering: a tinplate sheet carrying five body blanks
+  of the Al Qaisi tin, its prepress marks drawn in brand navy (trim lines, crop and registration marks, a colour bar); the press
+  runs across it (an amber light bar; the print is revealed with a clipping plane) and a light runs over the fresh print; the
+  middle blank is cut out, rolled into the body and closed with its lid; the tin rises, a pallet of its twins builds below
+  (3 x 3 a layer, four layers, a wooden pallet), the tin lands in the last place and the stretch film goes on;
+  the pallet then leaves for a navy globe (land in champagne-gold dots) with amber routes out of Amman (only Amman is named).
+- The card uses the previous site's step design: an outlined amber numeral, one step at a time with its approved line, a rail of
+  five dots. The film is longer (1700svh, 1500svh on a phone) so the chapter has room: `CHAPTERS[5]` is 0.75 to 1.
+- The journey moves its own camera (`journey.shotAt`), mirrored in Arabic so the tin stays clear of the card.
+
 ## Engine
 - `assets/js/engine/tins.js`: the tins. Geometry follows the order platform's studio rules (`studio.js`: lid gap and lift, skirt,
   curled lip, 3.5 mm corners) at each tin's real millimetres; artwork from `halawah.js` (the straightened photos). Materials are

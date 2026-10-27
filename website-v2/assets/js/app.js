@@ -9,7 +9,7 @@ const store = { get(k) { try { return localStorage.getItem(k); } catch (e) { ret
 const AR = {
   skip: 'انتقل إلى المحتوى الرئيسي', brandAria: 'الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية، الصفحة الرئيسية', filmAria: 'الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية: علبنا بثلاثية الأبعاد', railAria: 'الفصول',
   langSwitch: 'English', modeAria: 'التبديل بين الوضع الفاتح والداكن', quote: 'اطلب عرض سعر', soon: 'قريباً',
-  c0: 'العلبة', c1: 'النقش', c2: 'الطباعة', c3: 'علبنا', c4: 'التشطيبات', c5: 'الصفيحة',
+  c0: 'العلبة', c1: 'النقش', c2: 'الطباعة', c3: 'علبنا', c4: 'التشطيبات', c5: 'من الصفيحة إلى الرف',
   'h.kick': 'علب معدنية مخصّصة · صناعة أردنية · منذ عام 1998', 'h.l1': 'نطبع.', 'h.l2': 'ونعلّب.',
   'h.lead': 'علب معدنية مخصّصة لعلامات الأغذية والمشروبات، من التصميم والألواح إلى علب مطبوعة ومشكَّلة وجاهزة للتصدير. مصنع أردني تقوده عائلة واحدة، ويقدّم الرحلة كاملة تحت سقف واحد.',
   'h.cue': 'مرّر الصفحة لتتابع · وحرّك المؤشر لتحرّك الضوء',
@@ -27,6 +27,11 @@ const AR = {
   'l.kick': 'مختبر التشطيبات', 'l.title': 'جرّب الملمس قبل الطباعة.', 'l.aria': 'التشطيبات', 'l.drag': 'اسحب العلبة لتدويرها.',
   'f.gloss': 'لامع', 'f.matte': 'مطفي', 'f.emboss': 'نقش بارز', 'f.spot': 'سبوت', 'f.trending': 'Trending',
   's.kick': 'سقف واحد، شريك واحد', 's.title': 'من الصفيحة إلى الرف.', 's.1': 'التصميم والألواح', 's.2': 'الطباعة والطلاء والتشطيب', 's.3': 'القص والتشكيل', 's.4': 'التغليف على الباليتات', 's.5': 'التخزين والشحن',
+  's.1s': 'يجهّز مصمّمونا عملك الفني داخل المصنع، وتقنية CTP (من الحاسوب إلى اللوح) تضمن دقة كل لوح طباعة.',
+  's.2s': 'أحبار وطلاءات عالية الجودة مع مؤثرات متنوعة: لامع، مطفي، ملمس ناعم، ملمس خشن، ونقش بارز.',
+  's.3s': 'تُقصّ الصفائح بدقة وتُشكَّل بالهيئة التي تريدها: دائرية أو مربعة أو مستطيلة أو بشكل خاص.',
+  's.4s': 'تُرتَّب الكراتين على باليتات بطرق تناسب كل عميل وتصلح للشحن إلى الخارج.',
+  's.5s': 'يمكننا تخزين منتجك الجاهز لدينا لتوفير مساحة التخزين لديك، ثم شحنه إلى أسواقك.',
   'sec.kick': 'القطاعات التي نخدمها',
   m1: 'زيت الزيتون', m1s: 'تنكات 1 و4 و8 و16 لتر/كغ', m2: 'حليب البودرة', m2s: 'قطر 99–189 مم، حتى 5.5 كغ', m3: 'كعك وحلويات', m3s: 'علب هدايا لرمضان والعيد',
   m4: 'شوكولاتة', m4s: 'دائرية ومربعة ومستطيلة وبيضاوية', m5: 'جبنة بيضاء', m5s: 'علب لموسم الربيع', m6: 'قهوة وشاي', m6s: 'علب تحفظ العبير', m7: 'دهانات وكيماويات', m7s: 'علب صناعية وبراميل',
@@ -91,6 +96,7 @@ $('.top__brand').addEventListener('click', (e) => { e.preventDefault(); scrollTo
 
 // overlays, rail, steps and the shelf caption follow the film
 const ovs = $$('.ov'), rails = $$('.rail button'), steps = $$('#steps li'), meter = $('#meter'), top = $('#top');
+const flowSteps = $$('.flow__step'), flowDots = $$('.flow__rail b'), flowRail = $('.flow__rail');
 const RING = film ? film.ringKeys : [];
 $('#capT').textContent = String(RING.length).padStart(2, '0');
 function caption(i) {
@@ -100,19 +106,20 @@ function caption(i) {
   $('#capDims').textContent = T.dims ? (lang() === 'ar' ? T.dims.replace('mm', 'مم') : T.dims) : '';
   $('#capN').textContent = String(i + 1).padStart(2, '0');
 }
-let lastCh = -1, lastL = -1, lastR = -1;
+let lastCh = -1, lastL = -1, lastR = -1, lastS = -1;
 (function ui() {
   const p = progress();
   if (film) film.time = p;
   meter.style.setProperty('--p', p.toFixed(4));
   top.classList.toggle('solid', p >= 1);
-  const st = film ? film.state : { chapter: 0, layer: 0, ring: 0 };
+  const st = film ? film.state : { chapter: 0, layer: 0, ring: 0, step: 0 };
   // an overlay shows while its chapter holds the screen (not while the camera travels between chapters)
   let ch = -1; CHAPTERS.forEach(([a, b], i) => { if (p >= a - 0.012 && p <= b + 0.012) ch = i; });
   if (ch !== lastCh) { lastCh = ch; ovs.forEach((o) => o.classList.toggle('on', +o.dataset.ch === ch)); }
   rails.forEach((r) => r.classList.toggle('on', +r.dataset.go === st.chapter));
   if (st.layer !== lastL) { lastL = st.layer; steps.forEach((li) => { const l = +li.dataset.l; li.classList.toggle('on', l === st.layer); li.classList.toggle('done', l < st.layer); }); }
   if (st.ring !== lastR) { lastR = st.ring; caption(st.ring); }
+  if (st.step !== lastS) { lastS = st.step; flowSteps.forEach((el, i) => el.classList.toggle('on', i === st.step)); flowDots.forEach((b, i) => b.classList.toggle('done', i <= st.step)); flowRail.style.setProperty('--f', st.step / 4); }
   requestAnimationFrame(ui);
 })();
 
