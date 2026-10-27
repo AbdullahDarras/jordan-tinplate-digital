@@ -34,6 +34,22 @@ const SHOTS = [
 ];
 const RING_KEYS = ['bab', 'najmah', 'frieds', 'jgz', 'laqmi', 'sufyan', 'suliman', 'abed', 'levelmax', 'maeen', 'halawah'];
 
+// Tone mapping that keeps colour. The stock filmic curve squeezes each channel on its own, so bright gold drifts to white and
+// printed colour goes pale. This curve shapes the brightness of the brightest channel and scales the colour by the same factor,
+// so hue and saturation survive; only the very hottest glints roll off towards white, as they do on camera.
+const HUE_KEEPING_TONE = `
+vec3 ACESFilmicToneMapping( vec3 color ) {
+  color *= toneMappingExposure;
+  float m = max( max( color.r, color.g ), color.b );
+  float t = ( m * ( 2.51 * m + 0.03 ) ) / ( m * ( 2.43 * m + 0.59 ) + 0.14 );
+  vec3 c = color * ( t / max( m, 1e-5 ) );
+  c = mix( c, vec3( t ), smoothstep( 3.0, 10.0, m ) * 0.7 );
+  return mix( c, ACESFilmicToneMappingStock( color / max( toneMappingExposure, 1e-5 ) ), 0.3 ); // a touch of the stock curve: highlights on gold turn pale yellow, as on camera
+}`;
+if (!THREE.ShaderChunk.tonemapping_pars_fragment.includes('ACESFilmicToneMappingStock')) {
+  THREE.ShaderChunk.tonemapping_pars_fragment = THREE.ShaderChunk.tonemapping_pars_fragment.replace('vec3 ACESFilmicToneMapping( vec3 color )', 'vec3 ACESFilmicToneMappingStock( vec3 color )') + HUE_KEEPING_TONE;
+}
+
 export function createFilm(canvas) {
   const COARSE = matchMedia('(pointer: coarse)').matches || innerWidth < 760;
   const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -58,31 +74,33 @@ export function createFilm(canvas) {
   // ---------------------------------------------------------------- the studio the metal reflects
   {
     const st = new THREE.Scene();
+    // A dark studio with defined soft-boxes, like a product photographer's: the metal shows bright, clean highlights against deep
+    // reflections, and the print keeps its blacks. (A bright grey surround puts a grey veil over every surface.)
     st.add(new THREE.Mesh(new THREE.SphereGeometry(40, 32, 16), new THREE.ShaderMaterial({
       side: THREE.BackSide,
       vertexShader: 'varying vec3 p; void main(){ p = position; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }',
-      fragmentShader: 'varying vec3 p; void main(){ float y = normalize(p).y; vec3 c = y > 0.0 ? mix(vec3(0.30,0.34,0.42), vec3(0.95,0.96,0.98), pow(y, 0.6)) : mix(vec3(0.30,0.34,0.42), vec3(0.42,0.38,0.34), pow(-y, 0.7)); gl_FragColor = vec4(c, 1.0); }'
+      fragmentShader: 'varying vec3 p; void main(){ float y = normalize(p).y; vec3 c = mix(vec3(0.018,0.022,0.03), vec3(0.06,0.065,0.075), smoothstep(-0.2, 0.9, y)); gl_FragColor = vec4(c, 1.0); }'
     })));
     const box = (w, h, x, y, z, k, tint = [1, 1, 1]) => {
       const m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshBasicMaterial({ color: new THREE.Color(tint[0] * k, tint[1] * k, tint[2] * k), side: THREE.DoubleSide }));
       m.position.set(x, y, z); m.lookAt(0, 0, 0); st.add(m);
     };
-    box(30, 14, 0, 24, 2, 1.5);                       // overhead
-    box(44, 8, 0, 8, -22, 1.1, [1, 0.95, 0.86]);    // a long soft-box behind the tins: the bright sky a lid reflects at a low camera angle
-    box(12, 22, -16, 6, 14, 7.5, [1, 0.98, 0.95]);   // key, front left
-    box(4, 26, 17, 3, 11, 9, [0.92, 0.95, 1]);       // strip, front right
-    box(3, 24, -3, 2, 20, 3.5);                      // thin strip by the camera
-    box(5, 26, -21, 4, -9, 5, [0.75, 0.84, 1]);      // cool rim, back left (the brand's blue in the reflections)
-    box(5, 26, 21, 4, -11, 4.5, [0.85, 0.9, 1]);     // cool rim, back right
-    box(34, 12, 0, -16, 6, 0.9, [1, 0.92, 0.8]);     // floor bounce
+    box(22, 22, 0, 26, 0, 2.2);                        // overhead: the lids read gold from above
+    box(36, 9, 0, 9, -18, 3.2);                        // the long soft-box behind: the bright band a lid reflects at a low camera angle
+    box(10, 20, -15, 6, 13, 6.5);                      // key, front left: the long highlight on the body
+    box(3, 24, 16, 3, 10, 8, [0.94, 0.96, 1]);         // strip, front right
+    box(4, 22, -21, 4, -9, 4, [0.72, 0.82, 1]);        // cool rim, back left (the brand's blue in the edges)
+    box(4, 22, 21, 4, -11, 3.5, [0.8, 0.88, 1]);       // cool rim, back right
+    box(30, 10, 0, -15, 6, 0.25);                      // a faint floor bounce
     scene.environment = new THREE.PMREMGenerator(renderer).fromScene(st, 0.02).texture;
   }
-  const key = new THREE.DirectionalLight(0xfff7ee, 1.7); key.castShadow = true;
+  const key = new THREE.DirectionalLight(0xffffff, 2.4); key.castShadow = true;
   key.shadow.mapSize.set(COARSE ? 1024 : 2048, COARSE ? 1024 : 2048); key.shadow.bias = -0.0004; key.shadow.normalBias = 0.02;
   scene.add(key, key.target);
   const rim = new THREE.DirectionalLight(0xbcd0f0, 0.9); rim.position.set(4, 3, -6); scene.add(rim);
-  scene.add(new THREE.HemisphereLight(0xffffff, 0xd8e0ec, 0.3));
-  const hand = new THREE.PointLight(0xfff3df, 0, 20, 1.5); scene.add(hand);   // the visitor's light
+  scene.add(new THREE.HemisphereLight(0xffffff, 0xb5c4d7, 0.85));          // the print's daylight: the dark studio only shapes the reflections
+  const fillL = new THREE.DirectionalLight(0xffffff, 0.9); scene.add(fillL);  // from the camera, so no printed face falls into shadow
+  const hand = new THREE.PointLight(0xfffaf2, 0, 20, 1.5); scene.add(hand);   // the visitor's light
   const rake = new THREE.SpotLight(0xfff1d8, 0, 8, 0.5, 0.6, 1.2); scene.add(rake, rake.target); // macro: the light across the relief
 
   const floor = new THREE.Mesh(new THREE.PlaneGeometry(80, 80), new THREE.ShadowMaterial({ opacity: 0.18, transparent: true, depthWrite: false }));
@@ -150,7 +168,7 @@ export function createFilm(canvas) {
     composer = new EffectComposer(renderer, rt);
     composer.addPass(new RenderPass(scene, camera));
     bokeh = new BokehPass(scene, camera, { focus: 1.2, aperture: 0.002, maxblur: 0.006 }); composer.addPass(bokeh);
-    bloom = new UnrealBloomPass(new THREE.Vector2(256, 256), 0.22, 0.5, 0.92); composer.addPass(bloom);
+    bloom = new UnrealBloomPass(new THREE.Vector2(256, 256), 0.12, 0.4, 0.97); composer.addPass(bloom);
     composer.addPass(new OutputPass());
   }
 
@@ -255,6 +273,7 @@ export function createFilm(canvas) {
       bokeh.uniforms.focus.value = camera.position.distanceTo(V(0.05, 0.62, -0.1));
       bokeh.uniforms.aperture.value = 0.0035 * f; bokeh.uniforms.maxblur.value = 0.008;
     }
+    fillL.position.copy(camera.position).add(V(0, 2, 0));
     if (composer) composer.render(); else renderer.render(scene, camera);
   }
   (function loop(now) { frame(now); requestAnimationFrame(loop); })(performance.now());

@@ -19,7 +19,7 @@ export const DESIGNS = {
   // the main tin: Al Qaisi Roastery's round tin (catalogue rd-235, 60 mm): a stamped gold lid, plain gold skirt, a dark band with gold line art.
   // tileW: the side photo's own width (px) so the band keeps its resolution; plainSkirt: the real skirt is plain gold, not the lid's art;
   // bead: the curled lip is the same gold as the skirt (the studio's silver otherwise).
-  qaisi: { kind: 'can', reps: 2, skirt: '#d79242', rim: GOLD, plainSkirt: true, bead: '#d79242', tileW: 3128, lidRes: 2048 },
+  qaisi: { kind: 'can', reps: 2, skirt: '#d9a44e', rim: GOLD, plainSkirt: true, bead: '#d9a44e', tileW: 3128, lidRes: 2048, grade: 'contrast(1.16) hue-rotate(7deg) saturate(0.95) brightness(0.93)' },
   halawah: { kind: 'band', skirt: RED, rim: GOLD },
   bab: { kind: 'box', skirt: '#5a2210', rim: GOLD },           // square gift tin, Beirut clock tower
   jgz: { kind: 'box', skirt: '#9a5216', rim: GOLD },           // rectangular gift tin, desert village
@@ -47,6 +47,8 @@ function img(file) {
   return IMG[file];
 }
 const SUFFIX = ['.jpg', '-relief.png', '-spot.png'];
+const GRADE = 'contrast(1.18) saturate(1.12) brightness(0.96)';
+const GRADE_KEY = { k: '' };
 const file = (key, part, layer) => `${key}-${part}${SUFFIX[layer]}`;
 
 // the parts a surface draws from, per design and surface kind
@@ -62,6 +64,8 @@ function partsFor(design, kind) {
 // draw one layer (0 colour, 1 relief, 2 spot) of a surface
 function paint(ctx, W, H, P, layer, reps, ground, kind) {
   ctx.fillStyle = layer ? '#000' : ground; ctx.fillRect(0, 0, W, H);
+  // the colour layer gets the depth back that the straightening took out of the photos (deeper darks, fuller colour)
+  ctx.filter = layer ? 'none' : (DESIGNS[GRADE_KEY.k] && DESIGNS[GRADE_KEY.k].grade) || GRADE;
   if (P.plain) return;
   if (P.flat) {
     const i = img(file(...P.flat, layer)).i; if (!i.naturalWidth) return;
@@ -105,7 +109,7 @@ export function surface(kind, aspect = 1, reps = 1, design = 'halawah') {
     const t = new THREE.CanvasTexture(c);
     if (layer === 0) t.colorSpace = THREE.SRGBColorSpace;
     t.anisotropy = 8;
-    const draw = () => { paint(c.getContext('2d'), W, H, P, layer, n, ground, kind); t.needsUpdate = true; };
+    const draw = () => { GRADE_KEY.k = d; paint(c.getContext('2d'), W, H, P, layer, n, ground, kind); t.needsUpdate = true; };
     draw();
     const src = P.flat || P.face || P.strip || P.band;
     return { c, t, draw, ready: src ? img(file(...src, layer)).ready : Promise.resolve() };

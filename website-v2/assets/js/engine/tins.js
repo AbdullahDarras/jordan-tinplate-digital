@@ -50,18 +50,24 @@ function metalMap(L) {
   return (L.metalTex = t);
 }
 // the finishes a tin can wear
+// How a printed tin is drawn: the photograph is the tin's colour, as it was shot (emissive base), so the print keeps the real
+// tin's depth and saturation whatever the studio does. On top of it, a fraction of the colour takes the studio's light (so the
+// relief and the body shading respond), the metal areas (gold lacquer, bare tin) take the studio's reflections, and the varnish
+// gives clean highlights. The light only adds shine; it never greys the print.
+const PHOTO = 0.82, LIT = 0.3;
 export const FINISHES = {
-  gloss: { roughness: 0.2, clearcoat: 0.45, clearcoatRoughness: 0.06, bump: 1, sheen: 0 },
-  matte: { roughness: 0.62, clearcoat: 0, clearcoatRoughness: 0.6, bump: 1, sheen: 0.35 },
-  emboss: { roughness: 0.22, clearcoat: 0.4, clearcoatRoughness: 0.08, bump: 4.5, sheen: 0 },
-  spot: { roughness: 0.66, clearcoat: 1, clearcoatRoughness: 0.02, bump: 1.4, sheen: 0.3, spot: true }
+  gloss: { roughness: 0.18, spec: 0.55, clearcoat: 0, clearcoatRoughness: 0.1, bump: 1, sheen: 0 },
+  matte: { roughness: 0.6, spec: 0.2, clearcoat: 0, clearcoatRoughness: 0.6, bump: 1, sheen: 0.15 },
+  emboss: { roughness: 0.2, spec: 0.55, clearcoat: 0, clearcoatRoughness: 0.1, bump: 4.5, sheen: 0 },
+  spot: { roughness: 0.6, spec: 0.2, clearcoat: 0.8, clearcoatRoughness: 0.03, bump: 1.4, sheen: 0.1, spot: true }
 };
 export function printMat(L, base = 1) {
   const m = new THREE.MeshPhysicalMaterial({
-    map: L.map, metalnessMap: metalMap(L), metalness: 1, roughness: 0.22, clearcoat: 1, clearcoatRoughness: 0.04,
+    map: L.map, color: new THREE.Color(LIT, LIT, LIT), emissiveMap: L.map, emissive: new THREE.Color(1, 1, 1), emissiveIntensity: PHOTO,
+    metalnessMap: metalMap(L), metalness: 1, roughness: 0.18, specularIntensity: 0.55, clearcoat: 0, clearcoatRoughness: 0.1,
     bumpMap: L.relief, bumpScale: base, sheenColor: new THREE.Color('#ffffff'), sheenRoughness: 0.4
   });
-  m.envMapIntensity = 0.75; // the print stays readable under the bright soft-boxes; bare metal keeps the full reflection
+  m.envMapIntensity = 0.7;
   m.userData.L = L; m.userData.bump = base;
   return m;
 }
@@ -70,7 +76,7 @@ export function setFinish(m, name, gsap) {
   const f = FINISHES[name] || FINISHES.gloss, L = m.userData.L;
   const cm = f.spot ? L.spot : null;
   if (m.clearcoatMap !== cm) { m.clearcoatMap = cm; m.needsUpdate = true; }
-  const to = { roughness: f.roughness, clearcoat: f.clearcoat, clearcoatRoughness: f.clearcoatRoughness, bumpScale: m.userData.bump * f.bump, sheen: f.sheen };
+  const to = { roughness: f.roughness, specularIntensity: f.spec, clearcoat: f.clearcoat, clearcoatRoughness: f.clearcoatRoughness, bumpScale: m.userData.bump * f.bump, sheen: f.sheen };
   if (gsap) gsap.to(m, { ...to, duration: 0.8, ease: 'power2.out' }); else Object.assign(m, to);
 }
 const metal = (color, roughness = 0.2) => new THREE.MeshPhysicalMaterial({ color, metalness: 1, roughness, clearcoat: 0.4, clearcoatRoughness: 0.1 });
@@ -82,7 +88,7 @@ const surface = (key, kind, aspect = 1) => HAL.surface(kind, aspect, 1, key);
 // lid over an outline: printed top, skirt (the top's artwork drawn over the edge, or plain), curled lip
 function lid(key, { outline, inner, topUv, skirtUv, k, aspect = 1, skirt }) {
   const D = HAL.DESIGNS[key], g = new THREE.Group();
-  const top = printMat(surface(key, 'lid', aspect), 1);
+  const top = printMat(surface(key, 'lid', aspect), D.lidRes ? 0.5 : 1); // the sharp lid's relief map is finer: less bump
   const SK = skirt * U;
   const sm = D.plainSkirt ? metal(D.skirt, 0.24) : top;
   g.add(new THREE.Mesh(STU.cap(inner, 0, true, topUv), top));
