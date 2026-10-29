@@ -89,7 +89,7 @@ function lineup(st, keys, fitW, fitH) {
   const GAP = 0.3; let x = 0;
   const holders = ms.map((m, i) => {
     const h = new THREE.Group(), spin = new THREE.Group(); spin.add(m.group); h.add(spin);
-    h.add(st.room.contact(Math.max(m.size.w, m.size.d)));
+    if (!m.photo) h.add(st.room.contact(Math.max(m.size.w, m.size.d))); // a photo brings its own shadow
     const w = Math.max(m.size.w, m.size.d);
     h.position.x = x + w / 2; x += w + GAP; g.add(h);
     return { m, h, spin, w };
@@ -104,7 +104,7 @@ function lineup(st, keys, fitW, fitH) {
 // ---------------------------------------------------------------- the hero
 export function createHero(canvas, { tins = ['qaisi'] } = {}) {
   const st = base(canvas), { scene, camera } = st;
-  const row = lineup(st, tins, tins.length > 1 ? 3.6 : 2.6, 0.95);
+  const row = lineup(st, tins, tins.length > 1 ? 3.4 : 2.5, 0.85);
   // the page title on a wall behind the tins (the page keeps it as real text too)
   const TW = 5.1, TH = TW * 1600 / 4096;
   const tc = document.createElement('canvas'); tc.width = 4096; tc.height = 1600;
@@ -144,7 +144,7 @@ export function createHero(canvas, { tins = ['qaisi'] } = {}) {
   st.loop((t) => {
     // step back until the whole row fits the width (phones), never closer than the home shot
     const fitW = 2 * POS.distanceTo(TGT) * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) * camera.aspect;
-    const back = Math.max(1, 0.95 / camera.aspect, (row.size.w + 0.9) / fitW);
+    const back = Math.max(1, (camera.aspect < 0.9 ? 0.75 : 0.95) / camera.aspect, (row.size.w + (camera.aspect < 0.9 ? 0.2 : 0.9)) / fitW);
     const p = POS.clone(); p.x += ptr.sx * 0.18; p.y -= ptr.sy * 0.09;
     camera.position.copy(TGT).addScaledVector(p.sub(TGT), back); camera.lookAt(TGT); st.dist = camera.position.distanceTo(TGT);
     { const dW = camera.position.distanceTo(wall.position), vis = 2 * dW * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) * camera.aspect; wall.scale.setScalar(Math.min(1, (vis * 0.94) / TW)); }

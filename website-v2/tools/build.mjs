@@ -185,12 +185,12 @@ const KINDS = {
     const panes = items.map((it, i) => `<div class="pane${i === 0 ? ' on' : ''}" id="pane-${it.id}" data-tin="${SHAPE_TIN[it.id]}"><p class="pane__k">${T(it.name, l)}</p><p class="pane__v num">${T(it.dim, l)}</p><p>${T(it.note, l)}</p></div>`).join('');
     const after = (s.after || []).map((b) => BLOCKS[b.k](b)).join('');
     return `<section class="sect lab lab--flip" id="${s.id}"><div class="sect__in lab__grid">
-  <div class="lab__stage"><canvas data-stage="lab" data-tin="${SHAPE_TIN[items[0].id]}" aria-label="${T(SHAPES_LAB.aria, l)}" role="img"></canvas><p class="fine lab__hint">${T(UI.dragTin, l)}</p></div>
+  <div class="lab__stage"><canvas data-stage="lab" data-tin="${SHAPE_TIN[items[0].id]}" aria-label="${T(SHAPES_LAB.aria, l)}" role="img"></canvas><p class="fine lab__hint">${T(t2('Our real tins: drag to turn', 'علبنا الحقيقية: اسحب لتحريكها'), l)}</p></div>
   <div class="lab__text">
     ${head(s, SHAPES_LAB)}
     <div class="chips" role="group" aria-label="${T(SHAPES_LAB.chipsAria, l)}">${chips}</div>
     <div class="panes" aria-live="polite">${panes}</div>
-    <p class="fine">${T(t2('Every 3D tin here is a tin we have made, at its real proportions and with its real lid. Custom sizes are available on request.', 'كل علبة ثلاثية الأبعاد هنا علبة صنعناها فعلاً، بنسبها الحقيقية وغطائها الحقيقي. والمقاسات الخاصة متاحة عند الطلب.'), l)}</p>
+    <p class="fine">${T(t2('Every tin here is a tin we have made, shown with its real artwork. Custom sizes are available on request.', 'كل علبة هنا علبة صنعناها فعلاً، بتصميمها الحقيقي. والمقاسات الخاصة متاحة عند الطلب.'), l)}</p>
     ${after}
   </div>
 </div></section>`;

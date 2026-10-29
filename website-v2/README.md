@@ -123,6 +123,16 @@ folded flat are modelled. The paint can is now the only illustrative tin. Many m
   poses itself from the same time value. `assets/js/app.js`: language, theme, smooth scroll, the overlays and the finish lab.
 - `studio.js` and `halawah.js` are copies of the files in `website/assets/js/engine/` (keep them in step until v2 replaces v1).
 
+## Round 12: the tins as their photographs
+- The 3D rebuilds of the newer tins lost detail (lids, colours, corners). Only Al Qaisi (and the illustrative paint can) stay as 3D
+  models; every other tin is shown as its real photograph inside the same 3D studio (`photoTin` in `engine/tins.js`): a card
+  that faces the camera, stands on the floor with a soft shadow and a faint reflection, sways as it "turns" and carries a moving
+  sheen. Its shader undoes the studio's tone curve so the photo keeps its colours.
+- Photos: `assets/img/photos/<key>.webp` (scenes) and `assets/img/renders/<key>.webp` (cards), made from the owner's cut-outs
+  by the scratchpad script `tools/photos.py` (crop, premultiplied resize, WebP with alpha). `photo:` in `TINS` is each photo's
+  width / height.
+- CSS and JS links carry `?v=<hash>` (build.mjs), so browsers fetch new files after each change.
+
 ## Publishing
 - **GitHub Pages (from the branch):** Settings > Pages > Source "Deploy from a branch" > `claude/confident-knuth-ibmf9c`,
   `/ (root)`. Every push republishes within a minute or two. The repository's root `index.html` forwards to `website-v2/`,

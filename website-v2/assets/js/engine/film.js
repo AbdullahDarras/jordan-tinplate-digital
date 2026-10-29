@@ -32,7 +32,7 @@ const SHOTS = [
   { pos: V(0, 1.05, 5.4), tgt: V(0, 0.5, 0), fov: 30 },           // hero: the tin in front of the title wall
   { pos: V(0.42, 1.12, 1.18), tgt: V(0.08, 0.6, -0.08), fov: 30 }, // macro on the lid
   { pos: V(AX - 1.15, 3.3, 5.0), tgt: V(AX - 1.0, 0.25, 0), fov: 30 }, // layers: the rig to the right of the text
-  { pos: V(0, 3.4, 10.6), tgt: V(0, 1.4, 2.2), fov: 30 },          // ring
+  { pos: V(0, 3.4, 10.6), tgt: V(0, 1.05, 2.2), fov: 30 },         // ring (aimed low, so the tin in front stays above the caption)
   { pos: V(-2.7, 1.5, 4.2), tgt: V(-0.55, 0.28, 0), fov: 30 },      // lab: the tin to the side away from the card
   null                                                             // from sheet to shelf: the journey rig moves its own camera
 ];
@@ -119,9 +119,10 @@ export function createFilm(canvas) {
   const RING_R = 5.3;
   const ring = RING_KEYS.map((k, i) => {
     const m = TIN.make(k); ready.push(m.ready); m.print.forEach((p) => TIN.setFinish(p, 'gloss'));
-    const holder = new THREE.Group(); holder.add(m.group); holder.add(contact(Math.max(m.size.w, m.size.d))); holder.scale.setScalar(0.001); scene.add(holder);
+    const holder = new THREE.Group(); holder.add(m.group); if (!m.photo) holder.add(contact(Math.max(m.size.w, m.size.d))); holder.scale.setScalar(0.001); scene.add(holder);
     // tall tins are brought down to the height of the others, so none of them hides the ring from the camera
-    return { key: k, m, holder, i, base: Math.min(1, 1.15 / m.size.h, 2.5 / Math.max(m.size.w, m.size.d)) };
+    // a photo faces the camera with its full height, so it is kept smaller than a 3D tin seen from above
+    return { key: k, m, holder, i, base: m.photo ? Math.min(0.7, 0.8 / m.size.h, 1.55 / m.size.w) : Math.min(1, 1.15 / m.size.h, 2.5 / Math.max(m.size.w, m.size.d)) };
   });
   // ---------------------------------------------------------------- from sheet to shelf (journey.js)
   const ptr = { x: 0.2, y: -0.2, sx: 0.2, sy: -0.2 };
@@ -221,8 +222,11 @@ export function createFilm(canvas) {
     if (front !== state.ring) { state.ring = front; listeners.forEach((f) => f(state)); }
     ring.forEach((r, i) => {
       const a = ((i - turn) / RING_KEYS.length) * Math.PI * 2;
-      r.holder.position.set(Math.sin(a) * RING_R, 0, Math.cos(a) * RING_R);
-      const s = sm(clamp(rise * 1.6 - i * 0.05)) * (1 - gone);
+      // an oval ring (shallower towards the camera) and the tins nearest the camera a little smaller: the one in front stays
+      // clear of the caption
+      r.holder.position.set(Math.sin(a) * RING_R, 0, Math.cos(a) * RING_R * 0.68);
+      const near = 1 - 0.38 * sm(clamp(Math.cos(a)));
+      const s = sm(clamp(rise * 1.6 - i * 0.05)) * (1 - gone) * near;
       r.holder.visible = s > 0.002; r.holder.scale.setScalar(Math.max(0.001, s * r.base));
       r.m.group.rotation.y = a + (REDUCED ? 0 : t * 0.2) - 0.4;
     });

@@ -14,22 +14,23 @@ const TAU = Math.PI * 2;
 // ---------------------------------------------------------------- the real tins (catalogue sizes where a tin matches one)
 export const TINS = {
   qaisi: { kind: 'round', D: 237.6, H: 60, skirt: 15.7, fmt: ['Round 235', 'دائري 235'], dims: 'Ø 237.6 × 60 mm' },
-  // the factory's tins from the owner's latest photos. Sizes are read from the photos (proportions), rounded to likely
+  // the factory's tins from the owner's latest photos, shown as the photographs themselves (photo: the photo's width / height;
+  // see photoTin below). Their artwork is too rich to rebuild in 3D faithfully. Sizes are read from the photos (proportions), rounded to likely
   // catalogue sizes: treat them as approximate until the factory confirms each one.
-  nejmah: { kind: 'round', D: 230, H: 58, fmt: ['Round gift tin', 'علبة هدايا دائرية'] },
-  maamoul: { kind: 'round', D: 240, H: 55, fmt: ['Round gift tin', 'علبة هدايا دائرية'] },
-  marouf: { kind: 'round', D: 230, H: 70, fmt: ['Round gift tin', 'علبة هدايا دائرية'] },
-  habybee: { kind: 'round', sides: 8, D: 180, H: 58, stretch: 1.45, fmt: ['Octagonal', 'ثماني الأضلاع'] },
-  jojo: { kind: 'box', w: 230, d: 230, h: 50, fmt: ['Square gift tin, embossed', 'علبة هدايا مربعة بنقش بارز'] },
-  melties: { kind: 'box', w: 250, d: 152, h: 62, fmt: ['Rectangular gift tin', 'علبة هدايا مستطيلة'] },
-  givinova: { kind: 'box', w: 110, d: 110, h: 105, fmt: ['Square tin', 'علبة مربعة'] },
-  shawra: { kind: 'box', w: 225, d: 225, h: 235, fmt: ['Square tin with a slip lid', 'علبة مربعة بغطاء'] },
-  rayhan: { kind: 'box', w: 72, d: 72, h: 105, fmt: ['Tall square tin', 'علبة مربعة طويلة'] },
-  kous: { kind: 'box', w: 130, d: 85, h: 170, sideKey: 'kouss', fmt: ['Tea tin', 'علبة شاي'] },
-  abedc: { kind: 'round', D: 100, H: 130, fmt: ['Coffee can with a slip lid', 'علبة قهوة بغطاء'] },
-  havana: { kind: 'round', D: 99, H: 127, fmt: ['Powder can with a slip lid', 'علبة بودرة بغطاء'] },
+  nejmah: { kind: 'round', photo: 1.378, D: 230, H: 58, fmt: ['Round gift tin', 'علبة هدايا دائرية'] },
+  maamoul: { kind: 'round', photo: 1.6647, D: 240, H: 55, fmt: ['Round gift tin', 'علبة هدايا دائرية'] },
+  marouf: { kind: 'round', photo: 1.2136, D: 230, H: 70, fmt: ['Round gift tin', 'علبة هدايا دائرية'] },
+  habybee: { kind: 'round', photo: 2.099, sides: 8, D: 180, H: 58, stretch: 1.45, fmt: ['Octagonal', 'ثماني الأضلاع'] },
+  jojo: { kind: 'box', photo: 2.1148, w: 230, d: 230, h: 50, fmt: ['Square gift tin, embossed', 'علبة هدايا مربعة بنقش بارز'] },
+  melties: { kind: 'box', photo: 1.9718, w: 250, d: 152, h: 62, fmt: ['Rectangular gift tin', 'علبة هدايا مستطيلة'] },
+  givinova: { kind: 'box', photo: 0.9382, w: 110, d: 110, h: 105, fmt: ['Square tin', 'علبة مربعة'] },
+  shawra: { kind: 'box', photo: 0.8482, w: 225, d: 225, h: 235, fmt: ['Square tin with a slip lid', 'علبة مربعة بغطاء'] },
+  rayhan: { kind: 'box', photo: 0.6782, w: 72, d: 72, h: 105, fmt: ['Tall square tin', 'علبة مربعة طويلة'] },
+  kous: { kind: 'box', photo: 0.8436, w: 130, d: 85, h: 170, sideKey: 'kouss', fmt: ['Tea tin', 'علبة شاي'] },
+  abedc: { kind: 'round', photo: 0.6645, D: 100, H: 130, fmt: ['Coffee can with a slip lid', 'علبة قهوة بغطاء'] },
+  havana: { kind: 'round', photo: 0.7945, D: 99, H: 127, fmt: ['Powder can with a slip lid', 'علبة بودرة بغطاء'] },
   // for the inner pages: an olive-oil tin from its photos, and an illustrative paint can (sample artwork, no client design)
-  oil: { kind: 'oil', w: 175, d: 115, h: 245, front: 'malka', side: 'malkas', fmt: ['Olive-oil tin, 4 L', 'تنكة زيت زيتون 4 لتر'], dims: '175 × 115 × 245 mm' },   // Malka Olive Press
+  oil: { kind: 'oil', photo: 0.8664, w: 175, d: 115, h: 245, front: 'malka', side: 'malkas', fmt: ['Olive-oil tin, 4 L', 'تنكة زيت زيتون 4 لتر'], dims: '175 × 115 × 245 mm' },   // Malka Olive Press
   paint: { kind: 'can', D: 110, H: 120, bail: true, fmt: ['Paint can', 'علبة دهان'], illus: true }
 };
 
@@ -193,8 +194,68 @@ function oilTin(key, T) {
   const clip = new THREE.Mesh(new THREE.BoxGeometry(0.22, 0.04, 0.1), metal('#c9ced6', 0.25)); clip.position.set(hx - W * 0.2, y0 + 0.03, hz); g.add(clip);
   return { group: g, lid: top, body, print: [front, side], size: { h: H + 0.1, w: W, d: D } };
 }
+// ---------------------------------------------------------------- a tin shown as its photograph
+// A tin whose artwork cannot be rebuilt in 3D faithfully stands in the studio as its real photograph (assets/img/photos/): a card
+// that always faces the camera, standing on its bottom edge, with a soft shadow on the floor. As the tin "turns" (the holder's
+// rotation) the card sways a little and a sheen sweeps across the metal. The photo's colours are kept as shot: the shader undoes
+// the studio's tone curve (room.js) for these pixels, with a soft knee so the whites stay just under the bloom.
+const PHOTOS = new URL('../../img/photos/', import.meta.url).href;
+const loader = new THREE.TextureLoader();
+const softShadow = (() => { const c = document.createElement('canvas'); c.width = c.height = 128; const x = c.getContext('2d'); const g = x.createRadialGradient(64, 64, 2, 64, 64, 64); g.addColorStop(0, 'rgba(0,19,45,.5)'); g.addColorStop(0.5, 'rgba(0,19,45,.18)'); g.addColorStop(1, 'rgba(0,19,45,0)'); x.fillStyle = g; x.fillRect(0, 0, 128, 128); return new THREE.CanvasTexture(c); })();
+function photoMat(tex, reflect) {
+  const m = new THREE.MeshBasicMaterial({ map: tex, transparent: true, depthWrite: false, side: THREE.DoubleSide });
+  m.userData.u = { uSheen: { value: -1 }, uExpo: { value: 1 } };
+  m.customProgramCacheKey = () => (reflect ? 'tin-photo-mirror' : 'tin-photo'); // two shaders from one function: keep them apart
+  m.onBeforeCompile = (sh) => {
+    Object.assign(sh.uniforms, m.userData.u);
+    sh.fragmentShader = sh.fragmentShader
+      .replace('void main() {', `uniform float uSheen; uniform float uExpo;
+float invTone( float y ) { float a = 2.51 - 2.43 * y, b = 0.03 - 0.59 * y, c = -0.14 * y; return ( -b + sqrt( b * b - 4.0 * a * c ) ) / ( 2.0 * a ); }
+void main() {`)
+      .replace('#include <map_fragment>', `#include <map_fragment>
+  {
+    float m = max( max( diffuseColor.r, diffuseColor.g ), diffuseColor.b );
+    float y = m < 0.55 ? m : 0.55 + ( m - 0.55 ) * 0.51;
+    diffuseColor.rgb *= invTone( y ) / uExpo / max( m, 1e-4 );
+    ${reflect ? `diffuseColor.a *= 0.16 * ( 1.0 - smoothstep( 0.0, 0.32, vMapUv.y ) );` : `float d = vMapUv.x * 0.85 + ( 1.0 - vMapUv.y ) * 0.4 - uSheen;
+    diffuseColor.rgb += ( exp( -d * d / 0.004 ) * 0.16 + exp( -d * d / 0.05 ) * 0.04 ) * diffuseColor.a;`}
+  }`);
+  };
+  return m;
+}
+function photoTin(key, T) {
+  const box = T.kind === 'box' || T.kind === 'oil';
+  const W = (box ? Math.max(T.w, T.d) * 1.15 : T.D * (T.stretch || 1) * 1.04) * U, H = W / T.photo;
+  const g = new THREE.Group(), yaw = new THREE.Group(), card = new THREE.Group(); g.add(yaw); yaw.add(card);
+  let done; const ready = new Promise((r) => { done = r; });
+  const tex = loader.load(PHOTOS + key + '.webp', () => done(), undefined, () => done());
+  tex.colorSpace = THREE.SRGBColorSpace; tex.anisotropy = 8;
+  const plane = new THREE.PlaneGeometry(W, H); plane.translate(0, H / 2, 0);
+  const front = new THREE.Mesh(plane, photoMat(tex, false)); front.renderOrder = 2; card.add(front);
+  const mirror = new THREE.Mesh(plane, photoMat(tex, true)); mirror.scale.y = -1; mirror.renderOrder = 1; card.add(mirror);
+  const shadow = new THREE.Mesh(new THREE.PlaneGeometry(W * 1.15, W * 0.42), new THREE.MeshBasicMaterial({ map: softShadow, transparent: true, depthWrite: false }));
+  shadow.rotation.x = -Math.PI / 2; shadow.position.set(0, 0.003, -W * 0.06); shadow.renderOrder = 1; yaw.add(shadow);
+  const wp = new THREE.Vector3(), cp = new THREE.Vector3(), q = new THREE.Quaternion(), e = new THREE.Euler();
+  let last = -1;
+  const face = (renderer, scene, camera) => {
+    if (last === renderer.info.render.frame + camera.id * 1e6) return; last = renderer.info.render.frame + camera.id * 1e6;
+    g.getWorldPosition(wp); camera.getWorldPosition(cp);
+    g.getWorldQuaternion(q); const turn = e.setFromQuaternion(q, 'YXZ').y;           // how far the tin has been turned
+    yaw.lookAt(cp.x, wp.y, cp.z); yaw.rotateY(Math.sin(turn) * 0.12);                 // face the camera, swaying with the turn
+    card.rotation.x = -Math.atan2(cp.y - wp.y - H * 0.4, Math.hypot(cp.x - wp.x, cp.z - wp.z)) * 0.85; // lean back towards a high camera
+    mirror.rotation.x = -card.rotation.x * 2;
+    const sweep = ((turn / (Math.PI * 2)) % 1 + 1) % 1;
+    front.material.userData.u.uSheen.value = sweep * 2.6 - 0.8;
+    front.material.userData.u.uExpo.value = mirror.material.userData.u.uExpo.value = renderer.toneMappingExposure;
+    yaw.updateMatrixWorld(true);
+  };
+  front.onBeforeRender = mirror.onBeforeRender = shadow.onBeforeRender = face;
+  return { group: g, lid: null, body: front, print: [], photo: true, ready, size: { h: H, w: W, d: W * 0.4 } };
+}
+
 export function make(key) {
   const T = TINS[key];
+  if (T.photo) { const m = photoTin(key, T); m.key = key; m.T = T; return m; }
   const m = T.kind === 'box' ? box(key, T) : T.kind === 'oil' ? oilTin(key, T) : T.kind === 'can' ? seamedCan(key, T) : roundTin(key, T);
   if (T.bail) { const R = (T.D / 2) * U, b = new THREE.Mesh(new THREE.TorusGeometry(R * 0.98, 0.012, 8, 64, Math.PI), metal('#9aa3b1', 0.3)); b.position.y = T.H * U * 0.72; b.rotation.set(-1.15, 0.4, 0, 'YXZ'); m.group.add(b); }
   m.key = key; m.T = T;
