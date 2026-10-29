@@ -124,10 +124,10 @@ folded flat are modelled. The paint can is now the only illustrative tin. Many m
 - `studio.js` and `halawah.js` are copies of the files in `website/assets/js/engine/` (keep them in step until v2 replaces v1).
 
 ## Publishing
-- **GitHub Pages (automatic):** `.github/workflows/pages-v2.yml` publishes the site on every push that changes `website-v2/`
-  (branches `main` and `claude/confident-knuth-ibmf9c`). One-time setup: Settings > Pages > Source "GitHub Actions"; if the
-  `github-pages` environment only allows `main`, add the working branch under Settings > Environments > github-pages.
-  A private repository needs a paid GitHub plan for Pages. The address is `https://abdullahdarras.github.io/jordan-tinplate-digital/`.
+- **GitHub Pages (from the branch):** Settings > Pages > Source "Deploy from a branch" > `claude/confident-knuth-ibmf9c`,
+  `/ (root)`. Every push republishes within a minute or two. The repository's root `index.html` forwards to `website-v2/`,
+  and `.nojekyll` serves the files as they are. Address: `https://abdullahdarras.github.io/jordan-tinplate-digital/`.
+  (Alternative: `.github/workflows/pages-v2.yml`, run by hand, publishes `website-v2/` alone with Source "GitHub Actions".)
 - **Netlify Drop / Cloudflare Pages:** upload the site files (index.html, en/, ar/, assets/, _headers); `_redirects` is
   Netlify's only.
 

@@ -1,12 +1,11 @@
-# Publishes the new website (website-v2/) to GitHub Pages on every push that changes it.
-# One-time setup by the repository owner: Settings > Pages > Source: "GitHub Actions".
+# Optional: publishes website-v2/ on its own through GitHub Actions (run it by hand from the Actions tab).
+# The simple route in use: Settings > Pages > "Deploy from a branch" > claude/confident-knuth-ibmf9c, / (root);
+# the index.html at the repository root forwards visitors to website-v2/.
+# This workflow needs instead: Settings > Pages > Source: "GitHub Actions", and the branch allowed in Environments > github-pages.
 # Pages on a private repository needs a paid GitHub plan (Pro / Team); on a public one it is free.
 name: Website v2 on GitHub Pages
 
 on:
-  push:
-    branches: [main, claude/confident-knuth-ibmf9c]
-    paths: ['website-v2/**', '.github/workflows/pages-v2.yml']
   workflow_dispatch:
 
 permissions:
