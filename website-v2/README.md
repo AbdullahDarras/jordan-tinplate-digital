@@ -81,6 +81,13 @@ writes `en/<path>/index.html` and `ar/<path>/index.html` with relative links.
   `assets/js/engine/stage.js` (hero, lab, journey stages, each rendering only while on screen); `assets/js/page.js`;
   `assets/css/pages.css`.
 
+## Round 8 (2026-10-29): packing as the factory does it
+The owner: tins are not stacked bare on the pallet. Each tin goes into a bag, then into a carton; the cartons go on the pallet,
+the pallet is shrink-wrapped and goes to transport. Step 04's text changed in `website/tools/content.mjs` (both sites rebuilt) and
+the 3D journey now shows: the bag over the tin, the carton (a stack of three bagged tins, illustrative) whose flaps close and get
+taped, a pallet of cartons, the shrink film climbing the stack, a plain white truck backing up, loading and driving off, then the
+globe. Decision 40 in `docs/decisions.md`.
+
 ## Engine
 - `assets/js/engine/tins.js`: the tins. Geometry follows the order platform's studio rules (`studio.js`: lid gap and lift, skirt,
   curled lip, 3.5 mm corners) at each tin's real millimetres; artwork from `halawah.js` (the straightened photos). Materials are

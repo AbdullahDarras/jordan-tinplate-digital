@@ -135,8 +135,8 @@ export const STEPS = [
     p: t('Sheets are cut on exact lines and formed into your shape: round, square, rectangular or custom.',
          'تُقصّ الصفائح بدقة وتُشكَّل بالهيئة التي تريدها: دائرية أو مربعة أو مستطيلة أو بشكل خاص.') },
   { h: t('Pack & palletise', 'التغليف على الباليتات'),
-    p: t('Cartons are palletised with methods tailored to each client and suited to overseas shipping.',
-         'تُرتَّب الكراتين على باليتات بطرق تناسب كل عميل وتصلح للشحن إلى الخارج.') },
+    p: t('Each tin goes into a bag, then into a carton. Cartons are stacked on pallets and shrink-wrapped, ready for transport, local or overseas.',
+         'توضع كل علبة في كيس ثم في كرتونة، وتُرتَّب الكراتين على الباليتات وتُغلَّف بنايلون الشرنك، جاهزة للنقل محلياً أو إلى الخارج.') },
   { h: t('Store & ship', 'التخزين والشحن'),
     p: t('We can hold finished stock for you, freeing your own storage, then ship it to your markets.',
          'يمكننا تخزين منتجك الجاهز لدينا لتوفير مساحة التخزين لديك، ثم شحنه إلى أسواقك.') }
@@ -598,7 +598,7 @@ export const PAGES = [
         after: [{ k: 'prose', ps: [t('Special molds: coffee tins, seamless two-piece cans, windowed boxes, tobacco tins and fully custom shapes.', 'قوالب خاصة: علب قهوة، وعلب من قطعتين بلا لحام، وعلب بنافذة شفافة، وعلب تبغ، وأشكال حسب الطلب.')] }] },
       { id: 'export', eyebrow: t('Packing, storage & export', 'التغليف والتخزين والتصدير'), title: t('Ready for your markets', 'جاهزة لأسواقك'),
         blocks: [{ k: 'prose', ps: [
-          t('Cartons are palletised with methods tailored to each client and suited to overseas shipping.', 'تُرتَّب الكراتين على باليتات بطرق تناسب كل عميل وتصلح للشحن إلى الخارج.'),
+          t('Each tin goes into a bag, then into a carton. Cartons are stacked on pallets, with methods tailored to each client, and shrink-wrapped for transport, local or overseas.', 'توضع كل علبة في كيس ثم في كرتونة، وتُرتَّب الكراتين على الباليتات بطرق تناسب كل عميل، ثم تُغلَّف بنايلون الشرنك وتنطلق للنقل محلياً أو إلى الخارج.'),
           t('We can hold finished stock for you, freeing your own storage, then ship it to your markets.', 'يمكننا تخزين منتجك الجاهز لدينا لتوفير مساحة التخزين لديك، ثم شحنه إلى أسواقك.')
         ] }] },
       { blocks: [{ k: 'tbc', title: t('Factory details', 'تفاصيل المصنع'), cards: true, items: [

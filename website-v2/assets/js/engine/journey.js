@@ -1,6 +1,6 @@
 // From sheet to shelf: the main tin's own story at its real size. A printed tinplate sheet carrying five body blanks of the Al Qaisi
-// tin; the press runs across it; the middle blank is cut out, rolled into the body and closed with its lid; the tin joins a wrapped
-// pallet of its twins, and the pallet leaves for a globe with routes out of Amman. pose(p, t) poses everything from the
+// tin; the press runs across it; the middle blank is cut out, rolled into the body and closed with its lid; the tin goes into a bag,
+// the bag into a carton, the carton onto a pallet that is shrink-wrapped and loaded on a truck, then a globe with routes out of Amman. pose(p, t) poses everything from the
 // chapter's own time p (0 … 1); shotAt(p) gives the camera. Used by the home film (chapter 6) and the Capabilities page.
 import * as THREE from 'three';
 import * as TIN from './tins.js';
@@ -16,7 +16,7 @@ export function makeJourney({ scene, ready, contact, ptr, COARSE = false, REDUCE
   // ---------------------------------------------------------------- from sheet to shelf: the main tin's own story, at its real size
   // A printed tinplate sheet carrying five body blanks of the Al Qaisi tin: the prepress marks are drawn, the press runs across it,
   // the middle blank is cut out, rolled into the body and closed with its lid; the tin then joins a wrapped pallet of its twins,
-  // and the pallet leaves for the globe with routes out of Amman. Everything poses itself from the chapter's own time (0 … 1).
+  // the tin is bagged, boxed, palletised, shrink-wrapped and trucked, then the globe with routes out of Amman. Everything poses itself from the chapter's own time (0 … 1).
   const J0 = V(JX, 0, 0), JV = V(JX, 0.6, 0);
   // three.js copies userData through JSON when cloning, and our userData holds the artwork's textures: clone without it
   const lean = (o, f) => { const kept = []; const strip = (x) => { kept.push([x, x.userData]); x.userData = {}; }; if (o.isMaterial) strip(o); else o.traverse(strip); const c = f(o); kept.forEach(([x, u]) => { x.userData = u; }); return c; };
@@ -126,36 +126,87 @@ export function makeJourney({ scene, ready, contact, ptr, COARSE = false, REDUCE
     const heroInk = new THREE.Mesh(geo, ink); heroInk.castShadow = true;
     const heroBack = new THREE.Mesh(geo, tinplate({ color: '#e3e7ed', metalness: 0.8, roughness: 0.22, side: THREE.DoubleSide })); heroBack.castShadow = true;
     const tin = TIN.make('qaisi'); ready.push(tin.ready); tin.print.forEach((m) => TIN.setFinish(m, 'gloss'));
-    const proto = lean(tin.group, (o) => o.clone());     // the finished tin, for the pallet
     tin.body.visible = false;                             // the rolled blank is the body
     const lidY = tin.lid.position.y;
     hero.add(heroBack, heroInk, tin.group);
     const startPose = new THREE.Object3D(); startPose.position.set(0, -JH / 2, 0.006); plate.add(startPose);
 
-    // the pallet: 3 x 3 tins a layer, four layers, a wooden pallet, stretch film
-    const PS = 0.42, PITCH = 2.46, STEP = H + 0.04, LAY = 4;
+    // packing, as the factory does it: each tin goes into a bag, the bagged tins into a carton (a stack of three here), the
+    // cartons onto a wooden pallet, and the pallet is shrink-wrapped and loaded on a truck
+    const DIR = () => (document.documentElement.dir === 'rtl' ? -1 : 1);   // the truck stands on the far side of the reading card
+    const BR = R * 1.07, BAG_H = H + 0.1;
+    const bagBump = (() => { const c = document.createElement('canvas'); c.width = 256; c.height = 64; const x = c.getContext('2d'); x.fillStyle = '#808080'; x.fillRect(0, 0, 256, 64); for (let i = 0; i < 90; i++) { x.globalAlpha = 0.25 + Math.random() * 0.4; x.fillStyle = Math.random() < 0.5 ? '#ffffff' : '#000000'; x.fillRect(Math.random() * 256, 0, 1 + Math.random() * 4, 64); } const t = new THREE.CanvasTexture(c); t.wrapS = THREE.RepeatWrapping; t.repeat.set(3, 1); return t; })();
+    const bagMat = new THREE.MeshPhysicalMaterial({ color: '#f2f6fb', transparent: true, opacity: 0, roughness: 0.14, clearcoat: 1, clearcoatRoughness: 0.08, bumpMap: bagBump, bumpScale: 3, side: THREE.DoubleSide, depthWrite: false });
+    const bag = new THREE.Group(); hero.add(bag);
+    { const side = new THREE.Mesh(new THREE.CylinderGeometry(BR, BR, BAG_H, 64, 1, true), bagMat); side.position.y = BAG_H / 2;
+      const top = new THREE.Mesh(new THREE.SphereGeometry(BR, 48, 12, 0, Math.PI * 2, 0, Math.PI / 2), bagMat); top.scale.y = 0.16; top.position.y = BAG_H;
+      const tie = new THREE.Mesh(new THREE.ConeGeometry(0.11, 0.26, 16), bagMat); tie.position.y = BAG_H + BR * 0.16 + 0.1;
+      bag.add(side, top, tie); bag.children.forEach((m) => { m.renderOrder = 4; }); }
+
+    const kraftTex = (top) => { const c = document.createElement('canvas'); c.width = c.height = 256; const x = c.getContext('2d'); x.fillStyle = '#c69f6e'; x.fillRect(0, 0, 256, 256);
+      for (let i = 0; i < 900; i++) { x.globalAlpha = 0.05 + Math.random() * 0.08; x.fillStyle = Math.random() < 0.5 ? '#8f6a3f' : '#e2c597'; x.fillRect(Math.random() * 256, Math.random() * 256, 1 + Math.random() * 10, 1); }
+      x.globalAlpha = 0.18; x.fillStyle = '#7a5a33'; x.fillRect(0, 0, 256, 3); x.fillRect(0, 253, 256, 3); x.fillRect(0, 0, 3, 256); x.fillRect(253, 0, 3, 256);
+      if (top) { x.globalAlpha = 0.55; x.fillStyle = '#e8d3a6'; x.fillRect(0, 108, 256, 40); x.globalAlpha = 0.25; x.fillStyle = '#ffffff'; x.fillRect(0, 112, 256, 4); } // the tape over the flaps
+      const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t; };
+    const kraft = new THREE.MeshStandardMaterial({ map: kraftTex(false), roughness: 0.9, side: THREE.DoubleSide });
+    const kraftTop = new THREE.MeshStandardMaterial({ map: kraftTex(true), roughness: 0.85 });
+    const hidden = new THREE.MeshBasicMaterial({ visible: false });
+    const CW = 2 * R + 0.24, SLOT = BAG_H + 0.06, CH = 3 * SLOT + 0.1;    // a carton for a stack of three bagged tins
+
+    // the hero's carton: open, then closed and taped
+    const carton = new THREE.Group(); scene.add(carton);
+    const cBody = new THREE.Mesh(new THREE.BoxGeometry(CW, CH, CW), [kraft, kraft, hidden, kraft, kraft, kraft]); cBody.position.y = CH / 2; cBody.castShadow = true; carton.add(cBody);
+    // four flaps hinged at the top edges: open they lean outwards, closed they lie flat (the side pair under the long pair)
+    const flaps = [[0, 1, 'x', 1], [0, -1, 'x', -1], [1, 0, 'z', -1], [-1, 0, 'z', 1]].map(([px, pz, ax, sg], i) => {
+      const piv = new THREE.Group(); piv.position.set(px * CW / 2, CH, pz * CW / 2);
+      const f = new THREE.Mesh(ax === 'x' ? new THREE.PlaneGeometry(CW, CW / 2) : new THREE.PlaneGeometry(CW / 2, CW), kraft);
+      f.rotation.x = -Math.PI / 2; f.position.set(-px * CW / 4, i < 2 ? 0.012 : 0.004, -pz * CW / 4); f.castShadow = true;
+      piv.add(f); carton.add(piv); return { piv, ax, sg };
+    });
+    const tape = new THREE.Mesh(new THREE.BoxGeometry(CW + 0.04, 0.012, 0.32), new THREE.MeshPhysicalMaterial({ color: '#e3cfa2', roughness: 0.25, clearcoat: 0.8, transparent: true, opacity: 0.9 }));
+    tape.position.y = CH + 0.02; carton.add(tape);
+    carton.add(contact(CW));
+
+    // the pallet: 3 x 3 cartons a layer, four layers, on a wooden pallet; shrink film over it all
+    const PS = 0.36, PITCH = CW + 0.04, LAY = 4;
     const pallet = new THREE.Group(); pallet.position.copy(J0); pallet.scale.setScalar(PS); scene.add(pallet);
     const woodTex = (() => { const c = document.createElement('canvas'); c.width = 256; c.height = 64; const x = c.getContext('2d'); x.fillStyle = '#c29a66'; x.fillRect(0, 0, 256, 64); for (let i = 0; i < 70; i++) { x.globalAlpha = 0.08 + Math.random() * 0.12; x.fillStyle = Math.random() < 0.5 ? '#8a6238' : '#e2c49a'; x.fillRect(0, Math.random() * 64, 256, 1 + Math.random() * 2); } const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t; })();
     const wood = new THREE.MeshStandardMaterial({ map: woodTex, roughness: 0.85 });
     const base = new THREE.Group(); pallet.add(base);
-    const PW = 3 * PITCH + 0.1, BOARD = 0.09, BLOCK = 0.42;
+    const PW = 3 * PITCH + 0.1, BOARD = 0.12, BLOCK = 0.5;
     const bx = (w, h, d, x, y, z) => { const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), wood); m.position.set(x, y, z); m.castShadow = true; m.receiveShadow = true; base.add(m); };
-    for (let i = 0; i < 3; i++) bx(PW, BOARD, 0.7, 0, BOARD / 2, (i - 1) * (PW / 2 - 0.35));            // bottom boards
-    for (let i = 0; i < 3; i++) for (let j = 0; j < 3; j++) bx(0.8, BLOCK, 0.8, (i - 1) * (PW / 2 - 0.4), BOARD + BLOCK / 2, (j - 1) * (PW / 2 - 0.4)); // blocks
-    for (let i = 0; i < 7; i++) bx(PW, BOARD, 0.86, 0, BOARD * 1.5 + BLOCK, (i - 3) * ((PW - 0.86) / 6)); // top deck
+    for (let i = 0; i < 3; i++) bx(PW, BOARD, 0.8, 0, BOARD / 2, (i - 1) * (PW / 2 - 0.4));            // bottom boards
+    for (let i = 0; i < 3; i++) for (let j = 0; j < 3; j++) bx(0.9, BLOCK, 0.9, (i - 1) * (PW / 2 - 0.45), BOARD + BLOCK / 2, (j - 1) * (PW / 2 - 0.45)); // blocks
+    for (let i = 0; i < 7; i++) bx(PW, BOARD, 1, 0, BOARD * 1.5 + BLOCK, (i - 3) * ((PW - 1) / 6)); // top deck
     const BASE = 2 * BOARD + BLOCK;
-    const tins = [], slotOf = (ix, iz, l) => V((ix - 1) * PITCH, BASE + l * STEP + 0.03, (iz - 1) * PITCH);
+    const boxGeo = new THREE.BoxGeometry(CW, CH, CW), boxMats = [kraft, kraft, kraftTop, kraft, kraft, kraft];
+    const boxes = [], slotOf = (ix, iz, l) => V((ix - 1) * PITCH, BASE + l * (CH + 0.02), (iz - 1) * PITCH);
     const HERO_SLOT = slotOf(1, 2, LAY - 1);
-    for (let l = 0; l < LAY; l++) {
-      for (let iz = 0; iz < 3; iz++) for (let ix = 0; ix < 3; ix++) {
-        if (l === LAY - 1 && ix === 1 && iz === 2) continue;   // the hero's place
-        const g = lean(proto, (o) => o.clone()); g.position.copy(slotOf(ix, iz, l)); g.rotation.y = -0.55 + (ix * 7 + iz * 3) * 0.37; g.userData.k = tins.length; g.userData.p = g.position.clone();
-        pallet.add(g); tins.push(g);
-      }
+    for (let l = 0; l < LAY; l++) for (let iz = 0; iz < 3; iz++) for (let ix = 0; ix < 3; ix++) {
+      if (l === LAY - 1 && ix === 1 && iz === 2) continue;      // the hero carton's place
+      const m = new THREE.Mesh(boxGeo, boxMats); m.castShadow = true; m.receiveShadow = true; m.position.y = CH / 2;
+      const g = new THREE.Group(); g.add(m); g.position.copy(slotOf(ix, iz, l)); g.userData.k = boxes.length; g.userData.p = g.position.clone();
+      pallet.add(g); boxes.push(g);
     }
-    const filmMat = new THREE.MeshPhysicalMaterial({ color: '#e9eef6', roughness: 0.08, metalness: 0, clearcoat: 1, transparent: true, opacity: 0, depthWrite: false, side: THREE.DoubleSide });
-    const wrapH = LAY * STEP + 0.05, wrap = new THREE.Mesh(new THREE.BoxGeometry(PW + 0.08, wrapH, PW + 0.08), filmMat); wrap.position.y = BASE + wrapH / 2; wrap.renderOrder = 3; pallet.add(wrap);
+    // shrink film: it climbs the stack as the pallet is wrapped
+    const filmMat = new THREE.MeshPhysicalMaterial({ color: '#eef3fa', roughness: 0.06, metalness: 0, clearcoat: 1, clearcoatRoughness: 0.04, bumpMap: bagBump, bumpScale: 2, transparent: true, opacity: 0, depthWrite: false, side: THREE.DoubleSide });
+    const wrapH = LAY * (CH + 0.02) + 0.1, wrap = new THREE.Mesh(new THREE.BoxGeometry(PW + 0.1, 1, PW + 0.1), filmMat); wrap.renderOrder = 3; pallet.add(wrap);
     const pc = contact(PW * 0.95); pallet.add(pc);
+
+    // the truck: it backs up to the pallet, the pallet goes in, and it drives off (plain white: no branding is implied)
+    const truck = new THREE.Group(); scene.add(truck);
+    { const white = new THREE.MeshPhysicalMaterial({ color: '#f1f4f8', roughness: 0.35, clearcoat: 0.6, side: THREE.DoubleSide });
+      const grey = new THREE.MeshStandardMaterial({ color: '#3a4250', roughness: 0.6, side: THREE.DoubleSide });
+      const glass = new THREE.MeshPhysicalMaterial({ color: '#0d1a2e', roughness: 0.05, metalness: 0.3, clearcoat: 1, side: THREE.DoubleSide });
+      const tyre = new THREE.MeshStandardMaterial({ color: '#15181d', roughness: 0.8, side: THREE.DoubleSide });
+      const add = (geo, mat, x, y, z) => { const m = new THREE.Mesh(geo, mat); m.position.set(x, y, z); m.castShadow = true; truck.add(m); return m; };
+      const LT = 8.4, WT = 3.7, HT = 4.6, FL = 1.15, X0 = 2.3;           // the trailer is open at the end facing the pallet
+      add(new THREE.BoxGeometry(LT, HT, WT), [white, hidden, white, grey, white, white], X0 + LT / 2, FL + HT / 2, 0);
+      add(new THREE.BoxGeometry(LT, 0.3, WT * 0.9), grey, X0 + LT / 2, FL - 0.2, 0);
+      add(new THREE.BoxGeometry(2.6, 3.3, WT), white, X0 + LT + 1.5, FL + 1.3, 0);                 // cab
+      add(new THREE.BoxGeometry(0.06, 1.3, WT * 0.84), glass, X0 + LT + 2.82, FL + 2.1, 0);          // windscreen
+      [X0 + 1.2, X0 + 2.5, X0 + LT + 1.9].forEach((x) => [-1, 1].forEach((sz) => { const w = add(new THREE.CylinderGeometry(0.62, 0.62, 0.5, 32), tyre, x, 0.62, sz * (WT / 2 - 0.2)); w.rotation.x = Math.PI / 2; }));
+      truck.userData.floor = FL; truck.userData.x0 = X0; }
 
     // the globe: a navy planet with the land in dots of champagne gold, and routes from Amman in amber
     const globe = new THREE.Group(); globe.position.set(JX, 1.75, 0); scene.add(globe);
@@ -226,16 +277,20 @@ export function makeJourney({ scene, ready, contact, ptr, COARSE = false, REDUCE
     const GY = -THREE.MathUtils.degToRad(36); tilt.rotation.set(0.42, GY, 0);
 
     // ------------------------------------------------------------ the chapter's time line
-    // 0 design & plates · 0.14 print · 0.34 cut & form · 0.56 pack · 0.8 ship
-    const STEPS = [0, 0.14, 0.34, 0.56, 0.8];
+    // 0 design & plates · 0.14 print · 0.34 cut & form · 0.56 bag, carton, pallet, shrink film · 0.82 truck, then the world
+    const STEPS = [0, 0.14, 0.34, 0.56, 0.82];
+    const focus = { pos: V(JX, 0.6, 0), span: 4.6 };
     const sp = V(0, 0, 0), sq = new THREE.Quaternion(), ss = V(0, 0, 0), q1 = new THREE.Quaternion(), spinQ = new THREE.Quaternion(), Y = V(0, 1, 0);
     const lin = (p, a, b) => clamp((p - a) / (b - a));
     function pose(p, t) {
       const vis = p > 0 || active();   // shown only once the camera heads this way
       const gd = seg(p, 0.0, 0.13), pr = lin(p, 0.15, 0.31);
       const cutA = seg(p, 0.35, 0.41), up = seg(p, 0.37, 0.45), bn = seg(p, 0.43, 0.52), lid = seg(p, 0.51, 0.555);
-      const rise = seg(p, 0.57, 0.63), land = seg(p, 0.72, 0.78), wrapF = seg(p, 0.76, 0.8);
-      const gl = seg(p, 0.81, 0.9), leave = seg(p, 0.8, 0.88);
+      const bagIn = seg(p, 0.57, 0.6), cIn = seg(p, 0.59, 0.63), lift1 = seg(p, 0.6, 0.635), drop = seg(p, 0.64, 0.675);
+      const fSide = seg(p, 0.68, 0.695), fLong = seg(p, 0.693, 0.71), tapeOn = seg(p, 0.705, 0.72);
+      const cRise = seg(p, 0.72, 0.75), cLand = seg(p, 0.775, 0.805), wrapF = lin(p, 0.8, 0.83);
+      const truckIn = seg(p, 0.82, 0.86), liftP = seg(p, 0.86, 0.875), slide = seg(p, 0.872, 0.9), drive = seg(p, 0.9, 0.95);
+      const gl = seg(p, 0.925, 0.98), dir = DIR();
       // the sheet
       drawBlank(gd);
       plate.visible = vis && cutA < 0.999;
@@ -251,31 +306,45 @@ export function makeJourney({ scene, ready, contact, ptr, COARSE = false, REDUCE
       plate.updateMatrixWorld(true); startPose.matrixWorld.decompose(sp, sq, ss);
       bend(bn);
       heroBack.visible = cutA > 0.001;
-      hero.visible = vis && gl < 0.999;
+      hero.visible = vis && fLong < 0.999;
       tin.group.visible = bn > 0.97;
       tin.lid.visible = lid > 0.001; tin.lid.position.y = lidY + (1 - lid) * (1 - lid) * 2.4;
       const spin = seg(p, 0.42, 0.58) * Math.PI * 2 + (REDUCED ? 0 : t * 0.12 * seg(p, 0.55, 0.62));
       spinQ.setFromAxisAngle(Y, spin);
-      const flat = V(J0.x, J0.y, J0.z), hover = V(JX, 2.35, 0.2), slot = HERO_SLOT.clone().multiplyScalar(PS).add(pallet.position);
-      const P = sp.clone().lerp(flat, up).lerp(hover, rise).lerp(slot, land);
+      const flat = V(J0.x, J0.y, J0.z), up1 = V(JX, CH + 0.35, 0), inBox = V(JX, CH - SLOT + 0.04, 0);
+      const P = sp.clone().lerp(flat, up).lerp(up1, lift1).lerp(inBox, drop);
       hero.position.copy(P);
       q1.identity(); hero.quaternion.copy(sq).slerp(q1, up).multiply(spinQ);
-      hero.scale.setScalar(lerp(lerp(ss.x, 1, bn), PS, rise));
-      // the pallet: the tins arrive in order, then the film; then it leaves for the globe
-      const build = lin(p, 0.58, 0.73);
-      pallet.visible = vis && p > 0.56 && gl < 0.999;
-      tins.forEach((g) => { const a = clamp(build * (tins.length + 6) - g.userData.k, 0, 6) / 6, e = 1 - (1 - a) * (1 - a); g.visible = a > 0; g.position.y = g.userData.p.y + (1 - e) * 2.2; g.scale.setScalar(Math.max(0.001, e)); });
-      
-      filmMat.opacity = 0.09 * wrapF;
-      const ps = PS * (1 - leave * 0.85);
-      pallet.scale.setScalar(Math.max(0.001, ps)); pallet.position.set(JX, leave * 1.4, 0);
-      if (leave > 0) hero.position.copy(HERO_SLOT.clone().multiplyScalar(ps).add(pallet.position)), hero.scale.setScalar(Math.max(0.001, ps));
+      hero.scale.setScalar(lerp(ss.x, 1, bn));
+      // into the bag
+      bag.visible = bagIn > 0.001; bag.position.y = (1 - bagIn) * 2.6; bagMat.opacity = 0.42 * Math.min(1, bagIn * 2);
+      // into the carton; the flaps close, the tape goes on
+      carton.visible = vis && cIn > 0.001 && gl < 0.999;
+      cBody.scale.y = Math.max(0.001, cIn); cBody.position.y = (CH * cIn) / 2;
+      flaps.forEach((f, i) => { const close = i < 2 ? fLong : fSide, open = 0.62 * Math.PI * (1 - close) * f.sg; f.piv.visible = cIn > 0.98; f.piv.rotation.set(f.ax === 'x' ? open : 0, 0, f.ax === 'z' ? open : 0); });
+      tape.visible = tapeOn > 0.001; tape.scale.x = Math.max(0.001, tapeOn);
+      // the pallet builds under the hovering carton, the hero carton lands last, the film climbs the stack
+      const build = lin(p, 0.72, 0.785);
+      pallet.visible = vis && p > 0.71 && gl < 0.999;
+      boxes.forEach((g) => { const a = clamp(build * (boxes.length + 6) - g.userData.k, 0, 6) / 6, e = 1 - (1 - a) * (1 - a); g.visible = a > 0; g.position.y = g.userData.p.y + (1 - e) * 3; g.scale.setScalar(Math.max(0.001, e)); });
+      const wh = Math.max(0.001, wrapF * wrapH); wrap.scale.y = wh; wrap.position.y = BASE + wh / 2; wrap.visible = wrapF > 0; filmMat.opacity = 0.2 * Math.min(1, wrapF * 4);
+      // the truck backs up, the pallet goes in, the truck leaves
+      truck.visible = vis && truckIn > 0.001 && drive < 0.999;
+      truck.scale.x = dir; truck.position.set(JX + dir * ((1 - truckIn) * 16 + drive * 34), 0, 0);
+      const FL = truck.userData.floor, inX = truck.userData.x0 + 2.4;
+      pallet.position.set(JX + dir * (slide * inX + drive * 34), liftP * FL, 0);
+      // the hero carton: up while the pallet builds, then onto its place (it rides with the pallet from there)
+      const hoverC = V(JX, 4.9, 0.3), slotC = HERO_SLOT.clone().multiplyScalar(PS).add(pallet.position);
+      carton.position.copy(J0).lerp(hoverC, cRise).lerp(slotC, cLand); carton.scale.setScalar(lerp(1, PS, cRise));
+      carton.rotation.y = cRise * (1 - cLand) * 0.6;
       // the globe
       globe.visible = vis && gl > 0.001; globe.scale.setScalar(Math.max(0.001, sm(gl)));
       tilt.rotation.y = GY + (REDUCED ? 0 : Math.sin(t * 0.3) * 0.06) + ptr.sx * 0.15 + (1 - gl) * 0.8;
-      arcs.forEach((a, i) => { const e = clamp((p - 0.86 - i * 0.012) / 0.1); a.tg.setDrawRange(0, Math.floor((a.n * e) / 6) * 6); a.end.visible = e > 0.98; });
+      arcs.forEach((a, i) => { const e = clamp((p - 0.945 - i * 0.006) / 0.05); a.tg.setDrawRange(0, Math.floor((a.n * e) / 6) * 6); a.end.visible = e > 0.98; });
       pulse.scale.setScalar(1 + ((t * 0.8) % 1) * 2.2); pulse.material.opacity = 1 - ((t * 0.8) % 1);
-      lbl.material.opacity = seg(p, 0.86, 0.92);
+      lbl.material.opacity = seg(p, 0.95, 0.98);
+      // where the key light's shadow should look
+      focus.span = p > 0.81 ? 11 : p > 0.7 ? 6.5 : 4.6; focus.pos.set(JX + (p > 0.81 && p < 0.93 ? dir * 4.5 : 0), 0.6, 0);
       let s = 0; STEPS.forEach((v, i) => { if (p >= v) s = i; });
       return s;
     }
@@ -285,10 +354,14 @@ export function makeJourney({ scene, ready, contact, ptr, COARSE = false, REDUCE
       [0.36, { pos: V(-1.25, 3.4, 12.8), tgt: V(-1.2, 1.1, 0) }],
       [0.44, { pos: V(-1.25, 2.6, 8.4), tgt: V(-1.1, 0.5, 0) }],
       [0.53, { pos: V(-1.3, 2.35, 6.7), tgt: V(-1.2, 0.36, 0) }],
-      [0.565, { pos: V(-1.3, 2.35, 6.7), tgt: V(-1.2, 0.36, 0) }],
-      [0.64, { pos: V(-1.6, 4.3, 9.8), tgt: V(-1.4, 0.95, 0) }],
-      [0.8, { pos: V(-1.6, 4.3, 9.8), tgt: V(-1.4, 0.95, 0) }],
-      [0.88, { pos: V(-1.3, 2.2, 9.4), tgt: V(-1.2, 1.75, 0) }],
+      [0.59, { pos: V(-1.3, 2.5, 7.0), tgt: V(-1.2, 0.5, 0) }],                 // the tin goes into its bag
+      [0.635, { pos: V(-1.5, 4.6, 11.0), tgt: V(-1.35, 1.6, 0) }],              // the carton
+      [0.715, { pos: V(-1.5, 4.6, 11.0), tgt: V(-1.35, 1.6, 0) }],
+      [0.77, { pos: V(-1.8, 6.0, 15.5), tgt: V(-1.5, 2.6, 0) }],                // the pallet, then its film
+      [0.82, { pos: V(-1.8, 6.0, 15.5), tgt: V(-1.5, 2.6, 0) }],
+      [0.86, { pos: V(3.6, 9.5, 37), tgt: V(3.6, 2.8, 0) }],                     // the truck: the pallet clear of the card, the cab in frame
+      [0.915, { pos: V(3.6, 9.5, 37), tgt: V(3.6, 2.8, 0) }],
+      [0.96, { pos: V(-1.3, 2.2, 9.4), tgt: V(-1.2, 1.75, 0) }],                // the world
       [1, { pos: V(-1.3, 2.2, 9.4), tgt: V(-1.2, 1.75, 0) }]
     ];
     const out = { pos: V(0, 0, 0), tgt: V(0, 0, 0), fov: 30 };
@@ -301,6 +374,6 @@ export function makeJourney({ scene, ready, contact, ptr, COARSE = false, REDUCE
       out.pos.x += JX; out.tgt.x += JX;
       return out;
     }
-    return { pose, shotAt, label, plate, JX, JV };
+    return { pose, shotAt, label, plate, JX, JV, focus };
   })();
 }

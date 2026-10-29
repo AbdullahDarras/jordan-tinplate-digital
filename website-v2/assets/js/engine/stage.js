@@ -205,7 +205,7 @@ export function createJourney(canvas) {
     const g = clamp((P - 0.27) / 0.1), on = Math.sin(Math.PI * clamp((P - 0.26) / 0.12));
     rake.intensity = 9 * Math.max(0, on); rake.distance = 9; rake.angle = 0.3;
     rake.position.set(lerp(-4.2, 4.2, g), 3.4, 1.4); rake.target.position.set(lerp(-2.6, 2.6, g), 1.3, 0);
-    st.shadowOn(j.JV, 4.6);
+    st.shadowOn(j.focus.pos, j.focus.span);
   });
   return {
     ready: Promise.all(st.ready), state,

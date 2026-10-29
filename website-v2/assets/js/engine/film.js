@@ -193,6 +193,7 @@ export function createFilm(canvas) {
     // the main tin: turning slowly; the visitor turns it in the lab
     const idle = REDUCED ? 0 : t * 0.16;
     mainSpin.rotation.y = -0.55 + idle * (S.i === 1 ? 0.3 : 1) + dragYaw;
+    mainSpin.visible = !(S.i === 5 && local(5) > 0.8); // the wide truck shot would see it
     // the layer rig
     const pl = local(2);
     {
@@ -228,8 +229,8 @@ export function createFilm(canvas) {
     if (step !== state.step) { state.step = step; listeners.forEach((f) => f(state)); }
 
     // lights: the shadow follows the subject; the visitor's light comes from where the pointer is, seen from the camera
-    const subj = S.i === 2 ? layers.g.position : S.i === 5 ? JV : S.i === 3 ? V(0, 0, 2) : mainSpin.position;
-    const span = S.i === 5 ? 4.6 : S.i === 3 ? 6.5 : 2.4;
+    const subj = S.i === 2 ? layers.g.position : S.i === 5 ? journey.focus.pos : S.i === 3 ? V(0, 0, 2) : mainSpin.position;
+    const span = S.i === 5 ? journey.focus.span : S.i === 3 ? 6.5 : 2.4;
     key.position.set(subj.x - 3, 9, subj.z + 6); key.target.position.copy(subj);
     Object.assign(key.shadow.camera, { left: -span, right: span, top: span, bottom: -span, near: 1, far: 30 }); key.shadow.camera.updateProjectionMatrix();
     const right = V(1, 0, 0).applyQuaternion(camera.quaternion), up = V(0, 1, 0).applyQuaternion(camera.quaternion), fwd = V(0, 0, -1).applyQuaternion(camera.quaternion);
