@@ -51,11 +51,11 @@ $$('.vid[data-vid]').forEach((v) => v.querySelector('.vid__play').addEventListen
   const f = document.createElement('iframe');
   f.src = `https://www.youtube-nocookie.com/embed/${v.dataset.vid}?autoplay=1&rel=0&playsinline=1`; f.title = v.dataset.title;
   f.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen'; f.allowFullscreen = true;
-  v.querySelector('.vid__play').hidden = true; v.prepend(f); v.classList.add('playing');
+  const btn = v.querySelector('.vid__play'); btn.hidden = true; btn.style.display = 'none'; v.append(f); v.classList.add('playing');
 }));
 document.addEventListener('securitypolicyviolation', (e) => {
   if (!/youtube/.test(e.blockedURI || '')) return;
-  $$('.vid.playing').forEach((v) => { v.querySelector('iframe')?.remove(); v.querySelector('.vid__play').hidden = false; v.classList.remove('playing'); v.querySelector('.vid__blocked').hidden = false; });
+  $$('.vid.playing').forEach((v) => { v.querySelector('iframe')?.remove(); const btn = v.querySelector('.vid__play'); btn.hidden = false; btn.style.display = ''; v.classList.remove('playing'); v.querySelector('.vid__blocked').hidden = false; });
 });
 // the site's own video files: one plays at a time
 $$('.vid--own video').forEach((vd) => vd.addEventListener('play', () => $$('.vid--own video').forEach((o) => { if (o !== vd) o.pause(); })));
