@@ -1,0 +1,16 @@
+# Netlify headers for website v2 (read by Netlify Drop and by Git deploys)
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  X-Frame-Options: SAMEORIGIN
+  Permissions-Policy: camera=(), microphone=(), geolocation=()
+
+# the 3D artwork, renders, vendored libraries and fonts change rarely: cache them for a week
+/assets/img/*
+  Cache-Control: public, max-age=604800
+/assets/vendor/*
+  Cache-Control: public, max-age=604800
+/assets/data/*
+  Cache-Control: public, max-age=604800
+/assets/video/*
+  Cache-Control: public, max-age=604800
