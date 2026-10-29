@@ -14,23 +14,24 @@ const TAU = Math.PI * 2;
 // ---------------------------------------------------------------- the real tins (catalogue sizes where a tin matches one)
 export const TINS = {
   qaisi: { kind: 'round', D: 237.6, H: 60, skirt: 15.7, fmt: ['Round 235', 'دائري 235'], dims: 'Ø 237.6 × 60 mm' },
-  // the factory's tins from the owner's latest photos, shown as the photographs themselves (photo: the photo's width / height;
-  // see photoTin below). Their artwork is too rich to rebuild in 3D faithfully. Sizes are read from the photos (proportions), rounded to likely
-  // catalogue sizes: treat them as approximate until the factory confirms each one.
-  nejmah: { kind: 'round', photo: 1.378, D: 230, H: 58, fmt: ['Round gift tin', 'علبة هدايا دائرية'] },
-  maamoul: { kind: 'round', photo: 1.6647, D: 240, H: 55, fmt: ['Round gift tin', 'علبة هدايا دائرية'] },
-  marouf: { kind: 'round', photo: 1.2136, D: 230, H: 70, fmt: ['Round gift tin', 'علبة هدايا دائرية'] },
-  habybee: { kind: 'round', photo: 2.099, sides: 8, D: 180, H: 58, stretch: 1.45, fmt: ['Octagonal', 'ثماني الأضلاع'] },
-  jojo: { kind: 'box', photo: 2.1148, w: 230, d: 230, h: 50, fmt: ['Square gift tin, embossed', 'علبة هدايا مربعة بنقش بارز'] },
-  melties: { kind: 'box', photo: 1.9718, w: 250, d: 152, h: 62, fmt: ['Rectangular gift tin', 'علبة هدايا مستطيلة'] },
-  givinova: { kind: 'box', photo: 0.9382, w: 110, d: 110, h: 105, fmt: ['Square tin', 'علبة مربعة'] },
-  shawra: { kind: 'box', photo: 0.8482, w: 225, d: 225, h: 235, fmt: ['Square tin with a slip lid', 'علبة مربعة بغطاء'] },
-  rayhan: { kind: 'box', photo: 0.6782, w: 72, d: 72, h: 105, fmt: ['Tall square tin', 'علبة مربعة طويلة'] },
-  kous: { kind: 'box', photo: 0.8436, w: 130, d: 85, h: 170, sideKey: 'kouss', fmt: ['Tea tin', 'علبة شاي'] },
-  abedc: { kind: 'round', photo: 0.6645, D: 100, H: 130, fmt: ['Coffee can with a slip lid', 'علبة قهوة بغطاء'] },
-  havana: { kind: 'round', photo: 0.7945, D: 99, H: 127, fmt: ['Powder can with a slip lid', 'علبة بودرة بغطاء'] },
+  // the factory's tins from the owner's latest photos, shown as the photographs themselves (see photoTin below): their artwork is
+  // too rich to rebuild in 3D faithfully. photo: the photo's width / height. pw: the width the photo shows, in mm (the diameter, or
+  // the faces seen at the photo's angle), which sets the tin's real size in the scenes. Sizes are read from the photos
+  // (proportions), rounded to likely catalogue sizes: treat them as approximate until the factory confirms each one.
+  nejmah: { kind: 'round', photo: 1.378, pw: 230, D: 230, H: 58, fmt: ['Round gift tin', 'علبة هدايا دائرية'] },
+  maamoul: { kind: 'round', photo: 1.6647, pw: 240, D: 240, H: 55, fmt: ['Round gift tin', 'علبة هدايا دائرية'] },
+  marouf: { kind: 'round', photo: 1.4257, pw: 230, D: 230, H: 70, fmt: ['Round gift tin', 'علبة هدايا دائرية'] },
+  habybee: { kind: 'round', photo: 2.099, pw: 261, sides: 8, D: 180, H: 58, stretch: 1.45, fmt: ['Octagonal', 'ثماني الأضلاع'] },
+  jojo: { kind: 'box', photo: 2.1148, pw: 265, w: 230, d: 230, h: 50, fmt: ['Square gift tin, embossed', 'علبة هدايا مربعة بنقش بارز'] },
+  melties: { kind: 'box', photo: 1.9718, pw: 255, w: 250, d: 152, h: 62, fmt: ['Rectangular gift tin', 'علبة هدايا مستطيلة'] },
+  givinova: { kind: 'box', photo: 0.9382, pw: 112, w: 110, d: 110, h: 105, fmt: ['Square tin', 'علبة مربعة'] },
+  shawra: { kind: 'box', photo: 0.8482, pw: 230, w: 225, d: 225, h: 235, fmt: ['Square tin with a slip lid', 'علبة مربعة بغطاء'] },
+  rayhan: { kind: 'box', photo: 0.6782, pw: 80, w: 72, d: 72, h: 105, fmt: ['Tall square tin', 'علبة مربعة طويلة'] },
+  kous: { kind: 'box', photo: 0.8436, pw: 135, w: 130, d: 85, h: 170, sideKey: 'kouss', fmt: ['Tea tin', 'علبة شاي'] },
+  abedc: { kind: 'round', photo: 0.6645, pw: 100, D: 100, H: 130, fmt: ['Coffee can with a slip lid', 'علبة قهوة بغطاء'] },
+  havana: { kind: 'round', photo: 0.7945, pw: 99, D: 99, H: 127, fmt: ['Powder can with a slip lid', 'علبة بودرة بغطاء'] },
   // for the inner pages: an olive-oil tin from its photos, and an illustrative paint can (sample artwork, no client design)
-  oil: { kind: 'oil', photo: 0.8664, w: 175, d: 115, h: 245, front: 'malka', side: 'malkas', fmt: ['Olive-oil tin, 4 L', 'تنكة زيت زيتون 4 لتر'], dims: '175 × 115 × 245 mm' },   // Malka Olive Press
+  oil: { kind: 'oil', photo: 0.8664, pw: 205, w: 175, d: 115, h: 245, front: 'malka', side: 'malkas', fmt: ['Olive-oil tin, 4 L', 'تنكة زيت زيتون 4 لتر'], dims: '175 × 115 × 245 mm' },   // Malka Olive Press
   paint: { kind: 'can', D: 110, H: 120, bail: true, fmt: ['Paint can', 'علبة دهان'], illus: true }
 };
 
@@ -224,8 +225,7 @@ void main() {`)
   return m;
 }
 function photoTin(key, T) {
-  const box = T.kind === 'box' || T.kind === 'oil';
-  const W = (box ? Math.max(T.w, T.d) * 1.15 : T.D * (T.stretch || 1) * 1.04) * U, H = W / T.photo;
+  const W = T.pw * U, H = W / T.photo;   // real size: the photo is as wide as the tin it shows
   const g = new THREE.Group(), yaw = new THREE.Group(), card = new THREE.Group(); g.add(yaw); yaw.add(card);
   let done; const ready = new Promise((r) => { done = r; });
   const tex = loader.load(PHOTOS + key + '.webp', () => done(), undefined, () => done());

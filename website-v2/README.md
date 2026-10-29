@@ -131,6 +131,9 @@ folded flat are modelled. The paint can is now the only illustrative tin. Many m
 - Photos: `assets/img/photos/<key>.webp` (scenes) and `assets/img/renders/<key>.webp` (cards), made from the owner's cut-outs
   by the scratchpad script `tools/photos.py` (crop, premultiplied resize, WebP with alpha). `photo:` in `TINS` is each photo's
   width / height.
+- Sizes are real and shared: each photo is as wide as the tin it shows (`pw:` in mm), every tin in the home ring is at the same
+  scale as Al Qaisi in the middle (no per-tin resizing), and the ring and hero cameras look down at about the angle the photos
+  were taken from (25-30 degrees), so flat tins and the 3D Al Qaisi read alike.
 - CSS and JS links carry `?v=<hash>` (build.mjs), so browsers fetch new files after each change.
 
 ## Publishing

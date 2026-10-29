@@ -112,8 +112,9 @@ export function createHero(canvas, { tins = ['qaisi'] } = {}) {
   const wall = new THREE.Mesh(new THREE.PlaneGeometry(TW, TH), new THREE.MeshBasicMaterial({ map: tt, transparent: true, depthWrite: false, toneMapped: false }));
   // tall tins: the wall and the camera go up with them, so the title stays readable above the tins
   const lift = Math.max(0, row.size.h - 0.62);
-  const POS = V(0, 1.05 + lift * 0.8, 5.4), TGT = V(0, 0.5 + lift * 0.8, 0);
-  wall.position.set(0, 1.22 + lift * 0.9, -2.6); wall.lookAt(POS.x, wall.position.y, POS.z); wall.renderOrder = -1; scene.add(wall);
+  const POS = V(0, 2.5 + lift * 0.8, 5.2), TGT = V(0, 0.62 + lift * 0.8, 0); // from above, at about the angle the tins were photographed at
+  wall.position.set(0, TGT.y - 2.6 * (POS.y - TGT.y) / POS.z + 1.08 + lift * 0.1, -2.6); // just above the line of sight
+  wall.lookAt(POS.x, wall.position.y, POS.z); wall.renderOrder = -1; scene.add(wall);
   function title(text, lang, mode) {
     const x = tc.getContext('2d'); x.clearRect(0, 0, 4096, 1600);
     const face = lang === 'ar' ? '700 {s}px "Readex Pro", sans-serif' : '800 {s}px "Bricolage Grotesque", sans-serif';
@@ -163,7 +164,7 @@ export function createLab(canvas, { tin = 'qaisi', finish = 'gloss', transparent
   cur.g.visible = true;
   const apply = (r, name, g) => r.holders.forEach((o) => o.m.print.forEach((m) => TIN.setFinish(m, name, g)));
   apply(cur, fin);
-  const POS = V(0, 1.75, 5.3), TGT = V(0, 0.45, 0);
+  const POS = V(0, 2.4, 5.2), TGT = V(0, 0.42, 0);
   st.handK = transparent ? 6 : 10;
   if (transparent) Object.assign(ptr, { x: 0.25, y: -0.3, sx: 0.25, sy: -0.3 });
   st.loop((t) => {
