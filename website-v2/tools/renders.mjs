@@ -4,7 +4,7 @@
 import { createRequire } from 'node:module';
 const require = createRequire(import.meta.url);
 const { chromium } = require(process.env.PW || 'playwright');
-const KEYS = (process.argv[2] || 'qaisi,abed,maeen,najmah,paint,oil,sharqi,laqmi,levelmax,bab,jgz').split(',');
+const KEYS = (process.argv[2] || 'qaisi,oil,paint,nejmah,maamoul,marouf,habybee,jojo,melties,givinova,shawra,rayhan,kous,abedc,havana').split(',');
 const OUT = new URL('../assets/img/renders/', import.meta.url).pathname;
 const b = await chromium.launch({ args: ['--use-gl=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'] });
 for (const k of KEYS) {

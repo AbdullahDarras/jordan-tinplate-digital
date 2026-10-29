@@ -34,16 +34,16 @@ const LOGO = HOME.match(/<svg fill="currentColor"[^>]*viewBox="0 0 1016\.89 275\
 // ---------------------------------------------------------------- the tins each page shows (real tins from our lines; the paint can is illustrative)
 const HERO_TINS = {
   // (the olive-oil tin is Malka Olive Press's 4 L tin, from its photos)
-  products: ['abed', 'qaisi', 'levelmax'], 'ind-olive': ['oil'], 'ind-dairy': ['maeen', 'abed'], 'ind-sweets': ['jgz', 'sharqi', 'bab'],
-  'ind-cheese': ['laqmi'], 'ind-coffee': ['levelmax', 'suliman'], 'ind-industrial': ['paint'], capabilities: ['qaisi'],
-  about: ['sufyan'], gallery: ['jgz'], news: ['bab'], contact: ['qaisi']
+  products: ['melties', 'qaisi', 'nejmah'], 'ind-olive': ['oil'], 'ind-dairy': ['havana', 'abedc'], 'ind-sweets': ['maamoul', 'jojo', 'habybee'],
+  'ind-cheese': ['shawra'], 'ind-coffee': ['abedc', 'kous', 'rayhan'], 'ind-industrial': ['paint'], capabilities: ['qaisi'],
+  about: ['nejmah'], gallery: ['melties'], news: ['marouf'], contact: ['qaisi']
 };
 const ILLUS = new Set(['paint']);  // the paint can carries sample artwork; every other tin is a real one
 // card pictures: renders of the same 3D tins (assets/img/renders, made by tools/renders.mjs)
-const TILE_TIN = { 'ind-olive': 'oil', 'ind-dairy': 'maeen', 'ind-sweets': 'sharqi', 'ind-cheese': 'laqmi', 'ind-coffee': 'levelmax', 'ind-industrial': 'paint' };
-const RANGE_TIN = [ 'qaisi', 'abed', 'maeen', null, 'najmah', null, 'paint' ];
+const TILE_TIN = { 'ind-olive': 'oil', 'ind-dairy': 'havana', 'ind-sweets': 'maamoul', 'ind-cheese': 'shawra', 'ind-coffee': 'kous', 'ind-industrial': 'paint' };
+const RANGE_TIN = [ 'nejmah', 'abedc', 'havana', null, 'habybee', null, 'paint' ];
 // the shapes lab: the shapes we can show with a real tin of that shape
-const SHAPE_TIN = { round: 'qaisi', octagon: 'najmah', square: 'bab', rect: 'jgz', bucket: 'frieds', can: 'abed', cheese: 'laqmi', tall: 'suliman' };
+const SHAPE_TIN = { round: 'qaisi', octagon: 'habybee', square: 'jojo', rect: 'melties', cheese: 'havana', tall: 'rayhan' };
 const RENDERS = new Set(fs.existsSync(path.join(ROOT, 'assets/img/renders')) ? fs.readdirSync(path.join(ROOT, 'assets/img/renders')).map((f) => f.replace(/\.(png|webp)$/, '')) : []);
 
 // ---------------------------------------------------------------- links
@@ -142,7 +142,7 @@ const head = (s, def = {}) => {
   const l = ctx.lang, k = s.eyebrow || def.eyebrow, ti = s.title || def.title, intro = s.intro || def.intro;
   return (k || ti) ? `<header class="sec__head">${k ? `<p class="kick">${T(k, l)}</p>` : ''}${ti ? `<h2 class="big">${T(ti, l)}</h2>` : ''}${intro ? `<p class="lead">${T(intro, l)}</p>` : ''}</header>` : '';
 };
-const ARTKEY = { round: 'qaisi', square: 'bab', rect: 'jgz', can: 'abed', oil: 'oil', oval: null };
+const ARTKEY = { round: 'qaisi', square: 'jojo', rect: 'melties', can: 'abedc', oil: 'oil', oval: null };
 const BLOCKS = {
   cards: (b) => `<div class="cards cards--${b.cols || 3}">${b.items.map((c, i) => `<article class="card${c.soon ? ' card--soon' : ''}">${c.art && ARTKEY[c.art] ? img(ARTKEY[c.art], 'card__img') : ''}<span class="card__n" dir="ltr">${pad2(i + 1)}</span><h3>${T(c.h, ctx.lang)}</h3><p>${T(c.p, ctx.lang)}</p>${c.meta ? `<p class="card__meta num">${T(c.meta, ctx.lang)}</p>` : ''}</article>`).join('')}</div>`,
   specs: (b) => `<dl class="specs">${b.rows.map((r) => `<div class="spec">${r.art && ARTKEY[r.art] ? img(ARTKEY[r.art], 'spec__img') : '<span class="spec__img spec__img--none" aria-hidden="true"></span>'}<dt>${T(r.k, ctx.lang)}</dt><dd><b class="num">${T(r.v, ctx.lang)}</b>${r.note ? `<span>${T(r.note, ctx.lang)}</span>` : ''}</dd></div>`).join('')}</dl>`,
@@ -240,14 +240,22 @@ const KINDS = {
     return sect(s.id, '', `<div class="news">${items.map((n, i) => `<article class="card news__card"><span class="card__n" dir="ltr">${pad2(i + 1)}</span><p class="kick">${T(n.tag, l)}</p><h3>${T(n.h, l)}</h3><p>${T(n.p, l)}</p>${n.href ? `<p class="more"><a class="go" href="${n.href}" target="_blank" rel="noopener"><span>${T(UI.read, l)}</span>${EXT}<span class="vh"> (${T(UI.opensNew, l)})</span></a></p>` : ''}</article>`).join('')}</div>`);
   }
 };
+// A video plays inside the page. When its file is hosted with the site (assets/video/<youtube id>.mp4, with a poster
+// <id>.jpg) it plays in the browser's own player, everywhere. Otherwise the YouTube player (no-cookie) loads in place on click.
+const videoFile = (id) => fs.existsSync(path.join(ROOT, 'assets/video', id + '.mp4'));
 function facade(id, label, big = false) {
   const l = ctx.lang, name = T(label, l);
+  if (videoFile(id)) {
+    const poster = fs.existsSync(path.join(ROOT, 'assets/video', id + '.jpg')) ? ` poster="${ctx.pre}assets/video/${id}.jpg"` : '';
+    return `<div class="vid vid--own${big ? ' vid--big' : ''}"><video controls playsinline preload="metadata"${poster} aria-label="${name}"><source src="${ctx.pre}assets/video/${id}.mp4" type="video/mp4"></video></div>`;
+  }
   return `<div class="vid${big ? ' vid--big' : ''}" data-vid="${id}" data-title="${name}">
-    <a class="vid__play" href="https://www.youtube.com/watch?v=${id}" target="_blank" rel="noopener" aria-label="${T(UI.playVideo, l)}: ${name}">
+    <button class="vid__play" type="button" aria-label="${T(UI.playVideo, l)}: ${name}">
       <img class="vid__poster" src="https://i.ytimg.com/vi/${id}/hqdefault.jpg" alt="" width="480" height="360" loading="lazy" decoding="async" referrerpolicy="no-referrer">
       <span class="vid__btn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span>
       <span class="vid__t">${name}</span>
-    </a>
+    </button>
+    <p class="vid__blocked" hidden>${T(t2('This viewer does not allow YouTube inside the page. On the website the video plays right here.', 'هذه المعاينة لا تسمح بتشغيل يوتيوب داخل الصفحة. على الموقع يعمل الفيديو هنا مباشرة.'), l)}</p>
   </div>`;
 }
 function contactPage() {

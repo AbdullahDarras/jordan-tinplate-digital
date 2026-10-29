@@ -101,6 +101,19 @@ The owner sent the latest photo set (272 cut-out PNGs). The illustrative oil tin
 face corners) into `assets/img/tins/malka-side.jpg` and `malkas-side.jpg`; gold seams and top, the open spout and the red handle
 folded flat are modelled. The paint can is now the only illustrative tin. Many more tins in the set can be added the same way.
 
+## Round 11 (2026-10-29): the new tins, videos inside the page
+- Every tin except Al Qaisi now comes from the owner's latest photo set, one of each kind: Al Nejmah, Maamoul Dates and
+  Marouf Bakery (round gift tins), Habybee (elongated octagon), jojo (embossed square), Melties (rectangle), Givinova (square),
+  Shawrat Al Sanah (square tin with a slip lid), Al Rayhan (tall square spice tin), Al Kbous (tea tin), Al Abed Turkish coffee
+  and Havana Cocoa (cans with slip lids), Malka (olive oil). Textures: `tools/` in the scratch pipeline (ext2.py): lids
+  straightened from top views by an ellipse fitted to the cut-out, bands unrolled from 3/4 views (body ellipse fitted from the
+  alpha edge), box faces by perspective warp. Sizes are read from the photos and marked approximate in `tins.js`.
+  The print-layers chapter uses the Maamoul lid; the home ring shows 13 tins, tall ones brought down to a common height.
+  The old tins' images were removed from website-v2 (website/ keeps its own).
+- Videos play inside the page. A video whose file is in `assets/video/<youtube id>.mp4` (poster `<id>.jpg`) plays in the
+  browser's own player everywhere, the claude.ai preview included. Otherwise the YouTube player loads in place (no new tab);
+  a viewer that forbids YouTube in frames (the preview) gets a short note instead of an empty box.
+
 ## Engine
 - `assets/js/engine/tins.js`: the tins. Geometry follows the order platform's studio rules (`studio.js`: lid gap and lift, skirt,
   curled lip, 3.5 mm corners) at each tin's real millimetres; artwork from `halawah.js` (the straightened photos). Materials are

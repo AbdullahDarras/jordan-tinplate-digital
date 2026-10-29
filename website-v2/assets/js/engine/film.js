@@ -36,7 +36,8 @@ const SHOTS = [
   { pos: V(-2.7, 1.5, 4.2), tgt: V(-0.55, 0.28, 0), fov: 30 },      // lab: the tin to the side away from the card
   null                                                             // from sheet to shelf: the journey rig moves its own camera
 ];
-const RING_KEYS = ['sharqi', 'bab', 'najmah', 'frieds', 'jgz', 'laqmi', 'sufyan', 'suliman', 'abed', 'levelmax', 'maeen'];
+// one tin of each kind, from the owner's latest photos (Al Qaisi stays in the middle)
+const RING_KEYS = ['nejmah', 'jojo', 'habybee', 'oil', 'melties', 'abedc', 'maamoul', 'rayhan', 'shawra', 'havana', 'marouf', 'kous', 'givinova'];
 
 export function createFilm(canvas) {
   const COARSE = matchMedia('(pointer: coarse)').matches || innerWidth < 760;
@@ -81,12 +82,12 @@ export function createFilm(canvas) {
   const mainSpin = new THREE.Group(); mainSpin.add(main.group); scene.add(mainSpin);
   scene.add(contact(main.size.w));
 
-  // ---------------------------------------------------------------- the layer rig (the painted Bab Sharqi lid: a full-colour print, so the separations show)
+  // ---------------------------------------------------------------- the layer rig (the Maamoul Dates lid: a full-colour print, so the separations show)
   const LR = 1.15;
   const layers = (() => {
     const g = new THREE.Group(); g.position.set(AX, 0, 0); scene.add(g);
     const disc = new THREE.CircleGeometry(LR, 160); disc.rotateX(-Math.PI / 2);
-    const L = HAL.surface('lid', 1, 1, 'sharqi'); ready.push(L.ready);
+    const L = HAL.surface('lid', 1, 1, 'maamoul'); ready.push(L.ready);
     const N = 768, plates = [0, 1, 2, 3].map(() => { const c = document.createElement('canvas'); c.width = c.height = N; const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 8; return { c, t }; });
     L.ready.then(() => { // RGB -> C, M, Y, K coverage; each plate drawn in the brand navy
       const s = document.createElement('canvas'); s.width = s.height = N; const sx = s.getContext('2d', { willReadFrequently: true }); sx.drawImage(L.canvas, 0, 0, N, N);
@@ -115,11 +116,12 @@ export function createFilm(canvas) {
   })();
 
   // ---------------------------------------------------------------- the other tins: a ring round the main tin
-  const RING_R = 4.8;
+  const RING_R = 5.3;
   const ring = RING_KEYS.map((k, i) => {
     const m = TIN.make(k); ready.push(m.ready); m.print.forEach((p) => TIN.setFinish(p, 'gloss'));
     const holder = new THREE.Group(); holder.add(m.group); holder.add(contact(Math.max(m.size.w, m.size.d))); holder.scale.setScalar(0.001); scene.add(holder);
-    return { key: k, m, holder, i };
+    // tall tins are brought down to the height of the others, so none of them hides the ring from the camera
+    return { key: k, m, holder, i, base: Math.min(1, 1.15 / m.size.h, 2.5 / Math.max(m.size.w, m.size.d)) };
   });
   // ---------------------------------------------------------------- from sheet to shelf (journey.js)
   const ptr = { x: 0.2, y: -0.2, sx: 0.2, sy: -0.2 };
@@ -221,7 +223,7 @@ export function createFilm(canvas) {
       const a = ((i - turn) / RING_KEYS.length) * Math.PI * 2;
       r.holder.position.set(Math.sin(a) * RING_R, 0, Math.cos(a) * RING_R);
       const s = sm(clamp(rise * 1.6 - i * 0.05)) * (1 - gone);
-      r.holder.visible = s > 0.002; r.holder.scale.setScalar(Math.max(0.001, s));
+      r.holder.visible = s > 0.002; r.holder.scale.setScalar(Math.max(0.001, s * r.base));
       r.m.group.rotation.y = a + (REDUCED ? 0 : t * 0.2) - 0.4;
     });
     // from sheet to shelf

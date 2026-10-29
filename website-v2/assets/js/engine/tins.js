@@ -14,18 +14,20 @@ const TAU = Math.PI * 2;
 // ---------------------------------------------------------------- the real tins (catalogue sizes where a tin matches one)
 export const TINS = {
   qaisi: { kind: 'round', D: 237.6, H: 60, skirt: 15.7, fmt: ['Round 235', 'دائري 235'], dims: 'Ø 237.6 × 60 mm' },
-  halawah: { kind: 'round', D: 237.6, H: 49, fmt: ['Round 235', 'دائري 235'], dims: 'Ø 237.6 × 49 mm' },
-  sharqi: { kind: 'round', D: 215, H: 55, skirt: 12, fmt: ['Round gift tin', 'علبة هدايا دائرية'] },
-  sufyan: { kind: 'round', D: 269, H: 50, fmt: ['Round 265', 'دائري 265'], dims: 'Ø 269 × 50 mm' },
-  bab: { kind: 'box', w: 194.5, d: 194.5, h: 40, fmt: ['Square 20', 'مربع 20'], dims: '194.5 × 194.5 × 40 mm' },
-  jgz: { kind: 'box', w: 236.1, d: 137.7, h: 50, fmt: ['Rectangle 14 × 24', 'مستطيل 14 × 24'], dims: '236.1 × 137.7 × 50 mm' },
-  najmah: { kind: 'round', sides: 8, D: 160, H: 48, stretch: 1.87, vertexFront: true, fmt: ['Octagonal', 'ثماني الأضلاع'] },
-  frieds: { kind: 'round', D: 180, H: 146, taper: 0.77, skirt: 19.8, lidScale: 1.2, fmt: ['Bucket', 'سطل'] },
-  laqmi: { kind: 'round', D: 100, H: 118, fmt: ['Round with slip lid', 'دائرية بغطاء'] },
-  abed: { kind: 'can', D: 73, H: 91, fmt: ['Food can, peel-off end', 'علبة أغذية بطرف قابل للنزع'] },
-  maeen: { kind: 'can', D: 73, H: 83, fmt: ['Milk powder can', 'علبة حليب بودرة'] },
-  suliman: { kind: 'box', w: 70, d: 60, h: 88, fmt: ['Tall square tin', 'علبة مربعة طويلة'] },
-  levelmax: { kind: 'box', w: 110, d: 67, h: 98, fmt: ['Tea caddy', 'علبة شاي'] },
+  // the factory's tins from the owner's latest photos. Sizes are read from the photos (proportions), rounded to likely
+  // catalogue sizes: treat them as approximate until the factory confirms each one.
+  nejmah: { kind: 'round', D: 230, H: 58, fmt: ['Round gift tin', 'علبة هدايا دائرية'] },
+  maamoul: { kind: 'round', D: 240, H: 55, fmt: ['Round gift tin', 'علبة هدايا دائرية'] },
+  marouf: { kind: 'round', D: 230, H: 70, fmt: ['Round gift tin', 'علبة هدايا دائرية'] },
+  habybee: { kind: 'round', sides: 8, D: 180, H: 58, stretch: 1.45, fmt: ['Octagonal', 'ثماني الأضلاع'] },
+  jojo: { kind: 'box', w: 230, d: 230, h: 50, fmt: ['Square gift tin, embossed', 'علبة هدايا مربعة بنقش بارز'] },
+  melties: { kind: 'box', w: 250, d: 152, h: 62, fmt: ['Rectangular gift tin', 'علبة هدايا مستطيلة'] },
+  givinova: { kind: 'box', w: 110, d: 110, h: 105, fmt: ['Square tin', 'علبة مربعة'] },
+  shawra: { kind: 'box', w: 225, d: 225, h: 235, fmt: ['Square tin with a slip lid', 'علبة مربعة بغطاء'] },
+  rayhan: { kind: 'box', w: 72, d: 72, h: 105, fmt: ['Tall square tin', 'علبة مربعة طويلة'] },
+  kous: { kind: 'box', w: 130, d: 85, h: 170, sideKey: 'kouss', fmt: ['Tea tin', 'علبة شاي'] },
+  abedc: { kind: 'round', D: 100, H: 130, fmt: ['Coffee can with a slip lid', 'علبة قهوة بغطاء'] },
+  havana: { kind: 'round', D: 99, H: 127, fmt: ['Powder can with a slip lid', 'علبة بودرة بغطاء'] },
   // for the inner pages: an olive-oil tin from its photos, and an illustrative paint can (sample artwork, no client design)
   oil: { kind: 'oil', w: 175, d: 115, h: 245, front: 'malka', side: 'malkas', fmt: ['Olive-oil tin, 4 L', 'تنكة زيت زيتون 4 لتر'], dims: '175 × 115 × 245 mm' },   // Malka Olive Press
   paint: { kind: 'can', D: 110, H: 120, bail: true, fmt: ['Paint can', 'علبة دهان'], illus: true }
@@ -151,8 +153,8 @@ function box(key, T) {
   const k = STU.rules({ w: T.w, d: T.d, h: T.h });
   const W = T.w * U, D = T.d * U, H = T.h * U, CR = k.corner * U;
   const sides = STU.boxSides(W / 2, D / 2, CR);
-  const face = (len) => printMat(HAL.surface('face', H / len, 1, key), 0.6);
-  const front = face(sides[0].total), side = face(sides[1].total);
+  const face = (len, k = key) => printMat(HAL.surface('face', H / len, 1, k), 0.6);
+  const front = face(sides[0].total), side = face(sides[1].total, T.sideKey || key); // a tin whose narrow sides carry their own art
   const body = new THREE.Group();
   sides.forEach((pts, i) => body.add(new THREE.Mesh(STU.wall(pts, 0, H, (p, t) => [p.s / pts.total, t]), i % 2 ? side : front)));
   body.add(new THREE.Mesh(STU.cap(STU.roundRect(W / 2, D / 2, CR), 0.001, false, () => [0.5, 0.5]), metal(TIN, 0.3)));

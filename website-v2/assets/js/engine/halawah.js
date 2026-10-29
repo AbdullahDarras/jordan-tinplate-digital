@@ -20,24 +20,26 @@ export const DESIGNS = {
   // tileW: the side photo's own width (px) so the band keeps its resolution; plainSkirt: the real skirt is plain gold, not the lid's art;
   // bead: the curled lip is the same gold as the skirt (the studio's silver otherwise).
   qaisi: { kind: 'can', reps: 2, skirt: '#d9a44e', rim: GOLD, plainSkirt: true, bead: '#d9a44e', tileW: 3128, lidRes: 2048, grade: 'contrast(1.16) hue-rotate(7deg) saturate(0.95) brightness(0.93)' },
-  // round Bab Sharqi tin: a painted coffee scene on a cream lacquer lid (photo 2I9A8959), cream body, gold lip
-  sharqi: { kind: 'can', reps: 1, skirt: '#ece2d6', rim: GOLD, plainSkirt: true, skirtLacquer: true, bead: '#d9a44e', lidRes: 2048, grade: 'contrast(1.1) saturate(1.08)' },
-  halawah: { kind: 'band', skirt: RED, rim: GOLD },
-  bab: { kind: 'box', skirt: '#5a2210', rim: GOLD },           // square gift tin, Beirut clock tower
-  jgz: { kind: 'box', skirt: '#9a5216', rim: GOLD },           // rectangular gift tin, desert village
-  suliman: { kind: 'box', skirt: '#cbbb97', rim: GOLD },       // tall square tea tin
-  levelmax: { kind: 'box', skirt: '#24201d', rim: GOLD },      // square tea caddy, black and gold
-  najmah: { kind: 'octagon', skirt: '#1c1d3a', rim: GOLD, stretch: 1.45 }, // elongated octagonal sweets tin
-  frieds: { kind: 'can', reps: 3, skirt: '#3a1638', rim: SILVER },          // bucket
-  abed: { kind: 'can', reps: 3, skirt: '#9a8a74', rim: SILVER },            // food can with a peel-off end
-  maeen: { kind: 'can', reps: 3, skirt: '#c9ccd2', rim: SILVER, lid: 'abed' }, // milk powder can (closed end borrowed from abed)
-  sufyan: { kind: 'can', reps: 3, skirt: '#2c2a52', rim: GOLD },           // low round sweets tin, navy with a carved door
-  laqmi: { kind: 'can', reps: 3, skirt: '#1f6b3a', rim: SILVER },           // round can with a green slip lid (cheese & halawa can)
+  halawah: { kind: 'band', skirt: RED, rim: GOLD },             // the fallback design (not shown on the site)
+  // the factory's tins from the owner's latest photo set (cut-outs, October 2026): lids straightened from top views, bands
+  // unrolled from the 3/4 views, box faces straightened by a perspective warp (see website-v2/README.md, round 11)
+  nejmah: { kind: 'can', reps: 3, skirt: '#1f2b2a', rim: GOLD, bead: '#c9a246', lidRes: 2048, grade: 'contrast(1.1) saturate(1.06)' },   // Al Nejmah: the mosque in gold
+  maamoul: { kind: 'can', reps: 3, skirt: '#ec8739', rim: GOLD, bead: '#d9a44e', lidRes: 2048, grade: 'contrast(1.06) saturate(1.05)' }, // Maamoul Dates
+  marouf: { kind: 'can', reps: 3, skirt: '#242122', rim: GOLD, bead: '#b9805c', lidRes: 2048, grade: 'contrast(1.08)' },                 // Marouf Bakery, black with copper
+  abedc: { kind: 'can', reps: 2, skirt: '#1c2640', rim: GOLD, bead: '#c9a246', grade: 'contrast(1.06)' },                             // Al Abed Premium Turkish Coffee
+  havana: { kind: 'can', reps: 2, skirt: '#140d0b', rim: GOLD, bead: '#c9a246', grade: 'contrast(1.06)' },                            // Havana Cocoa powder
+  habybee: { kind: 'octagon', skirt: '#e6b9ad', rim: GOLD, stretch: 1.45, grade: 'contrast(1.06)' },                                // Habybee, the elongated octagon
+  jojo: { kind: 'box', skirt: '#24302c', rim: GOLD, bead: '#c9a246', lidRes: 2048, grade: 'contrast(1.05)' },                                     // jojo, embossed dark green
+  melties: { kind: 'box', skirt: '#a37c2e', rim: GOLD, bead: '#b8902f', lidRes: 2048, grade: 'contrast(1.06) saturate(1.05)' },                   // Melties, gold with palms
+  givinova: { kind: 'box', skirt: '#c7d3e6', rim: SILVER, grade: 'contrast(1.05)' },                                                 // Givinova, blue tiles
+  rayhan: { kind: 'box', skirt: '#9e5a33', rim: GOLD, bead: '#a6633a', grade: 'contrast(1.06)' },                                    // Al Rayhan spices
+  kous: { kind: 'box', skirt: '#eeeeec', rim: SILVER, grade: 'contrast(1.06)' },                                                     // Al Kbous tea (front)
+  kouss: { kind: 'box', skirt: '#eeeeec', rim: SILVER, grade: 'contrast(1.06)' },                                                    // Al Kbous tea (side)
+  shawra: { kind: 'box', skirt: '#567337', rim: GOLD, bead: '#5d7a3c', lidRes: 2048, grade: 'contrast(1.05)' },                                    // Shawrat Al Sanah rusks
   // Malka Olive Press's 4 L olive-oil tin: the front and the narrow side, straightened from the photos (2I9A5615, 2I9A5610)
   malka: { kind: 'box', skirt: '#141513', rim: GOLD, grade: 'contrast(1.08) saturate(1.05)' },
   malkas: { kind: 'box', skirt: '#141513', rim: GOLD, grade: 'contrast(1.08) saturate(1.05)' },
   // shapes with no photographed tin of their own wear a design that suits the shape:
-  oval: { kind: 'can', reps: 3, skirt: '#9a5216', rim: GOLD, lid: ['jgz', 'top'], side: ['jgz', 'side'] }, // the desert landscape fits a wide oval lid
   paint: { kind: 'can', reps: 1, skirt: '#c4cad3', rim: SILVER },                                          // tinplate paint can, a label of paint swatches
   plain: { kind: 'plain', skirt: '#c4cad3', rim: SILVER }
 };

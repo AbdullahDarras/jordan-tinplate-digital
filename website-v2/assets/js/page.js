@@ -45,14 +45,20 @@ rv.forEach((el) => el.classList.add('rv'));
 const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { rootMargin: '0px 0px -8% 0px' });
 rv.forEach((el, i) => { el.style.setProperty('--d', (i % 4) * 70 + 'ms'); io.observe(el); });
 
-// video facades: the YouTube player (no-cookie) loads only on click
-$$('.vid').forEach((v) => v.querySelector('.vid__play').addEventListener('click', (e) => {
-  e.preventDefault();
+// videos play inside the page: the YouTube player (no-cookie) loads in place on click. A viewer that forbids other sites in
+// frames (a sandboxed preview) blocks it: then the poster stays and a short note says so, instead of an empty box.
+$$('.vid[data-vid]').forEach((v) => v.querySelector('.vid__play').addEventListener('click', () => {
   const f = document.createElement('iframe');
-  f.src = `https://www.youtube-nocookie.com/embed/${v.dataset.vid}?autoplay=1&rel=0`; f.title = v.dataset.title;
+  f.src = `https://www.youtube-nocookie.com/embed/${v.dataset.vid}?autoplay=1&rel=0&playsinline=1`; f.title = v.dataset.title;
   f.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen'; f.allowFullscreen = true;
-  v.replaceChildren(f); v.classList.add('playing');
+  v.querySelector('.vid__play').hidden = true; v.prepend(f); v.classList.add('playing');
 }));
+document.addEventListener('securitypolicyviolation', (e) => {
+  if (!/youtube/.test(e.blockedURI || '')) return;
+  $$('.vid.playing').forEach((v) => { v.querySelector('iframe')?.remove(); v.querySelector('.vid__play').hidden = false; v.classList.remove('playing'); v.querySelector('.vid__blocked').hidden = false; });
+});
+// the site's own video files: one plays at a time
+$$('.vid--own video').forEach((vd) => vd.addEventListener('play', () => $$('.vid--own video').forEach((o) => { if (o !== vd) o.pause(); })));
 
 // ---------------------------------------------------------------- 3D
 let heroStage = null;
