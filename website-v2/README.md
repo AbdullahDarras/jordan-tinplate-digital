@@ -95,6 +95,12 @@ globe. Decision 40 in `docs/decisions.md`.
   silver), as on the factory's tins; can seams are a dull silver. Bab Sharqi's skirt is cream lacquer with the thin gold line,
   as in its photo. Card renders re-made.
 
+## Round 10 (2026-10-29): the real olive-oil tin
+The owner sent the latest photo set (272 cut-out PNGs). The illustrative oil tin is replaced by Malka Olive Press's 4 L tin
+(175 x 115 x 245 mm): its front and narrow side were straightened out of photos 2I9A5615 and 2I9A5610 (perspective warp on the
+face corners) into `assets/img/tins/malka-side.jpg` and `malkas-side.jpg`; gold seams and top, the open spout and the red handle
+folded flat are modelled. The paint can is now the only illustrative tin. Many more tins in the set can be added the same way.
+
 ## Engine
 - `assets/js/engine/tins.js`: the tins. Geometry follows the order platform's studio rules (`studio.js`: lid gap and lift, skirt,
   curled lip, 3.5 mm corners) at each tin's real millimetres; artwork from `halawah.js` (the straightened photos). Materials are

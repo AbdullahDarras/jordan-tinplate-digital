@@ -31,13 +31,14 @@ const other = (l) => (l === 'en' ? 'ar' : 'en');
 const HOME = fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8');
 const LOGO = HOME.match(/<svg fill="currentColor"[^>]*viewBox="0 0 1016\.89 275\.9">[\s\S]*?<\/svg>/)[0];
 
-// ---------------------------------------------------------------- the tins each page shows (real tins from our lines; oil and paint are illustrative)
+// ---------------------------------------------------------------- the tins each page shows (real tins from our lines; the paint can is illustrative)
 const HERO_TINS = {
+  // (the olive-oil tin is Malka Olive Press's 4 L tin, from its photos)
   products: ['abed', 'qaisi', 'levelmax'], 'ind-olive': ['oil'], 'ind-dairy': ['maeen', 'abed'], 'ind-sweets': ['jgz', 'sharqi', 'bab'],
   'ind-cheese': ['laqmi'], 'ind-coffee': ['levelmax', 'suliman'], 'ind-industrial': ['paint'], capabilities: ['qaisi'],
   about: ['sufyan'], gallery: ['jgz'], news: ['bab'], contact: ['qaisi']
 };
-const ILLUS = new Set(['oil', 'paint']);
+const ILLUS = new Set(['paint']);  // the paint can carries sample artwork; every other tin is a real one
 // card pictures: renders of the same 3D tins (assets/img/renders, made by tools/renders.mjs)
 const TILE_TIN = { 'ind-olive': 'oil', 'ind-dairy': 'maeen', 'ind-sweets': 'sharqi', 'ind-cheese': 'laqmi', 'ind-coffee': 'levelmax', 'ind-industrial': 'paint' };
 const RANGE_TIN = [ 'qaisi', 'abed', 'maeen', null, 'najmah', null, 'paint' ];

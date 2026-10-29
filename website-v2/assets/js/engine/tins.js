@@ -26,8 +26,8 @@ export const TINS = {
   maeen: { kind: 'can', D: 73, H: 83, fmt: ['Milk powder can', 'علبة حليب بودرة'] },
   suliman: { kind: 'box', w: 70, d: 60, h: 88, fmt: ['Tall square tin', 'علبة مربعة طويلة'] },
   levelmax: { kind: 'box', w: 110, d: 67, h: 98, fmt: ['Tea caddy', 'علبة شاي'] },
-  // illustrative shapes for the inner pages (plain tinplate or sample artwork, no client design)
-  oil: { kind: 'oil', w: 235, d: 235, h: 350, fmt: ['Olive-oil tin, 16 kg', 'تنكة زيت زيتون 16 كغ'], illus: true },   // the old site's exact 16 kg tin
+  // for the inner pages: an olive-oil tin from its photos, and an illustrative paint can (sample artwork, no client design)
+  oil: { kind: 'oil', w: 175, d: 115, h: 245, front: 'malka', side: 'malkas', fmt: ['Olive-oil tin, 4 L', 'تنكة زيت زيتون 4 لتر'], dims: '175 × 115 × 245 mm' },   // Malka Olive Press
   paint: { kind: 'can', D: 110, H: 120, bail: true, fmt: ['Paint can', 'علبة دهان'], illus: true }
 };
 
@@ -163,27 +163,33 @@ function box(key, T) {
   const g = new THREE.Group(); g.add(body, L);
   return { group: g, lid: L, body, print: [front, side, ...L.userData.print], size: { h: H, w: W + 2 * G, d: D + 2 * G } };
 }
-// the olive-oil tin: plain tinplate, a square body with seamed rims, a raised top panel, a spout with a screw cap and a wire handle
+// the olive-oil tin: Malka Olive Press's 4 L tin (175 x 115 x 245 mm), from its photographs: a printed body (the front and back
+// carry the brand, the two narrow sides the Arabic panel), gold seams and top panel, an open spout, and the red plastic handle
+// folded flat on the top, as the factory ships it
 function oilTin(key, T) {
   const k = STU.rules({ w: T.w, d: T.d, h: T.h });
-  const W = T.w * U, D = T.d * U, H = T.h * U, CR = 9 * U, sr = k.seamR * U * 1.4;
-  const tin = new THREE.MeshPhysicalMaterial({ color: '#e6eaf0', metalness: 0.78, roughness: 0.2, clearcoat: 0.5, clearcoatRoughness: 0.1 }), dark = metal('#aab2bf', 0.3); // bright tinplate: part metal, part lacquer, so it never reads grey
-  const g = new THREE.Group();
+  const W = T.w * U, D = T.d * U, H = T.h * U, CR = 8 * U, sr = k.seamR * U * 1.5;
+  const gold = new THREE.MeshPhysicalMaterial({ color: '#c9a654', metalness: 1, roughness: 0.22, clearcoat: 0.5, clearcoatRoughness: 0.12 });
+  const sides = STU.boxSides(W / 2, D / 2, CR);
+  const face = (len, design) => printMat(HAL.surface('face', H / len, 1, design), 0.4);
+  const front = face(sides[0].total, T.front || 'malka'), side = face(sides[1].total, T.side || 'malkas');
+  const g = new THREE.Group(), body = new THREE.Group(); g.add(body);
+  sides.forEach((pts, i) => body.add(new THREE.Mesh(STU.wall(pts, 0, H, (p, t) => [p.s / pts.total, t]), i % 2 ? side : front)));
   const out = STU.roundRect(W / 2, D / 2, CR);
-  g.add(new THREE.Mesh(STU.wall(out, 0, H, () => [0.5, 0.5]), tin));
-  // two shallow ribs round the body, as on the real tins
-  [0.3, 0.7].forEach((f) => g.add(STU.ring(STU.grow(out, 0.001), sr * 0.35, H * f, tin)));
-  g.add(STU.ring(out, sr, H, tin), STU.ring(out, sr, sr * 0.6, tin));
-  const top = new THREE.Mesh(STU.cap(STU.roundRect(W / 2 - sr, D / 2 - sr, CR), H - sr * 0.6, true, () => [0.5, 0.5]), tin); g.add(top);
-  g.add(new THREE.Mesh(STU.cap(STU.roundRect(W / 2, D / 2, CR), 0.001, false, () => [0.5, 0.5]), dark));
-  // spout and cap near one corner
-  const sx = W * 0.27, sz = D * 0.27, y0 = H - sr * 0.6;
-  const neck = new THREE.Mesh(new THREE.CylinderGeometry(0.17, 0.2, 0.12, 40), tin); neck.position.set(sx, y0 + 0.06, sz); g.add(neck);
-  const capM = new THREE.MeshPhysicalMaterial({ color: '#d98b14', roughness: 0.35, clearcoat: 0.8 }); // the amber of the brand on the cap only
-  const cp = new THREE.Mesh(new THREE.CylinderGeometry(0.19, 0.19, 0.16, 40), capM); cp.position.set(sx, y0 + 0.2, sz); g.add(cp);
-  // wire handle across the top
-  const hdl = new THREE.Mesh(new THREE.TorusGeometry(W * 0.22, 0.012, 8, 48, Math.PI), dark); hdl.position.set(-W * 0.05, y0 + 0.02, -D * 0.05); hdl.rotation.y = Math.PI / 4; g.add(hdl);
-  return { group: g, lid: top, body: g.children[0], print: [], size: { h: H + 0.3, w: W, d: D } };
+  g.add(STU.ring(STU.grow(out, sr * 0.3), sr, H - sr * 0.2, gold), STU.ring(STU.grow(out, sr * 0.3), sr, sr * 0.8, gold));   // the top and bottom seams
+  const top = new THREE.Mesh(STU.cap(STU.roundRect(W / 2 - sr * 0.6, D / 2 - sr * 0.6, CR), H - sr * 0.9, true, () => [0.5, 0.5]), gold); g.add(top);
+  g.add(new THREE.Mesh(STU.cap(out, 0.001, false, () => [0.5, 0.5]), metal('#8d7444', 0.35)));
+  // the spout: a gold neck round a dark opening, towards one end of the top
+  const y0 = H - sr * 0.9, sx = -W * 0.28, sz = D * 0.04;
+  const neck = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.23, 0.07, 48, 1, true), gold); neck.position.set(sx, y0 + 0.035, sz); g.add(neck);
+  const lip = STU.ring(STU.polygon(0.2, 48), 0.022, 0, gold); lip.position.set(sx, y0 + 0.07, sz); g.add(lip);
+  const hole = new THREE.Mesh(new THREE.CircleGeometry(0.19, 48), new THREE.MeshStandardMaterial({ color: '#0b0b0c', roughness: 0.9 })); hole.rotation.x = -Math.PI / 2; hole.position.set(sx, y0 + 0.03, sz); g.add(hole);
+  // the red handle, folded flat: a loop of red plastic held by a steel clip
+  const red = new THREE.MeshPhysicalMaterial({ color: '#d4222b', roughness: 0.35, clearcoat: 0.6, clearcoatRoughness: 0.2 });
+  const loop = STU.roundRect(W * 0.2, D * 0.16, D * 0.08), hx = W * 0.17, hz = -D * 0.05;
+  const handle = STU.ring(loop, 0.032, 0, red); handle.position.set(hx, y0 + 0.04, hz); handle.scale.set(1, 0.6, 1); g.add(handle);
+  const clip = new THREE.Mesh(new THREE.BoxGeometry(0.22, 0.04, 0.1), metal('#c9ced6', 0.25)); clip.position.set(hx - W * 0.2, y0 + 0.03, hz); g.add(clip);
+  return { group: g, lid: top, body, print: [front, side], size: { h: H + 0.1, w: W, d: D } };
 }
 export function make(key) {
   const T = TINS[key];

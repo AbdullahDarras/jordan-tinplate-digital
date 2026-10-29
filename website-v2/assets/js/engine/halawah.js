@@ -33,6 +33,9 @@ export const DESIGNS = {
   maeen: { kind: 'can', reps: 3, skirt: '#c9ccd2', rim: SILVER, lid: 'abed' }, // milk powder can (closed end borrowed from abed)
   sufyan: { kind: 'can', reps: 3, skirt: '#2c2a52', rim: GOLD },           // low round sweets tin, navy with a carved door
   laqmi: { kind: 'can', reps: 3, skirt: '#1f6b3a', rim: SILVER },           // round can with a green slip lid (cheese & halawa can)
+  // Malka Olive Press's 4 L olive-oil tin: the front and the narrow side, straightened from the photos (2I9A5615, 2I9A5610)
+  malka: { kind: 'box', skirt: '#141513', rim: GOLD, grade: 'contrast(1.08) saturate(1.05)' },
+  malkas: { kind: 'box', skirt: '#141513', rim: GOLD, grade: 'contrast(1.08) saturate(1.05)' },
   // shapes with no photographed tin of their own wear a design that suits the shape:
   oval: { kind: 'can', reps: 3, skirt: '#9a5216', rim: GOLD, lid: ['jgz', 'top'], side: ['jgz', 'side'] }, // the desert landscape fits a wide oval lid
   paint: { kind: 'can', reps: 1, skirt: '#c4cad3', rim: SILVER },                                          // tinplate paint can, a label of paint swatches
