@@ -123,6 +123,14 @@ folded flat are modelled. The paint can is now the only illustrative tin. Many m
   poses itself from the same time value. `assets/js/app.js`: language, theme, smooth scroll, the overlays and the finish lab.
 - `studio.js` and `halawah.js` are copies of the files in `website/assets/js/engine/` (keep them in step until v2 replaces v1).
 
+## Publishing
+- **GitHub Pages (automatic):** `.github/workflows/pages-v2.yml` publishes the site on every push that changes `website-v2/`
+  (branches `main` and `claude/confident-knuth-ibmf9c`). One-time setup: Settings > Pages > Source "GitHub Actions"; if the
+  `github-pages` environment only allows `main`, add the working branch under Settings > Environments > github-pages.
+  A private repository needs a paid GitHub plan for Pages. The address is `https://abdullahdarras.github.io/jordan-tinplate-digital/`.
+- **Netlify Drop / Cloudflare Pages:** upload the site files (index.html, en/, ar/, assets/, _headers); `_redirects` is
+  Netlify's only.
+
 ## Preview
 Serve the folder (`python3 -m http.server` in `website-v2/`) and open `index.html`; `?lang=ar` and `?mode=dark` force a language or theme.
 

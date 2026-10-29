@@ -1,0 +1,48 @@
+# Publishes the new website (website-v2/) to GitHub Pages on every push that changes it.
+# One-time setup by the repository owner: Settings > Pages > Source: "GitHub Actions".
+# Pages on a private repository needs a paid GitHub plan (Pro / Team); on a public one it is free.
+name: Website v2 on GitHub Pages
+
+on:
+  push:
+    branches: [main, claude/confident-knuth-ibmf9c]
+    paths: ['website-v2/**', '.github/workflows/pages-v2.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Collect the site (everything but the build tools and notes)
+        run: |
+          mkdir _site
+          cp -r website-v2/index.html website-v2/en website-v2/ar website-v2/assets _site/
+          touch _site/.nojekyll
+          # a missing page goes back to the home page (works under /<repo>/ and on a custom domain)
+          cat > _site/404.html <<'HTML'
+          <!doctype html><meta charset="utf-8"><title>Jordan Tinplate Canning</title>
+          <script>var p=location.pathname.split('/');location.replace(location.hostname.endsWith('github.io')&&p[1]?'/'+p[1]+'/':'/');</script>
+          <p><a href="./">Jordan Tinplate Canning</a></p>
+          HTML
+          echo "files: $(find _site -type f | wc -l)  size: $(du -sh _site | cut -f1)"
+
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+      - id: deployment
+        uses: actions/deploy-pages@v4
