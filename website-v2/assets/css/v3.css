@@ -62,7 +62,7 @@ img { max-width: 100%; height: auto; display: block; }
 .menu a { display: flex; align-items: baseline; gap: 16px; padding: 14px 0; border-bottom: 1px solid var(--line); color: var(--ink); text-decoration: none; font: 800 clamp(30px, 7vw, 48px)/1.1 var(--f-head); letter-spacing: -.02em; }
 html[lang="ar"] .menu a { letter-spacing: 0; font-weight: 700; }
 .menu .num { font-size: 14px; color: var(--accent-text); font-weight: 600; }
-@media (max-width: 1180px) { .top__nav { display: none; } .menu-btn { display: inline-flex; } }
+@media (max-width: 1280px) { .top__nav { display: none; } .menu-btn { display: inline-flex; } }
 
 /* ---------------------------------------------------------------- shared type */
 .kick { margin: 0 0 14px; font: 600 13px var(--f-body); letter-spacing: .14em; text-transform: uppercase; color: var(--accent-text); }

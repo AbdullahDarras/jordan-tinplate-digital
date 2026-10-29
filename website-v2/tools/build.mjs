@@ -64,7 +64,7 @@ const img = (key, cls = 'render') => (RENDERS.has(key) ? `<img class="${cls}" sr
 // ---------------------------------------------------------------- chrome
 function header(page) {
   const l = ctx.lang;
-  const nav = NAV.map((n) => `<li><a href="${pageHref(n.page)}"${page.navKey === n.key ? ' aria-current="page"' : ''}>${T(n.label, l)}</a></li>`).join('');
+  const nav = [{ key: 'home', page: 'home', label: byId.home.crumb }, ...NAV].map((n) => `<li><a href="${pageHref(n.page)}"${page.navKey === n.key ? ' aria-current="page"' : ''}>${T(n.label, l)}</a></li>`).join('');
   return `<header class="top top--page" id="top">
   <a class="top__brand" href="${pageHref('home')}" aria-label="${T(UI.brandAria, l)}">${LOGO}</a>
   <nav class="top__nav" aria-label="${T(UI.primaryNav, l)}"><ul>${nav}</ul></nav>
@@ -326,10 +326,11 @@ for (const page of PAGES) {
 // the home page's header gets the same navigation (between markers in index.html; app.js switches the links' language)
 {
   ctx.pre = ''; ctx.lang = 'en';
-  const items = NAV.map((x) => ({ key: x.key, path: byId[x.page].path + 'index.html', en: x.label.en, ar: x.label.ar }));
-  const nav = `<!--nav--><nav class="top__nav" aria-label="Primary" data-i18n-aria="primaryNav"><ul>${items.map((x) => `<li><a href="en/${x.path}" data-path="${x.path}" data-i18n="nav.${x.key}">${esc(x.en)}</a></li>`).join('')}</ul></nav><!--/nav-->`;
+  // the home tab first; on the home page itself it is the current page and stays on index.html
+  const items = [{ key: 'home', path: '', en: byId.home.crumb.en, ar: byId.home.crumb.ar }, ...NAV.map((x) => ({ key: x.key, path: byId[x.page].path + 'index.html', en: x.label.en, ar: x.label.ar }))];
+  const nav = `<!--nav--><nav class="top__nav" aria-label="Primary" data-i18n-aria="primaryNav"><ul>${items.map((x) => (x.key === 'home' ? `<li><a href="index.html" aria-current="page" data-i18n="nav.home">${esc(x.en)}</a></li>` : `<li><a href="en/${x.path}" data-path="${x.path}" data-i18n="nav.${x.key}">${esc(x.en)}</a></li>`)).join('')}</ul></nav><!--/nav-->`;
   const btn = `<!--menubtn--><button class="pill pill--icon menu-btn" id="menuBtn" type="button" aria-expanded="false" aria-controls="menu" aria-label="Menu" data-i18n-aria="menu"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h16M4 16h16"/></svg></button><!--/menubtn-->`;
-  const menu = `<!--menu--><div class="menu" id="menu" hidden><nav aria-label="Main menu" data-i18n-aria="menu"><ul>${items.map((x, i) => `<li><a href="en/${x.path}" data-path="${x.path}"><span class="num">${pad2(i + 1)}</span><span data-i18n="nav.${x.key}">${esc(x.en)}</span></a></li>`).join('')}</ul></nav></div><!--/menu-->`;
+  const menu = `<!--menu--><div class="menu" id="menu" hidden><nav aria-label="Main menu" data-i18n-aria="menu"><ul>${items.map((x, i) => `<li><a href="${x.key === 'home' ? 'index.html' : `en/${x.path}`}"${x.key === 'home' ? '' : ` data-path="${x.path}"`}><span class="num">${pad2(i + 1)}</span><span data-i18n="nav.${x.key}">${esc(x.en)}</span></a></li>`).join('')}</ul></nav></div><!--/menu-->`;
   let h = HOME;
   const put = (mark, html, fallback) => { const re = new RegExp(`<!--${mark}-->[\\s\\S]*?<!--/${mark}-->`); h = re.test(h) ? h.replace(re, html) : fallback(h, html); };
   put('nav', nav, (x, v) => x.replace('  <div class="top__tools">', `  ${v}\n  <div class="top__tools">`));

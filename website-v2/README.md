@@ -88,6 +88,13 @@ the 3D journey now shows: the bag over the tin, the carton (a stack of three bag
 taped, a pallet of cartons, the shrink film climbing the stack, a plain white truck backing up, loading and driving off, then the
 globe. Decision 40 in `docs/decisions.md`.
 
+## Round 9 (2026-10-29)
+- Every page opens at its top (also on a reload or a back step); links to a section (#…) still jump to it.
+- A Home tab at the start of the navigation (and of the phone menu) on every page.
+- The lid's curled lip no longer reads as a thick white line: it is thinner and takes the lid's own colour (or a dull
+  silver), as on the factory's tins; can seams are a dull silver. Bab Sharqi's skirt is cream lacquer with the thin gold line,
+  as in its photo. Card renders re-made.
+
 ## Engine
 - `assets/js/engine/tins.js`: the tins. Geometry follows the order platform's studio rules (`studio.js`: lid gap and lift, skirt,
   curled lip, 3.5 mm corners) at each tin's real millimetres; artwork from `halawah.js` (the straightened photos). Materials are

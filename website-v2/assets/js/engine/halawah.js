@@ -21,7 +21,7 @@ export const DESIGNS = {
   // bead: the curled lip is the same gold as the skirt (the studio's silver otherwise).
   qaisi: { kind: 'can', reps: 2, skirt: '#d9a44e', rim: GOLD, plainSkirt: true, bead: '#d9a44e', tileW: 3128, lidRes: 2048, grade: 'contrast(1.16) hue-rotate(7deg) saturate(0.95) brightness(0.93)' },
   // round Bab Sharqi tin: a painted coffee scene on a cream lacquer lid (photo 2I9A8959), cream body, gold lip
-  sharqi: { kind: 'can', reps: 1, skirt: '#ece2d6', rim: GOLD, plainSkirt: true, bead: '#d9a44e', lidRes: 2048, grade: 'contrast(1.1) saturate(1.08)' },
+  sharqi: { kind: 'can', reps: 1, skirt: '#ece2d6', rim: GOLD, plainSkirt: true, skirtLacquer: true, bead: '#d9a44e', lidRes: 2048, grade: 'contrast(1.1) saturate(1.08)' },
   halawah: { kind: 'band', skirt: RED, rim: GOLD },
   bab: { kind: 'box', skirt: '#5a2210', rim: GOLD },           // square gift tin, Beirut clock tower
   jgz: { kind: 'box', skirt: '#9a5216', rim: GOLD },           // rectangular gift tin, desert village

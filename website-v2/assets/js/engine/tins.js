@@ -86,6 +86,14 @@ export function setFinish(m, name, gsap) {
 const metal = (color, roughness = 0.2) => new THREE.MeshPhysicalMaterial({ color, metalness: 1, roughness, clearcoat: 0.4, clearcoatRoughness: 0.1 });
 const lacquer = (color) => new THREE.MeshPhysicalMaterial({ color, metalness: 0.25, roughness: 0.3, clearcoat: 1, clearcoatRoughness: 0.05 });
 const TIN = '#dfe3e8';
+// The curled lip under a lid's skirt and the seams of a can. On the factory's tins they barely show: the lip is in the lid's own
+// colour or a dull silver, and it is thin. (A shiny pale tube catches the studio's soft-boxes and reads as a thick white line.)
+function lipMat(D) {
+  const c = new THREE.Color(D.bead || D.skirt || '#9aa3ae').multiplyScalar(0.85);
+  const m = new THREE.MeshPhysicalMaterial({ color: c, metalness: 0.55, roughness: 0.4, clearcoat: 0.25, clearcoatRoughness: 0.35 });
+  m.envMapIntensity = 0.45; return m;
+}
+const seamMat = () => { const m = new THREE.MeshPhysicalMaterial({ color: '#aeb5bf', metalness: 0.85, roughness: 0.34, clearcoat: 0.2 }); m.envMapIntensity = 0.55; return m; };
 
 // ---------------------------------------------------------------- parts
 const surface = (key, kind, aspect = 1) => HAL.surface(kind, aspect, 1, key);
@@ -94,11 +102,10 @@ function lid(key, { outline, inner, topUv, skirtUv, k, aspect = 1, skirt }) {
   const D = HAL.DESIGNS[key], g = new THREE.Group();
   const top = printMat(surface(key, 'lid', aspect), D.lidRes ? 0.5 : 1); // the sharp lid's relief map is finer: less bump
   const SK = skirt * U;
-  const sm = D.plainSkirt ? metal(D.skirt, 0.24) : top;
+  const sm = D.plainSkirt ? (D.skirtLacquer ? lacquer(D.skirt) : metal(D.skirt, 0.24)) : top; // plain gold metal (Al Qaisi) or a lacquered colour (Bab Sharqi's cream)
   g.add(new THREE.Mesh(STU.cap(inner, 0, true, topUv), top));
   g.add(new THREE.Mesh(STU.wall(outline, -SK, 0, skirtUv), sm));
-  const lip = D.bead ? metal(D.bead, 0.2) : metal(TIN, 0.16);
-  g.add(STU.ring(STU.grow(outline, k.beadOut * U), k.beadR * U, -SK - k.beadDrop * U, lip));
+  g.add(STU.ring(STU.grow(outline, k.beadOut * U * 0.5), k.beadR * U * 0.55, -SK - k.beadDrop * U * 0.5, lipMat(D)));
   g.userData.print = [top];
   return g;
 }
@@ -134,7 +141,7 @@ function seamedCan(key, T) {
   const em = printMat(surface(key, 'lid'), 0.8);
   const top = new THREE.Group(); top.position.y = H;
   top.add(new THREE.Mesh(STU.cap(STU.polygon(endR, 96), -sr, true, (x, z) => [0.5 + x / (2 * endR), 0.5 - z / (2 * endR)]), em));
-  const seam = () => STU.ring(STU.polygon(R + k.seamOut * U - sr, 96), sr, 0, metal(TIN, 0.16));
+  const sm = seamMat(), seam = () => STU.ring(STU.polygon(R + k.seamOut * U - sr, 96), sr, 0, sm);
   top.add(seam()); const foot = seam(); foot.position.y = sr * 0.6;
   const bottom = new THREE.Mesh(STU.cap(STU.polygon(R, 96), 0.001, false, () => [0.5, 0.5]), metal(TIN, 0.3));
   const g = new THREE.Group(); g.add(body, top, foot, bottom);
