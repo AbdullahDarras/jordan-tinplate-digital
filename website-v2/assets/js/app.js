@@ -6,11 +6,21 @@ import { NAV_AR } from './nav-ar.js';
 const d = document.documentElement, $ = (s) => document.querySelector(s), $$ = (s) => [...document.querySelectorAll(s)];
 const store = { get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }, set(k, v) { try { localStorage.setItem(k, v); } catch (e) { /* private mode */ } } };
 // every page opens at its top (not where the visitor was on the page before, nor on a reload or a back step), unless a link
-// points to a section (#…)
+// points to a section (#…). scrollIntoView also scrolls any frame the page is shown in (a preview, an embed), which scrollTo
+// cannot reach; it runs again once the page has loaded, unless the visitor has started scrolling.
 if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
-const toTop = () => { if (location.hash) return; scrollTo(0, 0); try { if (lenis) lenis.scrollTo(0, { immediate: true, force: true }); } catch (e) { /* smooth scroll not started yet */ } };
+let touched = false;
+['wheel', 'touchstart', 'keydown', 'pointerdown'].forEach((ev) => addEventListener(ev, () => { touched = true; }, { once: true, passive: true }));
+const toTop = () => {
+  if (location.hash || touched) return;
+  scrollTo(0, 0);
+  try { if (lenis) lenis.scrollTo(0, { immediate: true, force: true }); } catch (e) { /* smooth scroll not started yet */ }
+  try { (document.body || document.documentElement).scrollIntoView({ block: 'start', inline: 'nearest' }); } catch (e) { /* old browser */ }
+};
 toTop();
-addEventListener('pageshow', (e) => { if (e.persisted) toTop(); });
+addEventListener('DOMContentLoaded', toTop);
+addEventListener('load', () => { toTop(); setTimeout(toTop, 400); });
+addEventListener('pageshow', (e) => { if (e.persisted) { touched = false; toTop(); } });
 
 // Arabic: approved copy from website/tools/content.mjs where it exists
 const AR = {
