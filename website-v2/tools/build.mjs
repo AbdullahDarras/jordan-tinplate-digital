@@ -243,6 +243,8 @@ const KINDS = {
 // A video plays inside the page. When its file is hosted with the site (assets/video/<youtube id>.mp4, with a poster
 // <id>.jpg) it plays in the browser's own player, everywhere. Otherwise the YouTube player (no-cookie) loads in place on click.
 const videoFile = (id) => fs.existsSync(path.join(ROOT, 'assets/video', id + '.mp4'));
+// the poster is hosted with the site (a viewer may block YouTube's image server); YouTube's own as a fallback
+const posterOf = (id) => (fs.existsSync(path.join(ROOT, 'assets/video', id + '.jpg')) ? `${ctx.pre}assets/video/${id}.jpg` : `https://i.ytimg.com/vi/${id}/hqdefault.jpg`);
 function facade(id, label, big = false) {
   const l = ctx.lang, name = T(label, l);
   if (videoFile(id)) {
@@ -251,11 +253,11 @@ function facade(id, label, big = false) {
   }
   return `<div class="vid${big ? ' vid--big' : ''}" data-vid="${id}" data-title="${name}">
     <button class="vid__play" type="button" aria-label="${T(UI.playVideo, l)}: ${name}">
-      <img class="vid__poster" src="https://i.ytimg.com/vi/${id}/hqdefault.jpg" alt="" width="480" height="360" loading="lazy" decoding="async" referrerpolicy="no-referrer">
+      <img class="vid__poster" src="${posterOf(id)}" alt="" width="1280" height="720" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.remove()">
       <span class="vid__btn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span>
       <span class="vid__t">${name}</span>
     </button>
-    <p class="vid__blocked" hidden>${T(t2('This viewer does not allow YouTube inside the page. On the website the video plays right here.', 'هذه المعاينة لا تسمح بتشغيل يوتيوب داخل الصفحة. على الموقع يعمل الفيديو هنا مباشرة.'), l)}</p>
+    <p class="vid__blocked" hidden>${T(t2('This viewer does not allow YouTube inside the page. On the website the video plays right here.', 'هذه المعاينة لا تسمح بتشغيل يوتيوب داخل الصفحة. على الموقع يعمل الفيديو هنا مباشرة.'), l)} <a href="https://www.youtube.com/watch?v=${id}" target="_blank" rel="noopener">${T(UI.watchYoutube, l)}</a></p>
   </div>`;
 }
 function contactPage() {
