@@ -1,7 +1,7 @@
 
 /* Gulfood Manufacturing 2026 invitation, Arabic + English (Arabic first).
-   The hero is a clean, bright photo of our own stand: the 3D render of the Dubai booth (assets/booth-hero.jpg,
-   assets/booth-wide.jpg, our section only), shown as a framed photo with sharp edges, no feathering.
+   Shared by gfm2026.html (hero = our booth render, booth-cine.jpg / booth-pano.jpg) and gfm2026-tins.html (hero = tin photos).
+   The hero is a full-width .band strip with gold hairlines and sharp edges, no feathering.
    Three formats: post 1080x1350, story 1080x1920, banner 1920x1080.
    The logo is always white (brand rule); gold is for accents only. The event lockup is the organiser's, used as supplied. */
 :root { --champ: #e3c06c; --foil: linear-gradient(125deg, #b98b34 0%, #e3c06c 30%, #fff1c4 50%, #e3c06c 70%, #c99a3e 100%); }
