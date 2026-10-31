@@ -26,7 +26,12 @@ const lerp = (a, b, t) => a + (b - a) * t;
 const V = (x, y, z) => new THREE.Vector3(x, y, z);
 
 // chapter windows on the film's time line (start, end); the camera moves between them
-export const CHAPTERS = [[0, 0.08], [0.14, 0.21], [0.27, 0.41], [0.46, 0.59], [0.64, 0.7], [0.75, 1]];
+// The ring of tins (chapter 3) is hidden for now (owner's decision, 2026-10-31): its window has no length and its shot is the
+// lab's, so the film goes from the print straight to the finishes. SHOW_RING = true brings it back with its old timing.
+export const SHOW_RING = false;
+export const CHAPTERS = SHOW_RING
+  ? [[0, 0.08], [0.14, 0.21], [0.27, 0.41], [0.46, 0.59], [0.64, 0.7], [0.75, 1]]
+  : [[0, 0.09], [0.16, 0.24], [0.31, 0.47], [0.54, 0.54], [0.54, 0.65], [0.71, 1]];
 const AX = 9; // where the layer rig stands (to the side of the main tin)
 const SHOTS = [
   { pos: V(0, 1.05, 5.4), tgt: V(0, 0.5, 0), fov: 30 },           // hero: the tin in front of the title wall
@@ -37,7 +42,7 @@ const SHOTS = [
   null                                                             // from sheet to shelf: the journey rig moves its own camera
 ];
 // one tin of each kind, from the owner's latest photos (Al Qaisi stays in the middle)
-const RING_KEYS = ['nejmah', 'jojo', 'habybee', 'oil', 'melties', 'abedc', 'maamoul', 'rayhan', 'shawra', 'havana', 'marouf', 'kous', 'givinova'];
+const RING_KEYS = !SHOW_RING ? [] : ['nejmah', 'jojo', 'habybee', 'oil', 'melties', 'abedc', 'maamoul', 'rayhan', 'shawra', 'havana', 'marouf', 'kous', 'givinova'];
 
 export function createFilm(canvas) {
   const COARSE = matchMedia('(pointer: coarse)').matches || innerWidth < 760;
@@ -161,13 +166,15 @@ export function createFilm(canvas) {
   const MIRROR_AT = { 1: 0, 2: AX, 4: 0 };
   const mirrored = SHOTS.map((sh, i) => (sh && i in MIRROR_AT ? { pos: V(2 * MIRROR_AT[i] - sh.pos.x, sh.pos.y, sh.pos.z), tgt: V(2 * MIRROR_AT[i] - sh.tgt.x, sh.tgt.y, sh.tgt.z), fov: sh.fov } : sh));
   const rtl = () => document.documentElement.dir === 'rtl';
-  const shot = (i) => (i === 5 ? journey.shotAt(local(5), rtl(), camera.aspect < 0.9) : rtl() ? mirrored[i] : SHOTS[i]);
+  const shot = (i) => (!SHOW_RING && i === 3 ? shot(4) : i === 5 ? journey.shotAt(local(5), rtl(), camera.aspect < 0.9) : rtl() ? mirrored[i] : SHOTS[i]);
   const shotAt = (t) => { // the camera between shots: hold inside a chapter, travel between chapters
     let i = 0; while (i < CHAPTERS.length - 1 && t > CHAPTERS[i][1]) i++;
     const [a] = CHAPTERS[i];
-    if (i === 0 || t >= a) return { i, k: 0, ia: i, ib: i, A: shot(i), B: shot(i) };
+    if (i === 0 || t >= a) { const j = !SHOW_RING && i === 3 ? 4 : i; return { i: j, k: 0, ia: j, ib: j, A: shot(j), B: shot(j) }; }
     const pe = CHAPTERS[i - 1][1], k = sm(clamp((t - pe) / (a - pe)));
-    return { i: k < 0.5 ? i - 1 : i, k, ia: i - 1, ib: i, A: shot(i - 1), B: shot(i) };
+    const r = { i: k < 0.5 ? i - 1 : i, k, ia: i - 1, ib: i, A: shot(i - 1), B: shot(i) };
+    if (!SHOW_RING) ['i', 'ia', 'ib'].forEach((n) => { if (r[n] === 3) r[n] = 4; }); // the hidden ring counts as the lab
+    return r;
   };
   const tmpP = V(0, 0, 0), tmpT = V(0, 0, 0);
   const local = (i) => clamp((T - CHAPTERS[i][0]) / (CHAPTERS[i][1] - CHAPTERS[i][0]));

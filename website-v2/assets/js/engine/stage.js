@@ -104,7 +104,7 @@ function lineup(st, keys, fitW, fitH) {
 // ---------------------------------------------------------------- the hero
 export function createHero(canvas, { tins = ['qaisi'] } = {}) {
   const st = base(canvas), { scene, camera } = st;
-  const row = lineup(st, tins, tins.length > 1 ? 3.4 : 2.5, 0.85);
+  const row = lineup(st, tins, tins.length > 1 ? 3.4 : 2.2, 0.8);
   // the page title on a wall behind the tins (the page keeps it as real text too)
   const TW = 5.1, TH = TW * 1600 / 4096;
   const tc = document.createElement('canvas'); tc.width = 4096; tc.height = 1600;

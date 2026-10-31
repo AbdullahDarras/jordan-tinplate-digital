@@ -19,7 +19,9 @@ export const DESIGNS = {
   // the main tin: Al Qaisi Roastery's round tin (catalogue rd-235, 60 mm): a stamped gold lid, plain gold skirt, a dark band with gold line art.
   // tileW: the side photo's own width (px) so the band keeps its resolution; plainSkirt: the real skirt is plain gold, not the lid's art;
   // bead: the curled lip is the same gold as the skirt (the studio's silver otherwise).
-  qaisi: { kind: 'can', reps: 2, skirt: '#d9a44e', rim: GOLD, plainSkirt: true, bead: '#d9a44e', tileW: 3128, lidRes: 2048, grade: 'contrast(1.16) hue-rotate(7deg) saturate(0.95) brightness(0.93)' },
+  // In the JC identity (owner's decision, 2026-10-31): the same tin, ornaments and band art, recoloured to PANTONE 294 C navy with
+  // gold, the client's logo replaced by the JC logo (files jc-*, made from qaisi-* by website-v2/tools/jc-tin.py).
+  qaisi: { kind: 'can', reps: 2, skirt: '#0b3d86', rim: GOLD, plainSkirt: true, skirtLacquer: true, bead: '#e3c06c', tileW: 3128, lidRes: 2048, lid: ['jc', 'lid'], side: ['jc', 'side'], grade: 'contrast(1.04)' },
   halawah: { kind: 'band', skirt: RED, rim: GOLD },             // the fallback design (not shown on the site)
   // the factory's tins from the owner's latest photo set (cut-outs, October 2026): lids straightened from top views, bands
   // unrolled from the 3/4 views, box faces straightened by a perspective warp (see website-v2/README.md, round 11)

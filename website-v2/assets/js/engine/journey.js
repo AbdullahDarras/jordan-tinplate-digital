@@ -1,6 +1,7 @@
 // From sheet to shelf: the main tin's own story at its real size. A printed tinplate sheet carrying five body blanks of the Al Qaisi
 // tin; the press runs across it; the middle blank is cut out, rolled into the body and closed with its lid; the tin goes into a bag,
-// the bag into a carton, the carton onto a pallet that is shrink-wrapped and loaded on a truck, then a globe with routes out of Amman. pose(p, t) poses everything from the
+// the bag into a white JC carton, the carton onto a pallet that is shrink-wrapped and loaded into a JC container on a truck; the
+// container goes onto a JC ship, then a globe with routes out of Amman. pose(p, t) poses everything from the
 // chapter's own time p (0 … 1); shotAt(p) gives the camera. Used by the home film (chapter 6) and the Capabilities page.
 import * as THREE from 'three';
 import * as TIN from './tins.js';
@@ -143,13 +144,27 @@ export function makeJourney({ scene, ready, contact, ptr, COARSE = false, REDUCE
       const tie = new THREE.Mesh(new THREE.ConeGeometry(0.11, 0.26, 16), bagMat); tie.position.y = BAG_H + BR * 0.16 + 0.1;
       bag.add(side, top, tie); bag.children.forEach((m) => { m.renderOrder = 4; }); }
 
-    const kraftTex = (top) => { const c = document.createElement('canvas'); c.width = c.height = 256; const x = c.getContext('2d'); x.fillStyle = '#c69f6e'; x.fillRect(0, 0, 256, 256);
-      for (let i = 0; i < 900; i++) { x.globalAlpha = 0.05 + Math.random() * 0.08; x.fillStyle = Math.random() < 0.5 ? '#8f6a3f' : '#e2c597'; x.fillRect(Math.random() * 256, Math.random() * 256, 1 + Math.random() * 10, 1); }
-      x.globalAlpha = 0.18; x.fillStyle = '#7a5a33'; x.fillRect(0, 0, 256, 3); x.fillRect(0, 253, 256, 3); x.fillRect(0, 0, 3, 256); x.fillRect(253, 0, 3, 256);
-      if (top) { x.globalAlpha = 0.55; x.fillStyle = '#e8d3a6'; x.fillRect(0, 108, 256, 40); x.globalAlpha = 0.25; x.fillStyle = '#ffffff'; x.fillRect(0, 112, 256, 4); } // the tape over the flaps
-      const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t; };
-    const kraft = new THREE.MeshStandardMaterial({ map: kraftTex(false), roughness: 0.9, side: THREE.DoubleSide });
-    const kraftTop = new THREE.MeshStandardMaterial({ map: kraftTex(true), roughness: 0.85 });
+    // the JC logo, drawn into the canvas textures below once its image has loaded (assets/img/brand, rendered from the vector logo)
+    const LOGO = {};
+    ['h-navy', 'h-white', 'v-white'].forEach((k) => { const i = new Image(); i.decoding = 'async'; LOGO[k] = { i, ready: new Promise((r) => { i.onload = r; i.onerror = r; }) }; i.src = new URL(`../../img/brand/jc-logo-${k}.png`, import.meta.url).href; });
+    const putLogo = (x, k, cx, cy, w) => { const i = LOGO[k].i; if (!i.naturalWidth) return; const h = (w * i.naturalHeight) / i.naturalWidth; x.drawImage(i, cx - w / 2, cy - h / 2, w, h); };
+    const canvasTex = (w, h, draw, logo) => {
+      const c = document.createElement('canvas'); c.width = w; c.height = h; const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 8;
+      const go = () => { const x = c.getContext('2d'); x.globalAlpha = 1; draw(x, w, h); t.needsUpdate = true; };
+      go(); if (logo) { ready.push(LOGO[logo].ready); LOGO[logo].ready.then(go); }
+      return t;
+    };
+    // the cartons: white board with the JC logo on every side; clear tape over the top flaps
+    const board = (x, w, h) => {
+      x.fillStyle = '#f6f8fb'; x.fillRect(0, 0, w, h);
+      for (let i = 0; i < 700; i++) { x.globalAlpha = 0.03 + Math.random() * 0.04; x.fillStyle = Math.random() < 0.5 ? '#c3cddb' : '#ffffff'; x.fillRect(Math.random() * w, Math.random() * h, 1 + Math.random() * 12, 1); }
+      x.globalAlpha = 0.3; x.fillStyle = '#c3ccd8'; x.fillRect(0, 0, w, 4); x.fillRect(0, h - 4, w, 4); x.fillRect(0, 0, 4, h); x.fillRect(w - 4, 0, 4, h); x.globalAlpha = 1;
+    };
+    const cartonSide = canvasTex(512, 512, (x, w, h) => { board(x, w, h); putLogo(x, 'h-navy', w / 2, h / 2, w * 0.74); }, 'h-navy');
+    const cartonTop = canvasTex(512, 512, (x, w, h) => { board(x, w, h); x.globalAlpha = 0.45; x.fillStyle = '#dbe3ee'; x.fillRect(0, 216, w, 80); x.globalAlpha = 0.7; x.fillStyle = '#ffffff'; x.fillRect(0, 226, w, 6); x.globalAlpha = 1; });
+    const kraft = new THREE.MeshStandardMaterial({ map: cartonSide, roughness: 0.78, side: THREE.DoubleSide });     // the carton's sides
+    const kraftTop = new THREE.MeshStandardMaterial({ map: cartonTop, roughness: 0.72 });
+    const flapMat = new THREE.MeshStandardMaterial({ map: canvasTex(256, 256, board), roughness: 0.78, side: THREE.DoubleSide });
     const hidden = new THREE.MeshBasicMaterial({ visible: false });
     const CW = 2 * R + 0.24, SLOT = BAG_H + 0.06, CH = 3 * SLOT + 0.1;    // a carton for a stack of three bagged tins
 
@@ -159,11 +174,11 @@ export function makeJourney({ scene, ready, contact, ptr, COARSE = false, REDUCE
     // four flaps hinged at the top edges: open they lean outwards, closed they lie flat (the side pair under the long pair)
     const flaps = [[0, 1, 'x', 1], [0, -1, 'x', -1], [1, 0, 'z', -1], [-1, 0, 'z', 1]].map(([px, pz, ax, sg], i) => {
       const piv = new THREE.Group(); piv.position.set(px * CW / 2, CH, pz * CW / 2);
-      const f = new THREE.Mesh(ax === 'x' ? new THREE.PlaneGeometry(CW, CW / 2) : new THREE.PlaneGeometry(CW / 2, CW), kraft);
+      const f = new THREE.Mesh(ax === 'x' ? new THREE.PlaneGeometry(CW, CW / 2) : new THREE.PlaneGeometry(CW / 2, CW), flapMat);
       f.rotation.x = -Math.PI / 2; f.position.set(-px * CW / 4, i < 2 ? 0.012 : 0.004, -pz * CW / 4); f.castShadow = true;
       piv.add(f); carton.add(piv); return { piv, ax, sg };
     });
-    const tape = new THREE.Mesh(new THREE.BoxGeometry(CW + 0.04, 0.012, 0.32), new THREE.MeshPhysicalMaterial({ color: '#e3cfa2', roughness: 0.25, clearcoat: 0.8, transparent: true, opacity: 0.9 }));
+    const tape = new THREE.Mesh(new THREE.BoxGeometry(CW + 0.04, 0.012, 0.32), new THREE.MeshPhysicalMaterial({ color: '#eef3f9', roughness: 0.12, clearcoat: 1, transparent: true, opacity: 0.55 }));
     tape.position.y = CH + 0.02; carton.add(tape);
     carton.add(contact(CW));
 
@@ -193,23 +208,95 @@ export function makeJourney({ scene, ready, contact, ptr, COARSE = false, REDUCE
     const wrapH = LAY * (CH + 0.02) + 0.1, wrap = new THREE.Mesh(new THREE.BoxGeometry(PW + 0.1, 1, PW + 0.1), filmMat); wrap.renderOrder = 3; pallet.add(wrap);
     const pc = contact(PW * 0.95); pallet.add(pc);
 
-    // the truck: it backs up to the pallet, the pallet goes in, and it drives off (plain white: no branding is implied)
+    // the truck: it backs up with a 20-foot container in the brand navy carrying the JC logo; the container's doors open, the pallet
+    // goes in, the doors close and the truck drives off. For Arabic the truck turns round (not mirrored, so the logo reads right).
+    const NAVY = '#0b3d86';
+    const corrugated = (logo) => canvasTex(1024, 512, (x, w, h) => {
+      x.fillStyle = NAVY; x.fillRect(0, 0, w, h);
+      for (let i = 0; i < w; i += 16) { x.globalAlpha = 0.2; x.fillStyle = '#000d1f'; x.fillRect(i, 0, 5, h); x.globalAlpha = 0.1; x.fillStyle = '#ffffff'; x.fillRect(i + 8, 0, 3, h); }
+      x.globalAlpha = 0.4; x.fillStyle = '#000d1f'; x.fillRect(0, 0, w, 16); x.fillRect(0, h - 16, w, 16); x.globalAlpha = 1;
+      if (logo) putLogo(x, logo, w / 2, h / 2, w * 0.56);
+    }, logo);
+    const boxLogo = corrugated('h-white'), boxPlain = corrugated(null);
+    const steelMat = (map) => new THREE.MeshPhysicalMaterial({ map, roughness: 0.42, metalness: 0.15, clearcoat: 0.35, clearcoatRoughness: 0.3, side: THREE.DoubleSide });
+    const cLogoMat = steelMat(boxLogo), cPlainMat = steelMat(boxPlain);
     const truck = new THREE.Group(); scene.add(truck);
+    const doors = [];
     { const white = new THREE.MeshPhysicalMaterial({ color: '#f1f4f8', roughness: 0.35, clearcoat: 0.6, side: THREE.DoubleSide });
       const grey = new THREE.MeshStandardMaterial({ color: '#3a4250', roughness: 0.6, side: THREE.DoubleSide });
       const glass = new THREE.MeshPhysicalMaterial({ color: '#0d1a2e', roughness: 0.05, metalness: 0.3, clearcoat: 1, side: THREE.DoubleSide });
       const tyre = new THREE.MeshStandardMaterial({ color: '#15181d', roughness: 0.8, side: THREE.DoubleSide });
-      const add = (geo, mat, x, y, z) => { const m = new THREE.Mesh(geo, mat); m.position.set(x, y, z); m.castShadow = true; truck.add(m); return m; };
-      const LT = 8.4, WT = 3.7, HT = 4.6, FL = 1.15, X0 = 2.3;           // the trailer is open at the end facing the pallet
-      add(new THREE.BoxGeometry(LT, HT, WT), [white, hidden, white, grey, white, white], X0 + LT / 2, FL + HT / 2, 0);
-      add(new THREE.BoxGeometry(LT, 0.3, WT * 0.9), grey, X0 + LT / 2, FL - 0.2, 0);
+      const add = (geo, mat, x, y, z, parent = truck) => { const m = new THREE.Mesh(geo, mat); m.position.set(x, y, z); m.castShadow = true; parent.add(m); return m; };
+      const LT = 8.4, WT = 3.7, HT = 4.6, FL = 1.15, X0 = 2.3;           // the container's doors are at the end facing the pallet
+      add(new THREE.BoxGeometry(LT, HT, WT), [cPlainMat, hidden, cPlainMat, grey, cLogoMat, cLogoMat], X0 + LT / 2, FL + HT / 2, 0);
+      add(new THREE.BoxGeometry(LT, 0.3, WT * 0.9), grey, X0 + LT / 2, FL - 0.2, 0);                  // the chassis
       add(new THREE.BoxGeometry(2.6, 3.3, WT), white, X0 + LT + 1.5, FL + 1.3, 0);                 // cab
       add(new THREE.BoxGeometry(0.06, 1.3, WT * 0.84), glass, X0 + LT + 2.82, FL + 2.1, 0);          // windscreen
       [X0 + 1.2, X0 + 2.5, X0 + LT + 1.9].forEach((x) => [-1, 1].forEach((sz) => { const w = add(new THREE.CylinderGeometry(0.62, 0.62, 0.5, 32), tyre, x, 0.62, sz * (WT / 2 - 0.2)); w.rotation.x = Math.PI / 2; }));
+      [-1, 1].forEach((sz) => { // two doors hinged at the container's corners
+        const piv = new THREE.Group(); piv.position.set(X0, FL + HT / 2, sz * WT / 2); truck.add(piv);
+        add(new THREE.BoxGeometry(0.06, HT - 0.04, WT / 2 - 0.02), cPlainMat, 0, 0, -sz * WT / 4, piv);
+        [0.3, -0.3].forEach((dy) => add(new THREE.BoxGeometry(0.1, HT * 0.8, 0.05), grey, -0.06, dy, -sz * WT * 0.12, piv)); // locking bars
+        doors.push({ piv, sz });
+      });
       truck.userData.floor = FL; truck.userData.x0 = X0; }
 
+    // the port: a patch of sea beyond where the truck drives off, and a navy JC container ship; our container is lowered onto it
+    const SX = 64, SL = 24, SB = 4.6, SHH = 3.2, DRAFT = 1.0;
+    const port = new THREE.Group(); scene.add(port);
+    const seaMat = new THREE.ShaderMaterial({ transparent: true, depthWrite: false, uniforms: { uT: { value: 0 } },
+      vertexShader: 'varying vec2 vP; void main(){ vP = position.xy; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }',
+      fragmentShader: `uniform float uT; varying vec2 vP; void main(){
+  float r = length(vP) / 30.0;
+  float w = sin(vP.x * 1.1 + uT * 0.9 + sin(vP.y * 0.6 + uT * 0.4) * 1.6) * 0.5 + 0.5;
+  float g = sin(vP.y * 2.3 - uT * 0.7 + vP.x * 0.3) * 0.5 + 0.5;
+  vec3 c = mix(vec3(0.012, 0.07, 0.2), vec3(0.05, 0.2, 0.42), clamp(w * 0.3 + g * 0.15 + (1.0 - r) * 0.35, 0.0, 1.0));
+  gl_FragColor = vec4(c, 1.0 - smoothstep(0.6, 1.0, r));
+#include <tonemapping_fragment>
+#include <colorspace_fragment>
+}` });
+    const water = new THREE.Mesh(new THREE.CircleGeometry(30, 96), seaMat); water.rotation.x = -Math.PI / 2; water.position.y = 0.01; port.add(water);
+    const ship = new THREE.Group(); port.add(ship);
+    const hullShape = new THREE.Shape(); // seen from above: a square stern, a pointed bow
+    hullShape.moveTo(-SL / 2, -SB / 2); hullShape.lineTo(SL / 2 - SB * 0.9, -SB / 2); hullShape.quadraticCurveTo(SL / 2 - SB * 0.2, -SB / 2, SL / 2, 0);
+    hullShape.quadraticCurveTo(SL / 2 - SB * 0.2, SB / 2, SL / 2 - SB * 0.9, SB / 2); hullShape.lineTo(-SL / 2, SB / 2); hullShape.closePath();
+    const hullGeo = (h) => { const g = new THREE.ExtrudeGeometry(hullShape, { depth: h, bevelEnabled: false, curveSegments: 16 }); g.rotateX(-Math.PI / 2); return g; };
+    const hullMat = new THREE.MeshPhysicalMaterial({ color: NAVY, roughness: 0.35, clearcoat: 0.6, clearcoatRoughness: 0.2 });
+    const hull = new THREE.Mesh(hullGeo(SHH), hullMat); hull.position.y = -DRAFT; hull.castShadow = true; ship.add(hull);
+    const boot = new THREE.Mesh(hullGeo(0.32), new THREE.MeshPhysicalMaterial({ color: '#a3302b', roughness: 0.5 })); boot.scale.set(1.004, 1, 1.01); boot.position.y = -0.02; ship.add(boot);
+    const sheer = new THREE.Mesh(hullGeo(0.08), new THREE.MeshStandardMaterial({ color: '#f1f4f8', roughness: 0.5 })); sheer.scale.set(1.003, 1, 1.008); sheer.position.y = SHH - DRAFT - 0.08; ship.add(sheer);
+    const DECK = SHH - DRAFT;
+    // the JC logo on both sides of the hull (each reads from outside)
+    const hullLogo = new THREE.MeshBasicMaterial({ map: canvasTex(1400, 380, (x, w, h) => { x.clearRect(0, 0, w, h); putLogo(x, 'h-white', w / 2, h / 2, w); }, 'h-white'), transparent: true, depthWrite: false });
+    [-1, 1].forEach((sz) => { const m = new THREE.Mesh(new THREE.PlaneGeometry(6.6, 1.79), hullLogo); m.position.set(-1.5, DECK * 0.45, sz * (SB / 2 + 0.02)); m.rotation.y = sz > 0 ? 0 : Math.PI; ship.add(m); });
+    // the bridge at the stern, its funnel with the JC mark
+    const whiteM = new THREE.MeshPhysicalMaterial({ color: '#f1f4f8', roughness: 0.35, clearcoat: 0.5 });
+    const bridge = new THREE.Mesh(new THREE.BoxGeometry(2.4, 3.4, SB * 0.92), whiteM); bridge.position.set(-SL / 2 + 1.7, DECK + 1.7, 0); bridge.castShadow = true; ship.add(bridge);
+    const wing = new THREE.Mesh(new THREE.BoxGeometry(2.6, 0.5, SB + 0.4), whiteM); wing.position.set(-SL / 2 + 1.7, DECK + 3.2, 0); ship.add(wing);
+    const win = new THREE.Mesh(new THREE.BoxGeometry(2.45, 0.36, SB * 0.94), new THREE.MeshPhysicalMaterial({ color: '#0d1a2e', roughness: 0.05, clearcoat: 1 })); win.position.set(-SL / 2 + 1.7, DECK + 2.75, 0); ship.add(win);
+    const funnel = new THREE.Mesh(new THREE.BoxGeometry(1.3, 1.8, 1.5), hullMat); funnel.position.set(-SL / 2 + 1.2, DECK + 4.3, 0); funnel.castShadow = true; ship.add(funnel);
+    const funMark = new THREE.MeshBasicMaterial({ map: canvasTex(900, 564, (x, w, h) => { x.clearRect(0, 0, w, h); putLogo(x, 'v-white', w / 2, h / 2, w * 0.9); }, 'v-white'), transparent: true, depthWrite: false });
+    [-1, 1].forEach((sz) => { const m = new THREE.Mesh(new THREE.PlaneGeometry(1.15, 0.72), funMark); m.position.set(-SL / 2 + 1.2, DECK + 4.35, sz * 0.76); m.rotation.y = sz > 0 ? 0 : Math.PI; ship.add(m); });
+    // the cargo: containers in the brand's colours, in bays along the deck (instanced); one bay keeps a place for ours
+    const CL = 2.3, CWd = 1.02, CHt = 1.05, BAYS = 7, ROWS4 = 4, OURS = { bay: 3, tier: 2 };
+    const cargoGeo = new THREE.BoxGeometry(CL, CHt, CWd);
+    const cargo = new THREE.InstancedMesh(cargoGeo, new THREE.MeshPhysicalMaterial({ map: boxPlain, roughness: 0.45, clearcoat: 0.3 }), BAYS * ROWS4 * 3);
+    cargo.castShadow = true; ship.add(cargo);
+    const PAL = ['#0b3d86', '#e9edf3', '#5d7fae', '#0b3d86', '#d98b14', '#274f83', '#c9d2de', '#0b3d86'].map((c) => new THREE.Color(c).multiplyScalar(2.2));
+    const slot = (b, r, tier) => V(-SL / 2 + 4.3 + b * (CL + 0.12), DECK + CHt / 2 + tier * (CHt + 0.02), (r - (ROWS4 - 1) / 2) * (CWd + 0.06));
+    { const M = new THREE.Matrix4(); let n = 0;
+      for (let b = 0; b < BAYS; b++) for (let r = 0; r < ROWS4; r++) {
+        const top = 2 + ((b * 7 + r * 3) % 3 === 0 ? 1 : 0) - (b === BAYS - 1 ? 1 : 0);
+        for (let tier = 0; tier < top; tier++) {
+          if (b === OURS.bay && tier === OURS.tier && (r === 0 || r === ROWS4 - 1)) continue;
+          M.setPosition(slot(b, r, tier)); cargo.setMatrixAt(n, M); cargo.setColorAt(n, PAL[(b * 5 + r * 3 + tier) % PAL.length]); n++;
+        }
+      }
+      cargo.count = n; cargo.instanceMatrix.needsUpdate = true; cargo.instanceColor.needsUpdate = true; }
+    const ours = new THREE.Mesh(cargoGeo, [cPlainMat, cPlainMat, cPlainMat, cPlainMat, cLogoMat, cLogoMat]); ours.castShadow = true; ship.add(ours);
+
     // the globe: a navy planet with the land in dots of champagne gold, and routes from Amman in amber
-    const globe = new THREE.Group(); globe.position.set(JX, 1.75, 0); scene.add(globe);
+    const globe = new THREE.Group(); scene.add(globe);   // placed in pose(): high above the port
     const tilt = new THREE.Group(); globe.add(tilt);
     const GR = 1.25;
     const ll = (lat, lon, r = GR) => { const a = THREE.MathUtils.degToRad(lat), o = THREE.MathUtils.degToRad(lon); return V(r * Math.cos(a) * Math.sin(o), r * Math.sin(a), r * Math.cos(a) * Math.cos(o)); };
@@ -289,8 +376,9 @@ export function makeJourney({ scene, ready, contact, ptr, COARSE = false, REDUCE
       const bagIn = seg(p, 0.57, 0.6), cIn = seg(p, 0.59, 0.63), lift1 = seg(p, 0.6, 0.635), drop = seg(p, 0.64, 0.675);
       const fSide = seg(p, 0.68, 0.695), fLong = seg(p, 0.693, 0.71), tapeOn = seg(p, 0.705, 0.72);
       const cRise = seg(p, 0.72, 0.75), cLand = seg(p, 0.775, 0.805), wrapF = lin(p, 0.8, 0.83);
-      const truckIn = seg(p, 0.82, 0.86), liftP = seg(p, 0.86, 0.875), slide = seg(p, 0.872, 0.9), drive = seg(p, 0.9, 0.95);
-      const gl = seg(p, 0.925, 0.98), dir = DIR();
+      const truckIn = seg(p, 0.82, 0.85), liftP = seg(p, 0.852, 0.864), slide = seg(p, 0.862, 0.885), drive = seg(p, 0.895, 0.93);
+      const doorOpen = seg(p, 0.838, 0.852) * (1 - seg(p, 0.884, 0.895));
+      const crane = seg(p, 0.918, 0.948), sail = seg(p, 0.945, 0.99), gl = seg(p, 0.955, 0.985), dir = DIR();
       // the sheet
       drawBlank(gd);
       plate.visible = vis && cutA < 0.999;
@@ -319,32 +407,40 @@ export function makeJourney({ scene, ready, contact, ptr, COARSE = false, REDUCE
       // into the bag
       bag.visible = bagIn > 0.001; bag.position.y = (1 - bagIn) * 2.6; bagMat.opacity = 0.42 * Math.min(1, bagIn * 2);
       // into the carton; the flaps close, the tape goes on
-      carton.visible = vis && cIn > 0.001 && gl < 0.999;
+      carton.visible = vis && cIn > 0.001 && drive < 0.999;
       cBody.scale.y = Math.max(0.001, cIn); cBody.position.y = (CH * cIn) / 2;
       flaps.forEach((f, i) => { const close = i < 2 ? fLong : fSide, open = 0.62 * Math.PI * (1 - close) * f.sg; f.piv.visible = cIn > 0.98; f.piv.rotation.set(f.ax === 'x' ? open : 0, 0, f.ax === 'z' ? open : 0); });
       tape.visible = tapeOn > 0.001; tape.scale.x = Math.max(0.001, tapeOn);
       // the pallet builds under the hovering carton, the hero carton lands last, the film climbs the stack
       const build = lin(p, 0.72, 0.785);
-      pallet.visible = vis && p > 0.71 && gl < 0.999;
+      pallet.visible = vis && p > 0.71 && drive < 0.999;
       boxes.forEach((g) => { const a = clamp(build * (boxes.length + 6) - g.userData.k, 0, 6) / 6, e = 1 - (1 - a) * (1 - a); g.visible = a > 0; g.position.y = g.userData.p.y + (1 - e) * 3; g.scale.setScalar(Math.max(0.001, e)); });
       const wh = Math.max(0.001, wrapF * wrapH); wrap.scale.y = wh; wrap.position.y = BASE + wh / 2; wrap.visible = wrapF > 0; filmMat.opacity = 0.2 * Math.min(1, wrapF * 4);
       // the truck backs up, the pallet goes in, the truck leaves
       truck.visible = vis && truckIn > 0.001 && drive < 0.999;
-      truck.scale.x = dir; truck.position.set(JX + dir * ((1 - truckIn) * 16 + drive * 34), 0, 0);
+      truck.rotation.y = dir < 0 ? Math.PI : 0; truck.position.set(JX + dir * ((1 - truckIn) * 16 + drive * 34), 0, 0);
+      doors.forEach((d) => { d.piv.rotation.y = d.sz * doorOpen * Math.PI * 0.62; });
       const FL = truck.userData.floor, inX = truck.userData.x0 + 2.4;
       pallet.position.set(JX + dir * (slide * inX + drive * 34), liftP * FL, 0);
       // the hero carton: up while the pallet builds, then onto its place (it rides with the pallet from there)
       const hoverC = V(JX, 4.9, 0.3), slotC = HERO_SLOT.clone().multiplyScalar(PS).add(pallet.position);
       carton.position.copy(J0).lerp(hoverC, cRise).lerp(slotC, cLand); carton.scale.setScalar(lerp(1, PS, cRise));
       carton.rotation.y = cRise * (1 - cLand) * 0.6;
-      // the globe
+      // the port: the sea, the ship; our container comes down onto its place in the cargo, then the ship sails
+      port.visible = vis && p > 0.885 && gl < 0.999;
+      port.position.set(JX + dir * SX, 0, 0); port.rotation.y = dir < 0 ? Math.PI : 0; seaMat.uniforms.uT.value = t;
+      ship.position.set(sail * sail * 7, REDUCED ? 0 : Math.sin(t * 0.9) * 0.04, 0); ship.rotation.x = REDUCED ? 0 : Math.sin(t * 0.7) * 0.012;
+      ours.visible = crane > 0.001; ours.position.copy(slot(OURS.bay, ROWS4 - 1, OURS.tier)); ours.position.y += (1 - crane) * 9;
+      // the globe, high above the port
+      globe.position.set(JX + dir * SX, 15, 0);
       globe.visible = vis && gl > 0.001; globe.scale.setScalar(Math.max(0.001, sm(gl)));
       tilt.rotation.y = GY + (REDUCED ? 0 : Math.sin(t * 0.3) * 0.06) + ptr.sx * 0.15 + (1 - gl) * 0.8;
-      arcs.forEach((a, i) => { const e = clamp((p - 0.945 - i * 0.006) / 0.05); a.tg.setDrawRange(0, Math.floor((a.n * e) / 6) * 6); a.end.visible = e > 0.98; });
+      arcs.forEach((a, i) => { const e = clamp((p - 0.972 - i * 0.003) / 0.022); a.tg.setDrawRange(0, Math.floor((a.n * e) / 6) * 6); a.end.visible = e > 0.98; });
       pulse.scale.setScalar(1 + ((t * 0.8) % 1) * 2.2); pulse.material.opacity = 1 - ((t * 0.8) % 1);
-      lbl.material.opacity = seg(p, 0.95, 0.98);
+      lbl.material.opacity = seg(p, 0.975, 0.992);
       // where the key light's shadow should look
-      focus.span = p > 0.81 ? 11 : p > 0.7 ? 6.5 : 4.6; focus.pos.set(JX + (p > 0.81 && p < 0.93 ? dir * 4.5 : 0), 0.6, 0);
+      focus.span = p > 0.905 ? 16 : p > 0.81 ? 11 : p > 0.7 ? 6.5 : 4.6;
+      focus.pos.set(JX + dir * (p > 0.905 ? SX : p > 0.81 ? 4.5 : 0), 0.6, 0);
       let s = 0; STEPS.forEach((v, i) => { if (p >= v) s = i; });
       return s;
     }
@@ -359,17 +455,21 @@ export function makeJourney({ scene, ready, contact, ptr, COARSE = false, REDUCE
       [0.715, { pos: V(-1.5, 4.6, 11.0), tgt: V(-1.35, 1.6, 0) }],
       [0.77, { pos: V(-1.8, 6.0, 15.5), tgt: V(-1.5, 2.6, 0) }],                // the pallet, then its film
       [0.82, { pos: V(-1.8, 6.0, 15.5), tgt: V(-1.5, 2.6, 0) }],
-      [0.86, { pos: V(3.6, 9.5, 37), tgt: V(3.6, 2.8, 0) }],                     // the truck: the pallet clear of the card, the cab in frame
-      [0.915, { pos: V(3.6, 9.5, 37), tgt: V(3.6, 2.8, 0) }],
-      [0.96, { pos: V(-1.3, 2.2, 9.4), tgt: V(-1.2, 1.75, 0) }],                // the world
-      [1, { pos: V(-1.3, 2.2, 9.4), tgt: V(-1.2, 1.75, 0) }]
+      [0.85, { pos: V(3.6, 9.5, 37), tgt: V(3.6, 2.8, 0) }],                     // the truck: the pallet clear of the card, the cab in frame
+      [0.895, { pos: V(3.6, 9.5, 37), tgt: V(3.6, 2.8, 0) }],
+      [0.93, { pos: V(SX - 8.5, 13, 48), tgt: V(SX - 8.5, 2.4, 0), c: SX }],             // the port: the ship to the side of the card
+      [0.958, { pos: V(SX - 7.5, 11.5, 44), tgt: V(SX - 7.5, 2.8, 0), c: SX }],
+      [0.97, { pos: V(SX - 3, 17, 34), tgt: V(SX - 2, 15, 0), c: SX }],              // up, clear of the ship, then in to the world
+      [0.986, { pos: V(SX - 1.3, 15.45, 9.4), tgt: V(SX - 1.2, 15, 0), c: SX }],
+      [1, { pos: V(SX - 1.3, 15.45, 9.4), tgt: V(SX - 1.2, 15, 0), c: SX }]
     ];
     const out = { pos: V(0, 0, 0), tgt: V(0, 0, 0), fov: 30 };
     function shotAt(p, mirror, portrait) {
       let i = 0; while (i < KEYS.length - 2 && p > KEYS[i + 1][0]) i++;
       const [pa, A] = KEYS[i], [pb, B] = KEYS[i + 1], e = sm(clamp((p - pa) / Math.max(1e-6, pb - pa)));
       out.pos.lerpVectors(A.pos, B.pos, e); out.tgt.lerpVectors(A.tgt, B.tgt, e);
-      if (portrait) { const dx = out.tgt.x; out.pos.x -= dx; out.tgt.x -= dx; out.tgt.y -= 0.55; out.pos.y -= 0.3; } // the card sits below: the subject centred, a little higher
+      // c: where the shot's subject stands (the port is far along x); 0 for everything at the factory
+      if (portrait) { const dx = out.tgt.x - lerp(A.c || 0, B.c || 0, e); out.pos.x -= dx; out.tgt.x -= dx; out.tgt.y -= 0.55; out.pos.y -= 0.3; } // the card sits below: the subject centred, a little higher
       if (mirror) { out.pos.x = -out.pos.x; out.tgt.x = -out.tgt.x; }
       out.pos.x += JX; out.tgt.x += JX;
       return out;

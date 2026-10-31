@@ -136,6 +136,18 @@ folded flat are modelled. The paint can is now the only illustrative tin. Many m
   were taken from (25-30 degrees), so flat tins and the 3D Al Qaisi read alike.
 - CSS and JS links carry `?v=<hash>` (build.mjs), so browsers fetch new files after each change.
 
+## Round 13 (2026-10-31): the JC tin, the logistics, the ring hidden
+- The main tin (key `qaisi`, the Al Qaisi round tin) now wears the JC identity: the same tin, embossed lid ornaments and band line
+  art, recoloured to PANTONE 294 C navy with gold, the client's logo replaced by the JC logo (vertical lock-up, gold foil,
+  raised). Files `assets/img/tins/jc-*` (colour, relief, spot), made from `qaisi-*` by `tools/jc-tin.py`; the logo is rendered
+  from `brand/logo/*.svg` by `tools/logo-png.cjs` (recoloured only). The originals stay in `qaisi-*`.
+- From sheet to shelf (`engine/journey.js`): white cartons with the JC logo; after the shrink film, a truck backs up with a navy
+  20-foot JC container, the doors open, the pallet goes in, the doors close and it drives off; the camera follows to the port,
+  where our container is lowered onto a navy JC container ship that sails; then the globe with the routes out of Amman, high
+  above the port. In Arabic the truck and ship turn round (not mirrored), so the logos read right.
+- The home film's ring of tins (chapter 4, "Tins we have made") is hidden: `SHOW_RING` in `engine/film.js` brings it back.
+- Sectors we serve: "Bottom ends" / «القيعان» added.
+
 ## Publishing
 - **GitHub Pages (from the branch):** Settings > Pages > Source "Deploy from a branch" > `claude/confident-knuth-ibmf9c`,
   `/ (root)`. Every push republishes within a minute or two. The repository's root `index.html` forwards to `website-v2/`,
