@@ -234,3 +234,4 @@ html[lang="ar"] .prod__txt h3 { letter-spacing: 0; font-weight: 700; line-height
 .prod__specs dd { margin: 0; font-weight: 600; color: var(--ink); }
 .prod__txt > .go { justify-self: start; }
 @media (max-width: 860px) { .prod__pair, .prod__txt { grid-template-columns: 1fr; } .prod__specs, .prod__txt > .go { grid-column: 1; grid-row: auto; margin-top: 14px; } .prod__specs > div { grid-template-columns: 7.5em 1fr; } }
+.vids--plain .vid__t { display: none; }

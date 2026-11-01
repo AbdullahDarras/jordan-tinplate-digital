@@ -245,7 +245,8 @@ const KINDS = {
   videos(s) {
     const l = ctx.lang;
     // the three factory videos only (the Facebook card is off, owner 2026-11-01)
-    return sect(s.id, '', head({}, { title: GALLERY.videosTitle }) + `<div class="vids">${VIDEOS.map((v) => facade(v.id, v.label)).join('')}${GALLERY_DRIVE.map((v) => driveFacade(v.id, v.label)).join('')}</div>`);
+    // no names on the gallery's videos (owner, 2026-11-02): the player keeps an accessible label
+    return sect(s.id, '', head({}, { title: GALLERY.videosTitle }) + `<div class="vids vids--plain">${VIDEOS.map((v) => facade(v.id, v.label)).join('')}${GALLERY_DRIVE.map((v) => driveFacade(v.id, v.label)).join('')}</div>`);
   },
   photos(s) {
     if (!PHOTOS.length) return '';
