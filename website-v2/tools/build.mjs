@@ -255,7 +255,7 @@ const KINDS = {
   range5(s) {
     const l = ctx.lang;
     return sect(s.id, 'sect--prods', head({}, RANGE5) + `<div class="prods">${RANGE5.items.map((it, i) => `<article class="prod" id="${it.id}">
-  <div class="prod__pair"><figure class="prod__fig"><img src="${ctx.pre}assets/img/range/${it.img}.webp" alt="${T(it.h, l)}" width="1200" height="900" loading="${i ? 'lazy' : 'eager'}" decoding="async"></figure>
+  <div class="prod__pair"><figure class="prod__fig"><img src="${ctx.pre}assets/img/range/${it.img}.webp" alt="${T(it.h, l)}" width="1600" height="1200" loading="${i ? 'lazy' : 'eager'}" decoding="async"></figure>
   <figure class="prod__plan">${plan(it.id, l)}</figure></div>
   <div class="prod__txt"><span class="card__n" dir="ltr">${pad2(i + 1)}</span><h3>${T(it.h, l)}</h3><p>${T(it.p, l)}</p>
     <dl class="prod__specs">${it.specs.map(([k, v]) => `<div><dt>${T(k, l)}</dt><dd class="num">${T(v, l)}</dd></div>`).join('')}</dl>
