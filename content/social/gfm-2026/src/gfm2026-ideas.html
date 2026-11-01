@@ -54,21 +54,21 @@
 /* ---------- boarding pass */
 .pass { background: radial-gradient(70% 50% at 50% 0%, #0d4489 0%, #002F6C 45%, #001a44 100%); color: #fff; }
 .pass .card { position: absolute; left: 72px; right: 72px; background: #fff; color: var(--navy); border-radius: 22px; overflow: hidden; box-shadow: 0 40px 80px rgba(0, 6, 24, .55); }
-.pass .head { background: var(--navy); color: #fff; height: 120px; display: flex; align-items: center; justify-content: space-between; gap: 30px; padding: 0 44px; }
+.pass .head { background: var(--navy); color: #fff; height: 104px; display: flex; align-items: center; justify-content: space-between; gap: 30px; padding: 0 44px; }
 .pass .head .t { font-size: 20px; font-weight: 600; display: flex; flex-direction: column; align-items: flex-end; gap: 2px; }
 .pass .head .t .en { font-size: 12px; letter-spacing: .34em; text-transform: uppercase; color: var(--amber); font-weight: 600; }
-.pass .route { display: flex; align-items: center; justify-content: space-between; padding: 30px 44px 0; direction: ltr; }
+.pass .route { display: flex; align-items: center; justify-content: space-between; padding: 18px 44px 0; direction: ltr; }
 .pass .route .ap { display: flex; flex-direction: column; }
-.pass .route .ap b { font-family: var(--en); font-size: 96px; font-weight: 800; letter-spacing: -.04em; line-height: .95; color: var(--navy); }
-.pass .route .ap span { font-family: var(--en); font-size: 15px; letter-spacing: .26em; text-transform: uppercase; color: #5b6b85; font-weight: 600; margin-top: 8px; }
+.pass .route .ap b { font-family: var(--en); font-size: 76px; font-weight: 800; letter-spacing: -.04em; line-height: .95; color: var(--navy); }
+.pass .route .ap span { font-family: var(--en); font-size: 14px; letter-spacing: .26em; text-transform: uppercase; color: #5b6b85; font-weight: 600; margin-top: 4px; }
 .pass .route .ap span .ar { font-family: var(--ar); letter-spacing: 0; text-transform: none; font-size: 17px; color: var(--navy); margin-left: 12px; }
 .pass .route .ap.to { align-items: flex-end; text-align: right; }
 .pass .route .mid { flex: 1; display: flex; align-items: center; gap: 10px; padding: 0 26px; }
 .pass .route .mid i { flex: 1; height: 0; border-top: 2px dashed #b5c4d7; }
 .pass .route .mid svg { width: 58px; height: 58px; fill: var(--amber-deep); flex: none; }
-.pass .photo { margin: 28px 44px 0; height: 376px; overflow: hidden; border-radius: 12px; background: #000; position: relative; }
+.pass .photo { margin: 22px 44px 0; height: 508px; overflow: hidden; border-radius: 12px; background: #000; position: relative; }
 .pass .photo img { display: block; width: 100%; height: 100%; object-fit: cover; }
-.pass .grid { display: grid; grid-template-columns: 2fr 1.1fr 1fr; gap: 22px 24px; padding: 30px 44px 34px; }
+.pass .grid { display: grid; grid-template-columns: 2fr 1.1fr 1fr; gap: 16px 24px; padding: 22px 44px 26px; }
 .pass .f { display: flex; flex-direction: column; gap: 4px; }
 .pass .f small { font-family: var(--en); font-size: 13px; letter-spacing: .3em; text-transform: uppercase; color: #5b6b85; font-weight: 600; direction: ltr; text-align: right; }
 .pass .f b { font-family: var(--en); font-size: 30px; font-weight: 700; color: var(--navy); direction: ltr; text-align: right; letter-spacing: -.01em; }
@@ -77,13 +77,13 @@
 .pass .tear { position: relative; height: 0; border-top: 3px dashed #c9d3e0; margin: 0 -40px; }
 .pass .tear::before, .pass .tear::after { content: ''; position: absolute; top: -22px; width: 44px; height: 44px; border-radius: 50%; background: #002F6C; }
 .pass .tear::before { left: 18px; } .pass .tear::after { right: 18px; }
-.pass .stub { display: flex; align-items: center; justify-content: space-between; padding: 30px 44px 34px; gap: 24px; }
-.pass .bc { height: 70px; width: 360px; background:
+.pass .stub { display: flex; align-items: center; justify-content: space-between; padding: 22px 44px 26px; gap: 24px; }
+.pass .bc { height: 60px; width: 340px; background:
   repeating-linear-gradient(90deg, var(--navy) 0 2px, transparent 2px 5px, var(--navy) 5px 6px, transparent 6px 10px, var(--navy) 10px 13px, transparent 13px 15px, var(--navy) 15px 16px, transparent 16px 20px, var(--navy) 20px 22px, transparent 22px 27px); }
 .pass .bcwrap { display: flex; flex-direction: column; gap: 8px; direction: ltr; }
 .pass .bcwrap small { font-family: var(--en); font-size: 14px; letter-spacing: .34em; color: #5b6b85; font-weight: 600; text-transform: uppercase; }
 .pass .mail { font-family: var(--en); font-size: 22px; font-weight: 700; color: var(--navy); direction: ltr; }
-.pass .foot { position: absolute; left: 96px; right: 96px; bottom: 64px; display: flex; align-items: center; justify-content: space-between; }
+.pass .foot { position: absolute; left: 96px; right: 96px; bottom: 48px; display: flex; align-items: center; justify-content: space-between; }
 .pass .foot .lbl { color: var(--amber); }
 </style></head>
 <body>
@@ -125,11 +125,11 @@
 
 <!-- ======================================================= CONCEPT "PASS": BOARDING PASS AMM -> DXB, POST 1080 x 1350 -->
 <div class="frame c pass" data-name="gfm2026-ticket-post-1080x1350" style="width:1080px;height:1350px">
-  <div style="position:absolute;top:56px;left:96px;right:96px;display:flex;align-items:center;justify-content:space-between">
-    <img src="assets/logo-h-white.svg" alt="Jordan Tinplate Canning" style="height:50px">
+  <div style="position:absolute;top:48px;left:96px;right:96px;display:flex;align-items:center;justify-content:space-between">
+    <img src="assets/logo-h-white.svg" alt="Jordan Tinplate Canning" style="height:48px">
     <div class="lbl" style="color:var(--amber)"><span class="ar">دعوة خاصة</span><span class="en">A private invitation</span></div>
   </div>
-  <div class="card" style="top:150px">
+  <div class="card" style="top:136px">
     <div class="head">
       <div class="t" style="white-space:nowrap">بطاقة صعود إلى معرضنا<span class="en">Boarding pass</span></div>
       <img src="assets/gfm-2026-logo.png" alt="Gulfood Manufacturing, 3–5 November 2026, Dubai World Trade Centre" style="height:52px;display:block">
