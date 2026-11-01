@@ -12,6 +12,7 @@ import crypto from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import { RANGE5 } from './range.mjs';
 import { plan } from './plans.mjs';
+import { ABOUT_VIDEO, GALLERY_DRIVE } from './videos.mjs';
 import { LOGO as LOGOS } from '../../website/tools/logo.mjs';
 import { SITE, UI, PAGES as ALL, NEWS, NAV, FINISH_LAB, SHAPES_LAB, RANGE, IND_LIST, STORY, STEPS, CERTS, VIDEOS, PHOTOS, GALLERY, SHOW_PENDING } from '../../website/tools/content.mjs';
 
@@ -238,15 +239,13 @@ const KINDS = {
     return sect(s.id, 'sect--certs', `<header class="sec__head"><p class="kick">${T(CERTS.title, l)}</p></header><div class="certs certs--row">${CERTS.items.map((c) => `<figure><img src="${ctx.pre}${c.file.replace(/^\//, '')}.webp" width="${c.w}" height="${c.h}" loading="lazy" alt="${T(c.alt, l)}"><figcaption><b>${T(c.name, l)}</b>${c.sub ? `<span>${T(c.sub, l)}</span>` : ''}</figcaption></figure>`).join('')}</div>`);
   },
   featuredVideo(s) {
-    const l = ctx.lang, v = VIDEOS.find((x) => x.id === SITE.mainVideoId) || VIDEOS[0];
-    // About (owner, 2026-11-02): the video is called "Jordan Canning" and its poster is the team in front of the factory; the new
-    // video file goes in its place when it arrives (assets/video/<id>.mp4)
-    return sect(s.id, 'sect--video', head({}, { eyebrow: GALLERY.featured.eyebrow, title: t2('Jordan Canning', 'Jordan Canning') }) + facade(v.id, t2('Jordan Canning', 'Jordan Canning'), true, 'assets/video/about-poster.jpg'));
+    // About (owner, 2026-11-02): the "Jordan Canning" video from the company Drive, the team photo as its poster
+    return sect(s.id, 'sect--video', head({}, { eyebrow: GALLERY.featured.eyebrow, title: ABOUT_VIDEO.label }) + driveFacade(ABOUT_VIDEO.id, ABOUT_VIDEO.label, true, ABOUT_VIDEO.poster));
   },
   videos(s) {
     const l = ctx.lang;
     // the three factory videos only (the Facebook card is off, owner 2026-11-01)
-    return sect(s.id, '', head({}, { title: GALLERY.videosTitle }) + `<div class="vids">${VIDEOS.map((v) => facade(v.id, v.label)).join('')}</div>`);
+    return sect(s.id, '', head({}, { title: GALLERY.videosTitle }) + `<div class="vids">${VIDEOS.map((v) => facade(v.id, v.label)).join('')}${GALLERY_DRIVE.map((v) => driveFacade(v.id, v.label)).join('')}</div>`);
   },
   photos(s) {
     if (!PHOTOS.length) return '';
@@ -272,6 +271,18 @@ const KINDS = {
 const videoFile = (id) => fs.existsSync(path.join(ROOT, 'assets/video', id + '.mp4'));
 // the poster is hosted with the site (a viewer may block YouTube's image server); YouTube's own as a fallback
 const posterOf = (id) => (fs.existsSync(path.join(ROOT, 'assets/video', id + '.jpg')) ? `${ctx.pre}assets/video/${id}.jpg` : `https://i.ytimg.com/vi/${id}/hqdefault.jpg`);
+// a video on Google Drive: the same poster and play button; on click Drive's player loads in place
+function driveFacade(id, label, big = false, poster = `assets/video/${id}.jpg`) {
+  const l = ctx.lang, name = T(label, l);
+  return `<div class="vid${big ? ' vid--big' : ''}" data-drive="${id}" data-title="${name}">
+    <button class="vid__play" type="button" aria-label="${T(UI.playVideo, l)}: ${name}">
+      <img class="vid__poster" src="${ctx.pre}${poster}" alt="" width="1280" height="720" loading="lazy" decoding="async">
+      <span class="vid__btn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span>
+      <span class="vid__t">${name}</span>
+    </button>
+    <p class="vid__blocked" hidden>${T(t2('This viewer does not allow Google Drive inside the page. On the website the video plays right here.', 'هذه المعاينة لا تسمح بتشغيل Google Drive داخل الصفحة. على الموقع يعمل الفيديو هنا مباشرة.'), l)} <a href="https://drive.google.com/file/d/${id}/view" target="_blank" rel="noopener">${T(t2('Open the video', 'افتح الفيديو'), l)}</a></p>
+  </div>`;
+}
 function facade(id, label, big = false, ownPoster = '') {
   const l = ctx.lang, name = T(label, l);
   if (videoFile(id)) {

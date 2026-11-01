@@ -47,14 +47,14 @@ rv.forEach((el, i) => { el.style.setProperty('--d', (i % 4) * 70 + 'ms'); io.obs
 
 // videos play inside the page: the YouTube player (no-cookie) loads in place on click. A viewer that forbids other sites in
 // frames (a sandboxed preview) blocks it: then the poster stays and a short note says so, instead of an empty box.
-$$('.vid[data-vid]').forEach((v) => v.querySelector('.vid__play').addEventListener('click', () => {
+$$('.vid[data-vid], .vid[data-drive]').forEach((v) => v.querySelector('.vid__play').addEventListener('click', () => {
   const f = document.createElement('iframe');
-  f.src = `https://www.youtube-nocookie.com/embed/${v.dataset.vid}?autoplay=1&rel=0&playsinline=1`; f.title = v.dataset.title;
+  f.src = v.dataset.drive ? `https://drive.google.com/file/d/${v.dataset.drive}/preview` : `https://www.youtube-nocookie.com/embed/${v.dataset.vid}?autoplay=1&rel=0&playsinline=1`; f.title = v.dataset.title;
   f.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen'; f.allowFullscreen = true;
   const btn = v.querySelector('.vid__play'); btn.hidden = true; btn.style.display = 'none'; v.append(f); v.classList.add('playing');
 }));
 document.addEventListener('securitypolicyviolation', (e) => {
-  if (!/youtube/.test(e.blockedURI || '')) return;
+  if (!/youtube|drive\.google/.test(e.blockedURI || '')) return;
   $$('.vid.playing').forEach((v) => { v.querySelector('iframe')?.remove(); const btn = v.querySelector('.vid__play'); btn.hidden = false; btn.style.display = ''; v.classList.remove('playing'); v.querySelector('.vid__blocked').hidden = false; });
 });
 // the site's own video files: one plays at a time
