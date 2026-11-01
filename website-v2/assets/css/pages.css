@@ -191,3 +191,11 @@ html[lang="ar"] .foot__h { letter-spacing: 0; font-size: 14px; }
   .story--one .facts { flex-direction: row; }
 }
 .credit { margin-top: 14px; opacity: .75; font-size: 12px; }
+/* the lead news item: full width, its picture beside the text on wide screens */
+.news__card--lead { grid-column: 1 / -1; display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); column-gap: 32px; align-items: start; }
+.news__card--lead > :not(.news__fig) { grid-column: 2; }
+.news__fig { grid-column: 1; grid-row: 1 / span 6; position: relative; margin: 0; border-radius: 16px; overflow: hidden; }
+.news__fig img { display: block; width: 100%; height: auto; }
+.news__fig figcaption { position: absolute; inset-inline-start: 12px; bottom: 12px; padding: 5px 10px; border-radius: 999px; background: rgba(0, 19, 45, .78); color: #fff; font-size: 12px; }
+.news__stand { position: absolute; inset-inline-end: 12px; top: 12px; padding: 8px 14px; border-radius: 12px; background: #d98b14; color: #1a1204; font-weight: 800; font-size: 18px; }
+@media (max-width: 760px) { .news__card--lead { grid-template-columns: 1fr; } .news__card--lead > :not(.news__fig) { grid-column: 1; } .news__fig { grid-row: auto; margin-bottom: 14px; } }

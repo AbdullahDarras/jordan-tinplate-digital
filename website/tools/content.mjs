@@ -658,8 +658,8 @@ export const PAGES = [
   {
     id: 'gallery', path: 'gallery/', navKey: 'gallery', parent: 'home',
     title: t('Photos & Videos Gallery | Jordan Tinplate Canning', 'معرض الصور والفيديوهات | الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية'),
-    description: t('Videos from the Jordan Tinplate Canning factory in Jordan, with links to our longer videos on Facebook.',
-                   'فيديوهات من مصنع الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية في الأردن، مع رابط لفيديوهاتنا الأطول على فيس بوك.'),
+    description: t('Videos from the Jordan Tinplate Canning factory in Jordan.',
+                   'فيديوهات من مصنع الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية في الأردن.'),
     crumb: t('Gallery', 'المعرض'),
     hero: {
       eyebrow: t('Gallery', 'المعرض'),
@@ -680,8 +680,8 @@ export const PAGES = [
   {
     id: 'news', path: 'news/', navKey: 'news', parent: 'home',
     title: t('News & Events | Jordan Tinplate Canning', 'الأخبار والفعاليات | الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية'),
-    description: t('Jordan Tinplate Canning in the news: the Saudi Food Manufacturing 2025 interview and our exhibitions in Dubai, New York and Baghdad.',
-                   'أخبار الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية: مقابلة معرض Saudi Food Manufacturing 2025، ومشاركاتنا في المعارض في دبي ونيويورك وبغداد.'),
+    description: t('Jordan Tinplate Canning news: Gulfood Manufacturing 2026 in Dubai (stand CC1-190), our Saudi Food Manufacturing 2025 interview and our exhibitions.',
+                   'أخبارنا: معرض Gulfood Manufacturing 2026 في دبي (الجناح CC1-190)، ومقابلة Saudi Food Manufacturing 2025، ومعارضنا في دبي ونيويورك وبغداد.'),
     crumb: t('News', 'الأخبار'),
     hero: {
       eyebrow: t('News & events', 'الأخبار والفعاليات'),
@@ -716,6 +716,13 @@ export const PAGES = [
 
 // ---------------------------------------------------------------- news items
 export const NEWS = [
+  // Gulfood Manufacturing 2026 (owner, 2026-11-01): dates, venue and stand from the invitation; the image is the stand design render
+  { tag: t('Dubai · 3–5 November 2026', 'دبي · 3–5 تشرين الثاني 2026'),
+    h: t('Meet us at Gulfood Manufacturing 2026', 'نلتقي في معرض Gulfood Manufacturing 2026'),
+    p: t('Jordan Tinplate Canning exhibits at Gulfood Manufacturing 2026, the region’s event for food and beverage manufacturing, processing and packaging, at Dubai World Trade Centre. Visit us at stand CC1-190, or book a meeting: sales@jordantinplate.com',
+         'تشارك الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية في معرض Gulfood Manufacturing 2026، معرض المنطقة لتصنيع الأغذية والمشروبات وتعبئتها وتغليفها، في مركز دبي التجاري العالمي. زورونا في الجناح CC1-190، أو احجزوا موعداً: sales@jordantinplate.com'),
+    img: 'assets/img/news/gfm-2026-stand.webp', imgAlt: t('Design of the Jordan Tinplate Canning stand at Gulfood Manufacturing 2026', 'تصميم جناح الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية في Gulfood Manufacturing 2026'),
+    stand: t('Stand CC1-190', 'الجناح CC1-190'), caption: t('Our stand design', 'تصميم جناحنا') },
   { tag: t('Interview · April 2025', 'مقابلة · نيسان 2025'),
     h: t('Saudi Food Manufacturing 2025', 'معرض Saudi Food Manufacturing 2025'),
     p: t('Our partner Omar Abu Salha was interviewed by Sharikat Mubasher at Saudi Food Manufacturing 2025.', 'أجرى موقع «شركات مباشر» مقابلة مع شريكنا Omar Abu Salha خلال معرض Saudi Food Manufacturing 2025.'),

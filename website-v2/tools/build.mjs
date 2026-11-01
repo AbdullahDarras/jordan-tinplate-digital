@@ -228,8 +228,8 @@ const KINDS = {
   },
   videos(s) {
     const l = ctx.lang;
-    const fb = `<a class="vcard vcard--fb" href="${SITE.social.Facebook}" target="_blank" rel="noopener"><span class="kick">${T(GALLERY.fb.tag, l)}</span><b>${T(GALLERY.fb.h, l)}</b><span>${T(GALLERY.fb.p, l)}</span><span class="go"><span>${T(GALLERY.fb.cta, l)}</span>${EXT}</span></a>`;
-    return sect(s.id, '', head({}, { title: GALLERY.videosTitle }) + `<div class="vids">${VIDEOS.map((v) => facade(v.id, v.label)).join('')}${fb}</div>`);
+    // the three factory videos only (the Facebook card is off, owner 2026-11-01)
+    return sect(s.id, '', head({}, { title: GALLERY.videosTitle }) + `<div class="vids">${VIDEOS.map((v) => facade(v.id, v.label)).join('')}</div>`);
   },
   photos(s) {
     if (!PHOTOS.length) return '';
@@ -237,7 +237,7 @@ const KINDS = {
   },
   news(s) {
     const l = ctx.lang, items = NEWS.slice(0, s.limit || NEWS.length);
-    return sect(s.id, '', `<div class="news">${items.map((n, i) => `<article class="card news__card"><span class="card__n" dir="ltr">${pad2(i + 1)}</span><p class="kick">${T(n.tag, l)}</p><h3>${T(n.h, l)}</h3><p>${T(n.p, l)}</p>${n.href ? `<p class="more"><a class="go" href="${n.href}" target="_blank" rel="noopener"><span>${T(UI.read, l)}</span>${EXT}<span class="vh"> (${T(UI.opensNew, l)})</span></a></p>` : ''}</article>`).join('')}</div>`);
+    return sect(s.id, '', `<div class="news">${items.map((n, i) => `<article class="card news__card${n.img ? ' news__card--lead' : ''}">${n.img ? `<figure class="news__fig"><img src="${ctx.pre}${n.img}" alt="${esc(T(n.imgAlt, l))}" width="1600" height="900" loading="lazy" decoding="async"><figcaption>${T(n.caption, l)}</figcaption>${n.stand ? `<span class="news__stand num">${T(n.stand, l)}</span>` : ''}</figure>` : ''}<span class="card__n" dir="ltr">${pad2(i + 1)}</span><p class="kick">${T(n.tag, l)}</p><h3>${T(n.h, l)}</h3><p>${T(n.p, l)}</p>${n.href ? `<p class="more"><a class="go" href="${n.href}" target="_blank" rel="noopener"><span>${T(UI.read, l)}</span>${EXT}<span class="vh"> (${T(UI.opensNew, l)})</span></a></p>` : ''}</article>`).join('')}</div>`);
   }
 };
 // A video plays inside the page. When its file is hosted with the site (assets/video/<youtube id>.mp4, with a poster
