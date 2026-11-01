@@ -199,3 +199,22 @@ html[lang="ar"] .foot__h { letter-spacing: 0; font-size: 14px; }
 .news__fig figcaption { position: absolute; inset-inline-start: 12px; bottom: 12px; padding: 5px 10px; border-radius: 999px; background: rgba(0, 19, 45, .78); color: #fff; font-size: 12px; }
 .news__stand { position: absolute; inset-inline-end: 12px; top: 12px; padding: 8px 14px; border-radius: 12px; background: #d98b14; color: #1a1204; font-weight: 800; font-size: 18px; }
 @media (max-width: 760px) { .news__card--lead { grid-template-columns: 1fr; } .news__card--lead > :not(.news__fig) { grid-column: 1; } .news__fig { grid-row: auto; margin-bottom: 14px; } }
+/* contact: both emails in one card, one under the other */
+.reach__mails { display: grid; gap: 4px; }
+.reach__mails a { color: inherit; text-decoration: none; }
+.reach__mails a:hover { text-decoration: underline; }
+/* products: five families, a large picture and the basics */
+.prods { display: grid; gap: 22px; }
+.prod { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); align-items: center; gap: clamp(20px, 4vw, 56px); padding: clamp(18px, 2.4vw, 30px); border-radius: 26px; background: var(--card); border: 1px solid var(--line); scroll-margin-top: 90px; }
+.prod:nth-child(even) .prod__fig { order: 2; }
+.prod__fig { margin: 0; border-radius: 18px; overflow: hidden; background: radial-gradient(120% 90% at 50% 40%, #ffffff, #e3e9f2); aspect-ratio: 4 / 3; display: grid; place-items: center; }
+html[data-mode="dark"] .prod__fig { background: radial-gradient(120% 90% at 50% 40%, #12305d, #071a36); }
+.prod__fig img { width: 100%; height: 100%; object-fit: contain; display: block; }
+.prod__txt h3 { margin: 6px 0 8px; font: 800 clamp(26px, 2.6vw, 38px)/1.1 var(--f-head); letter-spacing: -.02em; color: var(--ink); }
+html[lang="ar"] .prod__txt h3 { letter-spacing: 0; font-weight: 700; line-height: 1.35; }
+.prod__txt > p { margin: 0 0 16px; color: var(--mute); max-width: 52ch; }
+.prod__specs { margin: 0 0 18px; display: grid; gap: 0; border-top: 1px solid var(--line); }
+.prod__specs > div { display: grid; grid-template-columns: 9.5em 1fr; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--line); }
+.prod__specs dt { color: var(--mute); font-size: 14px; }
+.prod__specs dd { margin: 0; font-weight: 600; color: var(--ink); }
+@media (max-width: 860px) { .prod { grid-template-columns: 1fr; } .prod:nth-child(even) .prod__fig { order: 0; } .prod__specs > div { grid-template-columns: 7.5em 1fr; } }

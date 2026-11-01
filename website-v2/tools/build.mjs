@@ -10,6 +10,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import { fileURLToPath } from 'node:url';
+import { RANGE5 } from './range.mjs';
 import { LOGO as LOGOS } from '../../website/tools/logo.mjs';
 import { SITE, UI, PAGES as ALL, NEWS, NAV, FINISH_LAB, SHAPES_LAB, RANGE, IND_LIST, STORY, STEPS, CERTS, VIDEOS, PHOTOS, GALLERY, SHOW_PENDING } from '../../website/tools/content.mjs';
 
@@ -21,7 +22,19 @@ const PAGES = ALL.map((p) => (SHOW_PENDING ? p : {
   sections: p.sections.map((s) => (s.blocks ? { ...s, blocks: s.blocks.filter(keep).map((b) => (b.k === 'specs' ? { ...b, rows: b.rows.filter((r) => !r.tbc) } : b)) } : s))
     .filter((s) => !s.blocks || s.blocks.length)
 }));
-const byId = Object.fromEntries(PAGES.map((p) => [p.id, p]));
+// Owner, 2026-11-02: the Capabilities page and the industry pages are off; the industries and shapes sections go; Products shows the
+// product range only (tools/range.mjs). Links to a page that is off are left out.
+const OFF = (p) => p.id === 'capabilities' || p.id.startsWith('ind-');
+const DROP = new Set(['industries', 'shapes', 'finish']);
+const PAGES_ALL = PAGES;
+const LIVE = PAGES_ALL.filter((p) => !OFF(p)).map((p) => ({
+  ...p,
+  hero: p.id === 'products' ? { ...p.hero, lead: RANGE5.lead } : p.hero,
+  sections: p.id === 'products' ? [{ kind: 'range5', id: 'range' }] : p.sections.filter((s) => !DROP.has(s.kind))
+}));
+const byId = Object.fromEntries(LIVE.map((p) => [p.id, p]));
+const isLive = (id) => id === 'home' || !!byId[id];
+const NAV_LIVE = NAV.filter((n) => isLive(n.page));
 const t2 = (en, ar) => ({ en, ar });
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 const T = (v, l) => esc(v && typeof v === 'object' ? v[l] : v ?? '');
@@ -54,6 +67,7 @@ function link(to, label, cls = 'go') {
   const l = ctx.lang;
   if (to === 'order') return `<a class="${cls}" href="${SITE.orderUrl}" target="_blank" rel="noopener"><span>${T(label, l)}</span>${ARROW}<span class="vh"> (${T(UI.opensNew, l)})</span></a>`;
   if (to === 'catalogue') return `<a class="${cls}" href="${SITE.catalogue}" target="_blank" rel="noopener"><span>${T(label, l)}</span>${EXT}<span class="vh"> (${T(UI.opensNew, l)})</span></a>`;
+  if (!isLive(to)) return '';
   return `<a class="${cls}" href="${pageHref(to)}"><span>${T(label, l)}</span>${ARROW}</a>`;
 }
 const GEAR_SVG = `<svg class="gear" viewBox="0 0 274 275.9" aria-hidden="true" focusable="false"><path d="${LOGOS.H.gear}"/></svg>`;
@@ -64,7 +78,7 @@ const img = (key, cls = 'render') => (RENDERS.has(key) ? `<img class="${cls}" sr
 // ---------------------------------------------------------------- chrome
 function header(page) {
   const l = ctx.lang;
-  const nav = [{ key: 'home', page: 'home', label: byId.home.crumb }, ...NAV].map((n) => `<li><a href="${pageHref(n.page)}"${page.navKey === n.key ? ' aria-current="page"' : ''}>${T(n.label, l)}</a></li>`).join('');
+  const nav = [{ key: 'home', page: 'home', label: byId.home.crumb }, ...NAV_LIVE].map((n) => `<li><a href="${pageHref(n.page)}"${page.navKey === n.key ? ' aria-current="page"' : ''}>${T(n.label, l)}</a></li>`).join('');
   return `<header class="top top--page" id="top">
   <a class="top__brand" href="${pageHref('home')}" aria-label="${T(UI.brandAria, l)}">${LOGO}</a>
   <nav class="top__nav" aria-label="${T(UI.primaryNav, l)}"><ul>${nav}</ul></nav>
@@ -75,7 +89,7 @@ function header(page) {
     <button class="pill pill--icon menu-btn" id="menuBtn" type="button" aria-expanded="false" aria-controls="menu" aria-label="${T(UI.menu, l)}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h16M4 16h16"/></svg></button>
   </div>
 </header>
-<div class="menu" id="menu" hidden><nav aria-label="${T(UI.switchMenu, l)}"><ul>${[{ page: 'home', label: byId.home.crumb }, ...NAV].map((n, i) => `<li><a href="${pageHref(n.page)}"><span class="num">${pad2(i + 1)}</span>${T(n.label, l)}</a></li>`).join('')}</ul></nav></div>`;
+<div class="menu" id="menu" hidden><nav aria-label="${T(UI.switchMenu, l)}"><ul>${[{ page: 'home', label: byId.home.crumb }, ...NAV_LIVE].map((n, i) => `<li><a href="${pageHref(n.page)}"><span class="num">${pad2(i + 1)}</span>${T(n.label, l)}</a></li>`).join('')}</ul></nav></div>`;
 }
 function crumbs(page) {
   const chain = []; let p = page; while (p) { chain.unshift(p); p = p.parent ? byId[p.parent] : null; }
@@ -119,8 +133,8 @@ const contactList = () => { const l = ctx.lang; return `<dl class="contact">
     </dl>`; };
 function footer() {
   const l = ctx.lang;
-  const inds = PAGES.filter((p) => p.parent === 'products').map((p) => `<li><a href="${pageHref(p.id)}">${T(p.crumb, l)}</a></li>`).join('');
-  const comp = NAV.map((n) => `<li><a href="${pageHref(n.page)}">${T(n.label, l)}</a></li>`).join('');
+  const inds = RANGE5.items.map((p) => `<li><a href="${pageHref('products')}#${p.id}">${T(p.h, l)}</a></li>`).join('');
+  const comp = NAV_LIVE.map((n) => `<li><a href="${pageHref(n.page)}">${T(n.label, l)}</a></li>`).join('');
   return `<footer class="foot foot--page">
   <div class="sect__in foot__grid">
     <div class="foot__id">
@@ -128,7 +142,7 @@ function footer() {
       <p class="foot__blurb">${T(UI.footBlurb, l)}</p>
       <p class="foot__social">${Object.entries(SITE.social).map(([k, v]) => `<a href="${v}" target="_blank" rel="noopener">${k}</a>`).join('')}</p>
     </div>
-    <div><p class="foot__h">${T(UI.footIndustries, l)}</p><ul>${inds}</ul></div>
+    <div><p class="foot__h">${T(RANGE5.eyebrow, l)}</p><ul>${inds}</ul></div>
     <div><p class="foot__h">${T(UI.footCompany, l)}</p><ul>${comp}</ul></div>
     <div><p class="foot__h">${T(UI.footContact, l)}</p><ul><li class="num"><a href="mailto:${SITE.email}">${SITE.email}</a></li><li class="num"><a href="mailto:${SITE.email2}">${SITE.email2}</a></li><li class="num" dir="ltr"><a href="tel:${SITE.tel}">${SITE.phone}</a></li><li>${T(UI.addressArea, l)}</li></ul></div>
   </div>
@@ -224,7 +238,9 @@ const KINDS = {
   },
   featuredVideo(s) {
     const l = ctx.lang, v = VIDEOS.find((x) => x.id === SITE.mainVideoId) || VIDEOS[0];
-    return sect(s.id, 'sect--video', head({}, { eyebrow: GALLERY.featured.eyebrow, title: GALLERY.featured.title }) + facade(v.id, v.label, true));
+    // About (owner, 2026-11-02): the video is called "Jordan Canning" and its poster is the team in front of the factory; the new
+    // video file goes in its place when it arrives (assets/video/<id>.mp4)
+    return sect(s.id, 'sect--video', head({}, { eyebrow: GALLERY.featured.eyebrow, title: t2('Jordan Canning', 'Jordan Canning') }) + facade(v.id, t2('Jordan Canning', 'Jordan Canning'), true, 'assets/video/about-poster.jpg'));
   },
   videos(s) {
     const l = ctx.lang;
@@ -234,6 +250,15 @@ const KINDS = {
   photos(s) {
     if (!PHOTOS.length) return '';
     return sect(s.id, '', head({}, { title: GALLERY.photosTitle }) + `<div class="photos">${PHOTOS.map((p) => `<img src="${ctx.pre}${p.src.replace(/^\//, '')}" alt="${esc(ctx.lang === 'ar' ? p.alt_ar : p.alt_en)}" loading="lazy">`).join('')}</div>`);
+  },
+  range5(s) {
+    const l = ctx.lang;
+    return sect(s.id, 'sect--prods', head({}, RANGE5) + `<div class="prods">${RANGE5.items.map((it, i) => `<article class="prod" id="${it.id}">
+  <figure class="prod__fig"><img src="${ctx.pre}assets/img/range/${it.img}.webp" alt="${T(it.h, l)}" width="1200" height="900" loading="${i ? 'lazy' : 'eager'}" decoding="async"></figure>
+  <div class="prod__txt"><span class="card__n" dir="ltr">${pad2(i + 1)}</span><h3>${T(it.h, l)}</h3><p>${T(it.p, l)}</p>
+    <dl class="prod__specs">${it.specs.map(([k, v]) => `<div><dt>${T(k, l)}</dt><dd class="num">${T(v, l)}</dd></div>`).join('')}</dl>
+    ${link('order', UI.quote, 'go')}</div>
+</article>`).join('')}</div>`);
   },
   news(s) {
     const l = ctx.lang, items = NEWS.slice(0, s.limit || NEWS.length);
@@ -245,15 +270,15 @@ const KINDS = {
 const videoFile = (id) => fs.existsSync(path.join(ROOT, 'assets/video', id + '.mp4'));
 // the poster is hosted with the site (a viewer may block YouTube's image server); YouTube's own as a fallback
 const posterOf = (id) => (fs.existsSync(path.join(ROOT, 'assets/video', id + '.jpg')) ? `${ctx.pre}assets/video/${id}.jpg` : `https://i.ytimg.com/vi/${id}/hqdefault.jpg`);
-function facade(id, label, big = false) {
+function facade(id, label, big = false, ownPoster = '') {
   const l = ctx.lang, name = T(label, l);
   if (videoFile(id)) {
-    const poster = fs.existsSync(path.join(ROOT, 'assets/video', id + '.jpg')) ? ` poster="${ctx.pre}assets/video/${id}.jpg"` : '';
+    const poster = ownPoster ? ` poster="${ctx.pre}${ownPoster}"` : fs.existsSync(path.join(ROOT, 'assets/video', id + '.jpg')) ? ` poster="${ctx.pre}assets/video/${id}.jpg"` : '';
     return `<div class="vid vid--own${big ? ' vid--big' : ''}"><video controls playsinline preload="metadata"${poster} aria-label="${name}"><source src="${ctx.pre}assets/video/${id}.mp4" type="video/mp4"></video></div>`;
   }
   return `<div class="vid${big ? ' vid--big' : ''}" data-vid="${id}" data-title="${name}">
     <button class="vid__play" type="button" aria-label="${T(UI.playVideo, l)}: ${name}">
-      <img class="vid__poster" src="${posterOf(id)}" alt="" width="1280" height="720" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.remove()">
+      <img class="vid__poster" src="${ownPoster ? ctx.pre + ownPoster : posterOf(id)}" alt="" width="1280" height="720" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.remove()">
       <span class="vid__btn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span>
       <span class="vid__t">${name}</span>
     </button>
@@ -264,8 +289,7 @@ function contactPage() {
   const l = ctx.lang;
   return sect('reach', 'sect--reach', `<div class="reach">
   <a class="reach__order" href="${SITE.orderUrl}" target="_blank" rel="noopener"><span class="kick">${T(UI.quote, l)}</span><b>${T(UI.orderTitle, l)}</b><span>${T(UI.orderLead, l)}</span><i class="tile__go">${ARROW}</i></a>
-  <a class="reach__card" href="mailto:${SITE.email}"><span class="kick">${T(UI.mail, l)}</span><b class="num">${SITE.email}</b></a>
-  <a class="reach__card" href="mailto:${SITE.email2}"><span class="kick">${T(UI.mail, l)}</span><b class="num">${SITE.email2}</b></a>
+  <div class="reach__card"><span class="kick">${T(UI.mail, l)}</span><b class="num reach__mails"><a href="mailto:${SITE.email}">${SITE.email}</a><a href="mailto:${SITE.email2}">${SITE.email2}</a></b></div>
   <a class="reach__card" href="tel:${SITE.tel}"><span class="kick">${T(UI.phone, l)}</span><b class="num" dir="ltr">${SITE.phone}</b></a>
   <div class="reach__card"><span class="kick">${T(UI.address, l)}</span><b>${T(UI.addressArea, l)}</b></div>
 </div>
@@ -326,7 +350,8 @@ ${footer()}
 }
 
 let n = 0;
-for (const page of PAGES) {
+LANGS.forEach((l) => fs.rmSync(path.join(ROOT, l), { recursive: true, force: true }));   // only what is live is written
+for (const page of LIVE) {
   if (page.id === 'home') continue;
   for (const lang of LANGS) {
     const out = path.join(ROOT, lang, page.path, 'index.html');
@@ -339,7 +364,7 @@ for (const page of PAGES) {
 {
   ctx.pre = ''; ctx.lang = 'en';
   // the home tab first; on the home page itself it is the current page and stays on index.html
-  const items = [{ key: 'home', path: '', en: byId.home.crumb.en, ar: byId.home.crumb.ar }, ...NAV.map((x) => ({ key: x.key, path: byId[x.page].path + 'index.html', en: x.label.en, ar: x.label.ar }))];
+  const items = [{ key: 'home', path: '', en: byId.home.crumb.en, ar: byId.home.crumb.ar }, ...NAV_LIVE.map((x) => ({ key: x.key, path: byId[x.page].path + 'index.html', en: x.label.en, ar: x.label.ar }))];
   const nav = `<!--nav--><nav class="top__nav" aria-label="Primary" data-i18n-aria="primaryNav"><ul>${items.map((x) => (x.key === 'home' ? `<li><a href="index.html" aria-current="page" data-i18n="nav.home">${esc(x.en)}</a></li>` : `<li><a href="en/${x.path}" data-path="${x.path}" data-i18n="nav.${x.key}">${esc(x.en)}</a></li>`)).join('')}</ul></nav><!--/nav-->`;
   const btn = `<!--menubtn--><button class="pill pill--icon menu-btn" id="menuBtn" type="button" aria-expanded="false" aria-controls="menu" aria-label="Menu" data-i18n-aria="menu"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h16M4 16h16"/></svg></button><!--/menubtn-->`;
   const menu = `<!--menu--><div class="menu" id="menu" hidden><nav aria-label="Main menu" data-i18n-aria="menu"><ul>${items.map((x, i) => `<li><a href="${x.key === 'home' ? 'index.html' : `en/${x.path}`}"${x.key === 'home' ? '' : ` data-path="${x.path}"`}><span class="num">${pad2(i + 1)}</span><span data-i18n="nav.${x.key}">${esc(x.en)}</span></a></li>`).join('')}</ul></nav></div><!--/menu-->`;

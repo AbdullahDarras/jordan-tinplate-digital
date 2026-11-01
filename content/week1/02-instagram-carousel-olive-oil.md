@@ -66,7 +66,7 @@
 |---|---|---|
 | **Headline** | جاهز لموسمك؟ تحدّث معنا | Ready for your season? Talk to us |
 | **Body** | تنكات الزيت بأحجام 1 و4 و8 و16 لتر/كغ، بطلاء داخلي يطابق أعلى معايير الصحة الخاصة بالأغذية. | Olive-oil tins in 1, 4, 8 and 16 L/kg, with an interior lacquer that meets the highest food-grade hygiene standards. |
-| **Contact** | sales@jordantinplate.com · +962 6 4051125 · jordantinplate.com | same |
+| **Contact** | sales@jordantinplate.com · +962 6 4051124 · jordantinplate.com | same |
 | **Sign-off** | الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية · علب معدنية للأغذية والمشروبات · منذ 1998 | Jordan Tinplate Canning · Metal packaging for food & beverage brands · Since 1998 |
 
 **Visual direction:** Return to the cover tin (so the carousel loops), the olive branch smaller. Wordmark "Jordan Tinplate Canning" (temporary until the final vector logo arrives; colour PANTONE 294 C, about `#002F6C`) at the top. The two confirmed facts (sizes, interior lacquer) get their own line each, with the four sizes shown as four small tin silhouettes. No standard name, no badge. Contact lines in large, tappable-looking rows. A small "احفظ المنشور / Save this post" label.

@@ -210,3 +210,7 @@ html[lang="ar"] .cta__h { letter-spacing: 0; line-height: 1.2; font-weight: 700;
    make big Arabic lines touch. Every large heading gets real air in Arabic; letter-spacing stays 0 (it breaks the joins). */
 html[lang="ar"] :is(.mega, .big, .cta__h, .sectors b, .menu a, .tile b, .pane .pane__k, .vcard b, .reach__order b, .flow__step h3, .card h3, .facts dt, .ov--ring .cap b, .spec dt) { line-height: 1.45; letter-spacing: 0; }
 html[lang="ar"] :is(.mega, .cta__h) { line-height: 1.38; }
+/* the home hero: the team in front of the factory, the whole picture, clear (no veil); the 3D film follows */
+.hero-photo { position: relative; height: 100svh; min-height: 520px; overflow: hidden; background: #cfdcea; }
+.hero-photo img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 42%; }
+@media (max-aspect-ratio: 4/3) { .hero-photo { height: auto; min-height: 0; padding-top: 72px; background: var(--bg); } .hero-photo img { height: auto; } }

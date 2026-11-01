@@ -1,7 +1,7 @@
-# The main tin in the JC identity, made from the Al Qaisi tin's photos (qaisi-*), keeping its shape and every ornament:
-#   lid:  PANTONE 294 C navy lacquer with the stamped ornaments (shaded from the relief map, as on the real stamped lid), the
-#         client's logo taken out and the JC logo (vertical lock-up) put in its place in white, raised (embossed)
-#   band: deep navy with the gold line-art ornaments only, no logo: where the client's logos were, the band's own anise star
+# The main tin in the JC identity (owner, 2026-11-02): the Al Qaisi tin exactly as made (its stamped gold lid, its dark band with
+# the gold line art, its colours), with the client's logo taken out and the JC logo (vertical lock-up) put in its places:
+#   lid:  the JC logo in the dark the Al Qaisi logo was printed in, raised (embossed) like the ornaments
+#   band: the JC logo in the band's gold, where the Al Qaisi logos were
 # Run from website-v2: python3 tools/jc-tin.py assets/img/tins /path/to/jc-v.png
 #   jc-v.png: the vertical logo as a white mask on transparent, rendered from brand/logo/logo-vertical.svg (tools/logo-png.cjs)
 import cv2, numpy as np, sys
@@ -33,11 +33,10 @@ lm = (((hsv[..., 2] < 140) | (np.abs(rel.astype(np.int16) - 127) > 10) | (spt > 
 lm = cv2.dilate(lm, np.ones((31, 31), np.uint8)) & box
 col = cv2.inpaint(col.astype(np.uint8), lm, 25, cv2.INPAINT_TELEA).astype(np.float32)
 rel = rel.copy(); rel[lm > 0] = 127; spt = spt.copy(); spt[lm > 0] = 0
-L = lum(col); ref = np.median(L)
-r = (cv2.GaussianBlur(rel.astype(np.float32), (0, 0), 0.9) - 127) / 127
-out = navy_from(L, ref, 0.66) * np.clip(1 + 0.75 * r, 0.45, 1.9)[..., None]      # the stamped ornaments, lit and shaded
+ink = np.median(cv2.imread(f'{T}/qaisi-lid.jpg').astype(np.float32)[(lm > 0) & (hsv[..., 2] < 90)], 0)   # the old logo's dark
+out = col.copy()
 lg = place((N, N), 1024, 915, 470)
-out = out * (1 - lg[..., None]) + WHITE * lg[..., None]
+out = out * (1 - lg[..., None]) + ink * lg[..., None]
 rel = np.clip(rel.astype(np.float32) + cv2.GaussianBlur(lg, (0, 0), 2.2) * 80, 0, 255)     # the logo raised like the ornaments
 spt = np.maximum(spt.astype(np.float32), lg * 255)
 cv2.imwrite(f'{T}/jc-lid.jpg', np.clip(out, 0, 255).astype(np.uint8), [cv2.IMWRITE_JPEG_QUALITY, 90])
@@ -51,22 +50,20 @@ col = cv2.imread(f'{T}/qaisi-side.jpg').astype(np.float32); rel = cv2.imread(f'{
 H, W = col.shape[:2]; B0, B1 = 24, 346                       # the printed band between the gold rims
 L0 = lum(col); refB = np.median(L0[B0 + 20:B1 - 20][spt[B0 + 20:B1 - 20] < 20])
 # take the client's logos out (one sits on the seam): plain band there
+hm = np.zeros((H, W), np.uint8)
+hsvB = cv2.cvtColor(col.astype(np.uint8), cv2.COLOR_BGR2HSV)
 for a, b in [(0, 215), (1440, 1815), (3040, W)]:
-    col[B0:B1, a:b] = np.median(col[B0 + 20:B1 - 20, 120:200].reshape(-1, 3), 0); rel[B0:B1, a:b] = 0; spt[B0:B1, a:b] = 0
-# the band's own anise star in each gap, so the ornaments run on round the tin
-sy0, sy1, sx0, sx1 = 138, 246, 1166, 1276
-patch = [a[sy0:sy1, sx0:sx1].copy() for a in (col, rel, spt)]
-for cx in (1628, 44, 44 + W):
-    x0 = cx - (sx1 - sx0) // 2
-    for arr, p in zip((col, rel, spt), patch):
-        X0, X1 = max(0, x0), min(W, x0 + p.shape[1])
-        if X1 > X0: arr[sy0:sy1, X0:X1] = p[:, X0 - x0:X1 - x0]
-L = lum(col); band = np.zeros((H, W), np.float32); band[B0:B1] = 1
-lines = np.clip(cv2.GaussianBlur(spt, (0, 0), 0.8) / 255 * 1.6, 0, 1)
-gold = np.where(band[..., None] > 0, foil(L, np.median(L[B0:B1][lines[B0:B1] > 0.5])), col)
-navy = navy_from(np.where(band > 0, refB, L).astype(np.float32), refB, 0.58)
-m = np.maximum(lines, 1 - band)[..., None]
-out = gold * m + navy * (1 - m)
+    zone = np.zeros((H, W), bool); zone[B0 + 4:B1 - 4, a:b] = True
+    hm |= (zone & ((spt > 25) | (hsvB[..., 2] > np.median(hsvB[B0 + 20:B1 - 20, 120:200, 2]) + 18))).astype(np.uint8)
+    rel[B0:B1, a:b] = 0; spt[B0:B1, a:b] = 0
+hm = cv2.dilate(hm, np.ones((9, 9), np.uint8))
+col = cv2.inpaint(col.astype(np.uint8), hm, 9, cv2.INPAINT_TELEA).astype(np.float32)   # only the logo's pixels, from the band round them
+# the JC logo in the band's gold where the Al Qaisi logos were (one sits on the seam)
+gold = np.median(col[B0 + 20:B1 - 20][spt[B0 + 20:B1 - 20] > 200], 0)
+lg = np.zeros((H, W), np.float32)
+for cx in (1628, 44, 44 + W): lg = np.maximum(lg, place((H, W), cx, (B0 + B1) // 2, 300))
+out = col * (1 - lg[..., None]) + gold * 1.05 * lg[..., None]
+rel = np.clip(rel + cv2.GaussianBlur(lg, (0, 0), 1.2) * 200, 0, 255); spt = np.maximum(spt, lg * 255)
 cv2.imwrite(f'{T}/jc-side.jpg', np.clip(out, 0, 255).astype(np.uint8), [cv2.IMWRITE_JPEG_QUALITY, 90])
 cv2.imwrite(f'{T}/jc-side-relief.png', rel.astype(np.uint8), [cv2.IMWRITE_PNG_COMPRESSION, 9])
 cv2.imwrite(f'{T}/jc-side-spot.png', spt.astype(np.uint8), [cv2.IMWRITE_PNG_COMPRESSION, 9])

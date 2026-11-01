@@ -79,7 +79,7 @@ sales@jordantinplate.com
 
 - **Primary:** email `sales@jordantinplate.com`
 - **Secondary:** website `jordantinplate.com` (link to the **homepage**, not `about.html`; see Offsite plan, audit item 4)
-- **Optional line in the first comment:** "Phone: +962 6 4051125"
+- **Optional line in the first comment:** "Phone: +962 6 4051124"
 - **Follow CTA:** "Follow the page to see how a sheet becomes a can" (leads into posts #2 to #4 this week)
 
 ## 5) Visual: image brief (single image, 1080x1350 px, 4:5)

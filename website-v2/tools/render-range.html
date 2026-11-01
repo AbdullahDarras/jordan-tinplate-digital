@@ -1,0 +1,78 @@
+<!doctype html>
+<!-- The Products page pictures (assets/img/range/<scene>.webp): plain tinplate, no client designs. Rendered on a transparent
+     background with the site's studio (room.js). Run: tools/render-range.mjs (Playwright), then tools/range-webp.py. -->
+<html><head><meta charset="utf-8"><style>html,body{margin:0;background:transparent}canvas{display:block}</style>
+<script type="importmap">{"imports":{"three":"../assets/vendor/three/three.module.min.js","three/addons/":"../assets/vendor/three/addons/"}}</script></head>
+<body><canvas id="c" width="1600" height="1200" style="width:1600px;height:1200px"></canvas>
+<script type="module">
+import * as THREE from 'three';
+import { makeRoom } from '../assets/js/engine/room.js';
+import * as TIN from '../assets/js/engine/tins.js';
+const scene0 = new URLSearchParams(location.search).get('scene') || 'food-cans';
+const canvas = document.getElementById('c');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, preserveDrawingBuffer: true });
+renderer.setPixelRatio(1); renderer.setSize(1600, 1200, false);
+renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+const scene = new THREE.Scene(), camera = new THREE.PerspectiveCamera(26, 4 / 3, 0.05, 200);
+const room = makeRoom(renderer, scene, {}); scene.background = null; renderer.setClearColor(0, 0);
+room.floor.material.opacity = 0.22;
+const U = 0.01, ready = [];
+// the ends face the overhead soft-box: less reflection, so their rings read
+const goldEnd = new THREE.MeshPhysicalMaterial({ color: '#c99a42', metalness: 0.85, roughness: 0.36, clearcoat: 0.6, clearcoatRoughness: 0.2, side: THREE.DoubleSide }); goldEnd.envMapIntensity = 0.8;
+const tinEnd = new THREE.MeshPhysicalMaterial({ color: '#d7dce4', metalness: 0.8, roughness: 0.36, clearcoat: 0.4, clearcoatRoughness: 0.2, side: THREE.DoubleSide }); tinEnd.envMapIntensity = 0.8;
+const tinplate = new THREE.MeshPhysicalMaterial({ color: '#f3f5f8', metalness: 0.82, roughness: 0.3, clearcoat: 0.5, clearcoatRoughness: 0.18, side: THREE.DoubleSide }); tinplate.envMapIntensity = 2.4;
+const gold = new THREE.MeshPhysicalMaterial({ color: '#d8ae52', metalness: 0.9, roughness: 0.3, clearcoat: 0.8, clearcoatRoughness: 0.12, side: THREE.DoubleSide }); gold.envMapIntensity = 2.2;
+// a three-piece food can, turned from its profile: double seams top and bottom, beads round the body
+function foodCan(D, H, endMat = gold, beads = 5) {
+  const R = (D / 2) * U, h = H * U, s = 0.045, pts = [];
+  const lip = R + 0.018;
+  pts.push(new THREE.Vector2(0, 0.012), new THREE.Vector2(R - 0.05, 0.012), new THREE.Vector2(R - 0.04, 0.0), new THREE.Vector2(lip, 0.004), new THREE.Vector2(lip + 0.004, s * 0.5), new THREE.Vector2(lip, s), new THREE.Vector2(R, s + 0.01));
+  const top = h - s - 0.01, n = beads;
+  for (let i = 0; i <= 60; i++) { const y = s + 0.01 + (top - s - 0.01) * (i / 60); const ph = (i / 60) * n * Math.PI * 2; const zone = (i > 6 && i < 54) ? 1 : 0; pts.push(new THREE.Vector2(R - zone * 0.012 * Math.max(0, Math.cos(ph)) ** 6, y)); }
+  pts.push(new THREE.Vector2(R, top), new THREE.Vector2(lip, top + 0.01), new THREE.Vector2(lip + 0.004, top + s * 0.5), new THREE.Vector2(lip, h), new THREE.Vector2(R - 0.035, h), new THREE.Vector2(R - 0.045, h - 0.012));
+  const body = new THREE.Mesh(new THREE.LatheGeometry(pts, 128), tinplate); body.castShadow = true;
+  // the end: a disc with two expansion rings
+  const ep = [new THREE.Vector2(0, h - 0.016), new THREE.Vector2(R * 0.55, h - 0.016), new THREE.Vector2(R * 0.58, h - 0.008), new THREE.Vector2(R * 0.61, h - 0.016), new THREE.Vector2(R * 0.78, h - 0.016), new THREE.Vector2(R * 0.81, h - 0.008), new THREE.Vector2(R * 0.84, h - 0.016), new THREE.Vector2(R - 0.045, h - 0.012)];
+  const end = new THREE.Mesh(new THREE.LatheGeometry(ep.reverse(), 128), endMat); end.castShadow = true;
+  const g = new THREE.Group(); g.add(body, end); g.add(room.contact(2 * R)); return { g, R, h };
+}
+let fit = { tgt: new THREE.Vector3(0, 0.6, 0), dist: 7, h: 2.2 };
+if (scene0 === 'food-cans') {
+  const cans = [[189, 220, -2.25, -0.9], [153, 178, -0.2, -0.55], [99, 118, 1.35, 0.35], [127, 145, 2.75, -0.5], [73, 110, 0.55, 1.25]];
+  cans.forEach(([D, H, x, z], i) => { const c = foodCan(D, H, i % 2 ? tinEnd : goldEnd); c.g.position.set(x, 0, z); scene.add(c.g); });
+  fit = { tgt: new THREE.Vector3(0.25, 0.85, 0), pos: new THREE.Vector3(0.25, 5.2, 10.4) };
+} else if (scene0 === 'containers') {
+  // brushed tinplate: big flat faces would mirror the overhead soft-box as a white sheet
+  const brush = (() => { const c = document.createElement('canvas'); c.width = 64; c.height = 512; const x = c.getContext('2d'); x.fillStyle = '#808080'; x.fillRect(0, 0, 64, 512); for (let i = 0; i < 1400; i++) { x.globalAlpha = 0.05; x.fillStyle = Math.random() < 0.5 ? '#fff' : '#000'; x.fillRect(0, Math.random() * 512, 64, 1); } const t = new THREE.CanvasTexture(c); t.wrapS = t.wrapT = THREE.RepeatWrapping; return t; })();
+  const flatTin = new THREE.MeshPhysicalMaterial({ color: '#d8dde5', metalness: 0.92, roughness: 0.34, roughnessMap: brush, clearcoat: 0.3, clearcoatRoughness: 0.3 }); flatTin.envMapIntensity = 1.15;
+  // an 18 L square tin (N25: 250 x 250 x 350 mm) and a 4 L gallon (G1711: 165 x 105 x 250 mm), plain tinplate
+  const tinBox = (w, d, h, cap) => {
+    const r = 0.06, sh = new THREE.Shape(), W = w * U / 2 - r, D = d * U / 2 - r;
+    sh.moveTo(-W, -D - r); sh.lineTo(W, -D - r); sh.quadraticCurveTo(W + r, -D - r, W + r, -D); sh.lineTo(W + r, D); sh.quadraticCurveTo(W + r, D + r, W, D + r);
+    sh.lineTo(-W, D + r); sh.quadraticCurveTo(-W - r, D + r, -W - r, D); sh.lineTo(-W - r, -D); sh.quadraticCurveTo(-W - r, -D - r, -W, -D - r);
+    const geo = new THREE.ExtrudeGeometry(sh, { depth: h * U, bevelEnabled: true, bevelThickness: 0.02, bevelSize: 0.02, bevelSegments: 3, curveSegments: 10 }); geo.rotateX(-Math.PI / 2);
+    const g = new THREE.Group(), body = new THREE.Mesh(geo, flatTin); body.castShadow = true; g.add(body);
+    // beads round the body
+    [0.3, 0.5, 0.7].forEach((f) => { const b = new THREE.Mesh(new THREE.ExtrudeGeometry(sh, { depth: 0.012, bevelEnabled: true, bevelThickness: 0.006, bevelSize: 0.012, bevelSegments: 2 }), tinplate); b.geometry.rotateX(-Math.PI / 2); b.position.y = h * U * f; b.scale.set(1.012, 1, 1.012); g.add(b); });
+    const capM = new THREE.Mesh(new THREE.CylinderGeometry(cap * U, cap * U, 0.09, 48), goldEnd); capM.position.set(w * U * 0.22, h * U + 0.06, -d * U * 0.18); capM.castShadow = true; g.add(capM);
+    const neck = new THREE.Mesh(new THREE.CylinderGeometry(cap * U * 1.15, cap * U * 1.25, 0.03, 48), tinEnd); neck.position.set(w * U * 0.22, h * U + 0.02, -d * U * 0.18); g.add(neck);
+    const handle = new THREE.Mesh(new THREE.TorusGeometry(w * U * 0.16, 0.014, 10, 48, Math.PI), new THREE.MeshPhysicalMaterial({ color: '#1f2a37', roughness: 0.5 })); handle.position.set(-w * U * 0.12, h * U + 0.03, 0.02); handle.rotation.set(-1.2, 0, 0); g.add(handle);
+    g.add(room.contact(Math.max(w, d) * U)); return g;
+  };
+  const big = tinBox(250, 250, 350, 22); big.position.set(-0.85, 0, 0); big.rotation.y = 0.5; scene.add(big);
+  const gal = tinBox(165, 105, 250, 16); gal.position.set(1.55, 0, 0.55); gal.rotation.y = -0.35; scene.add(gal);
+  fit = { tgt: new THREE.Vector3(0.35, 1.6, 0), pos: new THREE.Vector3(0.35, 5.4, 13.2) };
+} else if (scene0 === 'fancy') {
+  const m = TIN.make('qaisi'); ready.push(m.ready); m.print.forEach((p) => TIN.setFinish(p, 'gloss'));
+  m.group.rotation.y = -0.55 + Math.PI / 2 * (+new URLSearchParams(location.search).get('turn') || 1); scene.add(m.group); scene.add(room.contact(m.size.w));
+  fit = { tgt: new THREE.Vector3(0, 0.25, 0), pos: new THREE.Vector3(0, 3.4, 6.6) };
+}
+camera.position.copy(fit.pos); camera.lookAt(fit.tgt);
+const k = room.key; k.position.set(-3, 9, 6); k.target.position.set(0, 0, 0);
+Object.assign(k.shadow.camera, { left: -6, right: 6, top: 6, bottom: -6, near: 1, far: 30 }); k.shadow.camera.updateProjectionMatrix();
+room.hand.position.copy(camera.position).add(new THREE.Vector3(-2, 1, -2)); room.hand.intensity = 8; room.hand.distance = 30;
+room.fillL.position.copy(camera.position).add(new THREE.Vector3(0, 2, 0));
+await Promise.all(ready); await new Promise((r) => setTimeout(r, 1200));
+renderer.render(scene, camera); renderer.render(scene, camera);
+document.body.dataset.ready = '1';
+</script></body></html>

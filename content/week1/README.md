@@ -65,7 +65,7 @@ Each post file contains: metadata, final copy (Arabic and English), the visual s
 | Services: artwork and design, CTP plates, printing and coating, forming, export-ready packing, storage of finished goods | Off-site plan section 3; website prototype journey section |
 | Products: food cans, milk powder cans, food containers, round / square / rectangular fancy tins, industrial cans, ends, special-edition packs | Off-site plan, section 3 |
 | Finishes: soft touch, embossing, matte, gloss | Off-site plan; Month-1 plan; website prototype Finish Lab |
-| Contact: sales@jordantinplate.com, +962 6 4051125, jordantinplate.com | Off-site plan; README |
+| Contact: sales@jordantinplate.com, +962 6 4051124, jordantinplate.com | Off-site plan; README |
 | Olive oil as a sector and a season; oil tin as a plain shape (no spout or handle detail) | Month-1 plan |
 
 ## Conventions

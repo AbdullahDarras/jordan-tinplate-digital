@@ -20,8 +20,8 @@ export const SITE = {
   name: 'Jordan Tinplate Canning',           // official English name (always written in full)
   nameAr: 'الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية',   // official Arabic name (confirmed, round 3, 2026-10-21)
   orderUrl: 'https://jc-order.netlify.app/',  // existing online order / quote tool: primary "Request a quote" link
-  phone: '+962 6 4051125',
-  tel: '+96264051125',
+  phone: '+962 6 4051124',
+  tel: '+96264051124',
   email: 'sales@jordantinplate.com',
   email2: 'info@jordantinplate.com',   // general enquiries (owner, 2026-11-01)
   founded: '1998',
@@ -702,8 +702,8 @@ export const PAGES = [
   {
     id: 'contact', path: 'contact/', navKey: 'contact', parent: 'home', noCta: true,
     title: t('Request a Quote | Contact Jordan Tinplate Canning', 'اطلب عرض سعر | تواصل مع الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية'),
-    description: t('Request a quotation for tinplate cans and tins. Call +962 6 4051125 or email sales@jordantinplate.com, or use our online order tool.',
-                   'اطلب عرض سعر لعلب الصفيح المعدنية. اتصل على ‎+962 6 4051125 أو راسلنا على sales@jordantinplate.com، أو استخدم أداة الطلب الإلكترونية.'),
+    description: t('Request a quotation for tinplate cans and tins. Call +962 6 4051124 or email sales@jordantinplate.com, or use our online order tool.',
+                   'اطلب عرض سعر لعلب الصفيح المعدنية. اتصل على ‎+962 6 4051124 أو راسلنا على sales@jordantinplate.com، أو استخدم أداة الطلب الإلكترونية.'),
     crumb: t('Contact', 'تواصل معنا'),
     hero: {
       eyebrow: t('Contact', 'تواصل معنا'),

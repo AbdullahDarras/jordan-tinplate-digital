@@ -156,6 +156,14 @@ folded flat are modelled. The paint can is now the only illustrative tin. Many m
 - Products, card 04: the round tray, from the owner's photo: cut out, perspective-corrected to a top view from its two circles,
   light evened, dust removed in the plain field only (`assets/img/renders/tray.webp`, `assets/img/photos/tray.webp`).
 
+## Round 15 (2026-11-02)
+- The main tin is the Al Qaisi tin as made (gold lid, dark band, gold art) with only its logo replaced by the JC logo.
+- Home: the team-in-front-of-the-factory photo is the hero; the 3D film ("We print. We can.") follows.
+- Capabilities and the industry pages are off (`OFF` in tools/build.mjs; `en/` and `ar/` are rebuilt from scratch). Products is the
+  range only: five families from the 2022 catalogue (`tools/range.mjs`), pictures in `assets/img/range/` (food cans and containers
+  rendered plain with `tools/render-range.html`, the JC tin rendered, the tray and lids from photos; `tools/range-webp.py`).
+- About: the video is called "Jordan Canning", poster `assets/video/about-poster.jpg`. Contact: one email card, three cards.
+
 ## Publishing
 - **GitHub Pages (from the branch):** Settings > Pages > Source "Deploy from a branch" > `claude/confident-knuth-ibmf9c`,
   `/ (root)`. Every push republishes within a minute or two. The repository's root `index.html` forwards to `website-v2/`,
