@@ -1,7 +1,7 @@
 # Jordan Tinplate Canning — Digital Plans
 # الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية — الخطط الرقمية
 
-Digital marketing work for **Jordan Tinplate Canning** (official Arabic name: «الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية»; https://www.jordantinplate.com), a tinplate can manufacturer in Al-Zmailat – Al-Muwaqqar, Jordan (about 250 employees) serving food & beverage brands, with the Gulf and Iraq as priority markets. The official brand name is always written in full (never "Canning" alone). Plans are working drafts updated with management's approved decisions in [docs/decisions.md](docs/decisions.md).
+Digital marketing work for **Jordan Tinplate Canning** (official Arabic name: «الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية»; https://www.jordantinplate.com), a tinplate can manufacturer in Al-Zmailat – Al-Muwaqqar, Jordan (400 employees) serving food & beverage brands, with the Gulf and Iraq as priority markets. The official brand name is always written in full (never "Canning" alone). Plans are working drafts updated with management's approved decisions in [docs/decisions.md](docs/decisions.md).
 
 عمل التسويق الرقمي لمصنع Jordan Tinplate Canning (الاسم العربي الرسمي «الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية»، علب التنك للأغذية والمشروبات) في الزميلات – الموقّر. الأولوية للخليج والعراق، والهدف في الأشهر الأولى: الوعي بالعلامة والظهور الرقمي وتحسين محركات البحث، وليس المبيعات. المحتوى مسودات محدَّثة بقرارات الإدارة المعتمدة، وما لم يُعتمد بعد مذكور في «بانتظار الإدارة» أدناه.
 
@@ -37,7 +37,7 @@ Then open http://localhost:5173 (add `?skip` to skip the entrance animation). It
 **Approved by management (see [docs/decisions.md](docs/decisions.md))**
 
 - Official brand name **Jordan Tinplate Canning**, always in full. The old name *Jordan Canning* is legal/historical only. Hashtag `#JordanTinplateCanning`. Official Arabic name **«الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية»** (confirmed in round 3, 2026-10-21; it supersedes the round-2 wording). One username on every platform: `@jordantinplate`; the profile display name is the official name (English: Jordan Tinplate Canning; Arabic: the Arabic name).
-- Address: **Al-Zmailat – Al-Muwaqqar (not Sahab), final as it is** (round 3: no further street address is requested). About 250 employees.
+- Address: **Al-Zmailat – Al-Muwaqqar (not Sahab), final as it is** (round 3: no further street address is requested). 400 employees.
 - Brand colour: **PANTONE 294 C** (about `#002F6C` on screen; print must use the Pantone swatch). Logo: only a preliminary raster of the old logo (gear "JC" with the wordmark "JORDAN CANNING") has arrived, saved in `brand/`; the wordmark conflicts with the official name, so the final vector logo is pending and the temporary mark stays on the site and prototype.
 - No Saudi branch exists. The Saudi Food Manufacturing 2025 item is kept as participation/interview news only (decision, round 2).
 - Olive-oil tins are produced in 1, 4, 8 and 16 L/kg. The interior lacquer meets the highest food-grade hygiene standards (no standard is named).

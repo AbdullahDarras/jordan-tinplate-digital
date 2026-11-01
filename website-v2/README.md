@@ -148,6 +148,14 @@ folded flat are modelled. The paint can is now the only illustrative tin. Many m
 - The home film's ring of tins (chapter 4, "Tins we have made") is hidden: `SHOW_RING` in `engine/film.js` brings it back.
 - Sectors we serve: "Bottom ends" / «القيعان» added.
 
+## Round 14 (2026-11-01)
+- The JC tin, as the owner set it: a PANTONE 294 C navy lid with the same stamped ornaments and the JC logo in white, raised; a
+  deep navy band with the gold line art only (no logo; the band's own anise star fills the old logo places). `tools/jc-tin.py`.
+- Every page's hero shows the JC tin alone (`HERO_TINS` empty, default `qaisi`); three-line titles a little smaller.
+- Journey: the truck's cab in the brand blue. 400 employees. info@jordantinplate.com next to sales@ (`SITE.email2`).
+- Products, card 04: the round tray, from the owner's photo: cut out, perspective-corrected to a top view from its two circles,
+  light evened, dust removed in the plain field only (`assets/img/renders/tray.webp`, `assets/img/photos/tray.webp`).
+
 ## Publishing
 - **GitHub Pages (from the branch):** Settings > Pages > Source "Deploy from a branch" > `claude/confident-knuth-ibmf9c`,
   `/ (root)`. Every push republishes within a minute or two. The repository's root `index.html` forwards to `website-v2/`,

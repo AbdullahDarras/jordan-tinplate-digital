@@ -104,7 +104,7 @@ function lineup(st, keys, fitW, fitH) {
 // ---------------------------------------------------------------- the hero
 export function createHero(canvas, { tins = ['qaisi'] } = {}) {
   const st = base(canvas), { scene, camera } = st;
-  const row = lineup(st, tins, tins.length > 1 ? 3.4 : 2.2, 0.8);
+  const row = lineup(st, tins, tins.length > 1 ? 3.4 : 1.75, 0.72);
   // the page title on a wall behind the tins (the page keeps it as real text too)
   const TW = 5.1, TH = TW * 1600 / 4096;
   const tc = document.createElement('canvas'); tc.width = 4096; tc.height = 1600;
@@ -113,7 +113,7 @@ export function createHero(canvas, { tins = ['qaisi'] } = {}) {
   // tall tins: the wall and the camera go up with them, so the title stays readable above the tins
   const lift = Math.max(0, row.size.h - 0.62);
   const POS = V(0, 2.5 + lift * 0.8, 5.2), TGT = V(0, 0.62 + lift * 0.8, 0); // from above, at about the angle the tins were photographed at
-  wall.position.set(0, TGT.y - 2.6 * (POS.y - TGT.y) / POS.z + 1.08 + lift * 0.1, -2.6); // just above the line of sight
+  wall.position.set(0, TGT.y - 2.6 * (POS.y - TGT.y) / POS.z + 1.06 + lift * 0.1, -2.6); // just above the line of sight
   wall.lookAt(POS.x, wall.position.y, POS.z); wall.renderOrder = -1; scene.add(wall);
   function title(text, lang, mode) {
     const x = tc.getContext('2d'); x.clearRect(0, 0, 4096, 1600);
@@ -129,7 +129,7 @@ export function createHero(canvas, { tins = ['qaisi'] } = {}) {
       words.forEach((w) => { if (cur.length && wd([...cur, w]) > ideal * 1.08 && lines.length < n - 1) { lines.push(cur); cur = []; } cur.push(w); });
       lines.push(cur);
       const widest = Math.max(...lines.map(wd)), lh = lang === 'ar' ? 1.5 : 0.95; // Arabic lines need far more height (see type.js)
-      const size = Math.min(400 * 3900 / widest, 1480 / (lines.length * lh));
+      const size = Math.min(400 * 3900 / widest, (lines.length > 2 ? 1320 : 1480) / (lines.length * lh)); // three lines: a little smaller, clear of the header
       if (!best || size > best.size * 1.05) best = { lines: lines.map((l) => l.join(' ')), size, lh };
     }
     if (lang === 'ar') { arabicBlock(x, best.lines, best.lines.map((_, i) => (mode === 'dark' ? ['#e9eef6', '#879ebc'] : ['#00132d', '#002F6C'])[i === best.lines.length - 1 && i > 0 ? 1 : 0]), { maxH: 1240, maxSize: 520 }); tt.needsUpdate = true; return; }

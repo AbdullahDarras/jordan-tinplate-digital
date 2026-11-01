@@ -34,17 +34,13 @@ const HOME = fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8');
 const VER = crypto.createHash('md5').update(['assets/css/v3.css', 'assets/css/pages.css', 'assets/js/page.js', 'assets/js/app.js'].map((f) => fs.readFileSync(path.join(ROOT, f))).join('')).digest('hex').slice(0, 8);
 const LOGO = HOME.match(/<svg fill="currentColor"[^>]*viewBox="0 0 1016\.89 275\.9">[\s\S]*?<\/svg>/)[0];
 
-// ---------------------------------------------------------------- the tins each page shows (real tins from our lines; the paint can is illustrative)
-const HERO_TINS = {
-  // (the olive-oil tin is Malka Olive Press's 4 L tin, from its photos)
-  products: ['melties', 'qaisi', 'nejmah'], 'ind-olive': ['oil'], 'ind-dairy': ['havana', 'abedc'], 'ind-sweets': ['maamoul', 'jojo', 'habybee'],
-  'ind-cheese': ['shawra'], 'ind-coffee': ['abedc', 'kous', 'rayhan'], 'ind-industrial': ['paint'], capabilities: ['qaisi'],
-  about: ['nejmah'], gallery: ['melties'], news: ['marouf'], contact: ['qaisi']
-};
+// ---------------------------------------------------------------- the tin each page's hero shows
+// Every page opens on the JC tin (owner's decision, 2026-11-01); the other tins appear further down the pages.
+const HERO_TINS = {};
 const ILLUS = new Set(['paint']);  // the paint can carries sample artwork; every other tin is a real one
 // card pictures: renders of the same 3D tins (assets/img/renders, made by tools/renders.mjs)
 const TILE_TIN = { 'ind-olive': 'oil', 'ind-dairy': 'havana', 'ind-sweets': 'maamoul', 'ind-cheese': 'shawra', 'ind-coffee': 'kous', 'ind-industrial': 'paint' };
-const RANGE_TIN = [ 'nejmah', 'abedc', 'havana', null, 'habybee', null, 'paint' ];
+const RANGE_TIN = [ 'nejmah', 'abedc', 'havana', 'tray', 'habybee', null, 'paint' ];   // 04: the round tray, from the owner's photo (straightened and cleaned)
 // the shapes lab: the shapes we can show with a real tin of that shape
 const SHAPE_TIN = { round: 'qaisi', octagon: 'habybee', square: 'jojo', rect: 'melties', cheese: 'havana', tall: 'rayhan' };
 const RENDERS = new Set(fs.existsSync(path.join(ROOT, 'assets/img/renders')) ? fs.readdirSync(path.join(ROOT, 'assets/img/renders')).map((f) => f.replace(/\.(png|webp)$/, '')) : []);
@@ -117,7 +113,7 @@ function ctaBand() {
 </section>`;
 }
 const contactList = () => { const l = ctx.lang; return `<dl class="contact">
-      <div><dt>${T(UI.mail, l)}</dt><dd class="num"><a href="mailto:${SITE.email}">${SITE.email}</a></dd></div>
+      <div><dt>${T(UI.mail, l)}</dt><dd class="num"><a href="mailto:${SITE.email}">${SITE.email}</a><br><a href="mailto:${SITE.email2}">${SITE.email2}</a></dd></div>
       <div><dt>${T(UI.phone, l)}</dt><dd class="num" dir="ltr"><a href="tel:${SITE.tel}">${SITE.phone}</a></dd></div>
       <div><dt>${T(UI.address, l)}</dt><dd>${T(UI.addressArea, l)}</dd></div>
     </dl>`; };
@@ -134,7 +130,7 @@ function footer() {
     </div>
     <div><p class="foot__h">${T(UI.footIndustries, l)}</p><ul>${inds}</ul></div>
     <div><p class="foot__h">${T(UI.footCompany, l)}</p><ul>${comp}</ul></div>
-    <div><p class="foot__h">${T(UI.footContact, l)}</p><ul><li class="num"><a href="mailto:${SITE.email}">${SITE.email}</a></li><li class="num" dir="ltr"><a href="tel:${SITE.tel}">${SITE.phone}</a></li><li>${T(UI.addressArea, l)}</li></ul></div>
+    <div><p class="foot__h">${T(UI.footContact, l)}</p><ul><li class="num"><a href="mailto:${SITE.email}">${SITE.email}</a></li><li class="num"><a href="mailto:${SITE.email2}">${SITE.email2}</a></li><li class="num" dir="ltr"><a href="tel:${SITE.tel}">${SITE.phone}</a></li><li>${T(UI.addressArea, l)}</li></ul></div>
   </div>
   <div class="sect__in foot__in"><p class="foot__name"><b>Jordan Tinplate Canning</b><span lang="ar" dir="rtl">${esc(SITE.nameAr)}</span></p><p class="foot__c">© ${SITE.year} Jordan Tinplate Canning. ${T(UI.rights, l)}</p></div>
 </footer>`;
@@ -268,6 +264,7 @@ function contactPage() {
   return sect('reach', 'sect--reach', `<div class="reach">
   <a class="reach__order" href="${SITE.orderUrl}" target="_blank" rel="noopener"><span class="kick">${T(UI.quote, l)}</span><b>${T(UI.orderTitle, l)}</b><span>${T(UI.orderLead, l)}</span><i class="tile__go">${ARROW}</i></a>
   <a class="reach__card" href="mailto:${SITE.email}"><span class="kick">${T(UI.mail, l)}</span><b class="num">${SITE.email}</b></a>
+  <a class="reach__card" href="mailto:${SITE.email2}"><span class="kick">${T(UI.mail, l)}</span><b class="num">${SITE.email2}</b></a>
   <a class="reach__card" href="tel:${SITE.tel}"><span class="kick">${T(UI.phone, l)}</span><b class="num" dir="ltr">${SITE.phone}</b></a>
   <div class="reach__card"><span class="kick">${T(UI.address, l)}</span><b>${T(UI.addressArea, l)}</b></div>
 </div>

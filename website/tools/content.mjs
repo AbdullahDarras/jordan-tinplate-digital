@@ -23,6 +23,7 @@ export const SITE = {
   phone: '+962 6 4051125',
   tel: '+96264051125',
   email: 'sales@jordantinplate.com',
+  email2: 'info@jordantinplate.com',   // general enquiries (owner, 2026-11-01)
   founded: '1998',
   catalogue: 'https://www.jordantinplate.com/pdf/catalog.pdf',
   social: {
@@ -319,7 +320,7 @@ export const PAGES = [
       stats: [
         { big: '1998', small: t('Founded in Jordan', 'تأسس في الأردن') },
         { big: t('3rd', 'الثالث'), small: t('generation of the family leads the company', 'الجيل الذي يقود الشركة اليوم من العائلة') },
-        { big: t('~250', 'نحو 250'), small: t('people work with us', 'موظفاً يعملون معنا') }
+        { big: t('400', '400'), small: t('people work with us', 'موظف يعملون معنا') }
       ]
     },
     sections: [
@@ -626,7 +627,7 @@ export const PAGES = [
       stats: [
         { big: '1998', small: t('Founded in Jordan', 'تأسس في الأردن') },
         { big: t('3rd', 'الثالث'), small: t('generation of the family leads the company', 'الجيل الذي يقود الشركة اليوم من العائلة') },
-        { big: t('~250', 'نحو 250'), small: t('people work with us', 'موظفاً يعملون معنا') },
+        { big: t('400', '400'), small: t('people work with us', 'موظف يعملون معنا') },
       ]
     },
     sections: [
@@ -643,7 +644,7 @@ export const PAGES = [
           { k: t('Official name (English)', 'الاسم الرسمي بالإنجليزية'), v: t('Jordan Tinplate Canning', 'Jordan Tinplate Canning') },
           { k: t('Official name (Arabic)', 'الاسم الرسمي بالعربية'), v: t('الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية', 'الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية') },
           { k: t('Location', 'الموقع'), v: t('Al-Zmailat – Al-Muwaqqar, Amman, Jordan', 'الزميلات – الموقّر، عمّان، الأردن') },
-          { k: t('People', 'الفريق'), v: t('About 250 employees', 'نحو 250 موظفاً') }
+          { k: t('People', 'الفريق'), v: t('400 employees', '400 موظف') }
         ] }] },
       { blocks: [{ k: 'tbc', title: t('Still to be confirmed', 'ما زال بانتظار التأكيد'), cards: true, items: [
         t('Production capacity', 'الطاقة الإنتاجية'),

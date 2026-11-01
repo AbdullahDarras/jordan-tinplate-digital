@@ -21,7 +21,7 @@ export const DESIGNS = {
   // bead: the curled lip is the same gold as the skirt (the studio's silver otherwise).
   // In the JC identity (owner's decision, 2026-10-31): the same tin, ornaments and band art, recoloured to PANTONE 294 C navy with
   // gold, the client's logo replaced by the JC logo (files jc-*, made from qaisi-* by website-v2/tools/jc-tin.py).
-  qaisi: { kind: 'can', reps: 2, skirt: '#0b3d86', rim: GOLD, plainSkirt: true, skirtLacquer: true, bead: '#e3c06c', tileW: 3128, lidRes: 2048, lid: ['jc', 'lid'], side: ['jc', 'side'], grade: 'contrast(1.04)' },
+  qaisi: { kind: 'can', reps: 2, skirt: '#082b63', rim: GOLD, plainSkirt: true, skirtLacquer: true, bead: '#e3c06c', tileW: 3128, lidRes: 2048, lid: ['jc', 'lid'], side: ['jc', 'side'], grade: 'contrast(1.16) hue-rotate(7deg) saturate(0.95) brightness(0.93)' },
   halawah: { kind: 'band', skirt: RED, rim: GOLD },             // the fallback design (not shown on the site)
   // the factory's tins from the owner's latest photo set (cut-outs, October 2026): lids straightened from top views, bands
   // unrolled from the 3/4 views, box faces straightened by a perspective warp (see website-v2/README.md, round 11)

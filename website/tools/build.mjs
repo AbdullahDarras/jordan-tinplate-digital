@@ -451,6 +451,7 @@ function contactSection(lang, page) {
       <ul class="contact__list" data-reveal>
         <li><span>${T(UI.phone, lang)}</span><a href="tel:${SITE.tel}" dir="ltr">${SITE.phone}</a></li>
         <li><span>${T(UI.mail, lang)}</span><a href="mailto:${SITE.email}">${SITE.email}</a></li>
+        <li><span>${T(UI.mail, lang)}</span><a href="mailto:${SITE.email2}">${SITE.email2}</a></li>
         <li><span>${T(UI.address, lang)}</span><em>${T(UI.addressArea, lang)}</em></li>
       </ul>
       <ul class="social" data-reveal>${Object.entries(SITE.social).map(([n, u]) => `<li><a href="${u}" target="_blank" rel="noopener noreferrer">${n === 'LinkedIn' ? n : `${n} <bdi dir="ltr">${SITE.handle}</bdi>`}<span class="vh"> (${T(UI.opensNew, lang)})</span></a></li>`).join('')}</ul>

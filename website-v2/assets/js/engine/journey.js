@@ -222,7 +222,7 @@ export function makeJourney({ scene, ready, contact, ptr, COARSE = false, REDUCE
     const cLogoMat = steelMat(boxLogo), cPlainMat = steelMat(boxPlain);
     const truck = new THREE.Group(); scene.add(truck);
     const doors = [];
-    { const white = new THREE.MeshPhysicalMaterial({ color: '#f1f4f8', roughness: 0.35, clearcoat: 0.6, side: THREE.DoubleSide });
+    { const cabMat = new THREE.MeshPhysicalMaterial({ color: '#0e4699', roughness: 0.3, metalness: 0.2, clearcoat: 1, clearcoatRoughness: 0.12, side: THREE.DoubleSide }); // the cab in the brand blue
       const grey = new THREE.MeshStandardMaterial({ color: '#3a4250', roughness: 0.6, side: THREE.DoubleSide });
       const glass = new THREE.MeshPhysicalMaterial({ color: '#0d1a2e', roughness: 0.05, metalness: 0.3, clearcoat: 1, side: THREE.DoubleSide });
       const tyre = new THREE.MeshStandardMaterial({ color: '#15181d', roughness: 0.8, side: THREE.DoubleSide });
@@ -230,7 +230,7 @@ export function makeJourney({ scene, ready, contact, ptr, COARSE = false, REDUCE
       const LT = 8.4, WT = 3.7, HT = 4.6, FL = 1.15, X0 = 2.3;           // the container's doors are at the end facing the pallet
       add(new THREE.BoxGeometry(LT, HT, WT), [cPlainMat, hidden, cPlainMat, grey, cLogoMat, cLogoMat], X0 + LT / 2, FL + HT / 2, 0);
       add(new THREE.BoxGeometry(LT, 0.3, WT * 0.9), grey, X0 + LT / 2, FL - 0.2, 0);                  // the chassis
-      add(new THREE.BoxGeometry(2.6, 3.3, WT), white, X0 + LT + 1.5, FL + 1.3, 0);                 // cab
+      add(new THREE.BoxGeometry(2.6, 3.3, WT), cabMat, X0 + LT + 1.5, FL + 1.3, 0);                // cab
       add(new THREE.BoxGeometry(0.06, 1.3, WT * 0.84), glass, X0 + LT + 2.82, FL + 2.1, 0);          // windscreen
       [X0 + 1.2, X0 + 2.5, X0 + LT + 1.9].forEach((x) => [-1, 1].forEach((sz) => { const w = add(new THREE.CylinderGeometry(0.62, 0.62, 0.5, 32), tyre, x, 0.62, sz * (WT / 2 - 0.2)); w.rotation.x = Math.PI / 2; }));
       [-1, 1].forEach((sz) => { // two doors hinged at the container's corners

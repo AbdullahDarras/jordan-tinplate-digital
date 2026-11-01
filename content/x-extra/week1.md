@@ -27,7 +27,7 @@ Conventions: copy is final-draft Arabic (X first), counted with Python (`len` af
 **Final copy (Arabic)**
 
 ```
-نحن الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية (Jordan Tinplate Canning): علب معدنية للأغذية والمشروبات منذ 1998، يقودنا الجيل الثالث من العائلة، ونحو 250 زميلاً في الزميلات – الموقّر، عمّان.
+نحن الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية (Jordan Tinplate Canning): علب معدنية للأغذية والمشروبات منذ 1998، يقودنا الجيل الثالث من العائلة، و400 زميل في الزميلات – الموقّر، عمّان.
 
 ما المنتج الذي تبحث له عن عبوة؟ أخبرنا في الردود.
 
@@ -40,7 +40,7 @@ Conventions: copy is final-draft Arabic (X first), counted with Python (`len` af
 
 **Engagement mechanic:** Open question in the replies (what are you packing?). Pin the post. Reply to every answer within the working day; answers also feed the topic list for weeks 2 to 4.
 
-**Complements (not duplicates):** Does not repeat LinkedIn #1: it is the 3-line X version (no "what we make" list). Uses 1998, third generation, ~250, Al-Zmailat – Al-Muwaqqar only.
+**Complements (not duplicates):** Does not repeat LinkedIn #1: it is the 3-line X version (no "what we make" list). Uses 1998, third generation, 400, Al-Zmailat – Al-Muwaqqar only.
 
 **Needs confirmation:**
 
