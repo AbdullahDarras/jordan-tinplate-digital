@@ -142,7 +142,6 @@ function footer() {
     <div class="foot__id">
       <span class="foot__logo">${LOGO}</span>
       <p class="foot__blurb">${T(UI.footBlurb, l)}</p>
-      <p class="foot__social">${Object.entries(SITE.social).map(([k, v]) => `<a href="${v}" target="_blank" rel="noopener">${k}</a>`).join('')}</p>
     </div>
     <div><p class="foot__h">${T(RANGE5.eyebrow, l)}</p><ul>${inds}</ul></div>
     <div><p class="foot__h">${T(UI.footCompany, l)}</p><ul>${comp}</ul></div>
