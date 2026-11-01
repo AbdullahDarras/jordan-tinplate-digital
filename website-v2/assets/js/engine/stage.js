@@ -9,7 +9,7 @@ import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
 import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 import * as TIN from './tins.js';
-import { makeRoom } from './room.js';
+import { makeRoom, warm, adapt } from './room.js';
 import { makeJourney } from './journey.js';
 import { arabicBlock } from './type.js';
 
@@ -52,11 +52,14 @@ function base(canvas, { transparent = false, bloom = true } = {}) {
   canvas.addEventListener('pointerdown', (e) => { dragging = true; lastX = e.clientX; });
   addEventListener('pointerup', () => { dragging = false; });
   addEventListener('pointermove', (e) => { if (!dragging) return; st.dragV = (e.clientX - lastX) * 0.006; lastX = e.clientX; st.drag += st.dragV; });
+  const pace = adapt(renderer, size);
   st.loop = (fn) => {
     const t0 = performance.now();
+    Promise.all(st.ready).then(() => warm(renderer, scene, camera));
     (function tick(now) {
       requestAnimationFrame(tick);
       if (!st.visible) return;
+      pace(now);
       const t = (now - t0) / 1000;
       ptr.sx += (ptr.x - ptr.sx) * 0.07; ptr.sy += (ptr.y - ptr.sy) * 0.07;
       st.dragV *= 0.94; if (!dragging) st.drag += st.dragV;

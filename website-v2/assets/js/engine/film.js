@@ -15,7 +15,7 @@ import { BokehPass } from 'three/addons/postprocessing/BokehPass.js';
 import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 import * as TIN from './tins.js';
 import * as HAL from './halawah.js';
-import { makeRoom } from './room.js';
+import { makeRoom, warm, adapt } from './room.js';
 import { makeJourney } from './journey.js';
 import { arabicBlock } from './type.js';
 
@@ -266,7 +266,9 @@ export function createFilm(canvas) {
     fillL.position.copy(camera.position).add(V(0, 2, 0));
     if (composer) composer.render(); else renderer.render(scene, camera);
   }
-  (function loop(now) { frame(now); requestAnimationFrame(loop); })(performance.now());
+  const pace = adapt(renderer, resize);
+  (function loop(now) { frame(now); pace(now); requestAnimationFrame(loop); })(performance.now());
+  Promise.all(ready).then(() => warm(renderer, scene, camera));   // everything that appears later is ready before it does
 
   return {
     ready: Promise.all(ready),

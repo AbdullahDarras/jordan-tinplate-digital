@@ -77,3 +77,29 @@ export function makeRoom(renderer, scene, { COARSE = false } = {}) {
   const contact = (w) => { const m = new THREE.Mesh(new THREE.PlaneGeometry(w * 1.45, w * 1.45), new THREE.MeshBasicMaterial({ map: soft, transparent: true, depthWrite: false })); m.rotation.x = -Math.PI / 2; m.position.y = 0.002; return m; };
   return { backdrop, key, rim, fillL, hand, rake, floor, contact };
 }
+
+// ---------------------------------------------------------------- smoothness
+// warm(): build every shader and upload every texture once everything has loaded, including the parts that only appear later
+// in the film (the truck, the container, the ship, the sea, the globe), so nothing stalls the scroll when it first comes on screen.
+const TEX_KEYS = ['map', 'emissiveMap', 'bumpMap', 'metalnessMap', 'roughnessMap', 'clearcoatMap', 'alphaMap', 'normalMap'];
+export function warm(renderer, scene, camera) {
+  const shown = [];
+  scene.traverse((o) => { if (!o.visible) { o.visible = true; shown.push(o); } });
+  try {
+    renderer.compile(scene, camera);
+    scene.traverse((o) => { const ms = Array.isArray(o.material) ? o.material : o.material ? [o.material] : []; ms.forEach((m) => TEX_KEYS.forEach((k) => { if (m[k] && m[k].isTexture) renderer.initTexture(m[k]); })); });
+  } catch (e) { /* an old browser: the first frames simply do the work */ }
+  shown.forEach((o) => { o.visible = false; });
+}
+// adapt(): a device that cannot keep up gets fewer pixels, not fewer frames. The frame time is watched; while it stays long, the
+// pixel ratio steps down (to 1 at the least) and resize() is called so the post-processing follows.
+export function adapt(renderer, resize) {
+  let ema = 16, n = 0, last = 0, cool = 0;
+  return (now) => {
+    const dt = last ? now - last : 16; last = now;
+    if (dt > 250) return;                                   // a hidden tab or a pause, not a slow frame
+    ema += (dt - ema) * 0.05; n++; if (cool > 0) { cool--; return; }
+    const pr = renderer.getPixelRatio();
+    if (n > 60 && ema > 24 && pr > 1) { renderer.setPixelRatio(Math.max(1, pr - 0.25)); resize(); cool = 90; ema = 16; }
+  };
+}

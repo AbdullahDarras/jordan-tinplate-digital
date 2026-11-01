@@ -40,7 +40,7 @@ const HERO_TINS = {};
 const ILLUS = new Set(['paint']);  // the paint can carries sample artwork; every other tin is a real one
 // card pictures: renders of the same 3D tins (assets/img/renders, made by tools/renders.mjs)
 const TILE_TIN = { 'ind-olive': 'oil', 'ind-dairy': 'havana', 'ind-sweets': 'maamoul', 'ind-cheese': 'shawra', 'ind-coffee': 'kous', 'ind-industrial': 'paint' };
-const RANGE_TIN = [ 'nejmah', 'abedc', 'havana', 'tray', 'habybee', null, 'paint' ];   // 04: the round tray, from the owner's photo (straightened and cleaned)
+const RANGE_TIN = [ 'nejmah', 'abedc', 'havana', 'tray', 'habybee', 'end', 'paint' ];   // 04: the round tray (owner's photo, straightened and cleaned); 06: a can end (Wikimedia Commons, credited below the cards)
 // the shapes lab: the shapes we can show with a real tin of that shape
 const SHAPE_TIN = { round: 'qaisi', octagon: 'habybee', square: 'jojo', rect: 'melties', cheese: 'havana', tall: 'rayhan' };
 const RENDERS = new Set(fs.existsSync(path.join(ROOT, 'assets/img/renders')) ? fs.readdirSync(path.join(ROOT, 'assets/img/renders')).map((f) => f.replace(/\.(png|webp)$/, '')) : []);
@@ -157,7 +157,8 @@ const KINDS = {
     return sect(s.id, 'sect--tiles', head(s, IND_LIST) + `<ul class="tiles">${inds.map((p, i) => `<li><a class="tile" href="${pageHref(p.id)}">${img(TILE_TIN[p.id], 'tile__img')}<span class="tile__n" dir="ltr">${pad2(i + 1)}</span><b>${T(p.tile.h, l)}</b><span>${T(p.tile.p, l)}</span><i class="tile__go">${ARROW}</i></a></li>`).join('')}</ul>`);
   },
   range(s) {
-    return sect(s.id, '', head(s, RANGE) + `<div class="cards cards--range">${RANGE.cards.map((c, i) => `<article class="card">${RANGE_TIN[i] ? img(RANGE_TIN[i], 'card__img') : ph()}<span class="card__n" dir="ltr">${pad2(i + 1)}</span><h3>${T(c.h, ctx.lang)}</h3><p>${T(c.p, ctx.lang)}</p>${c.meta ? `<p class="card__meta num">${T(c.meta, ctx.lang)}</p>` : ''}</article>`).join('')}</div>`);
+    return sect(s.id, '', head(s, RANGE) + `<div class="cards cards--range">${RANGE.cards.map((c, i) => `<article class="card">${RANGE_TIN[i] ? img(RANGE_TIN[i], 'card__img') : ph()}<span class="card__n" dir="ltr">${pad2(i + 1)}</span><h3>${T(c.h, ctx.lang)}</h3><p>${T(c.p, ctx.lang)}</p>${c.meta ? `<p class="card__meta num">${T(c.meta, ctx.lang)}</p>` : ''}</article>`).join('')}</div>
+<p class="fine credit">${T(t2('Can-end photo (06): Jnychka, Wikimedia Commons, CC BY-SA 4.0, cropped.', 'صورة الغطاء (06): Jnychka، ويكيميديا كومنز، CC BY-SA 4.0، مقصوصة.'), ctx.lang)}</p>`);
   },
   finish(s) {
     const l = ctx.lang;

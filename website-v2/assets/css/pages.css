@@ -190,3 +190,4 @@ html[lang="ar"] .foot__h { letter-spacing: 0; font-size: 14px; }
   .spec__img--none { width: 84px; }
   .story--one .facts { flex-direction: row; }
 }
+.credit { margin-top: 14px; opacity: .75; font-size: 12px; }
