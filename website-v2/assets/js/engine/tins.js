@@ -40,11 +40,13 @@ export const TINS = {
 // Written into the blue channel, which three.js reads as metalness.
 function metalMap(L) {
   if (L.metalTex) return L.metalTex;
-  const src = L.canvas, c = document.createElement('canvas');
-  c.width = src.width; c.height = src.height;
+  // computed once the artwork has loaded, on a smaller copy (metalness needs no fine detail): a few ms instead of a second
+  const src = L.canvas, c = document.createElement('canvas'), k = Math.min(1, 512 / Math.max(src.width, src.height) * 2);
+  c.width = Math.max(1, Math.round(src.width * k)); c.height = Math.max(1, Math.round(src.height * k));
   const t = new THREE.CanvasTexture(c); t.anisotropy = 8; t.colorSpace = THREE.NoColorSpace;
   const draw = () => {
-    const x = c.getContext('2d'), s = src.getContext('2d').getImageData(0, 0, c.width, c.height), o = x.createImageData(c.width, c.height);
+    const x = c.getContext('2d'); x.drawImage(src, 0, 0, c.width, c.height);
+    const s = x.getImageData(0, 0, c.width, c.height), o = x.createImageData(c.width, c.height);
     const a = s.data, b = o.data;
     for (let i = 0; i < a.length; i += 4) {
       const r = a[i] / 255, g = a[i + 1] / 255, bl = a[i + 2] / 255, mx = Math.max(r, g, bl), mn = Math.min(r, g, bl), sat = mx ? (mx - mn) / mx : 0;
@@ -54,7 +56,7 @@ function metalMap(L) {
     }
     x.putImageData(o, 0, 0); t.needsUpdate = true;
   };
-  draw(); L.ready.then(draw);
+  L.ready.then(draw);
   return (L.metalTex = t);
 }
 // the finishes a tin can wear

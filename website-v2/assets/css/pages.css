@@ -22,7 +22,7 @@ html.no-gl .phero .mega { margin-bottom: auto; margin-top: 70px; font-size: clam
 .phero__bar .lead { font-size: 15.5px; max-width: 60ch; }
 .phero__bar .fine { margin-top: 8px; }
 .phero__ctas { display: flex; flex-wrap: wrap; gap: 10px; justify-content: flex-end; }
-.btn--ghost { background: var(--card); color: var(--ink); border: 1px solid var(--line); backdrop-filter: blur(10px); }
+.btn--ghost { background: var(--card); color: var(--ink); border: 1px solid var(--line); }
 .btn > span { white-space: nowrap; }
 
 /* ---------------------------------------------------------------- sections */

@@ -41,8 +41,10 @@ out = out * (1 - lg[..., None]) + WHITE * lg[..., None]
 rel = np.clip(rel.astype(np.float32) + cv2.GaussianBlur(lg, (0, 0), 2.2) * 80, 0, 255)     # the logo raised like the ornaments
 spt = np.maximum(spt.astype(np.float32), lg * 255)
 cv2.imwrite(f'{T}/jc-lid.jpg', np.clip(out, 0, 255).astype(np.uint8), [cv2.IMWRITE_JPEG_QUALITY, 90])
-cv2.imwrite(f'{T}/jc-lid-relief.png', rel.astype(np.uint8), [cv2.IMWRITE_PNG_COMPRESSION, 9])
-cv2.imwrite(f'{T}/jc-lid-spot.png', spt.astype(np.uint8), [cv2.IMWRITE_PNG_COMPRESSION, 9])
+# the relief and spot maps at half size: the bump and the clear coat need no more, and the page loads 1.7 MB less
+half = lambda m: cv2.resize(np.clip(m, 0, 255).astype(np.uint8), (N // 2, N // 2), interpolation=cv2.INTER_AREA)
+cv2.imwrite(f'{T}/jc-lid-relief.png', half(rel), [cv2.IMWRITE_PNG_COMPRESSION, 9])
+cv2.imwrite(f'{T}/jc-lid-spot.png', half(spt), [cv2.IMWRITE_PNG_COMPRESSION, 9])
 
 # ---------------------------------------------------------------- side band
 col = cv2.imread(f'{T}/qaisi-side.jpg').astype(np.float32); rel = cv2.imread(f'{T}/qaisi-side-relief.png', 0).astype(np.float32); spt = cv2.imread(f'{T}/qaisi-side-spot.png', 0).astype(np.float32)

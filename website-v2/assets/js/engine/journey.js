@@ -30,7 +30,7 @@ export function makeJourney({ scene, ready, contact, ptr, COARSE = false, REDUCE
     const PLATE_S = 0.66, PLATE_Y = 1.3, TILT = 0.34;
 
     // the bare sheet and its prepress marks (brand navy), drawn as the chapter opens
-    const BW = 4096, BH = Math.round((BW * SH) / SW), k = BW / SW;
+    const BW = 2048, BH = Math.round((BW * SH) / SW), k = BW / SW, PX = BW / 4096; // redrawn while the marks appear: kept light
     const bc = document.createElement('canvas'); bc.width = BW; bc.height = BH;
     const bt = new THREE.CanvasTexture(bc); bt.colorSpace = THREE.SRGBColorSpace; bt.anisotropy = 8;
     const grain = (() => { // the brushed grain of tinplate, drawn once
@@ -49,7 +49,7 @@ export function makeJourney({ scene, ready, contact, ptr, COARSE = false, REDUCE
       const ease = (a, b) => sm(clamp((gd - a) / (b - a)));
       x.strokeStyle = '#002F6C'; x.fillStyle = '#002F6C'; x.lineCap = 'round';
       // 1. trim lines around each blank (dashed), drawn left to right
-      x.lineWidth = 11; x.setLineDash([40, 22]); x.globalAlpha = 0.85;
+      x.lineWidth = 11 * PX; x.setLineDash([40 * PX, 22 * PX]); x.globalAlpha = 0.85;
       for (let r = 0; r < ROWS; r++) {
         const e = ease(0.05 + r * 0.06, 0.4 + r * 0.06); if (e <= 0) continue;
         const y0 = py(rowY(r) + JH / 2), y1 = py(rowY(r) - JH / 2), x0 = px(-JW / 2), x1 = px(-JW / 2 + JW * e);
@@ -60,7 +60,7 @@ export function makeJourney({ scene, ready, contact, ptr, COARSE = false, REDUCE
       // 2. crop marks at the corners, registration targets at the edges, a colour bar along the gripper edge
       const e2 = ease(0.45, 0.75);
       if (e2 > 0) {
-        x.globalAlpha = e2; x.lineWidth = 11;
+        x.globalAlpha = e2; x.lineWidth = 11 * PX;
         const L = 0.2 * k, G = 0.06 * k;
         [[-1, 1], [1, 1], [-1, -1], [1, -1]].forEach(([sx, sy]) => {
           const cx = px((sx * JW) / 2), cy = py(sy * (rowY(ROWS - 1) + JH / 2));
@@ -73,7 +73,7 @@ export function makeJourney({ scene, ready, contact, ptr, COARSE = false, REDUCE
       if (e3 > 0) { // the colour bar: the brand's navy scale and the amber, the patches a press operator reads
         const tints = ['#002F6C', '#274f83', '#53739d', '#879ebc', '#b5c4d7', '#d98b14', '#f4b34c', '#00132d'];
         const n = 28, w = (JW * 0.62) / n, y = py(-SH / 2 + MY * 0.58), h = MY * 0.36 * k;
-        for (let i = 0; i < n * e3; i++) { x.globalAlpha = 0.9; x.fillStyle = tints[i % tints.length]; x.fillRect(px(-JW * 0.31 + i * w), y, w * k - 3, h); }
+        for (let i = 0; i < n * e3; i++) { x.globalAlpha = 0.9; x.fillStyle = tints[i % tints.length]; x.fillRect(px(-JW * 0.31 + i * w), y, w * k - 3 * PX, h); }
       }
       x.globalAlpha = 1; bt.needsUpdate = true;
     }

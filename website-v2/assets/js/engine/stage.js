@@ -23,12 +23,12 @@ const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const ptr = { x: 0.2, y: -0.2, sx: 0.2, sy: -0.2 };
 addEventListener('pointermove', (e) => { ptr.x = (e.clientX / innerWidth) * 2 - 1; ptr.y = (e.clientY / innerHeight) * 2 - 1; }, { passive: true });
 
-function base(canvas, { transparent = false, bloom = true } = {}) {
+function base(canvas, { transparent = false, bloom = false } = {}) {
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: transparent, preserveDrawingBuffer: transparent, powerPreference: 'high-performance' });
   renderer.localClippingEnabled = true;
-  renderer.setPixelRatio(Math.min(devicePixelRatio || 1, COARSE ? 1.5 : 2));
+  renderer.setPixelRatio(Math.min(devicePixelRatio || 1, COARSE ? 1.25 : 1.5));
   renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.0;
-  renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFShadowMap;
   const scene = new THREE.Scene(), camera = new THREE.PerspectiveCamera(30, 1, 0.05, 200);
   const room = makeRoom(renderer, scene, { COARSE });
   if (transparent) { scene.background = null; renderer.setClearColor(0x000000, 0); }

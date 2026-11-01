@@ -49,9 +49,9 @@ export function createFilm(canvas) {
   const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: 'high-performance' });
   renderer.localClippingEnabled = true; // the press reveals the print on the sheet
-  renderer.setPixelRatio(Math.min(devicePixelRatio || 1, COARSE ? 1.5 : 2));
+  renderer.setPixelRatio(Math.min(devicePixelRatio || 1, COARSE ? 1.25 : 1.5)); // more pixels cost frames, not visible sharpness
   renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.0;
-  renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFShadowMap;
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(30, 1, 0.05, 200);
 
@@ -135,7 +135,8 @@ export function createFilm(canvas) {
 
   // ---------------------------------------------------------------- post: bloom on the glints, depth of field in the macro shot
   let composer = null, bokeh = null, bloom = null;
-  if (!COARSE) {
+  // (the bloom and depth-of-field passes cost several full-screen passes every frame for an effect hardly seen: off)
+  if (false) {
     const rt = new THREE.WebGLRenderTarget(2, 2, { type: THREE.HalfFloatType, samples: 4 });
     composer = new EffectComposer(renderer, rt);
     composer.addPass(new RenderPass(scene, camera));
@@ -267,7 +268,10 @@ export function createFilm(canvas) {
     if (composer) composer.render(); else renderer.render(scene, camera);
   }
   const pace = adapt(renderer, resize);
-  (function loop(now) { frame(now); pace(now); requestAnimationFrame(loop); })(performance.now());
+  // nothing is drawn while the film is off screen (the page below it, a background tab)
+  let onScreen = true;
+  new IntersectionObserver(([e]) => { onScreen = e.isIntersecting; }).observe(canvas.closest('section') || canvas);
+  (function loop(now) { if (onScreen) { frame(now); pace(now); } requestAnimationFrame(loop); })(performance.now());
   Promise.all(ready).then(() => warm(renderer, scene, camera));   // everything that appears later is ready before it does
 
   return {

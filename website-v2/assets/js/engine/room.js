@@ -63,7 +63,7 @@ export function makeRoom(renderer, scene, { COARSE = false } = {}) {
     scene.environment = new THREE.PMREMGenerator(renderer).fromScene(st, 0.02).texture;
   }
   const key = new THREE.DirectionalLight(0xffffff, 2.4); key.castShadow = true;
-  key.shadow.mapSize.set(COARSE ? 1024 : 2048, COARSE ? 1024 : 2048); key.shadow.bias = -0.0004; key.shadow.normalBias = 0.02;
+  key.shadow.mapSize.set(1024, 1024); key.shadow.bias = -0.0004; key.shadow.normalBias = 0.02;
   scene.add(key, key.target);
   const rim = new THREE.DirectionalLight(0xbcd0f0, 0.9); rim.position.set(4, 3, -6); scene.add(rim);
   scene.add(new THREE.HemisphereLight(0xffffff, 0xb5c4d7, 0.85));          // the print's daylight: the dark studio only shapes the reflections

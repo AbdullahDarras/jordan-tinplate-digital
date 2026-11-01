@@ -26,7 +26,7 @@ export const DESIGNS = {
   // the factory's tins from the owner's latest photo set (cut-outs, October 2026): lids straightened from top views, bands
   // unrolled from the 3/4 views, box faces straightened by a perspective warp (see website-v2/README.md, round 11)
   nejmah: { kind: 'can', reps: 3, skirt: '#1f2b2a', rim: GOLD, bead: '#c9a246', lidRes: 2048, grade: 'contrast(1.1) saturate(1.06)' },   // Al Nejmah: the mosque in gold
-  maamoul: { kind: 'can', reps: 3, skirt: '#ec8739', rim: GOLD, bead: '#d9a44e', lidRes: 2048, grade: 'contrast(1.06) saturate(1.05)' }, // Maamoul Dates
+  maamoul: { kind: 'can', reps: 3, skirt: '#ec8739', rim: GOLD, bead: '#d9a44e', lidRes: 1024, grade: 'contrast(1.06) saturate(1.05)' }, // Maamoul Dates
   marouf: { kind: 'can', reps: 3, skirt: '#242122', rim: GOLD, bead: '#b9805c', lidRes: 2048, grade: 'contrast(1.08)' },                 // Marouf Bakery, black with copper
   abedc: { kind: 'can', reps: 2, skirt: '#1c2640', rim: GOLD, bead: '#c9a246', grade: 'contrast(1.06)' },                             // Al Abed Premium Turkish Coffee
   havana: { kind: 'can', reps: 2, skirt: '#140d0b', rim: GOLD, bead: '#c9a246', grade: 'contrast(1.06)' },                            // Havana Cocoa powder
