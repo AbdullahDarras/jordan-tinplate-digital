@@ -346,7 +346,7 @@ export const PAGES = [
     crumb: t('Products', 'المنتجات'),
     hero: {
       eyebrow: t('Products', 'المنتجات'),
-      h1: t('Tinplate cans and tins, made to fit what goes inside', 'علب صفيح معدنية تُصنع لتناسب ما بداخلها'),
+      h1: t('Made to hold. Made to impress.', 'صُنعت لتحفظ، وصُنعت لتُبهر.'),
       lead: t('Start from your industry, or browse the full range by type. Sizes below come from our product tables; custom sizes are available on request.',
               'ابدأ من قطاعك، أو تصفّح المجموعة كاملة حسب النوع. المقاسات أدناه من جداول منتجاتنا، والمقاسات الخاصة متاحة عند الطلب.'),
       art: 'round', stage: { shape: 'round', theme: 'halawah', cw: 0, finish: 'gloss' },

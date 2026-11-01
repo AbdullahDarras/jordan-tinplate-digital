@@ -469,7 +469,7 @@ export function makeJourney({ scene, ready, contact, ptr, COARSE = false, REDUCE
       const [pa, A] = KEYS[i], [pb, B] = KEYS[i + 1], e = sm(clamp((p - pa) / Math.max(1e-6, pb - pa)));
       out.pos.lerpVectors(A.pos, B.pos, e); out.tgt.lerpVectors(A.tgt, B.tgt, e);
       // c: where the shot's subject stands (the port is far along x); 0 for everything at the factory
-      if (portrait) { const dx = out.tgt.x - lerp(A.c || 0, B.c || 0, e); out.pos.x -= dx; out.tgt.x -= dx; out.tgt.y -= 0.55; out.pos.y -= 0.3; } // the card sits below: the subject centred, a little higher
+      if (portrait) { const dx = out.tgt.x - lerp(A.c || 0, B.c || 0, e); out.pos.x -= dx; out.tgt.x -= dx; out.tgt.y -= out.tgt.y > 10 ? -0.25 : 0.55; out.pos.y -= 0.3; } // the card sits below: the subject centred, a little higher
       if (mirror) { out.pos.x = -out.pos.x; out.tgt.x = -out.tgt.x; }
       out.pos.x += JX; out.tgt.x += JX;
       return out;

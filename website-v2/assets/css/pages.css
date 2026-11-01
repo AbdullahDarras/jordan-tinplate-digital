@@ -2,7 +2,7 @@
    the 3D hero, the sections (cards, specs, tiles, labs, journey, videos, contact) and the reveals. Logical properties throughout. */
 .vh { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 .page main { display: block; }
-.page .top { background: transparent; }
+.page .top:not(.solid) { background: transparent; }
 
 /* ---------------------------------------------------------------- the 3D hero: the title is a wall in the studio, the tins stand in front */
 .phero { position: relative; height: 100svh; min-height: 560px; overflow: hidden; background: var(--bg); }
@@ -235,3 +235,5 @@ html[lang="ar"] .prod__txt h3 { letter-spacing: 0; font-weight: 700; line-height
 .prod__txt > .go { justify-self: start; }
 @media (max-width: 860px) { .prod__pair, .prod__txt { grid-template-columns: 1fr; } .prod__specs, .prod__txt > .go { grid-column: 1; grid-row: auto; margin-top: 14px; } .prod__specs > div { grid-template-columns: 7.5em 1fr; } }
 .vids--plain .vid__t { display: none; }
+.foot__logo { display: block; }
+@media (max-width: 760px) { .foot .foot__logo { width: 150px; } }

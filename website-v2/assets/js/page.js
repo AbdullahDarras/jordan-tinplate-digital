@@ -38,7 +38,7 @@ addEventListener('keydown', (e) => { if (e.key === 'Escape' && mb?.getAttribute(
 let lenis = null;
 if (window.Lenis && !REDUCED) { lenis = new window.Lenis({ lerp: 0.09, wheelMultiplier: 0.85 }); const raf = (t) => { lenis.raf(t); requestAnimationFrame(raf); }; requestAnimationFrame(raf); }
 const top = $('#top'), hero = $('.phero');
-const onScroll = () => { top.classList.toggle('solid', scrollY > (hero ? hero.offsetHeight - 80 : 40)); };
+const onScroll = () => { top.classList.toggle('solid', scrollY > (innerWidth < 760 ? 10 : hero ? hero.offsetHeight - 80 : 40)); }; // phones: solid as soon as the page moves
 addEventListener('scroll', onScroll, { passive: true }); onScroll();
 const rv = $$('.sec__head, .card, .tile, .spec, .prose, .facts > div, .certs figure, .vid, .vcard, .reach > *, .lab__text > *, .story > div');
 rv.forEach((el) => el.classList.add('rv'));

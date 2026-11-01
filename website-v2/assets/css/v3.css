@@ -213,4 +213,6 @@ html[lang="ar"] :is(.mega, .cta__h) { line-height: 1.38; }
 /* the home hero: the team in front of the factory, the whole picture, clear (no veil); the 3D film follows */
 .hero-photo { position: relative; height: 100svh; min-height: 520px; overflow: hidden; background: #cfdcea; }
 .hero-photo img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 42%; }
-@media (max-aspect-ratio: 4/3) { .hero-photo { height: auto; min-height: 0; padding-top: 72px; background: var(--bg); } .hero-photo img { height: auto; } }
+@media (max-aspect-ratio: 4/3) { .hero-photo { height: 64svh; min-height: 420px; } .hero-photo img { object-position: 50% 55%; } }
+
+@media (max-width: 760px) { .foot__logo { width: 150px; } .page .top { padding-block: 10px; } }
