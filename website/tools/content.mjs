@@ -19,7 +19,7 @@ export const SITE = {
   origin: process.env.SITE_URL || 'https://www.jordantinplate.com',
   name: 'Jordan Tinplate Canning',           // official English name (always written in full)
   nameAr: 'الشركة الأردنية لصناعة وطباعة الصفيح والعبوات المعدنية',   // official Arabic name (confirmed, round 3, 2026-10-21)
-  orderUrl: 'https://jc-order.netlify.app/',  // existing online order / quote tool: primary "Request a quote" link
+  orderUrl: 'https://jordantinplate.net/order',  // the online order / quote tool: primary "Request a quote" link
   phone: '+962 6 4051124',
   tel: '+96264051124',
   email: 'sales@jordantinplate.com',

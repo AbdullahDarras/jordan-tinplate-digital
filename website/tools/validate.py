@@ -230,7 +230,7 @@ for f in site_pages:
         if not [s for s in p.stages if s.get("data-pose") == "hero" and s.get("role") == "img"]: err(f"{n}: no hero 3D stage")
     if src.count('class="stage__fb"') < len([s for s in p.stages if s.get("aria-hidden") != "true"]): err(f"{n}: a stage lacks its SVG fallback")
     # the order tool opens in a new tab with noopener; mailto fallback exists
-    orders = [a for a in p.anchors if a["href"].startswith("https://jc-order.netlify.app")]
+    orders = [a for a in p.anchors if a["href"].startswith("https://jordantinplate.net/order")]
     if not orders: err(f"{n}: no link to the order tool")
     for a in orders:
         if a.get("target") != "_blank" or "noopener" not in a.get("rel", ""): err(f"{n}: order-tool link without target=_blank rel=noopener")
