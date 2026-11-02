@@ -46,7 +46,15 @@ const other = (l) => (l === 'en' ? 'ar' : 'en');
 // the logo, as inlined in the home page (brand/logo/logo-horizontal.svg, currentColor)
 const HOME = fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8');
 // a version stamp on the site's own CSS and JS: a visitor's browser fetches the new files after each change instead of an old copy
-const VER = crypto.createHash('md5').update(['assets/css/v3.css', 'assets/css/pages.css', 'assets/js/page.js', 'assets/js/app.js'].map((f) => fs.readFileSync(path.join(ROOT, f))).join('')).digest('hex').slice(0, 8);
+// The site's own scripts import each other as modules: every relative import also carries the stamp (rewritten in place here), so a
+// browser never mixes a new page with old 3D engine files. The stamp is computed with the stamps taken out, so it is stable.
+const JS = ['assets/js', 'assets/js/engine'].flatMap((d) => fs.readdirSync(path.join(ROOT, d)).filter((f) => f.endsWith('.js')).map((f) => path.join(ROOT, d, f)));
+const UNSTAMP = (t) => t.replace(/(\.js)\?v=[0-9a-f]+(['"])/g, '$1$2');
+const VER = crypto.createHash('md5').update(['assets/css/v3.css', 'assets/css/pages.css'].map((f) => fs.readFileSync(path.join(ROOT, f), 'utf8')).join('') + JS.map((f) => UNSTAMP(fs.readFileSync(f, 'utf8'))).join('')).digest('hex').slice(0, 8);
+JS.forEach((f) => {
+  const t = UNSTAMP(fs.readFileSync(f, 'utf8')).replace(/((?:from\s*|import\(\s*)['"]\.{1,2}\/[^'"]+?\.js)(['"])/g, `$1?v=${VER}$2`);
+  fs.writeFileSync(f, t);
+});
 const LOGO = HOME.match(/<svg fill="currentColor"[^>]*viewBox="0 0 1016\.89 275\.9">[\s\S]*?<\/svg>/)[0];
 
 // ---------------------------------------------------------------- the tin each page's hero shows

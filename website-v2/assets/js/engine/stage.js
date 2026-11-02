@@ -8,10 +8,10 @@ import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
 import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
 import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
-import * as TIN from './tins.js';
-import { makeRoom, warm, adapt } from './room.js';
-import { makeJourney } from './journey.js';
-import { arabicBlock } from './type.js';
+import * as TIN from './tins.js?v=22cc8704';
+import { makeRoom, warm, adapt } from './room.js?v=22cc8704';
+import { makeJourney } from './journey.js?v=22cc8704';
+import { arabicBlock } from './type.js?v=22cc8704';
 
 const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
 const lerp = (a, b, t) => a + (b - a) * t;

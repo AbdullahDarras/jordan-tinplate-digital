@@ -1,7 +1,7 @@
 // Website v2 (round 2): the page around the 3D film. Language, theme, smooth scroll, the chapter overlays, the finish lab.
-import { createFilm, CHAPTERS } from './engine/film.js';
-import { TINS } from './engine/tins.js';
-import { NAV_AR } from './nav-ar.js';
+import { createFilm, CHAPTERS } from './engine/film.js?v=22cc8704';
+import { TINS } from './engine/tins.js?v=22cc8704';
+import { NAV_AR } from './nav-ar.js?v=22cc8704';
 
 const d = document.documentElement, $ = (s) => document.querySelector(s), $$ = (s) => [...document.querySelectorAll(s)];
 const store = { get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }, set(k, v) { try { localStorage.setItem(k, v); } catch (e) { /* private mode */ } } };

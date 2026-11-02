@@ -4,8 +4,8 @@
 // container goes onto a JC ship, then a globe with routes out of Amman. pose(p, t) poses everything from the
 // chapter's own time p (0 … 1); shotAt(p) gives the camera. Used by the home film (chapter 6) and the Capabilities page.
 import * as THREE from 'three';
-import * as TIN from './tins.js';
-import * as HAL from './halawah.js';
+import * as TIN from './tins.js?v=22cc8704';
+import * as HAL from './halawah.js?v=22cc8704';
 
 const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
 const sm = (t) => t * t * (3 - 2 * t);

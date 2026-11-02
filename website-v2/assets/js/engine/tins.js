@@ -5,8 +5,8 @@
 // reflects the studio (gold lacquer reads as gold, bare tin as tin) and the print sits on it as ink under a clear varnish.
 // 1 world unit = 100 mm.
 import * as THREE from 'three';
-import * as STU from './studio.js';
-import * as HAL from './halawah.js';
+import * as STU from './studio.js?v=22cc8704';
+import * as HAL from './halawah.js?v=22cc8704';
 
 const U = 0.01;                       // world units per mm
 const TAU = Math.PI * 2;

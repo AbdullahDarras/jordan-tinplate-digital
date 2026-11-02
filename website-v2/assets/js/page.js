@@ -68,7 +68,7 @@ function heroTitle() {
   (document.fonts ? document.fonts.load(font, text) : Promise.resolve()).catch(() => {}).then(() => heroStage.title(text, lang, d.dataset.mode));
 }
 function wire(stage) { stage.setTheme(d.dataset.mode); stages.push(stage); return stage; }
-import('./engine/stage.js').then((S) => {
+import('./engine/stage.js?v=22cc8704').then((S) => {
   const hc = $('canvas[data-stage="hero"]');
   if (hc) { heroStage = wire(S.createHero(hc, { tins: hc.dataset.tins.split(',') })); heroTitle(); heroStage.ready.then(() => d.classList.add('gl-ready')); }
   // the labs start when they come near the screen
