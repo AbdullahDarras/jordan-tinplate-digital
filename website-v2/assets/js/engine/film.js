@@ -41,6 +41,13 @@ const SHOTS = [
   { pos: V(-2.7, 1.5, 4.2), tgt: V(-0.55, 0.28, 0), fov: 30 },      // lab: the tin to the side away from the card
   null                                                             // from sheet to shelf: the journey rig moves its own camera
 ];
+// Phones (portrait): the text card sits at the bottom, so the subject is centred and framed in the upper part of the screen,
+// at a distance that fits its width (these shots are used as they are, without the step-back of the landscape shots)
+const SHOTS_P = {
+  1: { pos: V(0, 3.9, 6.4), tgt: V(0, -0.2, 0), fov: 30 },            // macro: the lid and its relief, the edge in view
+  2: { pos: V(AX, 3.6, 9.8), tgt: V(AX, -0.75, 0), fov: 30 },          // layers: the rig above the card
+  4: { pos: V(0, 2.9, 10.2), tgt: V(0, -0.8, 0), fov: 30 }             // lab: the tin above the card
+};
 // one tin of each kind, from the owner's latest photos (Al Qaisi stays in the middle)
 const RING_KEYS = !SHOW_RING ? [] : ['nejmah', 'jojo', 'habybee', 'oil', 'melties', 'abedc', 'maamoul', 'rayhan', 'shawra', 'havana', 'marouf', 'kous', 'givinova'];
 
@@ -167,7 +174,9 @@ export function createFilm(canvas) {
   const MIRROR_AT = { 1: 0, 2: AX, 4: 0 };
   const mirrored = SHOTS.map((sh, i) => (sh && i in MIRROR_AT ? { pos: V(2 * MIRROR_AT[i] - sh.pos.x, sh.pos.y, sh.pos.z), tgt: V(2 * MIRROR_AT[i] - sh.tgt.x, sh.tgt.y, sh.tgt.z), fov: sh.fov } : sh));
   const rtl = () => document.documentElement.dir === 'rtl';
-  const shot = (i) => (!SHOW_RING && i === 3 ? shot(4) : i === 5 ? journey.shotAt(local(5), rtl(), camera.aspect < 0.9) : rtl() ? mirrored[i] : SHOTS[i]);
+  const mirP = Object.fromEntries(Object.entries(SHOTS_P).map(([i, sh]) => [i, { pos: V(2 * MIRROR_AT[i] - sh.pos.x, sh.pos.y, sh.pos.z), tgt: V(2 * MIRROR_AT[i] - sh.tgt.x, sh.tgt.y, sh.tgt.z), fov: sh.fov }]));
+  const portrait = () => camera.aspect < 0.9;
+  const shot = (i) => (!SHOW_RING && i === 3 ? shot(4) : portrait() && SHOTS_P[i] ? (rtl() && i in MIRROR_AT ? mirP[i] : SHOTS_P[i]) : i === 5 ? journey.shotAt(local(5), rtl(), camera.aspect < 0.9) : rtl() ? mirrored[i] : SHOTS[i]);
   const shotAt = (t) => { // the camera between shots: hold inside a chapter, travel between chapters
     let i = 0; while (i < CHAPTERS.length - 1 && t > CHAPTERS[i][1]) i++;
     const [a] = CHAPTERS[i];
@@ -190,7 +199,7 @@ export function createFilm(canvas) {
     const drift = S.i === 1 ? 0.04 : S.i === 5 ? 0.1 : 0.18;
     tmpP.x += ptr.sx * drift; tmpP.y -= ptr.sy * drift * 0.5;
     // tall screens: step back so the subject keeps its width
-    const backOf = (i) => Math.max(1, (i === 5 ? 1.0 : i === 3 ? 1.25 : 0.95) / camera.aspect); // the ring is wide: on a phone the camera steps further back
+    const backOf = (i) => (camera.aspect < 0.9 && SHOTS_P[i] ? 1 : null) ?? Math.max(1, (i === 5 ? 1.0 : i === 3 ? 1.25 : 0.95) / camera.aspect); // the ring is wide: on a phone the camera steps further back
     const back = lerp(backOf(S.ia), backOf(S.ib), S.k);
     camera.position.copy(tmpT).addScaledVector(tmpP.clone().sub(tmpT), back);
     camera.lookAt(tmpT);

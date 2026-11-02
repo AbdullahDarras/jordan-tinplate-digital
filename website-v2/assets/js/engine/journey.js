@@ -227,12 +227,19 @@ export function makeJourney({ scene, ready, contact, ptr, COARSE = false, REDUCE
       const glass = new THREE.MeshPhysicalMaterial({ color: '#0d1a2e', roughness: 0.05, metalness: 0.3, clearcoat: 1, side: THREE.DoubleSide });
       const tyre = new THREE.MeshStandardMaterial({ color: '#15181d', roughness: 0.8, side: THREE.DoubleSide });
       const add = (geo, mat, x, y, z, parent = truck) => { const m = new THREE.Mesh(geo, mat); m.position.set(x, y, z); m.castShadow = true; parent.add(m); return m; };
-      const LT = 8.4, WT = 3.7, HT = 4.6, FL = 1.15, X0 = 2.3;           // the container's doors are at the end facing the pallet
+      // a semi-trailer: a 40-foot JC container on a flatbed trailer with three axles, pulled by a tractor unit in the brand blue
+      const LT = 16.5, WT = 3.7, HT = 4.6, FL = 1.15, X0 = 2.3;           // the container's doors are at the end facing the pallet
       add(new THREE.BoxGeometry(LT, HT, WT), [cPlainMat, hidden, cPlainMat, grey, cLogoMat, cLogoMat], X0 + LT / 2, FL + HT / 2, 0);
-      add(new THREE.BoxGeometry(LT, 0.3, WT * 0.9), grey, X0 + LT / 2, FL - 0.2, 0);                  // the chassis
-      add(new THREE.BoxGeometry(2.6, 3.3, WT), cabMat, X0 + LT + 1.5, FL + 1.3, 0);                // cab
-      add(new THREE.BoxGeometry(0.06, 1.3, WT * 0.84), glass, X0 + LT + 2.82, FL + 2.1, 0);          // windscreen
-      [X0 + 1.2, X0 + 2.5, X0 + LT + 1.9].forEach((x) => [-1, 1].forEach((sz) => { const w = add(new THREE.CylinderGeometry(0.62, 0.62, 0.5, 32), tyre, x, 0.62, sz * (WT / 2 - 0.2)); w.rotation.x = Math.PI / 2; }));
+      add(new THREE.BoxGeometry(LT + 0.2, 0.32, WT * 0.92), grey, X0 + LT / 2, FL - 0.2, 0);          // the trailer bed
+      [X0 + 1.1, X0 + 2.45, X0 + 3.8].forEach((x) => [-1, 1].forEach((sz) => { const w = add(new THREE.CylinderGeometry(0.62, 0.62, 0.5, 32), tyre, x, 0.62, sz * (WT / 2 - 0.2)); w.rotation.x = Math.PI / 2; })); // trailer axles
+      const XT = X0 + LT - 1.6;                                            // the tractor sits under the front of the trailer
+      add(new THREE.BoxGeometry(6.4, 0.5, WT * 0.8), grey, XT + 3.0, 1.0, 0);                          // tractor chassis
+      add(new THREE.BoxGeometry(3.0, 4.4, WT), cabMat, XT + 4.9, 3.15, 0);                             // the cab (flat front, tall, sleeper)
+      add(new THREE.BoxGeometry(3.05, 0.5, WT * 1.01), new THREE.MeshPhysicalMaterial({ color: '#082b63', roughness: 0.35, clearcoat: 0.8 }), XT + 4.9, 5.1, 0); // roof deflector band
+      add(new THREE.BoxGeometry(0.06, 1.6, WT * 0.86), glass, XT + 6.42, 3.9, 0);                     // windscreen
+      add(new THREE.BoxGeometry(0.1, 0.9, WT * 0.86), grey, XT + 6.45, 1.75, 0);                       // grille
+      [-1, 1].forEach((sz) => { add(new THREE.BoxGeometry(0.9, 0.9, 0.06), glass, XT + 5.6, 3.9, sz * (WT / 2 + 0.01)); }); // side windows
+      [XT + 1.2, XT + 2.5, XT + 5.4].forEach((x) => [-1, 1].forEach((sz) => { const w = add(new THREE.CylinderGeometry(0.62, 0.62, 0.5, 32), tyre, x, 0.62, sz * (WT / 2 - 0.2)); w.rotation.x = Math.PI / 2; })); // tractor axles
       [-1, 1].forEach((sz) => { // two doors hinged at the container's corners
         const piv = new THREE.Group(); piv.position.set(X0, FL + HT / 2, sz * WT / 2); truck.add(piv);
         add(new THREE.BoxGeometry(0.06, HT - 0.04, WT / 2 - 0.02), cPlainMat, 0, 0, -sz * WT / 4, piv);
@@ -418,10 +425,10 @@ export function makeJourney({ scene, ready, contact, ptr, COARSE = false, REDUCE
       const wh = Math.max(0.001, wrapF * wrapH); wrap.scale.y = wh; wrap.position.y = BASE + wh / 2; wrap.visible = wrapF > 0; filmMat.opacity = 0.2 * Math.min(1, wrapF * 4);
       // the truck backs up, the pallet goes in, the truck leaves
       truck.visible = vis && truckIn > 0.001 && drive < 0.999;
-      truck.rotation.y = dir < 0 ? Math.PI : 0; truck.position.set(JX + dir * ((1 - truckIn) * 16 + drive * 34), 0, 0);
+      truck.rotation.y = dir < 0 ? Math.PI : 0; truck.position.set(JX + dir * ((1 - truckIn) * 26 + drive * 40), 0, 0);
       doors.forEach((d) => { d.piv.rotation.y = d.sz * doorOpen * Math.PI * 0.62; });
       const FL = truck.userData.floor, inX = truck.userData.x0 + 2.4;
-      pallet.position.set(JX + dir * (slide * inX + drive * 34), liftP * FL, 0);
+      pallet.position.set(JX + dir * (slide * inX + drive * 40), liftP * FL, 0);
       // the hero carton: up while the pallet builds, then onto its place (it rides with the pallet from there)
       const hoverC = V(JX, 4.9, 0.3), slotC = HERO_SLOT.clone().multiplyScalar(PS).add(pallet.position);
       carton.position.copy(J0).lerp(hoverC, cRise).lerp(slotC, cLand); carton.scale.setScalar(lerp(1, PS, cRise));
@@ -439,8 +446,8 @@ export function makeJourney({ scene, ready, contact, ptr, COARSE = false, REDUCE
       pulse.scale.setScalar(1 + ((t * 0.8) % 1) * 2.2); pulse.material.opacity = 1 - ((t * 0.8) % 1);
       lbl.material.opacity = seg(p, 0.975, 0.992);
       // where the key light's shadow should look
-      focus.span = p > 0.905 ? 16 : p > 0.81 ? 11 : p > 0.7 ? 6.5 : 4.6;
-      focus.pos.set(JX + dir * (p > 0.905 ? SX : p > 0.81 ? 4.5 : 0), 0.6, 0);
+      focus.span = p > 0.905 ? 16 : p > 0.81 ? 15 : p > 0.7 ? 6.5 : 4.6;
+      focus.pos.set(JX + dir * (p > 0.905 ? SX : p > 0.81 ? 9 : 0), 0.6, 0);
       let s = 0; STEPS.forEach((v, i) => { if (p >= v) s = i; });
       return s;
     }
@@ -455,8 +462,8 @@ export function makeJourney({ scene, ready, contact, ptr, COARSE = false, REDUCE
       [0.715, { pos: V(-1.5, 4.6, 11.0), tgt: V(-1.35, 1.6, 0) }],
       [0.77, { pos: V(-1.8, 6.0, 15.5), tgt: V(-1.5, 2.6, 0) }],                // the pallet, then its film
       [0.82, { pos: V(-1.8, 6.0, 15.5), tgt: V(-1.5, 2.6, 0) }],
-      [0.85, { pos: V(3.6, 9.5, 37), tgt: V(3.6, 2.8, 0) }],                     // the truck: the pallet clear of the card, the cab in frame
-      [0.895, { pos: V(3.6, 9.5, 37), tgt: V(3.6, 2.8, 0) }],
+      [0.85, { pos: V(6.5, 13, 60), tgt: V(6.5, 3.2, 0), c: 11.7 }],                     // the truck: the pallet clear of the card, the cab in frame
+      [0.895, { pos: V(6.5, 13, 60), tgt: V(6.5, 3.2, 0), c: 11.7 }],
       [0.93, { pos: V(SX - 8.5, 13, 48), tgt: V(SX - 8.5, 2.4, 0), c: SX }],             // the port: the ship to the side of the card
       [0.958, { pos: V(SX - 7.5, 11.5, 44), tgt: V(SX - 7.5, 2.8, 0), c: SX }],
       [0.97, { pos: V(SX - 3, 17, 34), tgt: V(SX - 2, 15, 0), c: SX }],              // up, clear of the ship, then in to the world
