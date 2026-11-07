@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="ar" dir="rtl"><head><meta charset="utf-8"><title>HORECA Lebanon 2026, concepts 3 and 4</title>
+<link rel="stylesheet" href="brand.css">
+<style>
+/* Two more invitation concepts, each one idea from the factory's world:
+   "facts": the invitation set as a nutrition-facts panel, the label every food tin carries; serving = one stand visit.
+   "postcard": a postcard from Beirut, the booth on the front, the invitation, stamp and Amman -> Beirut postmark on the back.
+   Logo always white on navy; event logo as supplied (white knock-out on navy). Stand number via ?stand=. */
+.c { position: relative; overflow: hidden; flex: none; font-family: var(--ar); color: #fff;
+  background: radial-gradient(70% 45% at 50% 0%, #0d4489 0%, #002F6C 48%, #001a44 100%); }
+.en { font-family: var(--en); direction: ltr; unicode-bidi: isolate; }
+.top { position: absolute; top: 56px; left: 72px; right: 72px; display: flex; align-items: center; justify-content: space-between; }
+.q { display: block; background: #fff; border-radius: 8px; padding: 5px; flex: none; }
+.q img { display: block; width: 100%; height: 100%; }
+.lbl { display: inline-flex; align-items: baseline; gap: 10px; white-space: nowrap; color: var(--amber); }
+.lbl .ar { font-size: 16px; font-weight: 500; }
+.lbl .en { font-size: 11px; letter-spacing: .3em; font-weight: 600; text-transform: uppercase; }
+.mail { font-family: var(--en); font-weight: 600; direction: ltr; }
+
+/* ---------- facts */
+.facts .photo { position: absolute; left: 72px; right: 72px; top: 138px; height: 392px; overflow: hidden; border-radius: 6px; background: #000; }
+.facts .photo img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.facts .panel { position: absolute; left: 72px; right: 72px; top: 552px; background: #fff; color: #111; border: 4px solid #111; padding: 16px 26px 18px; }
+.facts .t { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; }
+.facts .t .ar { font-size: 50px; font-weight: 800; line-height: 1.1; letter-spacing: -.01em; }
+.facts .t .en { font-size: 36px; font-weight: 800; letter-spacing: -.03em; }
+.facts .r { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; padding: 10px 0; border-top: 1.5px solid #111; font-size: 21px; }
+.facts .r b { font-weight: 800; }
+.facts .r .en { font-size: 17px; color: #333; }
+.facts .r .v { font-family: var(--en); font-weight: 800; font-size: 22px; direction: ltr; }
+.facts .r.big { font-size: 26px; padding: 10px 0; }
+.facts .r.big .v { font-size: 34px; }
+.facts .r.ind { padding-inline-start: 22px; }
+.facts .rule { height: 14px; background: #111; margin: 8px 0 0; }
+.facts .rule.m { height: 7px; }
+.facts .sm { font-size: 14px; font-weight: 700; padding: 6px 0 2px; display: flex; justify-content: space-between; border-top: 1.5px solid #111; }
+.facts .sm .en { font-size: 12px; letter-spacing: .06em; font-weight: 700; color: #111; }
+.facts .note { margin: 10px 0 0; padding-top: 10px; border-top: 1.5px solid #111; font-size: 17px; line-height: 1.6; color: #222; }
+.facts .note b { font-weight: 800; }
+.facts .foot { position: absolute; left: 72px; right: 72px; bottom: 50px; display: flex; align-items: center; justify-content: space-between; }
+
+/* ---------- postcard */
+.post .front { position: absolute; left: 80px; right: 80px; top: 140px; height: 520px; background: #f8f4ea; padding: 18px; transform: rotate(-2deg); box-shadow: 0 30px 60px rgba(0, 6, 24, .55); z-index: 1; }
+.post .front .pic { position: relative; height: 100%; overflow: hidden; background: #000; }
+.post .front .pic img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.post .front .greet { position: absolute; bottom: 0; left: 0; right: 0; padding: 60px 30px 22px; text-align: right; color: #fff; background: linear-gradient(180deg, transparent, rgba(0, 10, 30, .82)); }
+.post .front .greet .ar { display: block; font-size: 54px; font-weight: 800; line-height: 1.15; }
+.post .front .greet .en { display: block; text-align: right; font-size: 17px; letter-spacing: .4em; text-transform: uppercase; font-weight: 700; color: var(--amber); margin-top: 4px; }
+.post .back { position: absolute; left: 64px; right: 64px; top: 640px; height: 560px; background: #f8f4ea; color: #1c2430; transform: rotate(1.4deg); box-shadow: 0 30px 60px rgba(0, 6, 24, .55); z-index: 2; display: flex; padding: 34px 34px 30px; gap: 30px; }
+.post .back .msg { flex: 1.15; min-width: 0; display: flex; flex-direction: column; gap: 12px; }
+.post .back .msg p { margin: 0; font-size: 21px; line-height: 1.75; color: #1c2430; }
+.post .back .msg p.en { font-size: 16px; line-height: 1.55; color: #4a5568; }
+.post .back .msg .sig { margin-top: auto; font-size: 19px; font-weight: 700; color: var(--navy); }
+.post .back .msg .sig .en { display: block; font-size: 13px; font-weight: 600; color: #4a5568; }
+.post .back .div { width: 2px; background: #c9c2b2; flex: none; }
+.post .back .addr { flex: 1; min-width: 0; display: flex; flex-direction: column; position: relative; direction: rtl; }
+.post .stamp { align-self: flex-end; width: 140px; height: 170px; padding: 8px; background: #fff; border: 6px dotted #f8f4ea; box-shadow: 0 0 0 1px rgba(0, 0, 0, .05), 2px 3px 6px rgba(0, 0, 0, .15); transform: rotate(3deg); }
+.post .stamp .in { height: 100%; background: var(--navy); color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: space-between; padding: 12px 8px 10px; }
+.post .stamp .in img { width: 100%; height: auto; display: block; }
+.post .stamp .in b { font-family: var(--en); font-size: 26px; font-weight: 800; letter-spacing: -.02em; line-height: 1; color: var(--amber); }
+.post .stamp .in small { font-family: var(--en); font-size: 10px; letter-spacing: .28em; text-transform: uppercase; font-weight: 700; }
+.post .pm { position: absolute; top: 40px; left: -6px; width: 300px; height: 150px; pointer-events: none; }
+.post .lines { margin-top: 26px; display: flex; flex-direction: column; gap: 0; }
+.post .lines div { border-bottom: 1.5px solid #b9b2a2; padding: 10px 2px 6px; font-size: 20px; font-weight: 600; color: #1c2430; }
+.post .lines div .en { font-size: 14px; color: #4a5568; font-weight: 600; margin-inline-start: 8px; }
+.post .lines div b { font-family: var(--en); font-weight: 800; direction: ltr; unicode-bidi: isolate; }
+.post .foot { position: absolute; left: 80px; right: 80px; bottom: 56px; display: flex; align-items: center; justify-content: space-between; z-index: 3; }
+</style></head>
+<body>
+
+<!-- ======================================================= CONCEPT "FACTS": INVITATION FACTS, POST 1080 x 1350 -->
+<div class="frame c facts" data-name="horeca2026-idea-facts-post-1080x1350" style="width:1080px;height:1350px">
+  <div class="top"><img src="assets/logo-h-white.svg" alt="Jordan Tinplate Canning" style="height:48px"><img src="assets/horeca-lebanon-logo.png" alt="HORECA Lebanon 2026" style="height:54px"></div>
+  <div class="photo"><img src="assets/booth-front-lb.jpg" alt="جناح الشركة في HORECA Lebanon 2026" style="object-position:50% 40%"></div>
+  <div class="panel">
+    <div class="t"><span class="ar">حقائق الدعوة</span><span class="en">Invitation Facts</span></div>
+    <div class="r"><span>حجم الحصة: <b>زيارة واحدة لجناحنا</b></span><span class="en">Serving size: 1 stand visit</span></div>
+    <div class="r"><span>عدد الحصص: <b>4 أيام · 10–13 تشرين الثاني 2026</b></span><span class="en">4 days</span></div>
+    <div class="rule"></div>
+    <div class="sm"><span>الكمية في كل زيارة</span><span class="en">Amount per visit · % Daily value</span></div>
+    <div class="r big"><b>الجناح · Stand</b><span class="v standno">CC1-190</span></div>
+    <div class="rule m"></div>
+    <div class="r"><b>تصميم العبوة</b><span class="v">100%</span></div>
+    <div class="r ind"><span>الطباعة على الصفيح</span><span class="v">100%</span></div>
+    <div class="r ind"><span>تشكيل العلب</span><span class="v">100%</span></div>
+    <div class="r"><b>صنع في الأردن منذ 1998</b><span class="v">100%</span></div>
+    <div class="r"><b>المكان</b><span>سيسايد أرينا، بيروت · <span class="en">Seaside Arena, Beirut</span></span></div>
+    <div class="rule m"></div>
+    <p class="note"><b>المكوّنات:</b> صفيح، أحبار، خبرة، وفنجان قهوة بانتظاركم. تتشرّف <b>الأردنية للعبوات المعدنية</b> بدعوتكم لزيارة جناحها في <span class="en" style="white-space:nowrap">HORECA Lebanon 2026</span>.</p>
+  </div>
+  <div class="foot">
+    <div style="display:flex;flex-direction:column;gap:4px;align-items:flex-start"><div class="lbl"><span class="ar">احجز موعداً</span><span class="en">Book a meeting</span></div><span class="mail" style="font-size:20px">sales@jordantinplate.com</span></div>
+    <div class="lbl" style="font-size:18px"><span class="ar" style="font-size:20px">نلتقي في بيروت</span><span class="en">See you in Beirut</span></div>
+    <span class="q" style="width:60px;height:60px"><img src="assets/qr-website.svg" alt="QR code to jordantinplate.com"></span>
+  </div>
+</div>
+
+<!-- ======================================================= CONCEPT "POSTCARD": A POSTCARD FROM BEIRUT, POST 1080 x 1350 -->
+<div class="frame c post" data-name="horeca2026-idea-postcard-post-1080x1350" style="width:1080px;height:1350px">
+  <div class="top"><img src="assets/logo-h-white.svg" alt="Jordan Tinplate Canning" style="height:48px"><img src="assets/horeca-lebanon-logo.png" alt="HORECA Lebanon 2026" style="height:54px"></div>
+  <div class="front"><div class="pic"><img src="assets/booth-front-lb.jpg" alt="جناح الشركة في HORECA Lebanon 2026" style="object-position:50% 40%"><div class="greet"><span class="ar">تحيات من بيروت</span><span class="en">Greetings from Beirut</span></div></div></div>
+  <div class="back">
+    <div class="msg">
+      <p style="font-size:23px">ضيفنا الكريم،<br>يسعدنا أن نستقبلكم في جناحنا في <b class="en" style="white-space:nowrap">HORECA Lebanon 2026</b>، لنريكم عن قرب كيف نصمّم ونطبع ونشكّل عبوات الصفيح لعلامتكم.</p>
+      <p class="en">Dear guest, we would be delighted to welcome you at our stand at HORECA Lebanon 2026 and show you how we design, print and form tinplate packaging for your brand.</p>
+      <div class="sig">الأردنية للعبوات المعدنية<span class="en">sales@jordantinplate.com</span></div>
+    </div>
+    <div class="div"></div>
+    <div class="addr">
+      <div class="stamp"><div class="in"><img src="assets/logo-h-white.svg" alt=""><b>1998</b><small>Jordan · Tinplate</small></div></div>
+      <svg class="pm" direction="ltr" viewBox="0 0 300 150" fill="none" stroke="#1c2430" stroke-opacity=".78" stroke-width="3">
+        <circle cx="75" cy="75" r="64"/><circle cx="75" cy="75" r="44"/>
+        <text x="75" y="70" text-anchor="middle" direction="ltr" unicode-bidi="bidi-override" font-family="Bricolage Grotesque, sans-serif" font-size="14" font-weight="800" fill="#1c2430" fill-opacity=".8" stroke="none">10–13 NOV</text>
+        <text x="75" y="88" text-anchor="middle" font-family="Bricolage Grotesque, sans-serif" font-size="14" font-weight="800" fill="#1c2430" fill-opacity=".8" stroke="none">2026</text>
+        <path id="arcT" d="M27 75 A48 48 0 0 1 123 75" stroke="none"/><path id="arcB" d="M21 75 A54 54 0 0 0 129 75" stroke="none"/>
+        <text font-family="Bricolage Grotesque, sans-serif" font-size="12" font-weight="800" letter-spacing="3" fill="#1c2430" fill-opacity=".8" stroke="none"><textPath href="#arcT" startOffset="50%" text-anchor="middle">AMMAN</textPath></text>
+        <text font-family="Bricolage Grotesque, sans-serif" font-size="12" font-weight="800" letter-spacing="3" fill="#1c2430" fill-opacity=".8" stroke="none"><textPath href="#arcB" startOffset="50%" text-anchor="middle">BEIRUT</textPath></text>
+        <path d="M150 50 q15 -10 30 0 t30 0 t30 0 t30 0 M150 75 q15 -10 30 0 t30 0 t30 0 t30 0 M150 100 q15 -10 30 0 t30 0 t30 0 t30 0"/>
+      </svg>
+      <div class="lines">
+        <div>إلى: ضيفنا الكريم</div>
+        <div>الجناح <b class="standno">CC1-190</b></div>
+        <div>HORECA Lebanon 2026</div>
+        <div>سيسايد أرينا، بيروت</div>
+        <div>10–13 تشرين الثاني 2026</div>
+      </div>
+    </div>
+  </div>
+  <div class="foot">
+    <div class="lbl"><span class="ar" style="font-size:20px">نلتقي في بيروت</span><span class="en">See you in Beirut</span></div>
+    <div style="display:flex;align-items:center;gap:14px"><div style="display:flex;flex-direction:column;gap:3px;align-items:flex-end"><div class="lbl"><span class="ar">احجز موعداً</span><span class="en">Book a meeting</span></div><span class="mail" style="font-size:19px">sales@jordantinplate.com</span></div><span class="q" style="width:58px;height:58px"><img src="assets/qr-website.svg" alt="QR code to jordantinplate.com"></span></div>
+  </div>
+</div>
+
+<script>
+const stand = new URLSearchParams(location.search).get('stand') || '—';
+document.querySelectorAll('.standno').forEach((el) => { el.textContent = stand; });
+</script>
+</body></html>
