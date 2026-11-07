@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// HORECA Lebanon 2026 invitation. Set the stand number with STAND=..., default CC1-190, e.g. STAND="CC1-190" node content/social/horeca-2026/render.mjs
+// HORECA Lebanon 2026 invitation. Set the stand number with STAND=..., default A25 · Hall 2, e.g. STAND="A25 · Hall 2" node content/social/horeca-2026/render.mjs
 // Export every .frame in src/*.html to media/<data-name>.png at its exact pixel size.
 //   node content/social/horeca-2026/render.mjs            all frames
 //   node content/social/horeca-2026/render.mjs slide-2    only frames whose name contains "slide-2"
@@ -18,7 +18,7 @@ const OUTDIR = process.env.OUT || path.join(here, 'media');
 const browser = await chromium.launch();
 const page = await browser.newPage({ viewport: { width: 2400, height: 2000 }, deviceScaleFactor: 1 });
 for (const file of fs.readdirSync(path.join(here, 'src')).filter((f) => f.endsWith('.html'))) {
-  await page.goto('file://' + path.join(here, 'src', file) + '?stand=' + encodeURIComponent(process.env.STAND || '—') + (GUIDES ? '&guides' : ''), { waitUntil: 'networkidle' });
+  await page.goto('file://' + path.join(here, 'src', file) + '?stand=' + encodeURIComponent(process.env.STAND || 'A25 · Hall 2') + (GUIDES ? '&guides' : ''), { waitUntil: 'networkidle' });
   await page.evaluate(() => document.fonts.ready);
   await page.waitForTimeout(400);
   for (const el of await page.$$('.frame')) {

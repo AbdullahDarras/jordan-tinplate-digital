@@ -5,7 +5,7 @@ import { chromium } from '/opt/node22/lib/node_modules/playwright/index.mjs';
 import path from 'node:path'; import { fileURLToPath } from 'node:url';
 const here = path.dirname(fileURLToPath(import.meta.url));
 const b = await chromium.launch(); const p = await b.newPage({ viewport: { width: 1000, height: 1400 } });
-await p.goto('file://' + path.join(here, 'src', 'horeca2026.html') + '?stand=' + (process.env.STAND || '—') + '', { waitUntil: 'networkidle' });
+await p.goto('file://' + path.join(here, 'src', 'horeca2026.html') + '?stand=' + (process.env.STAND || 'A25 · Hall 2') + '', { waitUntil: 'networkidle' });
 await p.addStyleTag({ content: `
   html, body { margin: 0; padding: 0; background: #fff; }
   body > *:not(.frame.pass) { display: none !important; }

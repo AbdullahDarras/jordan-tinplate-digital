@@ -75,7 +75,7 @@
 .pass .f small { font-family: var(--en); font-size: 13px; letter-spacing: .3em; text-transform: uppercase; color: #5b6b85; font-weight: 600; direction: ltr; text-align: right; }
 .pass .f b { font-family: var(--en); font-size: 28px; font-weight: 700; color: var(--navy); direction: ltr; text-align: right; letter-spacing: -.01em; }
 .pass .f b.ar { font-family: var(--ar); font-weight: 600; font-size: 25px; direction: rtl; }
-.pass .f.hot b { color: #fff; background: var(--amber-deep); display: inline-block; padding: 4px 16px; border-radius: 8px; align-self: flex-start; font-size: 40px; }
+.pass .f.hot b { color: #fff; background: var(--amber-deep); display: inline-block; padding: 4px 14px; border-radius: 8px; align-self: flex-start; font-size: 33px; }
 .pass .tear { position: relative; height: 0; border-top: 3px dashed #c9d3e0; margin: 0 -40px; }
 .pass .tear::before, .pass .tear::after { content: ''; position: absolute; top: -22px; width: 44px; height: 44px; border-radius: 50%; background: #002F6C; }
 .pass .tear::before { left: 18px; } .pass .tear::after { right: 18px; }
@@ -94,7 +94,7 @@
 <div class="frame c pass" data-name="horeca2026-ticket-post-1080x1350" style="width:1080px;height:1350px">
   <div style="position:absolute;top:48px;left:96px;right:96px;display:flex;align-items:center;justify-content:space-between">
     <img src="assets/logo-h-white.svg" alt="Jordan Tinplate Canning" style="height:48px">
-    <div class="lbl" style="color:var(--amber)"><span class="ar">دعوة خاصة</span><span class="en">A private invitation</span></div>
+    <div style="display:flex;align-items:baseline;gap:12px;white-space:nowrap;color:var(--amber)"><span style="font-size:32px;font-weight:700;font-family:var(--ar)">مرحبا لبنان!</span><span class="en" style="font-size:13px;letter-spacing:.3em;font-weight:600;text-transform:uppercase">Hello, Lebanon</span></div>
   </div>
   <div class="card" style="top:136px">
     <div class="head">
@@ -131,7 +131,7 @@
 </div>
 
 <script>
-const stand = new URLSearchParams(location.search).get('stand') || '—';
+const stand = new URLSearchParams(location.search).get('stand') || 'A25 · Hall 2';
 document.querySelectorAll('.standno').forEach((el) => { el.textContent = stand; });
 </script>
 </body></html>

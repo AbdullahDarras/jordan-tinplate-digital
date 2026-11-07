@@ -90,7 +90,7 @@
   </div>
   <div class="foot">
     <div style="display:flex;flex-direction:column;gap:4px;align-items:flex-start"><div class="lbl"><span class="ar">احجز موعداً</span><span class="en">Book a meeting</span></div><span class="mail" style="font-size:20px">sales@jordantinplate.com</span></div>
-    <div class="lbl" style="font-size:18px"><span class="ar" style="font-size:20px">نلتقي في بيروت</span><span class="en">See you in Beirut</span></div>
+    <div style="display:flex;align-items:baseline;gap:12px;white-space:nowrap;color:var(--amber)"><span style="font-size:28px;font-weight:700;font-family:var(--ar)">مرحبا لبنان!</span><span class="en" style="font-size:13px;letter-spacing:.3em;font-weight:600;text-transform:uppercase">Hello, Lebanon</span></div>
     <span class="q" style="width:60px;height:60px"><img src="assets/qr-website.svg" alt="QR code to jordantinplate.com"></span>
   </div>
 </div>
@@ -98,7 +98,7 @@
 <!-- ======================================================= CONCEPT "POSTCARD": A POSTCARD FROM BEIRUT, POST 1080 x 1350 -->
 <div class="frame c post" data-name="horeca2026-idea-postcard-post-1080x1350" style="width:1080px;height:1350px">
   <div class="top"><img src="assets/logo-h-white.svg" alt="Jordan Tinplate Canning" style="height:48px"><img src="assets/horeca-lebanon-logo.png" alt="HORECA Lebanon 2026" style="height:54px"></div>
-  <div class="front"><div class="pic"><img src="assets/booth-front-lb.jpg" alt="جناح الشركة في HORECA Lebanon 2026" style="object-position:50% 40%"><div class="greet"><span class="ar">تحيات من بيروت</span><span class="en">Greetings from Beirut</span></div></div></div>
+  <div class="front"><div class="pic"><img src="assets/booth-front-lb.jpg" alt="جناح الشركة في HORECA Lebanon 2026" style="object-position:50% 40%"><div class="greet"><span class="ar">مرحبا لبنان!</span><span class="en">Hello, Lebanon</span></div></div></div>
   <div class="back">
     <div class="msg">
       <p style="font-size:23px">ضيفنا الكريم،<br>يسعدنا أن نستقبلكم في جناحنا في <b class="en" style="white-space:nowrap">HORECA Lebanon 2026</b>، لنريكم عن قرب كيف نصمّم ونطبع ونشكّل عبوات الصفيح لعلامتكم.</p>
@@ -133,7 +133,7 @@
 </div>
 
 <script>
-const stand = new URLSearchParams(location.search).get('stand') || '—';
+const stand = new URLSearchParams(location.search).get('stand') || 'A25 · Hall 2';
 document.querySelectorAll('.standno').forEach((el) => { el.textContent = stand; });
 </script>
 </body></html>
